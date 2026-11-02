@@ -149,14 +149,16 @@
           }
         }
 
-        // Visible film grain: create coarse random pixels at display size.
+        // Stronger film grain: small, high-contrast noise that remains visible
+        // at the image's on-screen size.
         const displayScale = Math.min(
           (window.innerWidth * 0.7) / width,
           (window.innerHeight * 0.7) / height,
           1
         );
-        const noiseWidth = Math.max(1, Math.ceil(width * displayScale / 1.5));
-        const noiseHeight = Math.max(1, Math.ceil(height * displayScale / 1.5));
+        const grainSize = 1.1;
+        const noiseWidth = Math.max(1, Math.ceil(width * displayScale / grainSize));
+        const noiseHeight = Math.max(1, Math.ceil(height * displayScale / grainSize));
         const noiseCanvas = document.createElement('canvas');
         noiseCanvas.width = noiseWidth;
         noiseCanvas.height = noiseHeight;
@@ -165,7 +167,8 @@
         const noiseImage = noiseContext.createImageData(noiseWidth, noiseHeight);
 
         for (let i = 0; i < noiseImage.data.length; i += 4) {
-          const grain = Math.floor(random() * 256);
+          // Push grain toward black or white so the texture is not washed out.
+          const grain = random() < 0.5 ? 0 : 255;
           noiseImage.data[i] = grain;
           noiseImage.data[i + 1] = grain;
           noiseImage.data[i + 2] = grain;
@@ -175,7 +178,7 @@
         noiseContext.putImageData(noiseImage, 0, 0);
         ctx.save();
         ctx.globalCompositeOperation = 'overlay';
-        ctx.globalAlpha = 0.38;
+        ctx.globalAlpha = 0.52;
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(noiseCanvas, 0, 0, width, height);
         ctx.restore();
