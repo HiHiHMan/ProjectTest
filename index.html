@@ -19,7 +19,7 @@
       place-items: center;
       padding: 24px;
       overflow: hidden;
-      background: #111;
+      background: #000;
     }
 
     #artwork {
@@ -97,7 +97,7 @@
         sourceContext.drawImage(image, 0, 0, width, height);
         const pixels = sourceContext.getImageData(0, 0, width, height).data;
 
-        ctx.fillStyle = '#111';
+        ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, width, height);
 
         const spacing = Math.max(3, Math.round(Math.min(width, height) / 180));
