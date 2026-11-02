@@ -60,8 +60,12 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.85;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 80px 80px;
+  mask-image: url("../images/obj02.webp");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
 }
