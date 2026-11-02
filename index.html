@@ -24,7 +24,7 @@
     }
 
     .page {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1600px, calc(100% - 48px));
       margin: 0 auto;
       padding: 64px 0 48px;
     }
@@ -77,8 +77,8 @@
 
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
     }
 
     .project-card {
@@ -97,7 +97,7 @@
 
     .preview {
       position: relative;
-      height: 260px;
+      height: 190px;
       overflow: hidden;
       background: #000;
       border-bottom: 1px solid rgb(255 255 255 / 8%);
@@ -132,12 +132,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 18px 20px;
+      padding: 14px 15px;
     }
 
     .card-content h3 {
       margin: 0;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
     }
 
