@@ -26,6 +26,8 @@
       display: block;
       max-width: 70vw;
       max-height: 70vh;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     #source {
@@ -74,8 +76,13 @@
       }
 
       try {
-        const width = image.naturalWidth;
-        const height = image.naturalHeight;
+        const sourceWidth = image.naturalWidth;
+        const sourceHeight = image.naturalHeight;
+        const side = Math.min(sourceWidth, sourceHeight);
+        const cropX = (sourceWidth - side) / 2;
+        const cropY = (sourceHeight - side) / 2;
+        const width = side;
+        const height = side;
 
         canvas.width = width;
         canvas.height = height;
@@ -94,7 +101,11 @@
           return;
         }
 
-        sourceContext.drawImage(image, 0, 0, width, height);
+        sourceContext.drawImage(
+          image,
+          cropX, cropY, side, side,
+          0, 0, width, height
+        );
         const pixels = sourceContext.getImageData(0, 0, width, height).data;
 
         ctx.fillStyle = '#000';
@@ -174,7 +185,8 @@
 
     window.addEventListener('resize', () => {
       if (image.naturalWidth && canvas.width) {
-        fitCanvas(image.naturalWidth, image.naturalHeight);
+        const side = Math.min(image.naturalWidth, image.naturalHeight);
+        fitCanvas(side, side);
       }
     });
   </script>
