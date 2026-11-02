@@ -125,6 +125,21 @@
           }
         }
 
+        // Add subtle monochrome film grain over the colored dots.
+        const noiseCount = Math.floor(width * height * 0.035);
+
+        for (let i = 0; i < noiseCount; i++) {
+          const x = random() * width;
+          const y = random() * height;
+          const size = 0.35 + random() * 0.75;
+          const shade = random() > 0.5 ? 255 : 0;
+
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${shade}, ${shade}, ${shade}, ${0.08 + random() * 0.12})`;
+          ctx.fill();
+        }
+
         image.classList.remove('fallback');
         canvas.style.display = 'block';
       } catch (error) {
