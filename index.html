@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProjectTest - Pointillism</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       width: 100%;
       min-height: 100%;
       margin: 0;
@@ -29,78 +26,126 @@
       display: block;
       max-width: 70vw;
       max-height: 70vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
     }
 
     #source {
       display: none;
     }
+
+    #source.fallback {
+      display: block;
+      max-width: 70vw;
+      max-height: 70vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
   <canvas id="artwork" role="img" aria-label="ภาพศิลปะสไตล์ Pointillism"></canvas>
-  <img id="source" src="./images/obj01.jpg" alt="">
+  <img id="source" src="./images/obj01.jpg" alt="ภาพต้นฉบับ">
 
   <script>
     const image = document.getElementById('source');
     const canvas = document.getElementById('artwork');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const ctx = canvas.getContext('2d');
+
+    function showOriginal() {
+      canvas.style.display = 'none';
+      image.classList.add('fallback');
+    }
+
+    function fitCanvas(width, height) {
+      const scale = Math.min(
+        (window.innerWidth * 0.7) / width,
+        (window.innerHeight * 0.7) / height,
+        1
+      );
+
+      canvas.style.width = Math.round(width * scale) + 'px';
+      canvas.style.height = Math.round(height * scale) + 'px';
+    }
 
     function renderPointillism() {
-      if (!image.naturalWidth || !image.naturalHeight) return;
-
-      const width = image.naturalWidth;
-      const height = image.naturalHeight;
-      canvas.width = width;
-      canvas.height = height;
-
-      const sourceCanvas = document.createElement('canvas');
-      sourceCanvas.width = width;
-      sourceCanvas.height = height;
-
-      const sourceContext = sourceCanvas.getContext('2d', {
-        willReadFrequently: true
-      });
-
-      sourceContext.drawImage(image, 0, 0, width, height);
-      const pixels = sourceContext.getImageData(0, 0, width, height).data;
-
-      ctx.fillStyle = '#111';
-      ctx.fillRect(0, 0, width, height);
-
-      const spacing = Math.max(3, Math.round(Math.min(width, height) / 180));
-      let seed = 9173;
-
-      function random() {
-        seed = (seed * 16807) % 2147483647;
-        return (seed - 1) / 2147483646;
+      if (!image.naturalWidth || !image.naturalHeight || !ctx) {
+        showOriginal();
+        return;
       }
 
-      for (let y = spacing / 2; y < height; y += spacing) {
-        for (let x = spacing / 2; x < width; x += spacing) {
-          const offset = (Math.floor(y) * width + Math.floor(x)) * 4;
-          const alpha = pixels[offset + 3] / 255;
-          if (alpha < 0.05) continue;
+      try {
+        const width = image.naturalWidth;
+        const height = image.naturalHeight;
 
-          const jitterX = (random() - 0.5) * spacing * 0.55;
-          const jitterY = (random() - 0.5) * spacing * 0.55;
-          const radius = spacing * (0.22 + random() * 0.18);
+        canvas.width = width;
+        canvas.height = height;
+        fitCanvas(width, height);
 
-          ctx.beginPath();
-          ctx.arc(x + jitterX, y + jitterY, radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${pixels[offset]}, ${pixels[offset + 1]}, ${pixels[offset + 2]}, ${alpha})`;
-          ctx.fill();
+        const sourceCanvas = document.createElement('canvas');
+        sourceCanvas.width = width;
+        sourceCanvas.height = height;
+
+        const sourceContext = sourceCanvas.getContext('2d', {
+          willReadFrequently: true
+        });
+
+        if (!sourceContext) {
+          showOriginal();
+          return;
         }
+
+        sourceContext.drawImage(image, 0, 0, width, height);
+        const pixels = sourceContext.getImageData(0, 0, width, height).data;
+
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, width, height);
+
+        const spacing = Math.max(3, Math.round(Math.min(width, height) / 180));
+        let seed = 9173;
+
+        function random() {
+          seed = (seed * 16807) % 2147483647;
+          return (seed - 1) / 2147483646;
+        }
+
+        for (let y = spacing / 2; y < height; y += spacing) {
+          for (let x = spacing / 2; x < width; x += spacing) {
+            const offset = (Math.floor(y) * width + Math.floor(x)) * 4;
+            const alpha = pixels[offset + 3] / 255;
+            if (alpha < 0.05) continue;
+
+            const jitterX = (random() - 0.5) * spacing * 0.55;
+            const jitterY = (random() - 0.5) * spacing * 0.55;
+            const radius = spacing * (0.22 + random() * 0.18);
+
+            ctx.beginPath();
+            ctx.arc(x + jitterX, y + jitterY, radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${pixels[offset]}, ${pixels[offset + 1]}, ${pixels[offset + 2]}, ${alpha})`;
+            ctx.fill();
+          }
+        }
+
+        image.classList.remove('fallback');
+        canvas.style.display = 'block';
+      } catch (error) {
+        console.error('Pointillism rendering failed:', error);
+        showOriginal();
       }
     }
+
+    image.addEventListener('load', renderPointillism);
+    image.addEventListener('error', showOriginal);
 
     if (image.complete) {
-      renderPointillism();
-    } else {
-      image.addEventListener('load', renderPointillism, { once: true });
+      if (image.naturalWidth) renderPointillism();
+      else showOriginal();
     }
+
+    window.addEventListener('resize', () => {
+      if (image.naturalWidth && canvas.width) {
+        fitCanvas(image.naturalWidth, image.naturalHeight);
+      }
+    });
   </script>
 </body>
 </html>
