@@ -125,20 +125,35 @@
           }
         }
 
-        // Add subtle monochrome film grain over the colored dots.
-        const noiseCount = Math.floor(width * height * 0.035);
+        // Generate grain at the final display resolution so it remains visible
+        // after the artwork is scaled down in the browser.
+        const displayScale = Math.min(
+          (window.innerWidth * 0.7) / width,
+          (window.innerHeight * 0.7) / height,
+          1
+        );
+        const noiseWidth = Math.max(1, Math.round(width * displayScale));
+        const noiseHeight = Math.max(1, Math.round(height * displayScale));
+        const noiseCanvas = document.createElement('canvas');
+        noiseCanvas.width = noiseWidth;
+        noiseCanvas.height = noiseHeight;
 
-        for (let i = 0; i < noiseCount; i++) {
-          const x = random() * width;
-          const y = random() * height;
-          const size = 0.35 + random() * 0.75;
-          const shade = random() > 0.5 ? 255 : 0;
+        const noiseContext = noiseCanvas.getContext('2d');
+        const noiseImage = noiseContext.createImageData(noiseWidth, noiseHeight);
 
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${shade}, ${shade}, ${shade}, ${0.08 + random() * 0.12})`;
-          ctx.fill();
+        for (let i = 0; i < noiseImage.data.length; i += 4) {
+          const grain = Math.floor(random() * 256);
+          noiseImage.data[i] = grain;
+          noiseImage.data[i + 1] = grain;
+          noiseImage.data[i + 2] = grain;
+          noiseImage.data[i + 3] = 58 + Math.floor(random() * 42);
         }
+
+        noiseContext.putImageData(noiseImage, 0, 0);
+        ctx.save();
+        ctx.globalCompositeOperation = 'soft-light';
+        ctx.drawImage(noiseCanvas, 0, 0, width, height);
+        ctx.restore();
 
         image.classList.remove('fallback');
         canvas.style.display = 'block';
