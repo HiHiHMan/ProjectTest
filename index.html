@@ -38,6 +38,17 @@
       height: 100%;
     }
 
+    .ly-3-noise {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.6;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 120px 120px;
+    }
+
     #source {
       display: none;
     }
@@ -59,6 +70,7 @@
   <div class="circle-frame">
     <canvas id="artwork" role="img" aria-label="ภาพศิลปะสไตล์ Pointillism"></canvas>
     <img id="source" src="./images/obj01.jpg" alt="ภาพต้นฉบับ">
+    <div class="ly-3-noise" aria-hidden="true"></div>
   </div>
 
   <script>
@@ -149,39 +161,7 @@
           }
         }
 
-        // Stronger film grain: small, high-contrast noise that remains visible
-        // at the image's on-screen size.
-        const displayScale = Math.min(
-          (window.innerWidth * 0.7) / width,
-          (window.innerHeight * 0.7) / height,
-          1
-        );
-        const grainSize = 1.1;
-        const noiseWidth = Math.max(1, Math.ceil(width * displayScale / grainSize));
-        const noiseHeight = Math.max(1, Math.ceil(height * displayScale / grainSize));
-        const noiseCanvas = document.createElement('canvas');
-        noiseCanvas.width = noiseWidth;
-        noiseCanvas.height = noiseHeight;
 
-        const noiseContext = noiseCanvas.getContext('2d');
-        const noiseImage = noiseContext.createImageData(noiseWidth, noiseHeight);
-
-        for (let i = 0; i < noiseImage.data.length; i += 4) {
-          // Push grain toward black or white so the texture is not washed out.
-          const grain = random() < 0.5 ? 0 : 255;
-          noiseImage.data[i] = grain;
-          noiseImage.data[i + 1] = grain;
-          noiseImage.data[i + 2] = grain;
-          noiseImage.data[i + 3] = 255;
-        }
-
-        noiseContext.putImageData(noiseImage, 0, 0);
-        ctx.save();
-        ctx.globalCompositeOperation = 'overlay';
-        ctx.globalAlpha = 0.52;
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(noiseCanvas, 0, 0, width, height);
-        ctx.restore();
 
         image.classList.remove('fallback');
         canvas.style.display = 'block';
