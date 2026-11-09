@@ -10,15 +10,15 @@
 
   const MAX_DOTS = 20000;
   const CHUNK_SIZE = 3000;
-  const INTERACTION_RADIUS = 145;
-  const PUSH_STRENGTH = 1.9;
-  const RETURN_STRENGTH = 0.075;
-  const FRICTION = 0.86;
+  const INTERACTION_RADIUS = 92;
+  const PUSH_STRENGTH = 2.8;
+  const RETURN_STRENGTH = 0.018;
+  const FRICTION = 0.9;
 
   let drawing = false;
   let particles = null;
   let animationFrame = 0;
-  let pointer = { x: -10000, y: -10000, active: false };
+  let pointer = { x: -10000, y: -10000, active: false, lastX: -10000, lastY: -10000 };
 
   function updateProgress(percent, message) {
     const value = Math.max(0, Math.min(100, Math.round(percent)));
@@ -58,17 +58,6 @@
     const radiusSq = INTERACTION_RADIUS * INTERACTION_RADIUS;
 
     for (let i = 0; i < count; i++) {
-      let dx = x[i] - pointer.x;
-      let dy = y[i] - pointer.y;
-      const distSq = dx * dx + dy * dy;
-
-      if (pointer.active && distSq < radiusSq && distSq > 0.01) {
-        const distance = Math.sqrt(distSq);
-        const force = (1 - distance / INTERACTION_RADIUS) * PUSH_STRENGTH;
-        vx[i] += (dx / distance) * force;
-        vy[i] += (dy / distance) * force;
-      }
-
       vx[i] += (baseX[i] - x[i]) * RETURN_STRENGTH;
       vy[i] += (baseY[i] - y[i]) * RETURN_STRENGTH;
       vx[i] *= FRICTION;
@@ -102,8 +91,45 @@
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    pointer.x = (event.clientX - rect.left) * scaleX;
-    pointer.y = (event.clientY - rect.top) * scaleY;
+    const nextX = (event.clientX - rect.left) * scaleX;
+    const nextY = (event.clientY - rect.top) * scaleY;
+
+    if (event.clientX < rect.left || event.clientX > rect.right ||
+        event.clientY < rect.top || event.clientY > rect.bottom) {
+      handlePointerLeave();
+      return;
+    }
+
+    const moveX = pointer.active ? nextX - pointer.x : 0;
+    const moveY = pointer.active ? nextY - pointer.y : 0;
+    const moveLength = Math.hypot(moveX, moveY);
+    const dirX = moveLength > 0.01 ? moveX / moveLength : 0;
+    const dirY = moveLength > 0.01 ? moveY / moveLength : 0;
+    const brushRadius = INTERACTION_RADIUS * Math.max(scaleX, scaleY);
+    const brushRadiusSq = brushRadius * brushRadius;
+    const sweep = Math.min(moveLength, 28) / 28;
+
+    // ผลักเม็ดทรายเฉพาะตอนนิ้ว/เมาส์เคลื่อนผ่าน ไม่ผลักซ้ำตอนหยุดนิ่ง
+    for (let i = 0; i < particles.count; i++) {
+      const dx = particles.x[i] - nextX;
+      const dy = particles.y[i] - nextY;
+      const distSq = dx * dx + dy * dy;
+      if (distSq >= brushRadiusSq) continue;
+
+      const distance = Math.sqrt(distSq);
+      const falloff = 1 - distance / brushRadius;
+      const nx = distance > 0.01 ? dx / distance : (Math.random() - 0.5);
+      const ny = distance > 0.01 ? dy / distance : -0.5;
+      const force = PUSH_STRENGTH * falloff * (0.65 + sweep * 0.8);
+
+      particles.vx[i] += nx * force + dirX * force * 0.55;
+      particles.vy[i] += ny * force + dirY * force * 0.55 + force * 0.18;
+    }
+
+    pointer.lastX = pointer.x;
+    pointer.lastY = pointer.y;
+    pointer.x = nextX;
+    pointer.y = nextY;
     pointer.active = true;
     wakeParticles();
   }
@@ -112,6 +138,8 @@
     pointer.active = false;
     pointer.x = -10000;
     pointer.y = -10000;
+    pointer.lastX = -10000;
+    pointer.lastY = -10000;
     wakeParticles();
   }
 
