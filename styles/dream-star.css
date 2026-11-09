@@ -5,20 +5,28 @@ body{overflow:hidden}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
-/* Overlapping circular cloud puffs */
-.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(760px,94vw);height:290px;pointer-events:none;transform:translateX(-50%);filter:blur(16px);opacity:.32;background:
-radial-gradient(ellipse 23% 68% at 17% 57%,#d4d5de 0 97%,transparent 100%),
-radial-gradient(ellipse 18% 54% at 35% 65%,#c7c9d2 0 97%,transparent 100%),
-radial-gradient(ellipse 25% 88% at 52% 34%,#e4e5eb 0 97%,transparent 100%),
-radial-gradient(ellipse 19% 61% at 72% 57%,#c9cbd5 0 97%,transparent 100%),
-radial-gradient(ellipse 15% 47% at 90% 70%,#dedfe7 0 97%,transparent 100%);
+/* Option 5: irregular round puffs, overlapping into one connected cloud */
+.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(760px,94vw);height:290px;pointer-events:none;transform:translateX(-50%);filter:blur(9px);opacity:.36;background:
+radial-gradient(circle 88px at 17% 57%,#d4d5de 0 97%,transparent 100%),
+radial-gradient(circle 70px at 35% 65%,#c7c9d2 0 97%,transparent 100%),
+radial-gradient(circle 116px at 52% 34%,#e4e5eb 0 97%,transparent 100%),
+radial-gradient(circle 82px at 72% 57%,#c9cbd5 0 97%,transparent 100%),
+radial-gradient(circle 66px at 90% 70%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(circle 82px at 26% 68%,#c9cbd4 0 97%,transparent 100%),
+radial-gradient(circle 96px at 43% 53%,#dedee6 0 97%,transparent 100%),
+radial-gradient(circle 94px at 63% 50%,#c8c9d3 0 97%,transparent 100%),
+radial-gradient(circle 76px at 81% 64%,#c5c6d0 0 97%,transparent 100%);
 animation:cloud-drift 28s ease-in-out infinite alternate}
-.dream-scene::after{top:10%;left:54%;width:min(620px,80vw);height:240px;opacity:.17;filter:blur(19px);background:
-radial-gradient(ellipse 19% 58% at 17% 59%,#e3e4eb 0 97%,transparent 100%),
-radial-gradient(ellipse 15% 46% at 36% 65%,#dedfe7 0 97%,transparent 100%),
-radial-gradient(ellipse 21% 76% at 53% 38%,#d7d9e2 0 97%,transparent 100%),
-radial-gradient(ellipse 16% 53% at 72% 58%,#e4e5eb 0 97%,transparent 100%),
-radial-gradient(ellipse 13% 40% at 90% 70%,#d5d7e0 0 97%,transparent 100%);
+.dream-scene::after{top:10%;left:54%;width:min(620px,80vw);height:240px;opacity:.2;filter:blur(14px);background:
+radial-gradient(circle 68px at 17% 57%,#e3e4eb 0 97%,transparent 100%),
+radial-gradient(circle 56px at 36% 65%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(circle 91px at 53% 38%,#d7d9e2 0 97%,transparent 100%),
+radial-gradient(circle 64px at 72% 58%,#e4e5eb 0 97%,transparent 100%),
+radial-gradient(circle 52px at 90% 70%,#d5d7e0 0 97%,transparent 100%),
+radial-gradient(circle 67px at 27% 66%,#d9d9e1 0 97%,transparent 100%),
+radial-gradient(circle 76px at 44% 54%,#e5e5eb 0 97%,transparent 100%),
+radial-gradient(circle 73px at 63% 52%,#c6c7d1 0 97%,transparent 100%),
+radial-gradient(circle 60px at 81% 64%,#dedee6 0 97%,transparent 100%);
 animation-duration:36s;animation-direction:alternate-reverse}
 @keyframes cloud-drift{from{translate:-24px 0;scale:.96}to{translate:28px 9px;scale:1.04}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
