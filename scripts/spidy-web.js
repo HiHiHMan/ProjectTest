@@ -1,13 +1,20 @@
 const image = document.querySelector(".spidy-image");
 const layer = document.querySelector(".spidy-image-layer");
+const canvas = layer?.querySelector(".spidy-pixel-canvas");
 
-if (image && layer) {
-  const canvas = document.createElement("canvas");
-  canvas.className = "spidy-pixel-canvas";
-  canvas.setAttribute("aria-hidden", "true");
-  layer.appendChild(canvas);
-
+if (image && layer && canvas) {
   image.style.opacity = "0";
+
+  if (!image.complete || !image.naturalWidth) {
+    await new Promise((resolve) => {
+      image.addEventListener("load", resolve, { once: true });
+      image.addEventListener("error", resolve, { once: true });
+    });
+  }
+
+  if (!image.naturalWidth) {
+    image.style.opacity = "1";
+  } else {
 
   const gl = canvas.getContext("webgl", {
     alpha: true,
@@ -131,6 +138,6 @@ if (image && layer) {
     }
   } else {
     image.style.opacity = "1";
-    canvas.remove();
+  }
   }
 }
