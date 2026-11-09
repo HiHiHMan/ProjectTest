@@ -171,17 +171,6 @@ body {
   filter: saturate(1.12) contrast(1.06);
 }
 
-.spidy-image-layer::before {
-  content: "";
-  position: absolute;
-  inset: -2%;
-  z-index: -1;
-  background: linear-gradient(125deg, transparent 30%, rgba(255,255,255,.16) 48%, transparent 58%);
-  mix-blend-mode: screen;
-  opacity: .5;
-  pointer-events: none;
-}
-
 .spidy-image-layer::after {
   content: "";
   position: absolute;
