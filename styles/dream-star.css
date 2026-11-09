@@ -48,6 +48,6 @@ radial-gradient(circle 46px at 34% 51%,#d9dae2 0 97%,transparent 100%),
 radial-gradient(circle 44px at 63% 46%,#dedfe7 0 97%,transparent 100%),
 radial-gradient(circle 42px at 78% 57%,#d4d5de 0 97%,transparent 100%);
 animation-duration:36s;animation-direction:alternate-reverse}
-@keyframes cloud-drift{from{translate:-10px 0;scale:.78}to{translate:10px 5px;scale:.84}}
+@keyframes cloud-drift{from{translate:0 0;scale:.66}to{translate:0 4px;scale:.70}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
