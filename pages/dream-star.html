@@ -19,9 +19,12 @@ const random = () => {
   return (seed - 1) / 2147483646;
 };
 const fragment = document.createDocumentFragment();
+const starEmojis = ['⭐', '🌟', '💫'];
 for (let i = 0; i < 150; i++) {
-  const star = document.createElement('i');
+  const star = document.createElement('span');
   star.className = 'tiny-star' + (i % 9 === 0 ? ' bright' : '');
+  star.textContent = starEmojis[Math.floor(random() * starEmojis.length)];
+  star.style.setProperty('--size', (10 + random() * 18) + 'px');
   star.style.left = (random() * 100) + '%';
   star.style.top = (random() * 100) + '%';
   star.style.setProperty('--delay', (-random() * 8) + 's');
