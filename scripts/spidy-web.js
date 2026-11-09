@@ -8,7 +8,7 @@
   const progressMessage = progress?.querySelector(".pixel-progress-message");
   if (!image || !layer || !canvas) return;
 
-  const MAX_DOTS = 120000;
+  const MAX_DOTS = 50000;
   const CHUNK_SIZE = 3000;
   const INTERACTION_RADIUS = 145;
   const PUSH_STRENGTH = 1.9;
