@@ -8,7 +8,7 @@
   const progressMessage = progress?.querySelector(".pixel-progress-message");
   if (!image || !layer || !canvas) return;
 
-  const MAX_DOTS = 12000;
+  const MAX_DOTS = 120000;
   let drawing = false;
 
   function updateProgress(percent, message) {
@@ -59,42 +59,36 @@
 
       updateProgress(5, "กำลังอ่านค่าสีจากภาพ...");
       const imageData = sourceCtx.getImageData(0, 0, source.width, source.height);
-      const aspect = width / height;
-      const columns = Math.min(MAX_DOTS, Math.max(1, Math.round(Math.sqrt(MAX_DOTS * aspect))));
-      const rows = Math.max(1, Math.floor(MAX_DOTS / columns));
-      const cellW = width / columns;
-      const cellH = height / rows;
-      let row = 0;
+      // สุ่มพิกัดทั่วทั้งภาพแทนการวางเป็นตาราง ให้กระจายเหมือนเม็ดทรายสี
+      let particleIndex = 0;
       let drawn = 0;
-
+      const chunkSize = 3000;
+      const minDimension = Math.min(width, height);
       ctx.clearRect(0, 0, width, height);
-      function drawChunk() {
-        const endRow = Math.min(rows, row + 8);
-        for (; row < endRow; row++) {
-          for (let col = 0; col < columns; col++) {
-            // สุ่มตำแหน่งภายในแต่ละช่อง เพื่อให้เม็ดสีดูเป็นธรรมชาติคล้ายเม็ดทราย
-            const jitterX = Math.random();
-            const jitterY = Math.random();
-            const sx = Math.min(source.width - 1, Math.floor((col + jitterX) / columns * source.width));
-            const sy = Math.min(source.height - 1, Math.floor((row + jitterY) / rows * source.height));
-            const index = (sy * source.width + sx) * 4;
-            const alpha = imageData.data[index + 3] / 255;
-            if (alpha < 0.04) continue;
 
-            const grainSize = Math.min(cellW, cellH) * (0.28 + Math.random() * 0.34);
-            const x = (col + jitterX) * cellW;
-            const y = (row + jitterY) * cellH;
-            ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
-            ctx.beginPath();
-            ctx.arc(x, y, Math.max(0.3, grainSize), 0, Math.PI * 2);
-            ctx.fill();
-            drawn++;
-          }
+      function drawChunk() {
+        const endParticle = Math.min(MAX_DOTS, particleIndex + chunkSize);
+        for (; particleIndex < endParticle; particleIndex++) {
+          const sx = Math.floor(Math.random() * source.width);
+          const sy = Math.floor(Math.random() * source.height);
+          const index = (sy * source.width + sx) * 4;
+          const alpha = imageData.data[index + 3] / 255;
+          if (alpha < 0.04) continue;
+
+          const x = (sx / source.width) * width;
+          const y = (sy / source.height) * height;
+          const radius = minDimension * (0.00045 + Math.random() * 0.0003);
+
+          ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
+          ctx.beginPath();
+          ctx.arc(x, y, Math.max(0.35, radius), 0, Math.PI * 2);
+          ctx.fill();
+          drawn++;
         }
 
-        const percent = 5 + (row / rows) * 95;
-        updateProgress(percent, "กำลังสร้างจุดสี " + drawn.toLocaleString("th-TH") + " จุด...");
-        if (row < rows) {
+        const percent = 5 + (particleIndex / MAX_DOTS) * 95;
+        updateProgress(percent, "กำลังสร้างเม็ดสี " + drawn.toLocaleString("th-TH") + " จุด...");
+        if (particleIndex < MAX_DOTS) {
           requestAnimationFrame(drawChunk);
           return;
         }
