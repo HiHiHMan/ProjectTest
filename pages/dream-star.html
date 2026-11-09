@@ -11,27 +11,6 @@
 <main class="dream-scene" aria-label="ท้องฟ้ายามค่ำคืน">
   <div class="star-field" aria-hidden="true"></div>
 </main>
-<script>
-const field = document.querySelector('.star-field');
-let seed = 20261109;
-const random = () => {
-  seed = (seed * 16807) % 2147483647;
-  return (seed - 1) / 2147483646;
-};
-const fragment = document.createDocumentFragment();
-const starEmojis = ['⭐', '🌟', '💫'];
-for (let i = 0; i < 150; i++) {
-  const star = document.createElement('span');
-  star.className = 'tiny-star' + (i % 9 === 0 ? ' bright' : '');
-  star.textContent = starEmojis[Math.floor(random() * starEmojis.length)];
-  star.style.setProperty('--size', (10 + random() * 18) + 'px');
-  star.style.left = (random() * 100) + '%';
-  star.style.top = (random() * 100) + '%';
-  star.style.setProperty('--delay', (-random() * 8) + 's');
-  star.style.setProperty('--duration', (3 + random() * 5) + 's');
-  fragment.appendChild(star);
-}
-field.appendChild(fragment);
-</script>
+
 </body>
 </html>
