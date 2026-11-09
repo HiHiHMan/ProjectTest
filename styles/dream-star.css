@@ -7,30 +7,18 @@ body{overflow:hidden}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
 /* Overlapping circular cloud puffs */
 .dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(760px,94vw);height:290px;pointer-events:none;transform:translateX(-50%);filter:blur(16px);opacity:.32;background:
-radial-gradient(circle 112px at 9% 58%,#c9c9d2 0 97%,transparent 100%),
-radial-gradient(circle 86px at 23% 37%,#dedee6 0 97%,transparent 100%),
-radial-gradient(circle 124px at 34% 66%,#c8c9d3 0 97%,transparent 100%),
-radial-gradient(circle 96px at 48% 39%,#dedee6 0 97%,transparent 100%),
-radial-gradient(circle 138px at 61% 63%,#c5c6d0 0 97%,transparent 100%),
-radial-gradient(circle 91px at 77% 42%,#bfc0ca 0 97%,transparent 100%),
-radial-gradient(circle 116px at 91% 65%,#c9c9d2 0 97%,transparent 100%),
-radial-gradient(ellipse 132px 76px at 17% 67%,#c9c9d2 0 97%,transparent 100%),
-radial-gradient(ellipse 94px 62px at 30% 52%,#dedee6 0 97%,transparent 100%),
-radial-gradient(ellipse 146px 82px at 43% 61%,#c8c9d3 0 97%,transparent 100%),
-radial-gradient(ellipse 104px 72px at 56% 51%,#dedee6 0 97%,transparent 100%),
-radial-gradient(ellipse 138px 78px at 70% 65%,#c5c6d0 0 97%,transparent 100%),
-radial-gradient(ellipse 102px 66px at 84% 54%,#bfc0ca 0 97%,transparent 100%);
+radial-gradient(ellipse 23% 68% at 17% 57%,#d4d5de 0 97%,transparent 100%),
+radial-gradient(ellipse 18% 54% at 35% 65%,#c7c9d2 0 97%,transparent 100%),
+radial-gradient(ellipse 25% 88% at 52% 34%,#e4e5eb 0 97%,transparent 100%),
+radial-gradient(ellipse 19% 61% at 72% 57%,#c9cbd5 0 97%,transparent 100%),
+radial-gradient(ellipse 15% 47% at 90% 70%,#dedfe7 0 97%,transparent 100%);
 animation:cloud-drift 28s ease-in-out infinite alternate}
 .dream-scene::after{top:10%;left:54%;width:min(620px,80vw);height:240px;opacity:.17;filter:blur(19px);background:
-radial-gradient(circle 92px at 12% 43%,#d9d9e1 0 97%,transparent 100%),
-radial-gradient(circle 70px at 29% 69%,#e5e5eb 0 97%,transparent 100%),
-radial-gradient(circle 118px at 45% 39%,#c6c7d1 0 97%,transparent 100%),
-radial-gradient(circle 82px at 64% 68%,#dedee6 0 97%,transparent 100%),
-radial-gradient(circle 96px at 83% 42%,#c5c6d0 0 97%,transparent 100%),
-radial-gradient(ellipse 116px 68px at 20% 57%,#d9d9e1 0 97%,transparent 100%),
-radial-gradient(ellipse 126px 72px at 38% 57%,#e5e5eb 0 97%,transparent 100%),
-radial-gradient(ellipse 110px 66px at 57% 55%,#c6c7d1 0 97%,transparent 100%),
-radial-gradient(ellipse 120px 70px at 76% 56%,#dedee6 0 97%,transparent 100%);
+radial-gradient(ellipse 19% 58% at 17% 59%,#e3e4eb 0 97%,transparent 100%),
+radial-gradient(ellipse 15% 46% at 36% 65%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(ellipse 21% 76% at 53% 38%,#d7d9e2 0 97%,transparent 100%),
+radial-gradient(ellipse 16% 53% at 72% 58%,#e4e5eb 0 97%,transparent 100%),
+radial-gradient(ellipse 13% 40% at 90% 70%,#d5d7e0 0 97%,transparent 100%);
 animation-duration:36s;animation-direction:alternate-reverse}
 @keyframes cloud-drift{from{translate:-24px 0;scale:.96}to{translate:28px 9px;scale:1.04}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
