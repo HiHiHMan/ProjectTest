@@ -44,6 +44,19 @@ button:hover{background:#303448}
 @media(max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){body{padding:22px 13px 32px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.scene{height:130px}.selection{align-items:flex-start;flex-direction:column}}
 @media(max-width:380px){.grid{grid-template-columns:1fr}.scene{height:160px}}
+
+/* Larger, sharper previews so the cloud connections are easy to compare */
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.option{padding:12px}
+.scene{height:270px;background:radial-gradient(ellipse at 50% 55%,#10131c 0%,#020306 72%)}
+.scene:before{opacity:.72}
+.cloud{width:88%;height:190px;top:50%;filter:blur(.6px);opacity:1}
+.cloud:before{filter:drop-shadow(0 0 12px #d9dced55)}
+.cloud:after{inset:48px 3% 5px;background:linear-gradient(180deg,#e0e1e9 0%,#bfc2ce 70%,#aeb2c0 100%);border-radius:48% 52% 45% 50%;filter:blur(9px);opacity:.88}
+.option-label{padding:13px 5px 4px;font-size:17px}
+.option-label small{font-size:13px}
+@media(max-width:800px){.grid{grid-template-columns:1fr;gap:16px}.scene{height:250px}.cloud{width:90%;height:180px}}
+@media(max-width:480px){body{padding:18px 10px 28px}.scene{height:205px}.cloud{height:155px}.option{padding:9px}}
 </style>
 </head>
 <body>
