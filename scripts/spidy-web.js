@@ -8,7 +8,7 @@
   const progressMessage = progress?.querySelector(".pixel-progress-message");
   if (!image || !layer || !canvas) return;
 
-  const MAX_DOTS = 3000;
+  const MAX_DOTS = 12000;
   let drawing = false;
 
   function updateProgress(percent, message) {
@@ -72,15 +72,21 @@
         const endRow = Math.min(rows, row + 8);
         for (; row < endRow; row++) {
           for (let col = 0; col < columns; col++) {
-            const sx = Math.min(source.width - 1, Math.floor((col + 0.5) / columns * source.width));
-            const sy = Math.min(source.height - 1, Math.floor((row + 0.5) / rows * source.height));
+            // สุ่มตำแหน่งภายในแต่ละช่อง เพื่อให้เม็ดสีดูเป็นธรรมชาติคล้ายเม็ดทราย
+            const jitterX = Math.random();
+            const jitterY = Math.random();
+            const sx = Math.min(source.width - 1, Math.floor((col + jitterX) / columns * source.width));
+            const sy = Math.min(source.height - 1, Math.floor((row + jitterY) / rows * source.height));
             const index = (sy * source.width + sx) * 4;
             const alpha = imageData.data[index + 3] / 255;
             if (alpha < 0.04) continue;
 
+            const grainSize = Math.min(cellW, cellH) * (0.28 + Math.random() * 0.34);
+            const x = (col + jitterX) * cellW;
+            const y = (row + jitterY) * cellH;
             ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
             ctx.beginPath();
-            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(0.25, Math.min(cellW, cellH) * 0.12), 0, Math.PI * 2);
+            ctx.arc(x, y, Math.max(0.3, grainSize), 0, Math.PI * 2);
             ctx.fill();
             drawn++;
           }
