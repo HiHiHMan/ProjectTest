@@ -179,6 +179,6 @@
     requestAnimationFrame(() => start());
   } else {
     image.addEventListener("load", () => start(), { once: true });
-    image.addEventListener("error", () => showOriginal(), { once: true });
+    image.addEventListener("error", () => { image.style.opacity = "1"; }, { once: true });
   }
 })();
