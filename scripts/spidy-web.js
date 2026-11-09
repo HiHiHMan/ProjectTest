@@ -32,33 +32,29 @@
       }
 
       const gl = canvas.getContext("webgl", {
-        alpha: true, antialias: false, premultipliedAlpha: false
+        alpha: true, antialias: true, premultipliedAlpha: false
       });
       if (!gl) throw new Error("WebGL is unavailable");
 
       const vertexSource = [
         "attribute vec2 a_position;",
-        "varying vec2 v_uv;",
-        "void main() {",
-        "  gl_Position = vec4(a_position, 0.0, 1.0);",
-        "  v_uv = a_position * 0.5 + 0.5;",
-        "}"
+        "void main() { gl_Position = vec4(a_position, 0.0, 1.0); }"
       ].join("\n");
 
       const fragmentSource = [
         "precision mediump float;",
         "uniform sampler2D u_image;",
         "uniform vec2 u_resolution;",
-        "uniform float u_dotSize;",
-        "varying vec2 v_uv;",
+        "uniform vec2 u_grid;",
         "void main() {",
-        "  vec2 cell = floor(gl_FragCoord.xy / u_dotSize);",
-        "  vec2 samplePixel = (cell + 0.5) * u_dotSize;",
-        "  vec2 uv = clamp(samplePixel / u_resolution, 0.001, 0.999);",
+        "  vec2 cellSize = u_resolution / u_grid;",
+        "  vec2 cell = floor(gl_FragCoord.xy / cellSize);",
+        "  vec2 uv = (cell + 0.5) / u_grid;",
         "  vec4 color = texture2D(u_image, vec2(uv.x, 1.0 - uv.y));",
-        "  vec2 local = fract(gl_FragCoord.xy / u_dotSize) - 0.5;",
-        "  float circle = 1.0 - smoothstep(0.34, 0.48, length(local));",
-        "  gl_FragColor = vec4(color.rgb, color.a * circle);",
+        "  vec2 local = (fract(gl_FragCoord.xy / cellSize) - 0.5) * cellSize;",
+        "  float radius = min(cellSize.x, cellSize.y) * 0.43;",
+        "  float dotMask = 1.0 - smoothstep(radius - 0.8, radius + 0.5, length(local));",
+        "  gl_FragColor = vec4(color.rgb, color.a * dotMask);",
         "}"
       ].join("\n");
 
@@ -86,30 +82,38 @@
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       gl.uniform1i(gl.getUniformLocation(program, "u_image"), 0);
 
       const resolution = gl.getUniformLocation(program, "u_resolution");
-      const dotSize = gl.getUniformLocation(program, "u_dotSize");
+      const grid = gl.getUniformLocation(program, "u_grid");
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
       function render() {
         const rect = image.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
+
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = Math.max(1, Math.round(rect.width * dpr));
         canvas.height = Math.max(1, Math.round(rect.height * dpr));
+
+        // Keep the total number of sampled dots at or below 1000.
+        const aspect = canvas.width / canvas.height;
+        const columns = Math.max(1, Math.round(Math.sqrt(1000 * aspect)));
+        const rows = Math.max(1, Math.floor(1000 / columns));
+
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.uniform2f(resolution, canvas.width, canvas.height);
-        gl.uniform1f(dotSize, 3.2 * dpr);
+        gl.uniform2f(grid, columns, rows);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
         const error = gl.getError();
         if (error !== gl.NO_ERROR) throw new Error("WebGL render error: " + error);
         canvas.style.display = "block";
