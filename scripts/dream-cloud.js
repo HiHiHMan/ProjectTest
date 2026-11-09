@@ -27,61 +27,51 @@
     uniform vec2 u_resolution;
     uniform float u_time;
 
-    float hash(vec2 p) {
-      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+    float circleSdf(vec2 p, vec2 center, float radius) {
+      return length(p - center) - radius;
     }
-
-    float noise(vec2 p) {
-      vec2 i = floor(p);
-      vec2 f = fract(p);
-      f = f * f * (3.0 - 2.0 * f);
-      return mix(
-        mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
-        mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
-        f.y
-      );
-    }
-
-    float puff(vec2 p, vec2 center, vec2 radius, float strength) {
-      vec2 d = (p - center) / radius;
-      return exp(-dot(d, d) * 2.6) * strength;
+    float smoothUnion(float a, float b, float k) {
+      float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+      return mix(b, a, h) - k * h * (1.0 - h);
     }
 
     void main() {
       float aspect = u_resolution.x / u_resolution.y;
       vec2 p = vec2((v_uv.x - 0.5) * aspect, v_uv.y);
-      float cloudWidth = min(aspect * 0.43, 0.54);
-      vec2 q = vec2(p.x / cloudWidth, (p.y - 0.77) / 0.205);
-      q.x += sin(u_time * 0.10) * 0.018;
+      vec2 q = vec2(p.x / min(aspect * 0.43, 0.54), (p.y - 0.77) / 0.205);
+      q.x += sin(u_time * 0.22) * 0.012;
 
-      float density = 0.0;
-      density += puff(q, vec2(-0.72, -0.10), vec2(0.25, 0.37), 0.95);
-      density += puff(q, vec2(-0.55,  0.19), vec2(0.24, 0.34), 0.95);
-      density += puff(q, vec2(-0.34, -0.02), vec2(0.27, 0.39), 1.05);
-      density += puff(q, vec2(-0.10,  0.15), vec2(0.25, 0.36), 0.95);
-      density += puff(q, vec2( 0.12,  0.31), vec2(0.24, 0.34), 1.00);
-      density += puff(q, vec2( 0.35,  0.10), vec2(0.28, 0.38), 1.05);
-      density += puff(q, vec2( 0.60, -0.09), vec2(0.25, 0.34), 0.95);
-      density += puff(q, vec2( 0.79,  0.10), vec2(0.21, 0.31), 0.85);
+      // Distinct round jelly-like bubbles softly joined into a cloud.
+      float d = 10.0;
+      d = smoothUnion(d, circleSdf(q, vec2(-0.76, -0.02), 0.25), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2(-0.58,  0.27), 0.23), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2(-0.38, -0.02), 0.29), 0.14);
+      d = smoothUnion(d, circleSdf(q, vec2(-0.18,  0.27), 0.24), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.06,  0.43), 0.25), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.29,  0.19), 0.29), 0.14);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.55, -0.02), 0.25), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.76,  0.20), 0.21), 0.12);
+      d = smoothUnion(d, circleSdf(q, vec2(-0.43, -0.40), 0.23), 0.12);
+      d = smoothUnion(d, circleSdf(q, vec2(-0.08, -0.39), 0.27), 0.13);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.27, -0.39), 0.24), 0.12);
+      d = smoothUnion(d, circleSdf(q, vec2( 0.57, -0.35), 0.20), 0.11);
 
-      density += puff(q, vec2(-0.43, -0.48), vec2(0.30, 0.28), 0.68);
-      density += puff(q, vec2(-0.08, -0.43), vec2(0.34, 0.27), 0.72);
-      density += puff(q, vec2( 0.29, -0.48), vec2(0.30, 0.28), 0.68);
-      density += puff(q, vec2( 0.60, -0.40), vec2(0.23, 0.25), 0.50);
+      float aa = max(fwidth(d), 0.002);
+      float body = 1.0 - smoothstep(-aa, aa, d);
+      if (body <= 0.001) discard;
 
-      float n = noise(q * 8.0 + vec2(u_time * 0.025, -u_time * 0.012));
-      float fineNoise = noise(q * 19.0 - u_time * 0.018);
-      float wisps = (n - 0.5) * 0.22 + (fineNoise - 0.5) * 0.10;
-      float edge = smoothstep(0.72, 1.05, density + wisps);
-
-      float innerLight = smoothstep(0.85, 2.6, density);
-      vec3 cloudColor = mix(vec3(0.66, 0.68, 0.74), vec3(0.88, 0.89, 0.93), innerLight);
-      float alpha = edge * 0.42 * smoothstep(-0.78, -0.55, q.y + 0.08);
-      alpha *= 0.92 + n * 0.08;
-
-      gl_FragColor = vec4(cloudColor, alpha);
+      float rim = smoothstep(0.10, -0.015, d);
+      float light = 0.0;
+      light += exp(-length((q - vec2(-0.63, 0.35)) * vec2(1.0, 1.15)) * 13.0);
+      light += exp(-length((q - vec2(-0.18, 0.36)) * vec2(1.0, 1.15)) * 13.0);
+      light += exp(-length((q - vec2(0.06, 0.53)) * vec2(1.0, 1.15)) * 13.0);
+      light += exp(-length((q - vec2(0.37, 0.29)) * vec2(1.0, 1.15)) * 13.0);
+      vec3 base = vec3(0.62, 0.65, 0.72);
+      vec3 jelly = base + vec3(0.20, 0.20, 0.22) * rim
+                         + vec3(0.16, 0.16, 0.17) * clamp(light, 0.0, 1.0);
+      gl_FragColor = vec4(jelly, body * 0.48);
     }
-  `;
+  `;;
 
   function compile(type, source) {
     const shader = gl.createShader(type);
