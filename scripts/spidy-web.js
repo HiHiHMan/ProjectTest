@@ -8,7 +8,7 @@
   const progressMessage = progress?.querySelector(".pixel-progress-message");
   if (!image || !layer || !canvas) return;
 
-  const MAX_DOTS = 1000;
+  const MAX_DOTS = 3000;
   let drawing = false;
 
   function updateProgress(percent, message) {
@@ -80,7 +80,7 @@
 
             ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
             ctx.beginPath();
-            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(0.5, Math.min(cellW, cellH) * 0.20), 0, Math.PI * 2);
+            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(0.25, Math.min(cellW, cellH) * 0.12), 0, Math.PI * 2);
             ctx.fill();
             drawn++;
           }
