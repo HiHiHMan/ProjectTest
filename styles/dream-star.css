@@ -5,36 +5,41 @@ body{overflow:hidden}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
-/* Dense clusters of soft round puffs create a fluffy wool-like cloud */
-.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:4%;left:50%;width:min(700px,92vw);height:250px;pointer-events:none;transform:translateX(-50%);filter:blur(9px);opacity:.32;background:
-radial-gradient(circle 42px at 8% 65%,#c8c9d2 0 96%,transparent 100%),
-radial-gradient(circle 54px at 16% 48%,#dedee6 0 96%,transparent 100%),
-radial-gradient(circle 39px at 23% 65%,#c7c8d2 0 96%,transparent 100%),
-radial-gradient(circle 62px at 31% 43%,#e3e3e9 0 96%,transparent 100%),
-radial-gradient(circle 46px at 39% 62%,#c9cad4 0 96%,transparent 100%),
-radial-gradient(circle 69px at 48% 42%,#dedfe7 0 96%,transparent 100%),
-radial-gradient(circle 48px at 56% 63%,#c4c5cf 0 96%,transparent 100%),
-radial-gradient(circle 61px at 65% 45%,#e0e0e8 0 96%,transparent 100%),
-radial-gradient(circle 43px at 73% 64%,#c8c9d3 0 96%,transparent 100%),
-radial-gradient(circle 56px at 82% 48%,#dedee6 0 96%,transparent 100%),
-radial-gradient(circle 39px at 91% 65%,#c4c5cf 0 96%,transparent 100%),
-radial-gradient(circle 47px at 19% 76%,#bfc0ca 0 96%,transparent 100%),
-radial-gradient(circle 58px at 36% 77%,#c5c6d0 0 96%,transparent 100%),
-radial-gradient(circle 52px at 54% 79%,#bfc0ca 0 96%,transparent 100%),
-radial-gradient(circle 49px at 72% 78%,#c5c6d0 0 96%,transparent 100%),
-radial-gradient(circle 43px at 87% 77%,#bfc0ca 0 96%,transparent 100%);
+/* Popcorn-like cloud: individual knobbly puffs packed tightly together */
+.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(660px,90vw);height:245px;pointer-events:none;transform:translateX(-50%);filter:blur(2px);opacity:.36;background:
+radial-gradient(ellipse 5.5% 15% at 8% 64%,#bfc1cc 0 75%,transparent 100%),
+radial-gradient(ellipse 7% 19% at 15% 51%,#e3e4eb 0 75%,transparent 100%),
+radial-gradient(ellipse 6% 16% at 22% 65%,#c9cad4 0 75%,transparent 100%),
+radial-gradient(ellipse 8% 21% at 30% 47%,#e6e6ed 0 75%,transparent 100%),
+radial-gradient(ellipse 6% 17% at 38% 63%,#c7c9d3 0 75%,transparent 100%),
+radial-gradient(ellipse 9% 23% at 47% 44%,#e4e5ec 0 75%,transparent 100%),
+radial-gradient(ellipse 7% 18% at 56% 62%,#c4c6d0 0 75%,transparent 100%),
+radial-gradient(ellipse 8% 21% at 64% 46%,#e5e5ec 0 75%,transparent 100%),
+radial-gradient(ellipse 6% 16% at 72% 63%,#c8cad4 0 75%,transparent 100%),
+radial-gradient(ellipse 7.5% 20% at 81% 49%,#e0e1e9 0 75%,transparent 100%),
+radial-gradient(ellipse 5.5% 15% at 90% 65%,#c2c4ce 0 75%,transparent 100%),
+radial-gradient(ellipse 8% 15% at 18% 77%,#c5c7d1 0 75%,transparent 100%),
+radial-gradient(ellipse 9% 17% at 34% 78%,#d4d5de 0 75%,transparent 100%),
+radial-gradient(ellipse 9% 16% at 51% 78%,#c4c6d0 0 75%,transparent 100%),
+radial-gradient(ellipse 8% 16% at 69% 78%,#d0d1da 0 75%,transparent 100%),
+radial-gradient(ellipse 7% 15% at 85% 77%,#c1c3cd 0 75%,transparent 100%),
+radial-gradient(ellipse 4% 10% at 13% 43%,#f0f0f4 0 72%,transparent 100%),
+radial-gradient(ellipse 4.5% 11% at 28% 34%,#f4f4f7 0 72%,transparent 100%),
+radial-gradient(ellipse 5% 12% at 46% 31%,#f1f1f5 0 72%,transparent 100%),
+radial-gradient(ellipse 4.5% 11% at 63% 34%,#f3f3f6 0 72%,transparent 100%),
+radial-gradient(ellipse 4% 10% at 80% 37%,#eeeeF3 0 72%,transparent 100%);
 animation:cloud-drift 30s ease-in-out infinite alternate}
-.dream-scene::after{top:1%;left:53%;width:min(610px,82vw);height:210px;opacity:.2;filter:blur(15px);background:
-radial-gradient(circle 34px at 12% 65%,#f0f0f4 0 96%,transparent 100%),
-radial-gradient(circle 43px at 22% 42%,#e6e6ed 0 96%,transparent 100%),
-radial-gradient(circle 36px at 31% 66%,#f1f1f5 0 96%,transparent 100%),
-radial-gradient(circle 48px at 42% 39%,#e8e8ef 0 96%,transparent 100%),
-radial-gradient(circle 35px at 53% 63%,#f2f2f6 0 96%,transparent 100%),
-radial-gradient(circle 45px at 64% 41%,#e6e6ed 0 96%,transparent 100%),
-radial-gradient(circle 34px at 74% 65%,#f0f0f4 0 96%,transparent 100%),
-radial-gradient(circle 42px at 85% 45%,#e5e5ec 0 96%,transparent 100%),
-radial-gradient(circle 32px at 94% 66%,#eeeeF3 0 96%,transparent 100%);
+.dream-scene::after{top:1%;left:53%;width:min(590px,80vw);height:205px;opacity:.19;filter:blur(5px);background:
+radial-gradient(ellipse 5% 13% at 11% 64%,#f0f0f4 0 75%,transparent 100%),
+radial-gradient(ellipse 6% 17% at 20% 47%,#e7e8ee 0 75%,transparent 100%),
+radial-gradient(ellipse 5% 14% at 30% 64%,#f2f2f6 0 75%,transparent 100%),
+radial-gradient(ellipse 7% 18% at 41% 43%,#e7e8ee 0 75%,transparent 100%),
+radial-gradient(ellipse 5% 14% at 52% 63%,#f1f1f5 0 75%,transparent 100%),
+radial-gradient(ellipse 6.5% 17% at 63% 45%,#e6e7ed 0 75%,transparent 100%),
+radial-gradient(ellipse 5% 14% at 74% 64%,#f0f0f4 0 75%,transparent 100%),
+radial-gradient(ellipse 6% 16% at 85% 47%,#e6e7ed 0 75%,transparent 100%),
+radial-gradient(ellipse 4.5% 12% at 94% 65%,#eeeeF3 0 75%,transparent 100%);
 animation-duration:38s;animation-direction:alternate-reverse}
-@keyframes cloud-drift{from{translate:-22px 0;scale:.97}to{translate:25px 8px;scale:1.03}}
+@keyframes cloud-drift{from{translate:-22px 0;scale:.98}to{translate:25px 8px;scale:1.02}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
