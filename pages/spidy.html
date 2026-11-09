@@ -15,6 +15,54 @@
   <main class="spidy-stage">
     <div class="city-glow" aria-hidden="true"></div>
     <canvas id="webgl-web" aria-hidden="true"></canvas>
+    <svg class="web-nest-svg" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <filter id="web-glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g fill="none" stroke="#c8eaff" stroke-linecap="round" filter="url(#web-glow)">
+        <g stroke-width="1.35" opacity=".64">
+          <path d="M-80 45 C170 160 60 360 310 450 S500 700 260 960"/>
+          <path d="M90 -60 C250 180 390 140 440 360 S650 650 570 960"/>
+          <path d="M350 -80 C210 170 520 250 390 480 S250 720 450 980"/>
+          <path d="M720 -80 C560 160 850 230 700 430 S820 720 650 980"/>
+          <path d="M1030 -80 C820 140 1080 260 920 460 S1080 740 930 980"/>
+          <path d="M1450 30 C1190 170 1370 360 1130 500 S980 760 1190 960"/>
+          <path d="M-80 300 C180 220 280 520 520 390 S850 250 1040 430 S1280 600 1520 420"/>
+          <path d="M-80 650 C180 460 330 760 550 590 S860 450 1050 640 S1290 790 1520 620"/>
+          <path d="M-80 850 C160 650 350 900 620 730 S930 620 1140 820 S1350 940 1520 780"/>
+          <path d="M40 920 C250 680 160 470 390 280 S650 90 800 -40"/>
+          <path d="M500 940 C700 700 520 540 780 330 S1050 140 1160 -50"/>
+          <path d="M900 950 C1080 700 900 540 1110 340 S1320 160 1480 -40"/>
+        </g>
+        <g stroke-width=".85" opacity=".48">
+          <path d="M-40 130 Q180 20 310 220 T650 240 T980 180 T1480 220"/>
+          <path d="M-40 220 Q170 110 340 300 T680 330 T1010 270 T1480 310"/>
+          <path d="M-40 430 Q180 300 360 480 T700 510 T1040 450 T1480 500"/>
+          <path d="M-40 540 Q190 420 390 600 T740 620 T1080 570 T1480 620"/>
+          <path d="M-40 760 Q200 620 410 800 T770 820 T1120 760 T1480 830"/>
+          <path d="M160 -40 Q40 180 250 350 T300 700 T160 940"/>
+          <path d="M430 -40 Q300 180 500 370 T550 710 T430 940"/>
+          <path d="M760 -40 Q620 180 820 390 T860 720 T760 940"/>
+          <path d="M1080 -40 Q940 190 1150 400 T1190 740 T1080 940"/>
+          <path d="M1320 -40 Q1190 180 1380 370 T1410 710 T1320 940"/>
+          <path d="M240 120 Q420 210 300 390 T500 650"/>
+          <path d="M640 70 Q820 180 700 360 T900 620"/>
+          <path d="M1040 90 Q1220 200 1100 390 T1300 650"/>
+        </g>
+        <g stroke="#f0f8ff" stroke-width=".65" opacity=".36">
+          <path d="M-20 30 L250 420 L80 700 L390 920"/>
+          <path d="M180 -20 L420 260 L220 520 L560 900"/>
+          <path d="M520 -20 L720 250 L520 540 L820 920"/>
+          <path d="M880 -20 L1060 250 L850 560 L1160 920"/>
+          <path d="M1240 -20 L1400 260 L1200 560 L1480 900"/>
+          <path d="M-30 500 L300 300 L570 520 L850 300 L1160 520 L1480 300"/>
+          <path d="M-30 720 L280 520 L580 740 L870 520 L1180 740 L1480 520"/>
+        </g>
+      </g>
+    </svg>
     <div class="speed-lines" aria-hidden="true"></div>
 
     <header class="scene-heading">
