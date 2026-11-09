@@ -178,7 +178,7 @@
           const py = (sy / source.height) * height;
           data.x[i] = data.baseX[i] = px;
           data.y[i] = data.baseY[i] = py;
-          data.radius[i] = Math.max(0.45, minDimension * (0.0006 + Math.random() * 0.0004));
+          data.radius[i] = Math.max(0.6, minDimension * (0.0009 + Math.random() * 0.0005));
           data.red[i] = imageData.data[pixel];
           data.green[i] = imageData.data[pixel + 1];
           data.blue[i] = imageData.data[pixel + 2];
