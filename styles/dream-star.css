@@ -2,9 +2,30 @@
 html,body{width:100%;min-height:100%;margin:0;background:#000}
 body{overflow:hidden}
 .dream-scene{position:relative;width:100%;height:100vh;min-height:320px;padding:24px;overflow:visible;background:#000;isolation:isolate}
-.dream-cloud-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block;pointer-events:none}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
+
+/* Glossy jelly-like cloud made from layered CSS circles */
+.dream-scene::before{content:"";position:absolute;z-index:1;top:24px;left:50%;width:min(660px,calc(100vw - 48px));height:340px;transform:translateX(-50%);pointer-events:none;opacity:.72;filter:blur(1.5px) drop-shadow(0 8px 14px rgba(190,195,220,.12));background:
+radial-gradient(circle 66px at 17% 37%,#f0f1f7 0%,#d9dbe5 38%,#bfc2d0 76%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 58px at 25% 19%,#f5f5fa 0%,#dfe1e9 42%,#c2c5d2 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 68px at 31% 43%,#f0f1f7 0%,#d8dae4 42%,#bfc2d0 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 62px at 43% 24%,#f3f4f9 0%,#d9dbe5 42%,#c0c3d1 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 68px at 52% 9%,#f5f5fa 0%,#dfe1e9 42%,#c5c8d5 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 64px at 59% 29%,#eff0f6 0%,#d5d8e2 42%,#bdc1cf 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 60px at 70% 47%,#f1f2f7 0%,#d9dbe5 42%,#c0c3d1 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 70px at 80% 29%,#f5f5fa 0%,#dfe1e9 42%,#c3c6d3 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 58px at 88% 49%,#eff0f6 0%,#d7d9e3 42%,#bec2d0 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 56px at 36% 69%,#f1f2f7 0%,#d9dbe5 42%,#c0c3d1 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 68px at 47% 57%,#f4f4f9 0%,#d8dae4 42%,#bec2d0 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 62px at 57% 75%,#f0f1f7 0%,#d9dbe5 42%,#c0c3d1 78%,rgba(190,194,208,0) 100%),
+radial-gradient(circle 54px at 72% 72%,#f2f3f8 0%,#d9dbe5 42%,#c0c3d1 78%,rgba(190,194,208,0) 100%),
+radial-gradient(ellipse 22px 12px at 22% 13%,rgba(255,255,255,.68),transparent 100%),
+radial-gradient(ellipse 24px 13px at 49% 4%,rgba(255,255,255,.62),transparent 100%),
+radial-gradient(ellipse 20px 11px at 77% 24%,rgba(255,255,255,.58),transparent 100%),
+radial-gradient(ellipse 19px 10px at 40% 19%,rgba(255,255,255,.48),transparent 100%);
+animation:cloud-float 28s ease-in-out infinite alternate}
+@keyframes cloud-float{from{translate:0 0}to{translate:0 5px}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
-@media(prefers-reduced-motion:reduce){.tiny-star{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
