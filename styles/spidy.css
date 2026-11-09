@@ -311,3 +311,5 @@ body {
 .pixel-progress-value { color:#fff; font:700 12px "Orbitron",sans-serif; }
 .pixel-progress-track { height:5px; overflow:hidden; border-radius:10px; background:rgba(255,255,255,.12); }
 .pixel-progress-fill { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#ff304d,#28baff); box-shadow:0 0 12px rgba(40,186,255,.6); transition:width .08s linear; }
+/* Keep the source image measurable for particle rendering, but never show it */
+.spidy-image { visibility: hidden !important; }
