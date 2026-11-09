@@ -6,7 +6,7 @@ body{overflow:hidden}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
 /* Keep the previous soft circular puffs; reshape only the overall cloud silhouette */
-.dream-scene::before{content:"";position:absolute;z-index:1;top:4%;left:50%;width:min(660px,82vw);height:340px;pointer-events:none;transform:translateX(-50%);filter:blur(8px);opacity:.4;background:
+.dream-scene::before{content:"";position:absolute;z-index:1;top:24px;left:50%;width:660px;height:340px;scale:clamp(.42,calc(82vw / 660px),.70);pointer-events:none;transform:translateX(-50%);filter:blur(8px);opacity:.4;background:
 /* Left shoulder: three circles in a loose triangle */
 radial-gradient(circle 66px at 17% 37%,#d4d5de 0 97%,transparent 100%),
 radial-gradient(circle 58px at 25% 19%,#c9cbd5 0 97%,transparent 100%),
@@ -29,6 +29,6 @@ radial-gradient(circle 54px at 33% 49%,#d2d3dc 0 97%,transparent 100%),
 radial-gradient(circle 52px at 62% 44%,#d5d6df 0 97%,transparent 100%),
 radial-gradient(circle 48px at 77% 55%,#d1d2dc 0 97%,transparent 100%);
 animation:cloud-drift 28s ease-in-out infinite alternate}
-@keyframes cloud-drift{from{translate:0 0;scale:.66}to{translate:0 4px;scale:.70}}
+@keyframes cloud-drift{from{translate:0 0}to{translate:0 4px}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
