@@ -10,7 +10,7 @@
 
   const MAX_DOTS = 20000;
   const CHUNK_SIZE = 3000;
-  const INTERACTION_RADIUS = 92;
+  const INTERACTION_RADIUS = 58;
   const PUSH_STRENGTH = 2.8;
   const RETURN_STRENGTH = 0.018;
   const FRICTION = 0.9;
