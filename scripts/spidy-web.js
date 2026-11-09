@@ -9,7 +9,7 @@
 
   function getGrid(width, height) {
     const aspect = width / height;
-    const columns = Math.max(1, Math.round(Math.sqrt(MAX_DOTS * aspect)));
+    const columns = Math.min(MAX_DOTS, Math.max(1, Math.round(Math.sqrt(MAX_DOTS * aspect))));
     const rows = Math.max(1, Math.floor(MAX_DOTS / columns));
     return { columns, rows };
   }
@@ -127,7 +127,6 @@
       const texture = gl.createTexture();
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -155,6 +154,16 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         const err = gl.getError();
         if (err !== gl.NO_ERROR) throw new Error("WebGL draw error: " + err);
+
+        // ตรวจว่ามี Pixel ที่ถูกวาดจริงก่อนซ่อนภาพต้นฉบับ
+        const pixels = new Uint8Array(canvas.width * canvas.height * 4);
+        gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let visiblePixels = 0;
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] > 0) visiblePixels++;
+        }
+        if (!visiblePixels) throw new Error("WebGL rendered a transparent canvas");
+
         canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;pointer-events:none";
         image.style.opacity = "0";
       }
