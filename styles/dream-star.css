@@ -5,41 +5,8 @@ body{overflow:hidden}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
-/* Popcorn-like cloud: individual knobbly puffs packed tightly together */
-.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(660px,90vw);height:245px;pointer-events:none;transform:translateX(-50%);filter:blur(2px);opacity:.36;background:
-radial-gradient(ellipse 5.5% 15% at 8% 64%,#bfc1cc 0 75%,transparent 100%),
-radial-gradient(ellipse 7% 19% at 15% 51%,#e3e4eb 0 75%,transparent 100%),
-radial-gradient(ellipse 6% 16% at 22% 65%,#c9cad4 0 75%,transparent 100%),
-radial-gradient(ellipse 8% 21% at 30% 47%,#e6e6ed 0 75%,transparent 100%),
-radial-gradient(ellipse 6% 17% at 38% 63%,#c7c9d3 0 75%,transparent 100%),
-radial-gradient(ellipse 9% 23% at 47% 44%,#e4e5ec 0 75%,transparent 100%),
-radial-gradient(ellipse 7% 18% at 56% 62%,#c4c6d0 0 75%,transparent 100%),
-radial-gradient(ellipse 8% 21% at 64% 46%,#e5e5ec 0 75%,transparent 100%),
-radial-gradient(ellipse 6% 16% at 72% 63%,#c8cad4 0 75%,transparent 100%),
-radial-gradient(ellipse 7.5% 20% at 81% 49%,#e0e1e9 0 75%,transparent 100%),
-radial-gradient(ellipse 5.5% 15% at 90% 65%,#c2c4ce 0 75%,transparent 100%),
-radial-gradient(ellipse 8% 15% at 18% 77%,#c5c7d1 0 75%,transparent 100%),
-radial-gradient(ellipse 9% 17% at 34% 78%,#d4d5de 0 75%,transparent 100%),
-radial-gradient(ellipse 9% 16% at 51% 78%,#c4c6d0 0 75%,transparent 100%),
-radial-gradient(ellipse 8% 16% at 69% 78%,#d0d1da 0 75%,transparent 100%),
-radial-gradient(ellipse 7% 15% at 85% 77%,#c1c3cd 0 75%,transparent 100%),
-radial-gradient(ellipse 4% 10% at 13% 43%,#f0f0f4 0 72%,transparent 100%),
-radial-gradient(ellipse 4.5% 11% at 28% 34%,#f4f4f7 0 72%,transparent 100%),
-radial-gradient(ellipse 5% 12% at 46% 31%,#f1f1f5 0 72%,transparent 100%),
-radial-gradient(ellipse 4.5% 11% at 63% 34%,#f3f3f6 0 72%,transparent 100%),
-radial-gradient(ellipse 4% 10% at 80% 37%,#eeeeF3 0 72%,transparent 100%);
-animation:cloud-drift 30s ease-in-out infinite alternate}
-.dream-scene::after{top:1%;left:53%;width:min(590px,80vw);height:205px;opacity:.19;filter:blur(5px);background:
-radial-gradient(ellipse 5% 13% at 11% 64%,#f0f0f4 0 75%,transparent 100%),
-radial-gradient(ellipse 6% 17% at 20% 47%,#e7e8ee 0 75%,transparent 100%),
-radial-gradient(ellipse 5% 14% at 30% 64%,#f2f2f6 0 75%,transparent 100%),
-radial-gradient(ellipse 7% 18% at 41% 43%,#e7e8ee 0 75%,transparent 100%),
-radial-gradient(ellipse 5% 14% at 52% 63%,#f1f1f5 0 75%,transparent 100%),
-radial-gradient(ellipse 6.5% 17% at 63% 45%,#e6e7ed 0 75%,transparent 100%),
-radial-gradient(ellipse 5% 14% at 74% 64%,#f0f0f4 0 75%,transparent 100%),
-radial-gradient(ellipse 6% 16% at 85% 47%,#e6e7ed 0 75%,transparent 100%),
-radial-gradient(ellipse 4.5% 12% at 94% 65%,#eeeeF3 0 75%,transparent 100%);
-animation-duration:38s;animation-direction:alternate-reverse}
-@keyframes cloud-drift{from{translate:-22px 0;scale:.98}to{translate:25px 8px;scale:1.02}}
+.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:8%;left:50%;width:min(720px,90vw);height:190px;pointer-events:none;filter:blur(20px);opacity:.3;background:radial-gradient(ellipse at 18% 65%,#c9c9d2 0 10%,transparent 25%),radial-gradient(ellipse at 34% 43%,#e0e0e8 0 15%,transparent 29%),radial-gradient(ellipse at 51% 58%,#bfc0cc 0 17%,transparent 31%),radial-gradient(ellipse at 69% 43%,#dedee6 0 13%,transparent 27%),radial-gradient(ellipse at 83% 66%,#b9bac5 0 12%,transparent 25%);transform:translateX(-50%);animation:cloud-drift 28s ease-in-out infinite alternate}
+.dream-scene::after{top:13%;left:54%;width:min(540px,72vw);height:145px;opacity:.2;filter:blur(25px);animation-duration:36s;animation-direction:alternate-reverse}
+@keyframes cloud-drift{from{translate:-24px 0;scale:.96}to{translate:28px 9px;scale:1.04}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
