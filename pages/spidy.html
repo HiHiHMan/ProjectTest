@@ -3,17 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#080b16">
+  <meta name="description" content="A cinematic Spider-Man inspired floating scene.">
   <title>ProjectTest — Spidy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/spidy.css">
 </head>
 <body>
   <main class="spidy-stage">
+    <div class="city-glow" aria-hidden="true"></div>
+    <div class="web web-left" aria-hidden="true"></div>
+    <div class="web web-right" aria-hidden="true"></div>
+    <div class="speed-lines" aria-hidden="true"></div>
+
+    <header class="scene-heading">
+      <span class="eyebrow"><i></i> FRIENDLY NEIGHBORHOOD</span>
+      <h1>THE <span>SPIDER</span><br>IS IN THE AIR</h1>
+      <p>WITH GREAT POWER COMES GREAT RESPONSIBILITY</p>
+    </header>
+
     <div class="spidy-image-wrap">
+      <div class="image-aura" aria-hidden="true"></div>
       <div class="spidy-image-layer">
-        <img class="spidy-image" src="../images/obj02.webp" alt="Spidy visual">
+        <img class="spidy-image" src="../images/obj02.webp" alt="Spider-Man ลอยตัวอยู่กลางอากาศ">
       </div>
+      <span class="target-ring ring-one" aria-hidden="true"></span>
+      <span class="target-ring ring-two" aria-hidden="true"></span>
+      <span class="image-caption">WEB-SLINGER <b>•</b> NYC</span>
     </div>
+
+    <footer class="scene-footer">
+      <span>NEW YORK CITY</span>
+      <span class="footer-line"></span>
+      <span>YOUR FRIENDLY NEIGHBORHOOD SPIDER-MAN</span>
+    </footer>
+    <div class="corner-mark mark-tl" aria-hidden="true"></div>
+    <div class="corner-mark mark-br" aria-hidden="true"></div>
   </main>
 </body>
 </html>
