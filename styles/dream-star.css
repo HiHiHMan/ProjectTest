@@ -5,41 +5,48 @@ body{overflow:hidden}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
-/* Soft merged cloud masses: each puff is triangular, but overlaps deeply to avoid separate ball shapes */
-.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:3%;left:50%;width:min(650px,80vw);height:330px;pointer-events:none;transform:translateX(-50%);filter:blur(19px);opacity:.42;background:
-/* Triangle cluster A */
-radial-gradient(circle 76px at 24% 31%,#d4d5de 0 97%,transparent 100%),
-radial-gradient(circle 72px at 34% 19%,#c9cbd5 0 97%,transparent 100%),
-radial-gradient(circle 80px at 39% 39%,#e0e1e8 0 97%,transparent 100%),
-/* Triangle cluster B */
-radial-gradient(circle 74px at 48% 68%,#d0d1da 0 97%,transparent 100%),
-radial-gradient(circle 70px at 58% 54%,#e1e2e9 0 97%,transparent 100%),
-radial-gradient(circle 78px at 64% 73%,#c9cbd4 0 97%,transparent 100%),
-/* Triangle cluster C */
-radial-gradient(circle 70px at 68% 27%,#d4d5de 0 97%,transparent 100%),
-radial-gradient(circle 76px at 78% 15%,#e2e3ea 0 97%,transparent 100%),
-radial-gradient(circle 72px at 83% 36%,#d0d1da 0 97%,transparent 100%),
-/* Randomly overlapping round masses that merge neighboring clusters */
-radial-gradient(circle 92px at 31% 39%,#d2d3dc 0 97%,transparent 100%),
-radial-gradient(circle 88px at 51% 47%,#d5d6df 0 97%,transparent 100%),
-radial-gradient(circle 94px at 73% 43%,#d1d2dc 0 97%,transparent 100%),
-radial-gradient(circle 78px at 43% 49%,#dedfe7 0 97%,transparent 100%),
-radial-gradient(circle 82px at 63% 45%,#d4d5de 0 97%,transparent 100%);
+/* Keep the previous soft circular puffs; reshape only the overall cloud silhouette */
+.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:4%;left:50%;width:min(660px,82vw);height:340px;pointer-events:none;transform:translateX(-50%);filter:blur(8px);opacity:.4;background:
+/* Left shoulder: three circles in a loose triangle */
+radial-gradient(circle 66px at 17% 37%,#d4d5de 0 97%,transparent 100%),
+radial-gradient(circle 58px at 25% 19%,#c9cbd5 0 97%,transparent 100%),
+radial-gradient(circle 68px at 31% 43%,#e0e1e8 0 97%,transparent 100%),
+/* High middle lobe */
+radial-gradient(circle 62px at 43% 24%,#d0d1da 0 97%,transparent 100%),
+radial-gradient(circle 68px at 52% 9%,#e1e2e9 0 97%,transparent 100%),
+radial-gradient(circle 64px at 59% 29%,#c9cbd4 0 97%,transparent 100%),
+/* Right shoulder, offset lower */
+radial-gradient(circle 60px at 70% 47%,#d4d5de 0 97%,transparent 100%),
+radial-gradient(circle 70px at 80% 29%,#e2e3ea 0 97%,transparent 100%),
+radial-gradient(circle 58px at 88% 49%,#d0d1da 0 97%,transparent 100%),
+/* Uneven lower lobes */
+radial-gradient(circle 56px at 36% 69%,#d9dae2 0 97%,transparent 100%),
+radial-gradient(circle 68px at 47% 57%,#c8cad3 0 97%,transparent 100%),
+radial-gradient(circle 62px at 57% 75%,#e0e1e8 0 97%,transparent 100%),
+radial-gradient(circle 54px at 72% 72%,#d8d9e2 0 97%,transparent 100%),
+/* Small round joins, deliberately offset */
+radial-gradient(circle 54px at 33% 49%,#d2d3dc 0 97%,transparent 100%),
+radial-gradient(circle 52px at 62% 44%,#d5d6df 0 97%,transparent 100%),
+radial-gradient(circle 48px at 77% 55%,#d1d2dc 0 97%,transparent 100%);
 animation:cloud-drift 28s ease-in-out infinite alternate}
-.dream-scene::after{top:7%;left:51%;width:min(620px,77vw);height:310px;opacity:.2;filter:blur(23px);background:
-/* Soft secondary cloud layer, offset to break the round outline */
-radial-gradient(circle 64px at 25% 33%,#e3e4eb 0 97%,transparent 100%),
-radial-gradient(circle 62px at 35% 21%,#d8d9e2 0 97%,transparent 100%),
-radial-gradient(circle 68px at 40% 41%,#dedfe7 0 97%,transparent 100%),
-radial-gradient(circle 62px at 49% 69%,#d7d8e1 0 97%,transparent 100%),
-radial-gradient(circle 60px at 59% 55%,#e5e5eb 0 97%,transparent 100%),
-radial-gradient(circle 66px at 65% 74%,#d0d1da 0 97%,transparent 100%),
-radial-gradient(circle 60px at 69% 29%,#dedfe7 0 97%,transparent 100%),
-radial-gradient(circle 64px at 79% 17%,#d8d9e2 0 97%,transparent 100%),
-radial-gradient(circle 62px at 84% 38%,#e3e4eb 0 97%,transparent 100%),
-radial-gradient(circle 78px at 32% 41%,#e0e1e8 0 97%,transparent 100%),
-radial-gradient(circle 74px at 52% 49%,#d9dae2 0 97%,transparent 100%),
-radial-gradient(circle 80px at 74% 45%,#dedfe7 0 97%,transparent 100%);
+.dream-scene::after{top:8%;left:50%;width:min(640px,80vw);height:320px;opacity:.22;filter:blur(13px);background:
+/* Soft secondary circles follow the irregular outline */
+radial-gradient(circle 54px at 18% 40%,#e3e4eb 0 97%,transparent 100%),
+radial-gradient(circle 48px at 26% 22%,#d8d9e2 0 97%,transparent 100%),
+radial-gradient(circle 56px at 32% 46%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(circle 50px at 44% 27%,#d7d8e1 0 97%,transparent 100%),
+radial-gradient(circle 56px at 53% 12%,#e5e5eb 0 97%,transparent 100%),
+radial-gradient(circle 54px at 60% 32%,#d0d1da 0 97%,transparent 100%),
+radial-gradient(circle 50px at 71% 49%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(circle 58px at 81% 32%,#d8d9e2 0 97%,transparent 100%),
+radial-gradient(circle 48px at 89% 51%,#e3e4eb 0 97%,transparent 100%),
+radial-gradient(circle 48px at 37% 71%,#d7d8e1 0 97%,transparent 100%),
+radial-gradient(circle 56px at 48% 59%,#e1e2e9 0 97%,transparent 100%),
+radial-gradient(circle 52px at 58% 77%,#d1d2dc 0 97%,transparent 100%),
+radial-gradient(circle 46px at 73% 74%,#e0e1e8 0 97%,transparent 100%),
+radial-gradient(circle 46px at 34% 51%,#d9dae2 0 97%,transparent 100%),
+radial-gradient(circle 44px at 63% 46%,#dedfe7 0 97%,transparent 100%),
+radial-gradient(circle 42px at 78% 57%,#d4d5de 0 97%,transparent 100%);
 animation-duration:36s;animation-direction:alternate-reverse}
 @keyframes cloud-drift{from{translate:-10px 0;scale:.78}to{translate:10px 5px;scale:.84}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
