@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080817"><meta name="description" content="Dream Star — a little space for your dreams.">
+<title>Dream Star — ProjectTest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/dream-star.css"></head>
+<body><main class="dream-scene">
+<div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one"></div><div class="nebula nebula-two"></div>
+<div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+<nav class="topbar"><a class="brand" href="../index.html"><span>✦</span> DREAM STAR</a><span class="top-note">A LITTLE SPACE FOR BIG DREAMS</span></nav>
+<section class="hero"><div class="hero-copy">
+<p class="eyebrow"><i></i> YOUR UNIVERSE, YOUR STORY</p>
+<h1>Every dream<br>begins with a <em>star.</em></h1>
+<p class="lead">ในจักรวาลที่กว้างใหญ่ ความฝันของคุณก็มีแสงสว่างเป็นของตัวเอง<br class="desktop-break"> อย่าหยุดมองฟ้า และอย่าหยุดเดินตามสิ่งที่หัวใจต้องการ</p>
+<a class="discover-link" href="#constellation">EXPLORE YOUR UNIVERSE <b>↓</b></a>
+</div><div class="star-art" aria-label="ดวงดาวเรืองแสงท่ามกลางอวกาศ">
+<div class="star-halo"></div><div class="star-core">✦</div>
+<span class="spark spark-a">✧</span><span class="spark spark-b">✦</span><span class="spark spark-c">✧</span><span class="spark spark-d">·</span>
+<span class="star-label label-a">01 / IMAGINE</span><span class="star-label label-b">INFINITE POSSIBILITIES</span>
+</div></section>
+<section class="constellation" id="constellation"><div class="section-intro">
+<p class="eyebrow">A MAP OF POSSIBILITY</p><h2>Find your <em>north star.</em></h2>
+<p>ทุกความฝันเริ่มต้นจากก้าวเล็ก ๆ เลือกดาวของคุณ แล้วค่อย ๆ สร้างเส้นทางไปหามัน</p></div>
+<div class="dream-grid">
+<article class="dream-card"><span class="card-icon">✧</span><span class="card-index">01</span><h3>Imagine</h3><p>กล้าที่จะจินตนาการ มองเห็นความเป็นไปได้ แม้ในวันที่ยังไม่มีคำตอบ</p></article>
+<article class="dream-card"><span class="card-icon">☄</span><span class="card-index">02</span><h3>Believe</h3><p>เชื่อมั่นในตัวเอง เพราะคนที่รู้จักความฝันของคุณดีที่สุดก็คือตัวคุณ</p></article>
+<article class="dream-card"><span class="card-icon">✦</span><span class="card-index">03</span><h3>Become</h3><p>ลงมือทำทีละนิด ให้ทุกวันพาคุณเข้าใกล้ชีวิตที่อยากเป็น</p></article>
+</div></section>
+<section class="closing"><span class="closing-star">✦</span><p class="eyebrow">A NOTE TO YOUR FUTURE SELF</p>
+<h2>Keep looking up.</h2><p>ดาวบางดวงอาจอยู่ไกล แต่ทุกก้าวที่คุณเดินทำให้ระยะทางสั้นลง</p><span class="closing-line">YOUR DREAM IS WORTH THE JOURNEY.</span></section>
+<footer><a href="../index.html">← BACK TO PROJECTS</a><span>MADE OF DREAMS & STARDUST</span></footer>
+</main>
+<script>
+const field=document.querySelector('.star-field');let seed=20261109;
+const random=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
+const fragment=document.createDocumentFragment();
+for(let i=0;i<150;i++){const star=document.createElement('i');star.className='tiny-star'+(i%9===0?' bright':'');star.style.left=(random()*100)+'%';star.style.top=(random()*100)+'%';star.style.setProperty('--delay',(-random()*8)+'s');star.style.setProperty('--duration',(3+random()*5)+'s');fragment.appendChild(star)}
+field.appendChild(fragment);
+</script></body></html>
