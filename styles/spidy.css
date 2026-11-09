@@ -198,6 +198,22 @@ body {
   pointer-events: none;
 }
 
+.web-nest-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: .9;
+  overflow: visible;
+  animation: nest-drift 22s ease-in-out infinite alternate;
+}
+
+.web-nest-svg g {
+  vector-effect: non-scaling-stroke;
+}
+
 .speed-lines {
   position: absolute;
   inset: 0;
@@ -274,7 +290,7 @@ body {
   from { opacity: 0; transform: translateX(-20px); }
   to { opacity: 1; transform: translateX(0); }
 }
-@keyframes speed-drift { to { background-position: 300px 0; } }
+@keyframes speed-drift { to { background-position: 300px 0; } }\n@keyframes nest-drift { from { transform: translate3d(-.4%, -.3%, 0) scale(1.01); } to { transform: translate3d(.4%, .3%, 0) scale(1.025); } }
 
 @media (max-width: 700px) {
   .spidy-stage { padding: 20px 14px 70px; }
