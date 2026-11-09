@@ -2,14 +2,35 @@
   const image = document.querySelector(".spidy-image");
   const layer = document.querySelector(".spidy-image-layer");
   const canvas = layer?.querySelector(".spidy-pixel-canvas");
+  const progress = document.querySelector(".pixel-progress");
+  const progressFill = progress?.querySelector(".pixel-progress-fill");
+  const progressValue = progress?.querySelector(".pixel-progress-value");
+  const progressMessage = progress?.querySelector(".pixel-progress-message");
   if (!image || !layer || !canvas) return;
 
   const MAX_DOTS = 1000;
   let drawing = false;
 
+  function updateProgress(percent, message) {
+    const value = Math.max(0, Math.min(100, Math.round(percent)));
+    if (progressFill) progressFill.style.width = value + "%";
+    if (progressValue) progressValue.textContent = value + "%";
+    if (progressMessage && message) progressMessage.textContent = message;
+  }
+
+  function finishProgress(message, failed = false) {
+    updateProgress(failed ? 0 : 100, message);
+    if (failed) {
+      if (progress) progress.classList.add("is-error");
+      return;
+    }
+    window.setTimeout(() => progress?.classList.add("is-hidden"), 900);
+  }
+
   function renderDots() {
     if (drawing || !image.complete || !image.naturalWidth) return;
     drawing = true;
+    updateProgress(0, "กำลังเตรียมภาพ...");
 
     try {
       const rect = image.getBoundingClientRect();
@@ -36,40 +57,55 @@
       if (!sourceCtx) throw new Error("ไม่สามารถอ่านภาพต้นฉบับได้");
       sourceCtx.drawImage(image, 0, 0);
 
+      updateProgress(5, "กำลังอ่านค่าสีจากภาพ...");
+      const imageData = sourceCtx.getImageData(0, 0, source.width, source.height);
       const aspect = width / height;
       const columns = Math.min(MAX_DOTS, Math.max(1, Math.round(Math.sqrt(MAX_DOTS * aspect))));
       const rows = Math.max(1, Math.floor(MAX_DOTS / columns));
       const cellW = width / columns;
       const cellH = height / rows;
-      const imageData = sourceCtx.getImageData(0, 0, source.width, source.height);
+      let row = 0;
       let drawn = 0;
 
       ctx.clearRect(0, 0, width, height);
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
-          const sx = Math.min(source.width - 1, Math.floor((col + 0.5) / columns * source.width));
-          const sy = Math.min(source.height - 1, Math.floor((row + 0.5) / rows * source.height));
-          const index = (sy * source.width + sx) * 4;
-          const alpha = imageData.data[index + 3] / 255;
-          if (alpha < 0.04) continue;
+      function drawChunk() {
+        const endRow = Math.min(rows, row + 8);
+        for (; row < endRow; row++) {
+          for (let col = 0; col < columns; col++) {
+            const sx = Math.min(source.width - 1, Math.floor((col + 0.5) / columns * source.width));
+            const sy = Math.min(source.height - 1, Math.floor((row + 0.5) / rows * source.height));
+            const index = (sy * source.width + sx) * 4;
+            const alpha = imageData.data[index + 3] / 255;
+            if (alpha < 0.04) continue;
 
-          ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
-          ctx.beginPath();
-          ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(1, Math.min(cellW, cellH) * 0.46), 0, Math.PI * 2);
-          ctx.fill();
-          drawn++;
+            ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
+            ctx.beginPath();
+            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(1, Math.min(cellW, cellH) * 0.46), 0, Math.PI * 2);
+            ctx.fill();
+            drawn++;
+          }
         }
-      }
 
-      if (!drawn) throw new Error("ไม่พบ Pixel ที่มีสีในภาพ");
-      image.style.opacity = "0";
-      canvas.style.display = "block";
-      console.info("Spider-Man pixel effect ready:", drawn, "dots");
+        const percent = 5 + (row / rows) * 95;
+        updateProgress(percent, "กำลังสร้างจุดสี " + drawn.toLocaleString("th-TH") + " จุด...");
+        if (row < rows) {
+          requestAnimationFrame(drawChunk);
+          return;
+        }
+
+        if (!drawn) throw new Error("ไม่พบ Pixel ที่มีสีในภาพ");
+        image.style.opacity = "0";
+        canvas.style.display = "block";
+        finishProgress("สร้างจุดสีสำเร็จ " + drawn.toLocaleString("th-TH") + " จุด");
+        console.info("Spider-Man pixel effect ready:", drawn, "dots");
+        drawing = false;
+      }
+      requestAnimationFrame(drawChunk);
     } catch (error) {
       console.error("Spider-Man pixel effect failed:", error);
       image.style.opacity = "1";
       canvas.style.display = "none";
-    } finally {
+      finishProgress("ทำไม่สำเร็จ: " + (error.message || "เกิดข้อผิดพลาด"), true);
       drawing = false;
     }
   }
@@ -79,11 +115,19 @@
     requestAnimationFrame(renderDots);
   } else {
     image.addEventListener("load", () => requestAnimationFrame(renderDots), { once: true });
+    image.addEventListener("error", () => finishProgress("โหลด obj02.webp ไม่สำเร็จ", true), { once: true });
   }
 
   if ("ResizeObserver" in window) {
-    new ResizeObserver(() => requestAnimationFrame(renderDots)).observe(image);
+    new ResizeObserver(() => {
+      if (!drawing && image.complete && image.naturalWidth) {
+        progress?.classList.remove("is-hidden");
+        requestAnimationFrame(renderDots);
+      }
+    }).observe(image);
   } else {
-    window.addEventListener("resize", () => requestAnimationFrame(renderDots));
+    window.addEventListener("resize", () => {
+      if (!drawing) requestAnimationFrame(renderDots);
+    });
   }
 })();
