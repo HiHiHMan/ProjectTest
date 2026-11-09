@@ -80,7 +80,7 @@
 
             ctx.fillStyle = "rgba(" + imageData.data[index] + "," + imageData.data[index + 1] + "," + imageData.data[index + 2] + "," + alpha + ")";
             ctx.beginPath();
-            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(1, Math.min(cellW, cellH) * 0.46), 0, Math.PI * 2);
+            ctx.arc((col + 0.5) * cellW, (row + 0.5) * cellH, Math.max(0.5, Math.min(cellW, cellH) * 0.20), 0, Math.PI * 2);
             ctx.fill();
             drawn++;
           }
