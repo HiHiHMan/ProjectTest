@@ -188,7 +188,8 @@ body {
   mask-mode: alpha;
 }
 
-#webgl-web {
+#webgl-web,
+.web-fallback {
   position: absolute;
   inset: 0;
   z-index: 1;
