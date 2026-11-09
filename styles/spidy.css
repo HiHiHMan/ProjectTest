@@ -188,32 +188,6 @@ body {
   mask-mode: alpha;
 }
 
-#webgl-web,
-.web-fallback {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.web-nest-svg {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: .9;
-  overflow: visible;
-  animation: nest-drift 22s ease-in-out infinite alternate;
-}
-
-.web-nest-svg g {
-  vector-effect: non-scaling-stroke;
-}
-
 .speed-lines {
   position: absolute;
   inset: 0;
