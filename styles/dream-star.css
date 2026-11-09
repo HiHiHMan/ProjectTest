@@ -5,8 +5,23 @@ body{overflow:hidden}
 .star-field{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .tiny-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#e5ddff;opacity:.35;animation:twinkle var(--duration) ease-in-out var(--delay) infinite alternate}
 .tiny-star.bright{width:3px;height:3px;background:#fff;box-shadow:0 0 9px 2px #a99aff;opacity:.8}
-.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:8%;left:50%;width:min(720px,90vw);height:190px;pointer-events:none;filter:blur(20px);opacity:.3;background:radial-gradient(ellipse at 18% 65%,#c9c9d2 0 10%,transparent 25%),radial-gradient(ellipse at 34% 43%,#e0e0e8 0 15%,transparent 29%),radial-gradient(ellipse at 51% 58%,#bfc0cc 0 17%,transparent 31%),radial-gradient(ellipse at 69% 43%,#dedee6 0 13%,transparent 27%),radial-gradient(ellipse at 83% 66%,#b9bac5 0 12%,transparent 25%);transform:translateX(-50%);animation:cloud-drift 28s ease-in-out infinite alternate}
-.dream-scene::after{top:13%;left:54%;width:min(540px,72vw);height:145px;opacity:.2;filter:blur(25px);animation-duration:36s;animation-direction:alternate-reverse}
+/* Overlapping circular cloud puffs */
+.dream-scene::before,.dream-scene::after{content:"";position:absolute;z-index:1;top:5%;left:50%;width:min(660px,88vw);height:230px;pointer-events:none;transform:translateX(-50%);filter:blur(13px);opacity:.28;background:
+radial-gradient(circle 76px at 13% 67%,#c9c9d2 0 97%,transparent 100%),
+radial-gradient(circle 88px at 27% 51%,#dedee6 0 97%,transparent 100%),
+radial-gradient(circle 102px at 43% 47%,#c8c9d3 0 97%,transparent 100%),
+radial-gradient(circle 91px at 59% 56%,#dedee6 0 97%,transparent 100%),
+radial-gradient(circle 78px at 74% 47%,#c5c6d0 0 97%,transparent 100%),
+radial-gradient(circle 66px at 87% 65%,#bfc0ca 0 97%,transparent 100%),
+radial-gradient(circle 82px at 49% 76%,#bfc0ca 0 97%,transparent 100%);
+animation:cloud-drift 28s ease-in-out infinite alternate}
+.dream-scene::after{top:8%;left:54%;width:min(530px,72vw);height:190px;opacity:.17;filter:blur(19px);background:
+radial-gradient(circle 62px at 17% 64%,#d9d9e1 0 97%,transparent 100%),
+radial-gradient(circle 76px at 34% 47%,#e5e5eb 0 97%,transparent 100%),
+radial-gradient(circle 83px at 52% 54%,#c6c7d1 0 97%,transparent 100%),
+radial-gradient(circle 70px at 70% 46%,#dedee6 0 97%,transparent 100%),
+radial-gradient(circle 57px at 85% 66%,#c5c6d0 0 97%,transparent 100%);
+animation-duration:36s;animation-direction:alternate-reverse}
 @keyframes cloud-drift{from{translate:-24px 0;scale:.96}to{translate:28px 9px;scale:1.04}}
 @keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
