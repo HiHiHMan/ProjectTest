@@ -60,7 +60,7 @@ function rgba(hex,a){const c=rgb(hex);return 'rgba('+c[0]+','+c[1]+','+c[2]+','+
 function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*1200/r.width,y:(e.clientY-r.top)*750/r.height,pressure:e.pressure||.5}}
 function pigmentDab(p,prev){
  const radius=Number(size.value)*(.65+(p.pressure||.5)*.55),wet=Number(water.value)/100,alpha=Number(opacity.value)/100;
- const dx=prev?p.x-prev.x:0,dy=prev?p.y-prev.y,angle=Math.atan2(dy,dx);
+ const dx=prev?p.x-prev.x:0,dy=prev?p.y-prev.y:0,angle=Math.atan2(dy,dx);
  ctx.save();ctx.globalCompositeOperation='multiply';
  if(brush.value==='dry'){
    ctx.lineCap='round';for(let i=0;i<15;i++){const off=rand(-radius*.42,radius*.42);ctx.strokeStyle=rgba(color,alpha*rand(.12,.42));ctx.lineWidth=rand(.5,2.4);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle+Math.PI/2)*off,p.y+Math.sin(angle+Math.PI/2)*off);ctx.lineTo(p.x+Math.cos(angle+Math.PI/2)*off-dx*.9,p.y+Math.sin(angle+Math.PI/2)*off-dy*.9);ctx.stroke();}
