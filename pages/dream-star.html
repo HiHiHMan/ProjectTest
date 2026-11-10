@@ -11,11 +11,24 @@
 <main class="dream-scene" aria-label="ท้องฟ้ายามค่ำคืน">
   <div class="star-field" aria-hidden="true"></div>
   <div class="ly-3-noise" aria-hidden="true"></div>
-  <div class="cloud-decorations" aria-hidden="true">
-    <span class="cloud-flower cloud-flower-left">🌸</span>
-    <span class="cloud-flower cloud-flower-center">🏵️</span>
-    <span class="cloud-flower cloud-flower-right">🍂</span>
-  </div>
+  <div class="cloud-decorations" aria-hidden="true"></div>
+  <script>
+  (() => {
+    const container = document.querySelector('.cloud-decorations');
+    const flowers = ['🌸', '🏵️'];
+
+    for (let i = 0; i < 10; i++) {
+      const flower = document.createElement('span');
+      flower.className = 'cloud-flower';
+      flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+      flower.style.left = (12 + Math.random() * 76) + '%';
+      flower.style.top = (24 + Math.random() * 57) + '%';
+      flower.style.fontSize = (19 + Math.random() * 13) + 'px';
+      flower.style.transform = 'translate(-50%, -50%) rotate(' + (Math.random() * 50 - 25) + 'deg)';
+      container.appendChild(flower);
+    }
+  })();
+  </script>
   <canvas class="ambient-particles" aria-hidden="true"></canvas>
   <canvas class="hanging-stars" aria-hidden="true"></canvas>
   <script>
