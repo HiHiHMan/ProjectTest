@@ -1,54 +1,195 @@
-*{box-sizing:border-box}
-html,body{width:100%;min-height:100%;margin:0;background:#000}
-body{overflow:hidden}
-.dream-scene{position:relative;width:100%;height:100vh;min-height:320px;padding:24px;overflow:visible;background:#000;isolation:isolate}
-.dream-scene::before{content:"";position:absolute;z-index:1;top:24px;left:50%;width:660px;height:340px;pointer-events:none;transform:translateX(-50%);filter:blur(8px) saturate(1.8);opacity:.55;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");background-size:100% 100%;background-repeat:no-repeat;animation:cloud-drift 28s ease-in-out infinite alternate}
+/* =========================================================
+   Dream Star — pastel cloud scene
+   ========================================================= */
 
-.dream-scene::after{content:"";position:absolute;z-index:0;top:38px;left:50%;width:780px;height:400px;pointer-events:none;transform:translateX(-50%);filter:blur(14px) saturate(1.65);opacity:.32;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");background-size:100% 100%,82% 82%,68% 68%,52% 52%,42% 42%;background-position:center,8% 65%,92% 28%,28% 12%,78% 88%;background-repeat:no-repeat;animation:cloud-drift-back 34s ease-in-out infinite alternate}
-@keyframes cloud-drift-back{from{translate:0 3px}to{translate:0 -5px}}
-
-
-@keyframes cloud-drift{from{translate:0 0}to{translate:0 4px}}
-to{opacity:.95;transform:scale(1.4)}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
-
-
-
-/* One compact cloud cluster with a refreshed multi-tone gradient */
-.cloud-cluster{
-  position:absolute;z-index:2;top:18px;left:50%;width:min(560px,94vw);height:285px;
-  transform:translateX(-50%);pointer-events:none;overflow:visible;
-}
-.mini-cloud{
-  position:absolute;left:var(--x);top:var(--y);width:var(--w);aspect-ratio:660/340;
-  transform:translate(-50%,-50%);background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Ccircle%20cx%3D%2299%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363%22%20cy%3D%22255%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23243B75%22%2F%3E%3Cstop%20offset%3D%22.28%22%20stop-color%3D%22%2355C7D9%22%2F%3E%3Cstop%20offset%3D%22.53%22%20stop-color%3D%22%23A78BFA%22%2F%3E%3Cstop%20offset%3D%22.76%22%20stop-color%3D%22%23FF8FB8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23FFC477%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22r%22%3E%3Cstop%20stop-color%3D%22%23E8F8FF%22%20stop-opacity%3D%22.9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23E8F8FF%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23m)%22%20filter%3D%22url(%23s)%22%3E%3Crect%20width%3D%22660%22%20height%3D%22340%22%20fill%3D%22url(%23g)%22%2F%3E%3Cellipse%20cx%3D%22310%22%20cy%3D%22110%22%20rx%3D%22270%22%20ry%3D%22100%22%20fill%3D%22%2376E0E8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22470%22%20cy%3D%22230%22%20rx%3D%22220%22%20ry%3D%22110%22%20fill%3D%22%23FF9FCB%22%20opacity%3D%22.58%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22245%22%20rx%3D%22180%22%20ry%3D%2295%22%20fill%3D%22%237868D9%22%20opacity%3D%22.65%22%2F%3E%3Cellipse%20cx%3D%22340%22%20cy%3D%22165%22%20rx%3D%22240%22%20ry%3D%22100%22%20fill%3D%22url(%23r)%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-  background-size:100% 100%;background-repeat:no-repeat;
-  animation:mini-cloud-drift var(--duration,30s) ease-in-out var(--delay,0s) infinite alternate;
-}
-.cloud-back{--duration:40s;opacity:.34;filter:blur(9px) saturate(1.65)}
-.cloud-mid{--duration:32s;opacity:.52;filter:blur(6px) saturate(1.8)}
-.cloud-front{--duration:26s;opacity:.62;filter:blur(4px) saturate(1.9)}
-@keyframes mini-cloud-drift{from{translate:-8px 3px;scale:.96}to{translate:10px -6px;scale:1.04}}
-@media(max-width:600px){
-  .cloud-cluster{top:12px;height:220px;width:min(440px,100vw)}
-  .mini-cloud{width:calc(var(--w)*.72)}
-}
-@media(prefers-reduced-motion:reduce){.mini-cloud{animation:none}}
-
-/* Reduce the cluster footprint and keep the clouds compact */
-.cloud-cluster{width:min(420px,90vw);height:210px;top:20px}
-.mini-cloud{width:calc(var(--w)*.62)}
-@media(max-width:600px){
-  .cloud-cluster{width:min(340px,94vw);height:175px;top:12px}
-  .mini-cloud{width:calc(var(--w)*.52)}
+:root {
+  color-scheme: dark;
+  --scene-bg: #050510;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-/* Give every cloud its own color palette */
-.cloud-cluster .mini-cloud:nth-child(1){filter:blur(9px) saturate(1.65) hue-rotate(0deg)}
-.cloud-cluster .mini-cloud:nth-child(2){filter:blur(9px) saturate(1.75) hue-rotate(48deg)}
-.cloud-cluster .mini-cloud:nth-child(3){filter:blur(6px) saturate(1.8) hue-rotate(100deg)}
-.cloud-cluster .mini-cloud:nth-child(4){filter:blur(6px) saturate(1.85) hue-rotate(150deg)}
-.cloud-cluster .mini-cloud:nth-child(5){filter:blur(6px) saturate(1.9) hue-rotate(205deg)}
-.cloud-cluster .mini-cloud:nth-child(6){filter:blur(4px) saturate(1.95) hue-rotate(255deg)}
-.cloud-cluster .mini-cloud:nth-child(7){filter:blur(4px) saturate(2) hue-rotate(305deg)}
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: var(--scene-bg);
+}
+
+body {
+  overflow: hidden;
+}
+
+.dream-scene {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100vh;
+  min-height: 320px;
+  overflow: hidden;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(55, 48, 105, 0.22), transparent 55%),
+    var(--scene-bg);
+}
+
+/* Star field stays static to avoid unnecessary animation work. */
+.star-field {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff 98%, transparent),
+    radial-gradient(1px 1px at 78% 14%, #d9d5ff 98%, transparent),
+    radial-gradient(1.5px 1.5px at 88% 62%, #fff 98%, transparent),
+    radial-gradient(1px 1px at 32% 82%, #c8eaff 98%, transparent),
+    radial-gradient(1px 1px at 58% 35%, #fff 98%, transparent),
+    radial-gradient(1px 1px at 7% 70%, #f6dfff 98%, transparent);
+}
+
+/* Shared cloud silhouette: one lightweight SVG mask, no embedded SVG blur. */
+.cloud-cluster {
+  --cloud-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 660 340'%3E%3Cpath fill='white' d='M75 258c-38 0-68-28-68-64 0-34 27-62 62-64 8-49 51-86 103-86 39 0 73 21 91 53 18-21 45-34 75-34 42 0 78 25 93 61 14-10 31-16 49-16 43 0 78 32 83 73 42 2 75 32 75 70 0 40-34 72-77 72H75z'/%3E%3C/svg%3E");
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 50%;
+  width: min(420px, 90vw);
+  height: 210px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Each cloud gets a unique pastel palette through its own gradient. */
+.mini-cloud {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: calc(var(--w) * 0.62);
+  aspect-ratio: 660 / 340;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 28% 24%, var(--glow, rgba(255,255,255,.72)), transparent 35%),
+    radial-gradient(ellipse at 72% 72%, var(--tone-3), transparent 58%),
+    linear-gradient(125deg, var(--tone-1), var(--tone-2) 52%, var(--tone-3));
+  -webkit-mask: var(--cloud-mask) center / 100% 100% no-repeat;
+  mask: var(--cloud-mask) center / 100% 100% no-repeat;
+  transform: translate3d(-50%, -50%, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+  animation: cloud-float var(--duration, 32s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+/* Back layer: distant, softer and slower. */
+.cloud-back {
+  --duration: 44s;
+  opacity: 0.36;
+  filter: blur(2.5px);
+}
+
+/* Mid layer: balanced color and movement. */
+.cloud-mid {
+  --duration: 34s;
+  opacity: 0.54;
+  filter: blur(1.8px);
+}
+
+/* Front layer: clearer edges and a slightly quicker drift. */
+.cloud-front {
+  --duration: 27s;
+  opacity: 0.68;
+  filter: blur(1px);
+}
+
+/* Seven individual color combinations. */
+.mini-cloud:nth-child(1) {
+  --tone-1: #5268ad;
+  --tone-2: #8f9fe9;
+  --tone-3: #d6baff;
+  --glow: rgba(184, 205, 255, .72);
+}
+.mini-cloud:nth-child(2) {
+  --tone-1: #397d91;
+  --tone-2: #72c9d0;
+  --tone-3: #c0f0e7;
+  --glow: rgba(184, 255, 244, .72);
+}
+.mini-cloud:nth-child(3) {
+  --tone-1: #7755a8;
+  --tone-2: #b18be0;
+  --tone-3: #f0b9df;
+  --glow: rgba(235, 200, 255, .76);
+}
+.mini-cloud:nth-child(4) {
+  --tone-1: #a65d91;
+  --tone-2: #e99abd;
+  --tone-3: #ffd1c7;
+  --glow: rgba(255, 219, 237, .78);
+}
+.mini-cloud:nth-child(5) {
+  --tone-1: #526d9d;
+  --tone-2: #8cb9d9;
+  --tone-3: #c4d7fa;
+  --glow: rgba(218, 240, 255, .78);
+}
+.mini-cloud:nth-child(6) {
+  --tone-1: #9a6b9f;
+  --tone-2: #d39bc5;
+  --tone-3: #f4c5a9;
+  --glow: rgba(255, 225, 231, .76);
+}
+.mini-cloud:nth-child(7) {
+  --tone-1: #8c7190;
+  --tone-2: #c7a2c9;
+  --tone-3: #f2d5b4;
+  --glow: rgba(255, 235, 210, .76);
+}
+
+/* Use transform-only motion for smoother compositing. */
+@keyframes cloud-float {
+  from {
+    transform: translate3d(calc(-50% - 7px), calc(-50% + 3px), 0) scale(.97);
+  }
+  to {
+    transform: translate3d(calc(-50% + 9px), calc(-50% - 6px), 0) scale(1.025);
+  }
+}
+
+@media (max-width: 600px) {
+  .cloud-cluster {
+    top: 12px;
+    width: min(340px, 94vw);
+    height: 175px;
+  }
+
+  .mini-cloud {
+    width: calc(var(--w) * 0.52);
+  }
+
+  .cloud-back {
+    filter: blur(1.8px);
+  }
+
+  .cloud-mid {
+    filter: blur(1.2px);
+  }
+
+  .cloud-front {
+    filter: blur(.7px);
+  }
+}
+
+/* Respect device motion preferences and reduce GPU work. */
+@media (prefers-reduced-motion: reduce) {
+  .mini-cloud {
+    animation: none;
+    will-change: auto;
+  }
+}
