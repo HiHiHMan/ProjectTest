@@ -22,9 +22,9 @@
     function createStars() {
       const count = Math.max(8, Math.min(17, Math.round(width / 78) - 2));
       stars = Array.from({ length: count }, (_, i) => {
-        const spread = (i / Math.max(1, count - 1) - .5) * Math.min(width * .78, 650);
+        const spread = (i / Math.max(1, count - 1) - .5) * Math.min(width * .58, 420);
         return {
-          x: width / 2 + spread + (Math.random() - .5) * 24,
+          x: width / 2 + spread + (Math.random() - .5) * 12,
           y: 165 + Math.random() * 118,
           length: 200 + Math.random() * 300,
           size: 11 + Math.random() * 13,
