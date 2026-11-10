@@ -70,6 +70,7 @@
           trailStartY: cloudBottom - 28,
           flowSpeed: 18 + Math.random() * 24,
           flowOffset: Math.random(),
+          flickerDelay: Math.random() * 3000,
           noise: Array.from({ length: Math.max(18, Math.round(height * trailLength / 5)) }, () => ({
             x: (Math.random() - .5) * 3.2,
             y: Math.random(),
@@ -100,10 +101,9 @@
 
       stars.forEach(star => {
         const tailY = star.trailStartY;
-        const flickerSpeed = 2.2 + star.flowSpeed / 18;
-        const pulse = (Math.sin(time / 1000 * flickerSpeed + star.flowOffset * Math.PI * 2) + 1) / 2;
-        const shimmer = (Math.sin(time / 1000 * flickerSpeed * 2.7 + star.flowOffset * 13) + 1) / 2;
-        const brightness = .48 + pulse * .38 + shimmer * .14;
+        const flickerCycle = ((time + star.flickerDelay) % 3000) / 3000;
+        const pulse = (1 - Math.cos(flickerCycle * Math.PI * 2)) / 2;
+        const brightness = .42 + pulse * .58;
         const trail = ctx.createLinearGradient(star.x, tailY, star.x, star.y);
         trail.addColorStop(0, 'rgba(255,255,255,0)');
         trail.addColorStop(.25, star.trailColor + '66');
@@ -116,7 +116,7 @@
         ctx.moveTo(star.x, tailY);
         ctx.lineTo(star.x, star.y);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 1.5 + pulse * .45;
+        ctx.lineWidth = 1.5 + pulse * .35;
         ctx.shadowBlur = 0;
         ctx.shadowColor = 'transparent';
         ctx.stroke();
