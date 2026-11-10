@@ -16,26 +16,20 @@
   (() => {
     const canvas = document.querySelector('.hanging-stars');
     const ctx = canvas.getContext('2d');
-    const palette = ['#ffe6a6', '#ffd0e8', '#c9d9ff', '#d8c4ff', '#bdf4ed', '#ffc6a1'];
-    let width = 0, height = 0, dpr = 1, stars = [];
+    const colors = ['#fff2c6', '#dce8ff', '#f8ddff', '#d7fff5'];
+    let width = 0, height = 0, dpr = 1, meteors = [];
 
-    function createStars() {
-      const count = Math.max(8, Math.min(17, Math.round(width / 78) - 2));
-      const spread = Math.min(width * .58, 420);
-      const positions = Array.from(
-        { length: count },
-        () => (Math.random() - .5) * spread
-      ).sort((a, b) => a - b);
-
-      stars = positions.map(position => ({
-        x: width / 2 + position,
-        y: 165 + Math.random() * 118,
-        length: 200 + Math.random() * 300,
-        size: 11 + Math.random() * 13,
-        color: palette[Math.floor(Math.random() * palette.length)],
-        symbol: Math.random() > .45 ? '✦' : '✧',
-        twinkleSpeed: .001 + Math.random() * .002,
-        twinklePhase: Math.random() * Math.PI * 2
+    function createMeteors() {
+      meteors = Array.from({ length: 4 }, () => ({
+        active: false,
+        x: 0,
+        y: 0,
+        progress: 0,
+        length: 90 + Math.random() * 130,
+        speed: .00022 + Math.random() * .00018,
+        angle: Math.PI * (.68 + Math.random() * .12),
+        color: colors[Math.floor(Math.random() * colors.length)],
+        nextAt: performance.now() + Math.random() * 7000
       }));
     }
 
@@ -48,43 +42,64 @@
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      createStars();
+      createMeteors();
     }
 
     function draw(time) {
       ctx.clearRect(0, 0, width, height);
-      stars.forEach(star => {
-        const ax = star.x;
-        const ay = star.y;
-        const sx = ax;
-        const sy = ay + star.length;
 
-        const thread = ctx.createLinearGradient(ax, ay, sx, sy);
-        thread.addColorStop(0, star.color + 'bb');
-        thread.addColorStop(1, star.color + '55');
+      meteors.forEach(meteor => {
+        if (!meteor.active && time >= meteor.nextAt) {
+          meteor.active = true;
+          meteor.progress = 0;
+          meteor.x = width * (.18 + Math.random() * .78);
+          meteor.y = height * (.04 + Math.random() * .42);
+          meteor.length = 85 + Math.random() * 145;
+          meteor.speed = .00022 + Math.random() * .0002;
+          meteor.angle = Math.PI * (.68 + Math.random() * .12);
+          meteor.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        if (!meteor.active) return;
+
+        meteor.progress += meteor.speed * 16.67;
+        const distance = meteor.progress * Math.max(width, height) * .72;
+        const headX = meteor.x + Math.cos(meteor.angle) * distance;
+        const headY = meteor.y + Math.sin(meteor.angle) * distance;
+        const tailX = headX - Math.cos(meteor.angle) * meteor.length;
+        const tailY = headY - Math.sin(meteor.angle) * meteor.length;
+        const fade = Math.min(1, meteor.progress * 5, (1 - meteor.progress) * 5);
+
+        const trail = ctx.createLinearGradient(tailX, tailY, headX, headY);
+        trail.addColorStop(0, 'rgba(255,255,255,0)');
+        trail.addColorStop(.65, meteor.color + '66');
+        trail.addColorStop(1, '#ffffff');
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, fade);
         ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        ctx.quadraticCurveTo(ax, (ay + sy) / 2, sx, sy);
-        ctx.strokeStyle = thread;
-        ctx.lineWidth = 1.15;
-        ctx.shadowColor = star.color;
-        ctx.shadowBlur = 5;
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(headX, headY);
+        ctx.strokeStyle = trail;
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = meteor.color;
+        ctx.shadowBlur = 12;
         ctx.stroke();
 
-        const twinkle = (Math.sin(time * star.twinkleSpeed + star.twinklePhase) + 1) / 2;
-        ctx.save();
-        ctx.globalAlpha = .45 + twinkle * .55;
-        ctx.translate(sx, sy);
-        ctx.scale(.82 + twinkle * .2, .82 + twinkle * .2);
-        ctx.font = star.size + 'px Georgia, serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = star.color;
-        ctx.shadowColor = star.color;
-        ctx.shadowBlur = 5 + twinkle * 13;
-        ctx.fillText(star.symbol, 0, 0);
+        ctx.beginPath();
+        ctx.arc(headX, headY, 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = meteor.color;
+        ctx.shadowBlur = 16;
+        ctx.fill();
         ctx.restore();
+
+        if (meteor.progress >= 1 || headX < -meteor.length || headY > height + meteor.length) {
+          meteor.active = false;
+          meteor.nextAt = time + 1800 + Math.random() * 6500;
+        }
       });
+
       requestAnimationFrame(draw);
     }
 
