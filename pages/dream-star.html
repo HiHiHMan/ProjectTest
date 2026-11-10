@@ -17,22 +17,19 @@
     const canvas = document.querySelector('.hanging-stars');
     const ctx = canvas.getContext('2d');
     const colors = ['#fff2c6', '#dce8ff', '#f8ddff', '#d7fff5'];
-    let width = 0, height = 0, dpr = 1, meteors = [];
-    let nextWaveAt = 0;
+    let width = 0, height = 0, dpr = 1, stars = [];
 
-    function createMeteors() {
-      meteors = Array.from({ length: 4 }, () => ({
-        active: false,
-        x: 0,
-        y: 0,
-        progress: 0,
-        speed: .00016 + Math.random() * .000035,
-        angle: Math.PI / 2,
+    function createStars() {
+      const cloudWidth = Math.min(width * .9, 660);
+      const spread = cloudWidth * .39;
+
+      stars = Array.from({ length: 4 }, () => ({
+        x: width / 2 + (Math.random() - .5) * spread * 2,
+        y: height * (.32 + Math.random() * .42),
         color: colors[Math.floor(Math.random() * colors.length)],
         symbol: Math.random() < .5 ? '✦' : '✧',
         fontSize: 17 + Math.random() * 7
       }));
-      nextWaveAt = performance.now() + 1800;
     }
 
     function resize() {
@@ -44,69 +41,28 @@
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      createMeteors();
+      createStars();
+      draw();
     }
 
-    function launchWave(time) {
-      const cloudWidth = Math.min(width * .9, 660);
-      const cloudLeft = (width - cloudWidth) / 2;
-      const spread = cloudWidth * .39;
-
-      meteors.forEach((meteor, index) => {
-        meteor.active = true;
-        meteor.progress = 0;
-        meteor.x = width / 2 + (Math.random() - .5) * spread * 2;
-        meteor.y = 285 + Math.random() * 115;
-        meteor.speed = .00016 + Math.random() * .000035;
-        meteor.angle = Math.PI / 2;
-        meteor.color = colors[Math.floor(Math.random() * colors.length)];
-        meteor.symbol = Math.random() < .5 ? '✦' : '✧';
-        meteor.fontSize = 17 + Math.random() * 7;
-      });
-    }
-
-    function draw(time) {
+    function draw() {
       ctx.clearRect(0, 0, width, height);
 
-      if (meteors.every(meteor => !meteor.active) && time >= nextWaveAt) {
-        launchWave(time);
-      }
-
-      meteors.forEach(meteor => {
-        if (!meteor.active) return;
-
-        meteor.progress += meteor.speed * 16.67;
-        const distance = meteor.progress * height * 1.4;
-        const headX = meteor.x;
-        const headY = meteor.y + distance;
-        const fade = Math.min(1, meteor.progress * 7, (1 - meteor.progress) * 5);
-
+      stars.forEach(star => {
         ctx.save();
-        ctx.globalAlpha = Math.max(0, fade);
-        ctx.font = `${meteor.fontSize}px Georgia, serif`;
+        ctx.font = `${star.fontSize}px Georgia, serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = meteor.color;
-        ctx.shadowColor = meteor.color;
+        ctx.fillStyle = star.color;
+        ctx.shadowColor = star.color;
         ctx.shadowBlur = 10;
-        ctx.fillText(meteor.symbol, headX, headY);
+        ctx.fillText(star.symbol, star.x, star.y);
         ctx.restore();
-
-        if (meteor.progress >= 1 || headY > height + 30) {
-          meteor.active = false;
-        }
       });
-
-      if (meteors.every(meteor => !meteor.active) && nextWaveAt <= time) {
-        nextWaveAt = time + 2200 + Math.random() * 2500;
-      }
-
-      requestAnimationFrame(draw);
     }
 
     window.addEventListener('resize', resize, { passive: true });
     resize();
-    requestAnimationFrame(draw);
   })();
   </script>
 </main>
