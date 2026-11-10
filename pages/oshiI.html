@@ -26,7 +26,35 @@
         radial-gradient(ellipse at center, #211a39 0%, #100d20 48%, #080713 100%);
     }
 
+    .egg-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 100%;
+    }
+
+    .egg-wrap::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100vw;
+      height: 2px;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(220, 190, 255, .28) 18%,
+        rgba(245, 225, 255, .9) 50%,
+        rgba(220, 190, 255, .28) 82%,
+        transparent 100%
+      );
+      box-shadow: 0 0 10px rgba(205, 160, 255, .55);
+    }
+
     .egg-shape {
+      position: relative;
+      z-index: 1;
       width: min(38vw, 280px);
       height: min(54vw, 400px);
       min-width: 150px;
@@ -50,6 +78,8 @@
   </style>
 </head>
 <body>
-  <main class="egg-shape" role="img" aria-label="วงรีทรงไข่ตรงกลางหน้าจอ"></main>
+  <main class="egg-wrap">
+    <div class="egg-shape" role="img" aria-label="วงรีทรงไข่ตรงกลางหน้าจอ"></div>
+  </main>
 </body>
 </html>
