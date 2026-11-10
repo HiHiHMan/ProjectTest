@@ -11,6 +11,99 @@
 <main class="dream-scene" aria-label="ท้องฟ้ายามค่ำคืน">
   <div class="star-field" aria-hidden="true"></div>
   <div class="ly-3-noise" aria-hidden="true"></div>
+  <canvas class="hanging-stars" aria-hidden="true"></canvas>
+  <script>
+  (() => {
+    const canvas = document.querySelector('.hanging-stars');
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const palette = ['#ffe6a6', '#ffd0e8', '#c9d9ff', '#d8c4ff', '#bdf4ed', '#ffc6a1'];
+    let width = 0, height = 0, dpr = 1, stars = [];
+
+    function createStars() {
+      const count = Math.max(10, Math.min(19, Math.round(width / 78)));
+      stars = Array.from({ length: count }, (_, i) => {
+        const spread = (i / Math.max(1, count - 1) - .5) * Math.min(width * .78, 650);
+        return {
+          x: width / 2 + spread + (Math.random() - .5) * 24,
+          y: 165 + Math.random() * 118,
+          length: 54 + Math.random() * 112,
+          size: 11 + Math.random() * 13,
+          color: palette[Math.floor(Math.random() * palette.length)],
+          symbol: Math.random() > .45 ? '✦' : '✧',
+          angle: (Math.random() - .5) * .42,
+          velocity: 0,
+          phase: Math.random() * Math.PI * 2,
+          gravity: 7 + Math.random() * 3,
+          damping: .985 + Math.random() * .008
+        };
+      });
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      createStars();
+    }
+
+    function draw(time) {
+      ctx.clearRect(0, 0, width, height);
+      const t = time / 1000;
+      stars.forEach(star => {
+        const breeze = Math.sin(t * .55 + star.phase) * .0009;
+        if (!reduceMotion) {
+          star.velocity += (-star.gravity / star.length * Math.sin(star.angle) + breeze) * .016;
+          star.velocity *= star.damping;
+          star.angle += star.velocity * .016;
+        } else {
+          star.angle = 0;
+        }
+
+        const sway = Math.sin(t * .32 + star.phase) * 2.2;
+        const ax = star.x + sway;
+        const ay = star.y;
+        const sx = ax + Math.sin(star.angle) * star.length;
+        const sy = ay + Math.cos(star.angle) * star.length;
+
+        const thread = ctx.createLinearGradient(ax, ay, sx, sy);
+        thread.addColorStop(0, star.color + 'bb');
+        thread.addColorStop(1, star.color + '55');
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.quadraticCurveTo((ax + sx) / 2 + Math.sin(star.angle) * 5, (ay + sy) / 2, sx, sy);
+        ctx.strokeStyle = thread;
+        ctx.lineWidth = 1.15;
+        ctx.shadowColor = star.color;
+        ctx.shadowBlur = 5;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(sx, sy);
+        ctx.rotate(star.angle * .22);
+        ctx.font = star.size + 'px Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = star.color;
+        ctx.shadowColor = star.color;
+        ctx.shadowBlur = 12;
+        ctx.fillText(star.symbol, 0, 0);
+        ctx.restore();
+      });
+      if (!reduceMotion) requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    if (reduceMotion) draw(0);
+    else requestAnimationFrame(draw);
+  })();
+  </script>
 </main>
 
 </body>
