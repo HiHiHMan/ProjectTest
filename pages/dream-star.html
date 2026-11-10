@@ -23,21 +23,52 @@
     ];
     let width = 0, height = 0, dpr = 1, stars = [];
 
+    // วงกลมเหล่านี้ตรงกับรูปทรงเมฆใน dream-scene::before
+    const cloudPuffs = [
+      [99, 159.8, 66], [178.2, 91.8, 58], [316.8, 146.2, 68],
+      [257.4, 98.6, 62], [349.8, 68, 68], [435.6, 105.4, 64],
+      [435.6, 224.4, 60], [448.8, 115.6, 90], [561, 159.8, 55],
+      [191.4, 224.4, 68], [303.6, 227.8, 68], [158.4, 207.4, 62],
+      [363, 255, 63], [217.8, 166.6, 54], [409.2, 149.6, 52],
+      [488.4, 197.2, 48]
+    ];
+
+    function getCloudBottom(localX) {
+      let bottom = 0;
+
+      cloudPuffs.forEach(([cx, cy, radius]) => {
+        const dx = localX - cx;
+        if (Math.abs(dx) <= radius) {
+          const edgeY = cy + Math.sqrt(radius * radius - dx * dx);
+          bottom = Math.max(bottom, edgeY);
+        }
+      });
+
+      return bottom;
+    }
+
     function createStars() {
       const cloudWidth = Math.min(width * .9, 660);
       const spread = cloudWidth * .39;
+      const cloudLeft = (width - 660) / 2;
+      const cloudTop = 48;
 
-      const cloudExitY = Math.min(height * .43, 390);
+      stars = Array.from({ length: 16 }, () => {
+        const x = width / 2 + (Math.random() - .5) * spread * 2;
+        const localX = x - cloudLeft;
+        const cloudBottom = cloudTop + getCloudBottom(localX);
 
-      stars = Array.from({ length: 16 }, () => ({
-        x: width / 2 + (Math.random() - .5) * spread * 2,
-        y: cloudExitY + height * (.22 + Math.random() * .25),
-        color: colors[Math.floor(Math.random() * colors.length)],
-        trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
-        trailStartY: cloudExitY,
-        symbol: Math.random() < .5 ? '✦' : '✧',
-        fontSize: 17 + Math.random() * 7
-      }));
+        return {
+          x,
+          y: cloudBottom + height * (.22 + Math.random() * .25),
+          color: colors[Math.floor(Math.random() * colors.length)],
+          trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
+          // ซ่อนจุดเริ่มไว้ในขอบเมฆเล็กน้อย เพื่อให้เส้นแสงต่อเนื่องออกมาจากเมฆ
+          trailStartY: cloudBottom + 8,
+          symbol: Math.random() < .5 ? '✦' : '✧',
+          fontSize: 17 + Math.random() * 7
+        };
+      });
     }
 
     function resize() {
