@@ -117,8 +117,8 @@
         ctx.lineTo(star.x, star.y);
         ctx.strokeStyle = trail;
         ctx.lineWidth = 1.5 + pulse * .45;
-        ctx.shadowColor = star.trailColor;
-        ctx.shadowBlur = 7 + pulse * 13 + shimmer * 5;
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
         ctx.stroke();
         ctx.restore();
 
