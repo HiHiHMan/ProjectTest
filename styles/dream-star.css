@@ -26,3 +26,32 @@ to{opacity:.95;transform:scale(1.4)}}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:80px 80px;
 }
+
+
+/* Additional medium cloud puffs */
+.dream-cloud {
+  position: absolute;
+  z-index: 1;
+  width: 250px;
+  height: 140px;
+  pointer-events: none;
+  filter: blur(11px) saturate(1.7);
+  opacity: .42;
+  background:
+    radial-gradient(ellipse at 22% 62%, #9C6ADE 0 18%, transparent 52%),
+    radial-gradient(ellipse at 43% 38%, #78A2F2 0 22%, transparent 54%),
+    radial-gradient(ellipse at 65% 48%, #FFD95A 0 20%, transparent 52%),
+    radial-gradient(ellipse at 78% 70%, #FF94B8 0 18%, transparent 50%),
+    radial-gradient(ellipse at 48% 75%, #FF8C42 0 17%, transparent 48%);
+  animation: cloud-drift 30s ease-in-out infinite alternate;
+}
+.dream-cloud--left {
+  top: 205px;
+  left: calc(50% - 500px);
+}
+.dream-cloud--right {
+  top: 245px;
+  left: calc(50% + 250px);
+  transform: scale(.92);
+  animation-delay: -12s;
+}
