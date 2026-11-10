@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080713">
+  <title>OshiI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at center, #211a39 0%, #100d20 48%, #080713 100%);
+    }
+
+    .egg-shape {
+      width: min(38vw, 280px);
+      height: min(54vw, 400px);
+      min-width: 150px;
+      min-height: 220px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 34% 27%, rgba(255, 255, 255, .9), transparent 12%),
+        radial-gradient(ellipse at 35% 28%, #f8d9ff 0%, #c59be9 32%, #8064bd 68%, #49366f 100%);
+      box-shadow:
+        inset -18px -24px 38px rgba(24, 13, 48, .34),
+        inset 12px 14px 28px rgba(255, 255, 255, .24),
+        0 0 55px rgba(174, 126, 255, .24);
+    }
+
+    @media (max-width: 600px) {
+      .egg-shape {
+        width: min(58vw, 250px);
+        height: min(82vw, 350px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="egg-shape" role="img" aria-label="วงรีทรงไข่ตรงกลางหน้าจอ"></main>
+</body>
+</html>
