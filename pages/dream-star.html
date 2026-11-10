@@ -27,12 +27,14 @@
       const cloudWidth = Math.min(width * .9, 660);
       const spread = cloudWidth * .39;
 
+      const cloudExitY = Math.min(height * .43, 390);
+
       stars = Array.from({ length: 4 }, () => ({
         x: width / 2 + (Math.random() - .5) * spread * 2,
-        y: height * (.32 + Math.random() * .42),
+        y: cloudExitY + height * (.22 + Math.random() * .25),
         color: colors[Math.floor(Math.random() * colors.length)],
         trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
-        trailLength: 650 + Math.random() * 500,
+        trailStartY: cloudExitY,
         symbol: Math.random() < .5 ? '✦' : '✧',
         fontSize: 17 + Math.random() * 7
       }));
@@ -55,7 +57,7 @@
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach(star => {
-        const tailY = star.y - star.trailLength;
+        const tailY = star.trailStartY;
         const trail = ctx.createLinearGradient(star.x, tailY, star.x, star.y);
         trail.addColorStop(0, 'rgba(255,255,255,0)');
         trail.addColorStop(.48, star.trailColor + '55');
