@@ -50,15 +50,15 @@ to{opacity:.95;transform:scale(1.4)}}
 }
 .cloud-flower{
   animation:
-    cloud-flower-float var(--float-duration, 10s) ease-in-out var(--float-delay, 0s) infinite alternate,
-    cloud-flower-sway var(--sway-duration, 12s) ease-in-out var(--sway-delay, 0s) infinite alternate;
+    cloud-flower-float var(--float-duration, 15s) ease-in-out var(--float-delay, 0s) infinite alternate,
+    cloud-flower-spin var(--spin-duration, 26s) linear var(--spin-delay, 0s) infinite;
   will-change:translate,rotate;
 }
 @keyframes cloud-flower-float{
-  from{translate:0 0}
-  to{translate:5px -7px}
+  from{translate:-5px 2px}
+  to{translate:7px -5px}
 }
-@keyframes cloud-flower-sway{
-  from{rotate:-5deg}
-  to{rotate:5deg}
+@keyframes cloud-flower-spin{
+  from{rotate:0deg}
+  to{rotate:360deg}
 }
