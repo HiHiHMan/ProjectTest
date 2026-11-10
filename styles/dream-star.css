@@ -11,3 +11,23 @@ body{overflow:hidden}
 @keyframes cloud-drift{from{translate:0 0}to{translate:0 4px}}
 to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* Small layered clouds: reuse the original soft, colorful glow and slow drift */
+.cloud-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate}
+.cloud-layer-back{z-index:0;opacity:.42;filter:blur(13px) saturate(1.75)}
+.cloud-layer-mid{z-index:1;opacity:.58;filter:blur(9px) saturate(1.8)}
+.cloud-layer-front{z-index:2;opacity:.7;filter:blur(6px) saturate(1.65)}
+.mini-cloud{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:calc(var(--size)*.48);border-radius:50%;transform:translate(-50%,-50%);background:
+  radial-gradient(ellipse at 22% 65%,#ff8c42 0 17%,transparent 48%),
+  radial-gradient(ellipse at 43% 35%,#9c6ade 0 23%,transparent 55%),
+  radial-gradient(ellipse at 67% 40%,#78a2f2 0 24%,transparent 58%),
+  radial-gradient(ellipse at 83% 65%,#ffd95a 0 17%,transparent 48%),
+  radial-gradient(ellipse at 52% 72%,#ff94b8 0 22%,transparent 58%);
+animation:mini-cloud-float var(--duration,24s) ease-in-out var(--delay,0s) infinite alternate}
+.cloud-layer-back .mini-cloud{--duration:34s}
+.cloud-layer-mid .mini-cloud{--duration:27s}
+.cloud-layer-front .mini-cloud{--duration:21s}
+@keyframes mini-cloud-float{from{translate:-8px 3px;scale:.94}to{translate:10px -7px;scale:1.08}}
+@media(max-width:600px){.mini-cloud{width:calc(var(--size)*.72);height:calc(var(--size)*.36)}}
+@media(prefers-reduced-motion:reduce){.mini-cloud{animation:none}}
