@@ -68,6 +68,8 @@
           trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
           // เริ่มเส้นลึกเข้าไปในกลุ่มเมฆ เพื่อให้แสงแนบติดกับเมฆมากขึ้น
           trailStartY: cloudBottom - 28,
+          flowSpeed: 18 + Math.random() * 24,
+          flowOffset: Math.random(),
           noise: Array.from({ length: Math.max(18, Math.round(height * trailLength / 5)) }, () => ({
             x: (Math.random() - .5) * 3.2,
             y: Math.random(),
@@ -93,7 +95,7 @@
       draw();
     }
 
-    function draw() {
+    function draw(time = 0) {
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach(star => {
@@ -114,6 +116,28 @@
         ctx.shadowBlur = 12;
         ctx.stroke();
 
+        // แถบแสงสว่างเคลื่อนจากเมฆลงไปตามแนวเส้น
+        const trailDistance = star.y - tailY;
+        const glowLength = Math.min(26, Math.max(10, trailDistance * .12));
+        const progress = (time * star.flowSpeed / 1000 / trailDistance + star.flowOffset) % 1;
+        const movingGlow = ctx.createLinearGradient(star.x, tailY, star.x, star.y);
+        movingGlow.addColorStop(0, 'rgba(255,255,255,0)');
+        movingGlow.addColorStop(.5, 'rgba(255,255,255,.95)');
+        movingGlow.addColorStop(1, 'rgba(255,255,255,0)');
+
+        ctx.beginPath();
+        ctx.moveTo(star.x, tailY);
+        ctx.lineTo(star.x, star.y);
+        ctx.setLineDash([glowLength, Math.max(1, trailDistance - glowLength)]);
+        ctx.lineDashOffset = -progress * trailDistance;
+        ctx.strokeStyle = movingGlow;
+        ctx.lineWidth = 2;
+        ctx.shadowColor = star.trailColor;
+        ctx.shadowBlur = 9;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineDashOffset = 0;
+
         // เกรนละเอียดกระจายตามแนวเส้นแสง ให้พื้นผิวมี noise คล้ายเมฆ
         star.noise.forEach(grain => {
           const grainY = tailY + (star.y - tailY) * grain.y;
@@ -132,6 +156,7 @@
         ctx.fillText(star.symbol, star.x, star.y);
         ctx.restore();
       });
+      requestAnimationFrame(draw);
     }
 
     window.addEventListener('resize', resize, { passive: true });
