@@ -20,7 +20,7 @@
     let width = 0, height = 0, dpr = 1, stars = [];
 
     function createStars() {
-      const count = Math.max(10, Math.min(19, Math.round(width / 78)));
+      const count = Math.max(8, Math.min(17, Math.round(width / 78) - 2));
       stars = Array.from({ length: count }, (_, i) => {
         const spread = (i / Math.max(1, count - 1) - .5) * Math.min(width * .78, 650);
         return {
