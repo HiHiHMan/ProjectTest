@@ -34,3 +34,11 @@ to{opacity:.95;transform:scale(1.4)}}
   .mini-cloud{width:calc(var(--w)*.72)}
 }
 @media(prefers-reduced-motion:reduce){.mini-cloud{animation:none}}
+
+/* Reduce the cluster footprint and keep the clouds compact */
+.cloud-cluster{width:min(420px,90vw);height:210px;top:20px}
+.mini-cloud{width:calc(var(--w)*.62)}
+@media(max-width:600px){
+  .cloud-cluster{width:min(340px,94vw);height:175px;top:12px}
+  .mini-cloud{width:calc(var(--w)*.52)}
+}
