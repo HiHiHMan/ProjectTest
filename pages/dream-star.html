@@ -58,9 +58,12 @@
         const localX = x - cloudLeft;
         const cloudBottom = cloudTop + getCloudBottom(localX);
 
+        // สุ่มระยะห่างหลายระดับ ให้บางเส้นยาวเด่นและบางเส้นสั้นกว่ากลุ่มชัดเจน
+        const trailLength = [0.14, 0.17, 0.20, 0.24, 0.28, 0.34, 0.42, 0.52][Math.floor(Math.random() * 8)];
+
         return {
           x,
-          y: cloudBottom + height * (.22 + Math.random() * .25),
+          y: cloudBottom + height * trailLength,
           color: colors[Math.floor(Math.random() * colors.length)],
           trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
           // เริ่มเส้นลึกเข้าไปในกลุ่มเมฆ เพื่อให้แสงแนบติดกับเมฆมากขึ้น
