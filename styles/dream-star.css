@@ -28,3 +28,41 @@ to{opacity:.95;transform:scale(1.4)}}
 }
 
 
+
+
+/* ดอกไม้และใบไม้ประดับบนผิวเมฆ */
+.cloud-decorations{
+  position:absolute;
+  z-index:3;
+  top:48px;
+  left:50%;
+  width:min(90vw,660px);
+  height:340px;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+.cloud-flower{
+  position:absolute;
+  display:block;
+  font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;
+  line-height:1;
+  filter:drop-shadow(0 2px 3px rgba(20,10,40,.28));
+}
+.cloud-flower-left{
+  left:23%;
+  top:69%;
+  font-size:27px;
+  transform:rotate(-12deg);
+}
+.cloud-flower-center{
+  left:51%;
+  top:78%;
+  font-size:24px;
+  transform:translateX(-50%) rotate(8deg);
+}
+.cloud-flower-right{
+  right:21%;
+  top:68%;
+  font-size:28px;
+  transform:rotate(22deg);
+}
