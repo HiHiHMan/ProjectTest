@@ -35,14 +35,16 @@ to{opacity:.95;transform:scale(1.4)}}
   width: 250px;
   height: 140px;
   pointer-events: none;
-  filter: blur(11px) saturate(1.7);
-  opacity: .42;
+  filter: blur(18px) saturate(1.55);
+  opacity: .38;
   background:
-    radial-gradient(ellipse at 22% 62%, #9C6ADE 0 18%, transparent 52%),
-    radial-gradient(ellipse at 43% 38%, #78A2F2 0 22%, transparent 54%),
-    radial-gradient(ellipse at 65% 48%, #FFD95A 0 20%, transparent 52%),
-    radial-gradient(ellipse at 78% 70%, #FF94B8 0 18%, transparent 50%),
-    radial-gradient(ellipse at 48% 75%, #FF8C42 0 17%, transparent 48%);
+    radial-gradient(ellipse at 18% 62%, #9270c9 0 19%, transparent 48%),
+    radial-gradient(ellipse at 34% 38%, #9b7bd4 0 22%, transparent 51%),
+    radial-gradient(ellipse at 52% 30%, #8d9fe0 0 20%, transparent 50%),
+    radial-gradient(ellipse at 68% 46%, #a9a0df 0 22%, transparent 51%),
+    radial-gradient(ellipse at 82% 65%, #d59ac4 0 18%, transparent 48%),
+    radial-gradient(ellipse at 45% 70%, #c18acb 0 24%, transparent 54%),
+    radial-gradient(ellipse at 53% 54%, rgba(166, 139, 213, .9) 0 30%, transparent 62%);
   animation: cloud-drift 30s ease-in-out infinite alternate;
 }
 .dream-cloud--left {
