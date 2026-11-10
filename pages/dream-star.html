@@ -34,6 +34,7 @@
         angle: Math.PI / 2,
         color: colors[Math.floor(Math.random() * colors.length)],
         gradientColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
+        symbol: Math.random() < .5 ? '✦' : '✧',
         nextAt: performance.now() + Math.random() * 7000
       }));
     }
@@ -64,6 +65,7 @@
           meteor.angle = Math.PI / 2;
           meteor.color = colors[Math.floor(Math.random() * colors.length)];
           meteor.gradientColor = gradientColors[Math.floor(Math.random() * gradientColors.length)];
+          meteor.symbol = Math.random() < .5 ? '✦' : '✧';
         }
 
         if (!meteor.active) return;
@@ -92,12 +94,13 @@
         ctx.shadowBlur = 12;
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.arc(headX, headY, 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
+        ctx.font = `${16 + Math.random() * 5}px Georgia, serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = meteor.gradientColor;
         ctx.shadowColor = meteor.color;
         ctx.shadowBlur = 16;
-        ctx.fill();
+        ctx.fillText(meteor.symbol, headX, headY);
         ctx.restore();
 
         if (meteor.progress >= 1 || headX < -meteor.length || headY > height + meteor.length) {
