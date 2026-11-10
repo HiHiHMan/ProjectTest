@@ -42,3 +42,13 @@ to{opacity:.95;transform:scale(1.4)}}
   .cloud-cluster{width:min(340px,94vw);height:175px;top:12px}
   .mini-cloud{width:calc(var(--w)*.52)}
 }
+
+
+/* Give every cloud its own color palette */
+.cloud-cluster .mini-cloud:nth-child(1){filter:blur(9px) saturate(1.65) hue-rotate(0deg)}
+.cloud-cluster .mini-cloud:nth-child(2){filter:blur(9px) saturate(1.75) hue-rotate(48deg)}
+.cloud-cluster .mini-cloud:nth-child(3){filter:blur(6px) saturate(1.8) hue-rotate(100deg)}
+.cloud-cluster .mini-cloud:nth-child(4){filter:blur(6px) saturate(1.85) hue-rotate(150deg)}
+.cloud-cluster .mini-cloud:nth-child(5){filter:blur(6px) saturate(1.9) hue-rotate(205deg)}
+.cloud-cluster .mini-cloud:nth-child(6){filter:blur(4px) saturate(1.95) hue-rotate(255deg)}
+.cloud-cluster .mini-cloud:nth-child(7){filter:blur(4px) saturate(2) hue-rotate(305deg)}
