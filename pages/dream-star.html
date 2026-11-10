@@ -17,6 +17,10 @@
     const canvas = document.querySelector('.hanging-stars');
     const ctx = canvas.getContext('2d');
     const colors = ['#fff2c6', '#dce8ff', '#f8ddff', '#d7fff5'];
+    const gradientColors = [
+      '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8', '#FF8C42',
+      '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
+    ];
     let width = 0, height = 0, dpr = 1, meteors = [];
 
     function createMeteors() {
@@ -29,6 +33,7 @@
         speed: .00022 + Math.random() * .00018,
         angle: Math.PI * (.68 + Math.random() * .12),
         color: colors[Math.floor(Math.random() * colors.length)],
+        gradientColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
         nextAt: performance.now() + Math.random() * 7000
       }));
     }
@@ -58,6 +63,7 @@
           meteor.speed = .00022 + Math.random() * .0002;
           meteor.angle = Math.PI * (.68 + Math.random() * .12);
           meteor.color = colors[Math.floor(Math.random() * colors.length)];
+          meteor.gradientColor = gradientColors[Math.floor(Math.random() * gradientColors.length)];
         }
 
         if (!meteor.active) return;
@@ -72,7 +78,7 @@
 
         const trail = ctx.createLinearGradient(tailX, tailY, headX, headY);
         trail.addColorStop(0, 'rgba(255,255,255,0)');
-        trail.addColorStop(.65, meteor.color + '66');
+        trail.addColorStop(.65, meteor.gradientColor + '66');
         trail.addColorStop(1, '#ffffff');
 
         ctx.save();
