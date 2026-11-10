@@ -68,6 +68,12 @@
           trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
           // เริ่มเส้นลึกเข้าไปในกลุ่มเมฆ เพื่อให้แสงแนบติดกับเมฆมากขึ้น
           trailStartY: cloudBottom - 28,
+          noise: Array.from({ length: Math.max(18, Math.round(height * trailLength / 5)) }, () => ({
+            x: (Math.random() - .5) * 3.2,
+            y: Math.random(),
+            radius: .2 + Math.random() * .65,
+            alpha: .08 + Math.random() * .28
+          })),
           symbol: Math.random() < .5 ? '✦' : '✧',
           fontSize: 17 + Math.random() * 7
         };
@@ -107,6 +113,15 @@
         ctx.shadowColor = star.trailColor;
         ctx.shadowBlur = 12;
         ctx.stroke();
+
+        // เกรนละเอียดกระจายตามแนวเส้นแสง ให้พื้นผิวมี noise คล้ายเมฆ
+        star.noise.forEach(grain => {
+          const grainY = tailY + (star.y - tailY) * grain.y;
+          ctx.beginPath();
+          ctx.arc(star.x + grain.x, grainY, grain.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
+          ctx.fill();
+        });
 
         ctx.font = `${star.fontSize}px Georgia, serif`;
         ctx.textAlign = 'center';
