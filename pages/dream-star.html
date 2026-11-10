@@ -100,24 +100,14 @@
         ctx.save();
         ctx.globalAlpha = Math.max(0, fade);
 
-        // Long, soft outer glow
+        // Keep the original trail width while extending its length
         ctx.beginPath();
         ctx.moveTo(tailX, tailY);
         ctx.lineTo(headX, headY);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 5;
-        ctx.shadowColor = meteor.gradientColor;
-        ctx.shadowBlur = 28;
-        ctx.stroke();
-
-        // Bright, narrow core
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(headX, headY);
-        ctx.strokeStyle = trail;
-        ctx.lineWidth = 1.8;
+        ctx.lineWidth = 1.5;
         ctx.shadowColor = meteor.color;
-        ctx.shadowBlur = 18;
+        ctx.shadowBlur = 12;
         ctx.stroke();
 
         ctx.font = `${meteor.fontSize}px Georgia, serif`;
