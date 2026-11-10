@@ -100,44 +100,27 @@
 
       stars.forEach(star => {
         const tailY = star.trailStartY;
+        const flickerSpeed = 2.2 + star.flowSpeed / 18;
+        const pulse = (Math.sin(time / 1000 * flickerSpeed + star.flowOffset * Math.PI * 2) + 1) / 2;
+        const shimmer = (Math.sin(time / 1000 * flickerSpeed * 2.7 + star.flowOffset * 13) + 1) / 2;
+        const brightness = .48 + pulse * .38 + shimmer * .14;
         const trail = ctx.createLinearGradient(star.x, tailY, star.x, star.y);
         trail.addColorStop(0, 'rgba(255,255,255,0)');
-        trail.addColorStop(.48, star.trailColor + '55');
-        trail.addColorStop(.82, star.trailColor + 'dd');
+        trail.addColorStop(.25, star.trailColor + '66');
+        trail.addColorStop(.72, star.trailColor + 'dd');
         trail.addColorStop(1, '#ffffff');
 
         ctx.save();
+        ctx.globalAlpha = brightness;
         ctx.beginPath();
         ctx.moveTo(star.x, tailY);
         ctx.lineTo(star.x, star.y);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.5 + pulse * .45;
         ctx.shadowColor = star.trailColor;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 7 + pulse * 13 + shimmer * 5;
         ctx.stroke();
-
-        // อนุภาคแสงเล็ก ๆ ไหลต่อเนื่องลงมาตามเส้นด้าย
-        const trailDistance = star.y - tailY;
-        for (let i = 0; i < 5; i++) {
-          const progress = (time * star.flowSpeed / 1000 / trailDistance + star.flowOffset + i * .19) % 1;
-          const particleY = tailY + progress * trailDistance;
-          const particleSize = 0.7 + ((i * 7) % 4) * .28;
-          const particleAlpha = .35 + .5 * Math.sin(progress * Math.PI);
-
-          ctx.beginPath();
-          ctx.arc(star.x, particleY, particleSize * 3.2, 0, Math.PI * 2);
-          ctx.fillStyle = star.trailColor + '22';
-          ctx.shadowColor = star.trailColor;
-          ctx.shadowBlur = 9;
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.arc(star.x, particleY, particleSize, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${particleAlpha})`;
-          ctx.shadowColor = '#ffffff';
-          ctx.shadowBlur = 5;
-          ctx.fill();
-        }
+        ctx.restore();
 
         // เกรนละเอียดกระจายตามแนวเส้นแสง ให้พื้นผิวมี noise คล้ายเมฆ
         star.noise.forEach(grain => {
