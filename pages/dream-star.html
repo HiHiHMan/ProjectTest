@@ -4,13 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
-<title>Dream Star</title>
+<title>Dream Star — Art Style Lab</title>
 <link rel="stylesheet" href="../styles/dream-star.css">
+<link rel="stylesheet" href="../styles/dream-art-tests.css">
 </head>
 <body>
 <main class="dream-scene" aria-label="ท้องฟ้ายามค่ำคืน">
   <div class="star-field" aria-hidden="true"></div>
+  <section class="art-lab" aria-labelledby="art-lab-title">
+    <header class="art-lab__header">
+      <p class="art-lab__eyebrow">DREAM STAR / VISUAL EXPERIMENT</p>
+      <h1 id="art-lab-title">Art Style Lab</h1>
+      <p>ทดลองแปลงภาพเดียวกันให้กลายเป็นงานศิลปะหลายเทคนิค</p>
+    </header>
+    <div class="art-grid">
+      <article class="art-card">
+        <div class="art-sample style-watercolor"><img src="../images/obj02.webp" alt="ตัวอย่างสีน้ำ"></div>
+        <div class="art-info"><h2>Watercolor</h2><p>สีน้ำ — สีฟุ้ง ขอบนุ่ม มีพื้นผิวกระดาษและสีซึม</p><span>Blur · Saturation · Paper grain</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-crayon"><img src="../images/obj02.webp" alt="ตัวอย่างสีเทียน"></div>
+        <div class="art-info"><h2>Crayon</h2><p>สีเทียน — สีสดเป็นชั้น มีรอยขีดและเม็ดสีไม่สม่ำเสมอ</p><span>Texture overlay · Multiply · Grain</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-pastel"><img src="../images/obj02.webp" alt="ตัวอย่างสีชอล์ก"></div>
+        <div class="art-info"><h2>Soft Pastel</h2><p>สีชอล์ก — ฟุ้งนุ่ม สีด้าน ขอบภาพละมุน</p><span>Soft light · Desaturation · Grain</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-pencil"><img src="../images/obj02.webp" alt="ตัวอย่างภาพวาดดินสอ"></div>
+        <div class="art-info"><h2>Pencil Sketch</h2><p>ดินสอ — โทนขาวดำ เน้นเส้นและคอนทราสต์</p><span>Grayscale · Contrast · Edge texture</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-oil"><img src="../images/obj02.webp" alt="ตัวอย่างสีน้ำมัน"></div>
+        <div class="art-info"><h2>Oil Painting</h2><p>สีน้ำมัน — สีแน่น อิ่มตัว คล้ายปาดสีหนา</p><span>Contrast · Saturation · Brush texture</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-halftone"><img src="../images/obj02.webp" alt="ตัวอย่างภาพพิมพ์ฮาล์ฟโทน"></div>
+        <div class="art-info"><h2>Halftone</h2><p>ภาพพิมพ์ — สร้างมิติด้วยจุดเม็ดสกรีน</p><span>Dot pattern · Blend mode</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-vintage"><img src="../images/obj02.webp" alt="ตัวอย่างภาพฟิล์มวินเทจ"></div>
+        <div class="art-info"><h2>Vintage Film</h2><p>ฟิล์มวินเทจ — สีซีด อุ่น มีเกรนและแสงรั่ว</p><span>Sepia · Grain · Color overlay</span></div>
+      </article>
+      <article class="art-card">
+        <div class="art-sample style-pointillism"><img src="../images/obj02.webp" alt="ตัวอย่างภาพพอยต์ทิลลิซึม"></div>
+        <div class="art-info"><h2>Pointillism</h2><p>พอยต์ทิลลิซึม — ภาพประกอบจากจุดสีเล็ก ๆ</p><span>Dot screen · SVG / Canvas</span></div>
+      </article>
+    </div>
+    <p class="art-lab__note">หมายเหตุ: ตัวอย่างนี้เป็นการจำลองด้วย CSS เพื่อเปรียบเทียบแนวทางเบื้องต้น ไม่ใช่การแปลงภาพด้วย AI หรือการวาดพิกเซลใหม่จริง ๆ</p>
+  </section>
 </main>
-
 </body>
 </html>
