@@ -29,7 +29,7 @@ to{opacity:.95;transform:scale(1.4)}}
 
 
 
-/* Smaller overlapping lobes blended into one cloud shape */
+/* Uneven cloud lobes, following the silhouette of the main cloud */
 .cloud-bubbles{
   position:absolute;
   z-index:2;
@@ -39,31 +39,36 @@ to{opacity:.95;transform:scale(1.4)}}
   height:340px;
   transform:translateX(-50%);
   pointer-events:none;
-  filter:blur(24px) saturate(1.9);
+  filter:blur(25px) saturate(1.9);
 }
 .cloud-bubbles span{
   position:absolute;
   display:block;
   border-radius:50%;
-  opacity:.78;
+  opacity:.8;
 }
 .cloud-bubbles span:nth-child(1){
-  width:170px;height:170px;
-  left:12%;top:34%;
+  width:132px;height:118px;
+  left:7%;top:37%;
   background:radial-gradient(circle at 38% 35%,#FF8BC4 0%,#FF4FA3 48%,#9C6ADE 100%);
 }
 .cloud-bubbles span:nth-child(2){
-  width:185px;height:185px;
-  left:29%;top:13%;
+  width:176px;height:164px;
+  left:19%;top:10%;
   background:radial-gradient(circle at 38% 35%,#FFF08A 0%,#FFD21F 48%,#FF8C42 100%);
 }
 .cloud-bubbles span:nth-child(3){
-  width:180px;height:180px;
-  left:49%;top:20%;
-  background:radial-gradient(circle at 38% 35%,#75B8FF 0%,#287BFF 48%,#123A9C 100%);
+  width:124px;height:112px;
+  left:38%;top:28%;
+  background:radial-gradient(circle at 38% 35%,#FF9BCB 0%,#FF4FA3 52%,#9C6ADE 100%);
 }
 .cloud-bubbles span:nth-child(4){
-  width:155px;height:155px;
-  left:66%;top:39%;
-  background:radial-gradient(circle at 38% 35%,#FF9BCB 0%,#FF4FA3 52%,#9C6ADE 100%);
+  width:194px;height:174px;
+  left:48%;top:5%;
+  background:radial-gradient(circle at 38% 35%,#75B8FF 0%,#287BFF 48%,#123A9C 100%);
+}
+.cloud-bubbles span:nth-child(5){
+  width:148px;height:132px;
+  left:68%;top:32%;
+  background:radial-gradient(circle at 38% 35%,#FFF08A 0%,#FFD21F 48%,#FF8C42 100%);
 }
