@@ -63,8 +63,8 @@
           y: cloudBottom + height * (.22 + Math.random() * .25),
           color: colors[Math.floor(Math.random() * colors.length)],
           trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
-          // ซ่อนจุดเริ่มไว้ในขอบเมฆเล็กน้อย เพื่อให้เส้นแสงต่อเนื่องออกมาจากเมฆ
-          trailStartY: cloudBottom + 8,
+          // เริ่มเส้นลึกเข้าไปในกลุ่มเมฆ เพื่อให้แสงแนบติดกับเมฆมากขึ้น
+          trailStartY: cloudBottom - 28,
           symbol: Math.random() < .5 ? '✦' : '✧',
           fontSize: 17 + Math.random() * 7
         };
