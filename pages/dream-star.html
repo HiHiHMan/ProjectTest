@@ -29,7 +29,7 @@
 
       const cloudExitY = Math.min(height * .43, 390);
 
-      stars = Array.from({ length: 4 }, () => ({
+      stars = Array.from({ length: 16 }, () => ({
         x: width / 2 + (Math.random() - .5) * spread * 2,
         y: cloudExitY + height * (.22 + Math.random() * .25),
         color: colors[Math.floor(Math.random() * colors.length)],
