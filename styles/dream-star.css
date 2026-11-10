@@ -13,21 +13,15 @@ to{opacity:.95;transform:scale(1.4)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
 
-/* Small layered clouds: reuse the original soft, colorful glow and slow drift */
-.cloud-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate}
-.cloud-layer-back{z-index:0;opacity:.42;filter:blur(13px) saturate(1.75)}
-.cloud-layer-mid{z-index:1;opacity:.58;filter:blur(9px) saturate(1.8)}
-.cloud-layer-front{z-index:2;opacity:.7;filter:blur(6px) saturate(1.65)}
-.mini-cloud{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:calc(var(--size)*.48);border-radius:50%;transform:translate(-50%,-50%);background:
-  radial-gradient(ellipse at 22% 65%,#ff8c42 0 17%,transparent 48%),
-  radial-gradient(ellipse at 43% 35%,#9c6ade 0 23%,transparent 55%),
-  radial-gradient(ellipse at 67% 40%,#78a2f2 0 24%,transparent 58%),
-  radial-gradient(ellipse at 83% 65%,#ffd95a 0 17%,transparent 48%),
-  radial-gradient(ellipse at 52% 72%,#ff94b8 0 22%,transparent 58%);
-animation:mini-cloud-float var(--duration,24s) ease-in-out var(--delay,0s) infinite alternate}
-.cloud-layer-back .mini-cloud{--duration:34s}
-.cloud-layer-mid .mini-cloud{--duration:27s}
-.cloud-layer-front .mini-cloud{--duration:21s}
-@keyframes mini-cloud-float{from{translate:-8px 3px;scale:.94}to{translate:10px -7px;scale:1.08}}
-@media(max-width:600px){.mini-cloud{width:calc(var(--size)*.72);height:calc(var(--size)*.36)}}
+/* Mini clouds reuse the exact SVG silhouette, pigment colors and soft mask */
+.cloud-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.cloud-layer-back{z-index:0;opacity:.34}
+.cloud-layer-mid{z-index:1;opacity:.48}
+.cloud-layer-front{z-index:2;opacity:.58}
+.mini-cloud{position:absolute;left:var(--x);top:var(--y);width:var(--w);aspect-ratio:660/340;transform:translate(-50%,-50%);background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20660%20340%22%3E%3Cdefs%3E%3Cmask%20id%3D%22cloud%22%3E%3Ccircle%20cx%3D%2299.0%22%20cy%3D%22159.8%22%20r%3D%2266%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22178.2%22%20cy%3D%2291.8%22%20r%3D%2258%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22316.8%22%20cy%3D%22146.2%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22257.4%22%20cy%3D%2298.6%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22349.8%22%20cy%3D%2268.0%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22105.4%22%20r%3D%2264%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22435.6%22%20cy%3D%22224.4%22%20r%3D%2260%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22448.8%22%20cy%3D%22115.6%22%20r%3D%2290%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22561.0%22%20cy%3D%22159.8%22%20r%3D%2255%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22191.4%22%20cy%3D%22224.4%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22303.6%22%20cy%3D%22227.8%22%20r%3D%2268%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22158.4%22%20cy%3D%22207.4%22%20r%3D%2262%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22363.0%22%20cy%3D%22255.0%22%20r%3D%2263%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22217.8%22%20cy%3D%22166.6%22%20r%3D%2254%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22409.2%22%20cy%3D%22149.6%22%20r%3D%2252%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22488.4%22%20cy%3D%22197.2%22%20r%3D%2248%22%20fill%3D%22white%22%2F%3E%3C%2Fmask%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-30%25%22%20y%3D%22-40%25%22%20width%3D%22160%25%22%20height%3D%22180%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2229%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23cloud)%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22115%22%20cy%3D%22125%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%232A1B4E%22%2F%3E%3Cellipse%20cx%3D%22260%22%20cy%3D%22105%22%20rx%3D%22150%22%20ry%3D%22115%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22390%22%20cy%3D%22110%22%20rx%3D%22160%22%20ry%3D%22105%22%20fill%3D%22%2378A2F2%22%2F%3E%3Cellipse%20cx%3D%22510%22%20cy%3D%22145%22%20rx%3D%22150%22%20ry%3D%22110%22%20fill%3D%22%23FFD95A%22%2F%3E%3Cellipse%20cx%3D%22430%22%20cy%3D%22245%22%20rx%3D%22155%22%20ry%3D%22100%22%20fill%3D%22%23FF94B8%22%2F%3E%3Cellipse%20cx%3D%22170%22%20cy%3D%22255%22%20rx%3D%22145%22%20ry%3D%2290%22%20fill%3D%22%23FF8C42%22%2F%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22205%22%20rx%3D%22125%22%20ry%3D%22100%22%20fill%3D%22%239C6ADE%22%2F%3E%3Cellipse%20cx%3D%22575%22%20cy%3D%22220%22%20rx%3D%22100%22%20ry%3D%2295%22%20fill%3D%22%2378A2F2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");background-size:100% 100%;background-repeat:no-repeat;filter:blur(5px) saturate(1.8);animation:mini-cloud-drift var(--duration,28s) ease-in-out var(--delay,0s) infinite alternate}
+.cloud-layer-back .mini-cloud{--duration:38s;filter:blur(8px) saturate(1.7)}
+.cloud-layer-mid .mini-cloud{--duration:31s;filter:blur(6px) saturate(1.8)}
+.cloud-layer-front .mini-cloud{--duration:25s;filter:blur(4px) saturate(1.8)}
+@keyframes mini-cloud-drift{from{translate:-9px 3px;scale:.96}to{translate:11px -6px;scale:1.04}}
+@media(max-width:600px){.mini-cloud{width:calc(var(--w)*.72)}}
 @media(prefers-reduced-motion:reduce){.mini-cloud{animation:none}}
