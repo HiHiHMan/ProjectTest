@@ -22,6 +22,7 @@
       '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
     ];
     let width = 0, height = 0, dpr = 1, meteors = [];
+    let nextWaveAt = 0;
 
     function createMeteors() {
       meteors = Array.from({ length: 4 }, () => ({
@@ -29,14 +30,15 @@
         x: 0,
         y: 0,
         progress: 0,
-        length: 90 + Math.random() * 130,
-        speed: .00022 + Math.random() * .00018,
+        length: 650 + Math.random() * 450,
+        speed: .00016 + Math.random() * .000035,
         angle: Math.PI / 2,
         color: colors[Math.floor(Math.random() * colors.length)],
         gradientColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
         symbol: Math.random() < .5 ? '✦' : '✧',
-        nextAt: performance.now() + Math.random() * 7000
+        fontSize: 17 + Math.random() * 7
       }));
+      nextWaveAt = performance.now() + 1800;
     }
 
     function resize() {
@@ -51,63 +53,90 @@
       createMeteors();
     }
 
+    function launchWave(time) {
+      const cloudWidth = Math.min(width * .9, 660);
+      const cloudLeft = (width - cloudWidth) / 2;
+      const spread = cloudWidth * .39;
+
+      meteors.forEach((meteor, index) => {
+        meteor.active = true;
+        meteor.progress = 0;
+        meteor.x = width / 2 + (Math.random() - .5) * spread * 2;
+        meteor.y = 285 + Math.random() * 115;
+        meteor.length = 650 + Math.random() * 500;
+        meteor.speed = .00016 + Math.random() * .000035;
+        meteor.angle = Math.PI / 2;
+        meteor.color = colors[Math.floor(Math.random() * colors.length)];
+        meteor.gradientColor = gradientColors[Math.floor(Math.random() * gradientColors.length)];
+        meteor.symbol = Math.random() < .5 ? '✦' : '✧';
+        meteor.fontSize = 17 + Math.random() * 7;
+      });
+    }
+
     function draw(time) {
       ctx.clearRect(0, 0, width, height);
 
-      meteors.forEach(meteor => {
-        if (!meteor.active && time >= meteor.nextAt) {
-          meteor.active = true;
-          meteor.progress = 0;
-          meteor.x = width * (.18 + Math.random() * .78);
-          meteor.y = height * (.04 + Math.random() * .42);
-          meteor.length = 85 + Math.random() * 145;
-          meteor.speed = .00022 + Math.random() * .0002;
-          meteor.angle = Math.PI / 2;
-          meteor.color = colors[Math.floor(Math.random() * colors.length)];
-          meteor.gradientColor = gradientColors[Math.floor(Math.random() * gradientColors.length)];
-          meteor.symbol = Math.random() < .5 ? '✦' : '✧';
-        }
+      if (meteors.every(meteor => !meteor.active) && time >= nextWaveAt) {
+        launchWave(time);
+      }
 
+      meteors.forEach(meteor => {
         if (!meteor.active) return;
 
         meteor.progress += meteor.speed * 16.67;
-        const distance = meteor.progress * Math.max(width, height) * .72;
-        const headX = meteor.x + Math.cos(meteor.angle) * distance;
-        const headY = meteor.y + Math.sin(meteor.angle) * distance;
-        const tailX = headX - Math.cos(meteor.angle) * meteor.length;
-        const tailY = headY - Math.sin(meteor.angle) * meteor.length;
-        const fade = Math.min(1, meteor.progress * 5, (1 - meteor.progress) * 5);
+        const distance = meteor.progress * height * 1.4;
+        const headX = meteor.x;
+        const headY = meteor.y + distance;
+        const tailX = headX;
+        const tailY = headY - meteor.length;
+        const fade = Math.min(1, meteor.progress * 7, (1 - meteor.progress) * 5);
 
         const trail = ctx.createLinearGradient(tailX, tailY, headX, headY);
         trail.addColorStop(0, 'rgba(255,255,255,0)');
-        trail.addColorStop(.65, meteor.gradientColor + '66');
+        trail.addColorStop(.48, meteor.gradientColor + '55');
+        trail.addColorStop(.82, meteor.gradientColor + 'dd');
         trail.addColorStop(1, '#ffffff');
 
         ctx.save();
         ctx.globalAlpha = Math.max(0, fade);
+
+        // Long, soft outer glow
         ctx.beginPath();
         ctx.moveTo(tailX, tailY);
         ctx.lineTo(headX, headY);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 1.5;
-        ctx.shadowColor = meteor.color;
-        ctx.shadowBlur = 12;
+        ctx.lineWidth = 5;
+        ctx.shadowColor = meteor.gradientColor;
+        ctx.shadowBlur = 28;
         ctx.stroke();
 
-        ctx.font = `${16 + Math.random() * 5}px Georgia, serif`;
+        // Bright, narrow core
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(headX, headY);
+        ctx.strokeStyle = trail;
+        ctx.lineWidth = 1.8;
+        ctx.shadowColor = meteor.color;
+        ctx.shadowBlur = 18;
+        ctx.stroke();
+
+        ctx.font = `${meteor.fontSize}px Georgia, serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = meteor.gradientColor;
-        ctx.shadowColor = meteor.color;
-        ctx.shadowBlur = 16;
+        ctx.fillStyle = '#fff8e8';
+        ctx.shadowColor = meteor.gradientColor;
+        ctx.shadowBlur = 22;
         ctx.fillText(meteor.symbol, headX, headY);
         ctx.restore();
 
-        if (meteor.progress >= 1 || headX < -meteor.length || headY > height + meteor.length) {
+        if (meteor.progress >= 1 || headY > height + meteor.length) {
           meteor.active = false;
-          meteor.nextAt = time + 1800 + Math.random() * 6500;
         }
       });
+
+      if (meteors.every(meteor => !meteor.active) && nextWaveAt <= time) {
+        nextWaveAt = time + 2200 + Math.random() * 2500;
+      }
 
       requestAnimationFrame(draw);
     }
