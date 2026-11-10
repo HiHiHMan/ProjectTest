@@ -52,3 +52,33 @@ to{opacity:.95;transform:scale(1.4)}}
 .cloud-cluster .mini-cloud:nth-child(5){filter:blur(6px) saturate(1.9) hue-rotate(205deg)}
 .cloud-cluster .mini-cloud:nth-child(6){filter:blur(4px) saturate(1.95) hue-rotate(255deg)}
 .cloud-cluster .mini-cloud:nth-child(7){filter:blur(4px) saturate(2) hue-rotate(305deg)}
+
+/* Give each cloud a distinct silhouette while preserving the original pastel artwork */
+.cloud-cluster .mini-cloud:nth-child(1){
+  mask-image:radial-gradient(ellipse 24% 35% at 18% 62%,#000 98%,transparent 100%),radial-gradient(ellipse 29% 48% at 43% 43%,#000 98%,transparent 100%),radial-gradient(ellipse 24% 36% at 68% 58%,#000 98%,transparent 100%),radial-gradient(ellipse 19% 29% at 86% 67%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(2){
+  mask-image:radial-gradient(ellipse 18% 27% at 15% 65%,#000 98%,transparent 100%),radial-gradient(ellipse 25% 43% at 37% 49%,#000 98%,transparent 100%),radial-gradient(ellipse 31% 48% at 64% 40%,#000 98%,transparent 100%),radial-gradient(ellipse 20% 31% at 87% 63%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(3){
+  mask-image:radial-gradient(ellipse 29% 31% at 18% 65%,#000 98%,transparent 100%),radial-gradient(ellipse 20% 47% at 42% 39%,#000 98%,transparent 100%),radial-gradient(ellipse 25% 34% at 65% 57%,#000 98%,transparent 100%),radial-gradient(ellipse 20% 25% at 86% 69%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(4){
+  mask-image:radial-gradient(ellipse 22% 27% at 13% 68%,#000 98%,transparent 100%),radial-gradient(ellipse 24% 34% at 34% 57%,#000 98%,transparent 100%),radial-gradient(ellipse 22% 50% at 58% 39%,#000 98%,transparent 100%),radial-gradient(ellipse 29% 34% at 83% 62%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(5){
+  mask-image:radial-gradient(ellipse 20% 28% at 17% 66%,#000 98%,transparent 100%),radial-gradient(ellipse 27% 39% at 39% 50%,#000 98%,transparent 100%),radial-gradient(ellipse 19% 29% at 59% 65%,#000 98%,transparent 100%),radial-gradient(ellipse 27% 45% at 81% 43%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(6){
+  mask-image:radial-gradient(ellipse 30% 29% at 19% 67%,#000 98%,transparent 100%),radial-gradient(ellipse 22% 32% at 43% 58%,#000 98%,transparent 100%),radial-gradient(ellipse 21% 44% at 63% 43%,#000 98%,transparent 100%),radial-gradient(ellipse 22% 28% at 84% 65%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
+.cloud-cluster .mini-cloud:nth-child(7){
+  mask-image:radial-gradient(ellipse 20% 35% at 15% 62%,#000 98%,transparent 100%),radial-gradient(ellipse 23% 48% at 36% 43%,#000 98%,transparent 100%),radial-gradient(ellipse 29% 35% at 62% 59%,#000 98%,transparent 100%),radial-gradient(ellipse 23% 27% at 86% 67%,#000 98%,transparent 100%);
+  mask-composite:add;
+}
