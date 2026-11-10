@@ -28,33 +28,3 @@ to{opacity:.95;transform:scale(1.4)}}
 }
 
 
-/* Additional medium cloud puffs */
-.dream-cloud {
-  position: absolute;
-  z-index: 1;
-  width: 270px;
-  height: 145px;
-  pointer-events: none;
-  filter: blur(24px) saturate(1.45);
-  opacity: .42;
-  background:
-    radial-gradient(ellipse at 48% 58%, rgba(151, 125, 205, .9) 0 34%, transparent 76%),
-    radial-gradient(ellipse at 16% 58%, rgba(133, 105, 190, .82) 0 28%, transparent 70%),
-    radial-gradient(ellipse at 31% 36%, rgba(157, 128, 211, .86) 0 32%, transparent 72%),
-    radial-gradient(ellipse at 49% 27%, rgba(133, 151, 213, .82) 0 29%, transparent 70%),
-    radial-gradient(ellipse at 66% 39%, rgba(157, 151, 213, .84) 0 32%, transparent 72%),
-    radial-gradient(ellipse at 84% 58%, rgba(204, 143, 190, .78) 0 27%, transparent 69%),
-    radial-gradient(ellipse at 42% 76%, rgba(183, 127, 197, .76) 0 30%, transparent 70%),
-    radial-gradient(ellipse at 68% 73%, rgba(199, 139, 185, .72) 0 25%, transparent 67%);
-  animation: cloud-drift 30s ease-in-out infinite alternate;
-}
-.dream-cloud--left {
-  top: 205px;
-  left: calc(50% - 500px);
-}
-.dream-cloud--right {
-  top: 245px;
-  left: calc(50% + 250px);
-  transform: scale(.92);
-  animation-delay: -12s;
-}
