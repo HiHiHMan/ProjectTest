@@ -31,7 +31,7 @@
         progress: 0,
         length: 90 + Math.random() * 130,
         speed: .00022 + Math.random() * .00018,
-        angle: Math.PI * (.68 + Math.random() * .12),
+        angle: Math.PI / 2,
         color: colors[Math.floor(Math.random() * colors.length)],
         gradientColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
         nextAt: performance.now() + Math.random() * 7000
@@ -61,7 +61,7 @@
           meteor.y = height * (.04 + Math.random() * .42);
           meteor.length = 85 + Math.random() * 145;
           meteor.speed = .00022 + Math.random() * .0002;
-          meteor.angle = Math.PI * (.68 + Math.random() * .12);
+          meteor.angle = Math.PI / 2;
           meteor.color = colors[Math.floor(Math.random() * colors.length)];
           meteor.gradientColor = gradientColors[Math.floor(Math.random() * gradientColors.length)];
         }
