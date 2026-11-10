@@ -25,6 +25,10 @@
       flower.style.top = (24 + Math.random() * 57) + '%';
       flower.style.fontSize = (19 + Math.random() * 13) + 'px';
       flower.style.transform = 'translate(-50%, -50%) rotate(' + (Math.random() * 50 - 25) + 'deg)';
+      flower.style.setProperty('--float-duration', (8 + Math.random() * 5) + 's');
+      flower.style.setProperty('--sway-duration', (9 + Math.random() * 6) + 's');
+      flower.style.setProperty('--float-delay', (-Math.random() * 10) + 's');
+      flower.style.setProperty('--sway-delay', (-Math.random() * 12) + 's');
       container.appendChild(flower);
     }
   })();
