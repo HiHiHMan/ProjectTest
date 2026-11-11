@@ -9,7 +9,8 @@
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
     body {
-      background: radial-gradient(ellipse at 50% 100%, #111a35 0%, #080b18 42%, #03040a 100%);
+      background:
+        radial-gradient(ellipse at 50% 100%, #17213b 0%, #0a1022 40%, #03050d 100%);
       color: #eef2ff;
       font-family: Inter, ui-sans-serif, system-ui, sans-serif;
     }
@@ -21,13 +22,264 @@
       border: 1px solid #a9b8e455; border-radius: 999px;
       padding: 10px 16px; background: #080b18aa; backdrop-filter: blur(10px);
     }
+    .hint {
+      position: fixed; right: 30px; bottom: 26px; z-index: 2;
+      color: #8996b7; font-size: 10px; letter-spacing: .18em;
+      text-transform: uppercase; pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .back { top: 18px; left: 18px; }
+      .hint { right: 18px; bottom: 18px; font-size: 9px; }
+    }
   </style>
 </head>
 <body>
   <a class="back" href="../index.html">← Experiments</a>
-  <canvas id="scene" aria-label="Fireworks canvas"></canvas>
+  <canvas id="scene" aria-label="Colorful fireworks exploding in the night sky"></canvas>
+  <div class="hint">Click anywhere to launch</div>
   <script>
-    // Fireworks experiment starts here.
+    (() => {
+      const canvas = document.getElementById('scene');
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+      if (!gl) return;
+
+      const vertexSource = `
+        attribute vec2 aPosition;
+        attribute float aSize;
+        attribute vec4 aColor;
+        uniform vec2 uResolution;
+        uniform float uPixelRatio;
+        varying vec4 vColor;
+        void main() {
+          vec2 clip = vec2(
+            aPosition.x / uResolution.x * 2.0 - 1.0,
+            1.0 - aPosition.y / uResolution.y * 2.0
+          );
+          gl_Position = vec4(clip, 0.0, 1.0);
+          gl_PointSize = aSize * uPixelRatio;
+          vColor = aColor;
+        }`;
+
+      const fragmentSource = `
+        precision mediump float;
+        varying vec4 vColor;
+        void main() {
+          vec2 p = gl_PointCoord - 0.5;
+          float d = length(p) * 2.0;
+          if (d > 1.0) discard;
+          float core = exp(-d * d * 18.0);
+          float glow = exp(-d * d * 5.0) * 0.34;
+          float alpha = max(core, glow) * vColor.a;
+          gl_FragColor = vec4(vColor.rgb * alpha, alpha);
+        }`;
+
+      function compile(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          throw new Error(gl.getShaderInfoLog(shader));
+        }
+        return shader;
+      }
+
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        throw new Error(gl.getProgramInfoLog(program));
+      }
+      gl.useProgram(program);
+
+      const capacity = 12000;
+      const stride = 7;
+      const vertexData = new Float32Array(capacity * stride);
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertexData.byteLength, gl.DYNAMIC_DRAW);
+
+      const positionLoc = gl.getAttribLocation(program, 'aPosition');
+      const sizeLoc = gl.getAttribLocation(program, 'aSize');
+      const colorLoc = gl.getAttribLocation(program, 'aColor');
+      gl.enableVertexAttribArray(positionLoc);
+      gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, stride * 4, 0);
+      gl.enableVertexAttribArray(sizeLoc);
+      gl.vertexAttribPointer(sizeLoc, 1, gl.FLOAT, false, stride * 4, 2 * 4);
+      gl.enableVertexAttribArray(colorLoc);
+      gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, stride * 4, 3 * 4);
+
+      const resolutionLoc = gl.getUniformLocation(program, 'uResolution');
+      const ratioLoc = gl.getUniformLocation(program, 'uPixelRatio');
+      const particles = [];
+      const rockets = [];
+      const palette = [
+        [1.00, 0.28, 0.20], [1.00, 0.62, 0.18],
+        [1.00, 0.88, 0.42], [0.30, 0.82, 1.00],
+        [0.48, 0.48, 1.00], [0.78, 0.42, 1.00],
+        [1.00, 0.38, 0.68], [0.38, 1.00, 0.72]
+      ];
+      let width = innerWidth;
+      let height = innerHeight;
+      let pixelRatio = 1;
+      let lastTime = 0;
+      let nextLaunch = 0;
+
+      function resize() {
+        width = innerWidth;
+        height = innerHeight;
+        pixelRatio = Math.min(devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(width * pixelRatio);
+        canvas.height = Math.floor(height * pixelRatio);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(resolutionLoc, width, height);
+        gl.uniform1f(ratioLoc, pixelRatio);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function addParticle(x, y, vx, vy, color, life, size, gravity, drag) {
+        if (particles.length >= capacity) return;
+        particles.push({
+          x, y, vx, vy, color, life, maxLife: life,
+          size, gravity, drag, twinkle: Math.random() * 8
+        });
+      }
+
+      function launch(x = width * (0.16 + Math.random() * 0.68), targetY) {
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        rockets.push({
+          x, y: height + 8,
+          targetY: targetY ?? height * (0.20 + Math.random() * 0.36),
+          vx: (Math.random() - 0.5) * 42,
+          vy: -(height * (0.62 + Math.random() * 0.18)),
+          color,
+          trailTimer: 0
+        });
+      }
+
+      function burst(x, y, color) {
+        const pattern = Math.random();
+        const count = 115 + Math.floor(Math.random() * 95);
+        const baseSpeed = 85 + Math.random() * 115;
+        const rotation = Math.random() * Math.PI * 2;
+        for (let i = 0; i < count; i++) {
+          const angle = rotation + (i / count) * Math.PI * 2;
+          let speed = baseSpeed * (0.72 + Math.random() * 0.42);
+          if (pattern < 0.24) speed *= i % 2 ? 0.48 : 1.0;
+          if (pattern > 0.76) speed *= 0.72 + Math.random() * 0.5;
+          const life = 1.25 + Math.random() * 1.25;
+          addParticle(
+            x, y,
+            Math.cos(angle) * speed,
+            Math.sin(angle) * speed,
+            color, life, 2.0 + Math.random() * 2.3, 82 + Math.random() * 42, 0.986
+          );
+        }
+
+        // Fine golden sparks add a second, delicate layer to each explosion.
+        const glitterCount = 35 + Math.floor(Math.random() * 35);
+        for (let i = 0; i < glitterCount; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 35 + Math.random() * 155;
+          addParticle(
+            x, y, Math.cos(angle) * speed, Math.sin(angle) * speed,
+            [1.0, 0.82 + Math.random() * 0.16, 0.48],
+            1.5 + Math.random() * 1.4, 1.1 + Math.random() * 1.5,
+            105, 0.978
+          );
+        }
+      }
+
+      function update(dt) {
+        for (let i = rockets.length - 1; i >= 0; i--) {
+          const rocket = rockets[i];
+          rocket.trailTimer -= dt;
+          rocket.vy += 22 * dt;
+          rocket.x += rocket.vx * dt;
+          rocket.y += rocket.vy * dt;
+          if (rocket.trailTimer <= 0) {
+            addParticle(
+              rocket.x, rocket.y, (Math.random() - 0.5) * 24, 35 + Math.random() * 65,
+              rocket.color, 0.28 + Math.random() * 0.22, 1.8 + Math.random() * 1.4,
+              55, 0.94
+            );
+            rocket.trailTimer = 0.022;
+          }
+          if (rocket.y <= rocket.targetY || rocket.vy >= -35) {
+            burst(rocket.x, rocket.y, rocket.color);
+            rockets.splice(i, 1);
+          }
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.life -= dt;
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          p.vx *= Math.pow(p.drag, dt * 60);
+          p.vy *= Math.pow(p.drag, dt * 60);
+          p.vy += p.gravity * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+        }
+      }
+
+      function render() {
+        let vertexCount = 0;
+        for (let i = 0; i < particles.length && vertexCount < capacity; i++) {
+          const p = particles[i];
+          const fade = Math.pow(Math.max(0, p.life / p.maxLife), 0.72);
+          const flicker = 0.78 + Math.sin(p.life * 24 + p.twinkle) * 0.22;
+          const alpha = fade * flicker;
+          const offset = vertexCount * stride;
+          vertexData[offset] = p.x;
+          vertexData[offset + 1] = p.y;
+          vertexData[offset + 2] = p.size * (0.65 + fade * 0.55);
+          vertexData[offset + 3] = p.color[0];
+          vertexData[offset + 4] = p.color[1];
+          vertexData[offset + 5] = p.color[2];
+          vertexData[offset + 6] = alpha;
+          vertexCount++;
+        }
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexData.subarray(0, vertexCount * stride));
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.drawArrays(gl.POINTS, 0, vertexCount);
+      }
+
+      function frame(timestamp) {
+        const now = timestamp * 0.001;
+        const dt = Math.min(0.032, lastTime ? now - lastTime : 0.016);
+        lastTime = now;
+        nextLaunch -= dt;
+        if (nextLaunch <= 0) {
+          launch();
+          if (Math.random() < 0.28) {
+            launch(width * (0.18 + Math.random() * 0.64), height * (0.25 + Math.random() * 0.24));
+          }
+          nextLaunch = 0.62 + Math.random() * 0.72;
+        }
+        update(dt);
+        render();
+        requestAnimationFrame(frame);
+      }
+
+      canvas.addEventListener('pointerdown', event => {
+        launch(event.clientX, Math.max(height * 0.12, event.clientY));
+      });
+
+      // A few opening bursts make the scene feel alive immediately.
+      launch(width * 0.32, height * 0.32);
+      setTimeout(() => launch(width * 0.68, height * 0.25), 420);
+      requestAnimationFrame(frame);
+    })();
   </script>
 </body>
 </html>
