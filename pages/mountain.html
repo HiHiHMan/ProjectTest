@@ -125,19 +125,31 @@
         for (const [px, pz, height, radius] of peaks) {
           const dx = x - px;
           const dz = z - pz;
-          const distance = Math.sqrt(dx * dx * 0.82 + dz * dz * 0.48);
+          const angle = Math.atan2(dz, dx);
 
-          // A wide, rounded mountain mass with shoulders instead of a straight cone.
-          const body = height * Math.exp(-Math.pow(distance / radius, 1.65) * 1.55);
+          // Slightly uneven mountain outlines create natural shoulders, not extra summits.
+          const outline = radius * (
+            1
+            + 0.075 * Math.sin(angle * 3.0 + px * 0.25)
+            + 0.035 * Math.cos(angle * 5.0 + pz * 0.2)
+          );
+          const distance = Math.sqrt(dx * dx * 0.82 + dz * dz * 0.48);
+          const normalized = distance / outline;
+
+          // Keep one rounded summit while giving the slopes a less uniform profile.
+          const body = height * Math.exp(-Math.pow(normalized, 1.75) * 1.6);
           h = Math.max(h, body);
         }
 
-        // Subtle rocky variation, strongest on the mountain slopes and ridges.
+        // Add broad, low-amplitude ridges and rocky variation across the slopes.
+        // The variation fades near the summit and at the flat plain to avoid horn-like bumps.
         if (h > 0.08) {
-          const roughness =
-            Math.sin(x * 1.1 + z * 0.65) * 0.035 +
-            Math.sin(z * 1.7 - x * 0.4) * 0.025;
-          h = Math.max(0, h + roughness * Math.min(1, h * 0.3));
+          const slope = Math.min(1, h * 0.45);
+          const ridges =
+            Math.sin(x * 0.85 + z * 0.42) * 0.11 +
+            Math.sin(z * 1.15 - x * 0.32) * 0.075 +
+            Math.sin(x * 1.75 + z * 1.3) * 0.035;
+          h = Math.max(0, h + ridges * slope);
         }
 
         // The land outside the five mountain masses remains flat.
