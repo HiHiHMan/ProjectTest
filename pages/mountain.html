@@ -75,8 +75,7 @@
       const fragment = `
         precision mediump float;
         varying vec3 vColor;
-        varying vec2 vScreenPosition;
-        uniform vec2 uMouse;
+        uniform vec2 uMousePixels;
         uniform float uHoverActive;
         void main() {
           vec2 c = gl_PointCoord - 0.5;
@@ -88,9 +87,9 @@
           float halo = exp(-d * d * 22.0) * 0.42;
           float alpha = max(core, halo);
 
-          // A point directly under the pointer turns white and gains a soft glow.
-          float screenDistance = length(vScreenPosition - uMouse);
-          float hover = uHoverActive * (1.0 - smoothstep(0.0018, 0.0048, screenDistance));
+          // Circular focus area: 10 x 10 pixels (5 px radius).
+          float screenDistance = distance(gl_FragCoord.xy, uMousePixels);
+          float hover = uHoverActive * (1.0 - smoothstep(4.5, 5.0, screenDistance));
           vec3 pointColor = mix(vColor, vec3(1.0), hover);
           float hoverGlow = hover * exp(-d * d * 10.0) * 0.9;
           alpha = max(alpha, hoverGlow);
@@ -243,7 +242,7 @@
       const viewLoc = gl.getUniformLocation(program, 'uView');
       const timeLoc = gl.getUniformLocation(program, 'uTime');
       const ratioLoc = gl.getUniformLocation(program, 'uPixelRatio');
-      const mouseLoc = gl.getUniformLocation(program, 'uMouse');
+      const mouseLoc = gl.getUniformLocation(program, 'uMousePixels');
       const hoverLoc = gl.getUniformLocation(program, 'uHoverActive');
       const count = positions.length / 3;
       const pointer = { x: 0, y: 0, mouseX: 0, mouseY: 0, hovering: 0 };
@@ -269,8 +268,9 @@
           lastX = e.clientX;
         }
         pointer.y = (e.clientY / innerHeight - 0.5) * 0.7;
-        pointer.mouseX = (e.clientX / innerWidth) * 2 - 1;
-        pointer.mouseY = 1 - (e.clientY / innerHeight) * 2;
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        pointer.mouseX = e.clientX * dpr;
+        pointer.mouseY = canvas.height - e.clientY * dpr;
         pointer.hovering = 1;
       }, { passive: true });
 
