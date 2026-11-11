@@ -61,17 +61,23 @@
         uniform float uTime;
         uniform float uPixelRatio;
         varying vec3 vColor;
+        varying vec2 vScreenPosition;
         void main() {
           vec3 p = aPosition;
           // Keep every point and its glow steady; no twinkling or vertical wobble.
           vec4 viewPosition = uView * vec4(p, 1.0);
-          gl_Position = uProjection * viewPosition;
+          vec4 clipPosition = uProjection * viewPosition;
+          gl_Position = clipPosition;
           gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           vColor = aColor;
+          vScreenPosition = clipPosition.xy / clipPosition.w;
         }`;
       const fragment = `
         precision mediump float;
         varying vec3 vColor;
+        varying vec2 vScreenPosition;
+        uniform vec2 uMouse;
+        uniform float uHoverActive;
         void main() {
           vec2 c = gl_PointCoord - 0.5;
           float d = length(c);
@@ -81,9 +87,16 @@
           float core = 1.0 - smoothstep(0.10, 0.15, d);
           float halo = exp(-d * d * 22.0) * 0.42;
           float alpha = max(core, halo);
+
+          // A point directly under the pointer turns white and gains a soft glow.
+          float screenDistance = length(vScreenPosition - uMouse);
+          float hover = uHoverActive * (1.0 - smoothstep(0.0018, 0.0048, screenDistance));
+          vec3 pointColor = mix(vColor, vec3(1.0), hover);
+          float hoverGlow = hover * exp(-d * d * 10.0) * 0.9;
+          alpha = max(alpha, hoverGlow);
           if (alpha < 0.006) discard;
 
-          gl_FragColor = vec4(vColor, alpha);
+          gl_FragColor = vec4(pointColor, alpha);
         }`;
 
       function shader(type, source) {
@@ -230,8 +243,10 @@
       const viewLoc = gl.getUniformLocation(program, 'uView');
       const timeLoc = gl.getUniformLocation(program, 'uTime');
       const ratioLoc = gl.getUniformLocation(program, 'uPixelRatio');
+      const mouseLoc = gl.getUniformLocation(program, 'uMouse');
+      const hoverLoc = gl.getUniformLocation(program, 'uHoverActive');
       const count = positions.length / 3;
-      const pointer = { x: 0, y: 0 };
+      const pointer = { x: 0, y: 0, mouseX: 0, mouseY: 0, hovering: 0 };
       let rotation = 0;
       let dragging = false;
       let lastX = 0;
@@ -254,7 +269,14 @@
           lastX = e.clientX;
         }
         pointer.y = (e.clientY / innerHeight - 0.5) * 0.7;
+        pointer.mouseX = (e.clientX / innerWidth) * 2 - 1;
+        pointer.mouseY = 1 - (e.clientY / innerHeight) * 2;
+        pointer.hovering = 1;
       }, { passive: true });
+
+      canvas.addEventListener('pointerleave', () => {
+        pointer.hovering = 0;
+      });
 
       function stopDragging() {
         dragging = false;
@@ -304,6 +326,8 @@
         ];
         gl.uniformMatrix4fv(viewLoc, false, lookAt(eye, [0, 1.2, 0]));
         gl.uniform1f(timeLoc, t);
+        gl.uniform2f(mouseLoc, pointer.mouseX, pointer.mouseY);
+        gl.uniform1f(hoverLoc, pointer.hovering);
         gl.drawArrays(gl.POINTS, 0, count);
         requestAnimationFrame(render);
       }
