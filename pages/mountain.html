@@ -75,9 +75,9 @@
           gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           float mouseDistance = distance(pointPixels, uMousePixels);
           float pointRadius = gl_PointSize * 0.5;
-          // Use a wider focus radius, with a minimum size for tiny distant points.
-          float focusRadius = max(pointRadius * 5.0, 12.0);
-          vHover = uHoverActive * (1.0 - smoothstep(max(0.0, focusRadius - 2.0), focusRadius, mouseDistance));
+          // Broad focus area around each point, while remaining proportional to its size.
+          float focusRadius = max(pointRadius * 12.0, 40.0);
+          vHover = uHoverActive * (1.0 - smoothstep(max(0.0, focusRadius - 3.0), focusRadius, mouseDistance));
           vColor = aColor;
         }`;
       const fragment = `
