@@ -67,7 +67,7 @@
           p.y += cos(p.z * 0.55 + uTime * 0.22) * 0.025;
           vec4 viewPosition = uView * vec4(p, 1.0);
           gl_Position = uProjection * viewPosition;
-          gl_PointSize = aSize * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
+          gl_PointSize = aSize * 1.45 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           vColor = aColor;
         }`;
       const fragment = `
@@ -76,13 +76,12 @@
         void main() {
           vec2 c = gl_PointCoord - 0.5;
           float d = length(c);
-          if (d > 0.5) discard;
 
-          // Crisp point core with a very subtle soft halo.
-          float core = 1.0 - smoothstep(0.36, 0.43, d);
-          float halo = exp(-d * d * 30.0) * 0.10;
+          // A crisp bright center surrounded by a visible, soft glow.
+          float core = 1.0 - smoothstep(0.17, 0.27, d);
+          float halo = exp(-d * d * 20.0) * 0.28;
           float alpha = max(core, halo);
-          if (alpha < 0.006) discard;
+          if (alpha < 0.004) discard;
 
           gl_FragColor = vec4(vColor, alpha);
         }`;
@@ -129,9 +128,10 @@
 
       // Three staggered mountain ranges, with continuous point coverage.
       for (let j = 0; j < rows; j++) {
-        const z = (j / (rows - 1) - 0.5) * 25;
         for (let i = 0; i < columns; i++) {
-          const x = (i / (columns - 1) - 0.5) * 25;
+          // Randomize each point inside its grid cell to avoid visible rows or patterns.
+          const x = ((i + Math.random()) / columns - 0.5) * 25;
+          const z = ((j + Math.random()) / rows - 0.5) * 25;
           const y = mountain(x, z);
           positions.push(x, y, z);
           sizes.push(1.0 + Math.random() * 0.55);
