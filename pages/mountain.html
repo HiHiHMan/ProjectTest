@@ -271,9 +271,11 @@
           lastX = e.clientX;
         }
         pointer.y = (e.clientY / innerHeight - 0.5) * 0.7;
-        const dpr = Math.min(devicePixelRatio || 1, 2);
-        pointer.mouseX = e.clientX * dpr;
-        pointer.mouseY = canvas.height - e.clientY * dpr;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        pointer.mouseX = (e.clientX - rect.left) * scaleX;
+        pointer.mouseY = canvas.height - (e.clientY - rect.top) * scaleY;
         pointer.hovering = 1;
       }, { passive: true });
 
