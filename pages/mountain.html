@@ -125,19 +125,30 @@
         for (const [px, pz, height, radius] of peaks) {
           const dx = x - px;
           const dz = z - pz;
-          const distance = Math.sqrt(dx * dx * 0.82 + dz * dz * 0.48);
 
-          // One main summit per mountain, with broad uneven shoulders.
-          const body = height * Math.exp(-Math.pow(distance / radius, 1.65) * 1.55);
+          // A broad, asymmetric mountain profile with rounded shoulders.
+          // The summit stays singular, while the slopes are not straight cone-like lines.
+          const angle = Math.atan2(dz, dx);
+          const outline = radius * (
+            1
+            + 0.13 * Math.sin(angle * 2.0 + px * 0.3)
+            + 0.07 * Math.cos(angle * 3.0 + pz * 0.2)
+          );
+          const distance = Math.sqrt(dx * dx * 0.72 + dz * dz * 0.58);
+          const normalized = distance / outline;
+
+          // Rounded upper mass and gently flattening lower slopes.
+          const profile = Math.exp(-2.15 * Math.pow(normalized, 2.35));
+          const body = height * profile;
           h = Math.max(h, body);
         }
 
-        // Gentle rocky variation without creating additional peaks.
+        // Very subtle surface texture; never strong enough to form extra summits.
         if (h > 0.08) {
           const roughness =
-            Math.sin(x * 1.35 + z * 0.72) * 0.07 +
-            Math.sin(z * 2.15 - x * 0.48) * 0.045;
-          h = Math.max(0, h + roughness * Math.min(1, h * 0.35));
+            Math.sin(x * 1.1 + z * 0.65) * 0.035 +
+            Math.sin(z * 1.7 - x * 0.4) * 0.025;
+          h = Math.max(0, h + roughness * Math.min(1, h * 0.3));
         }
 
         // The land outside the five mountain masses remains flat.
