@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#071014">
-  <title>Mountain — Point Field</title>
+  <title>Mountain — Solid Surface</title>
   <style>
     :root { color-scheme: dark; --ink: #e7f2ed; --muted: #91aaa5; }
     * { box-sizing: border-box; }
@@ -33,12 +33,12 @@
       <div>
         <p class="eyebrow">Generative landscape · 001</p>
         <h1>Mountain</h1>
-        <p class="subtitle">Layered mountain ranges, formed by a continuous field of points.</p>
+        <p class="subtitle">Layered mountain ranges with a continuous solid surface.</p>
       </div>
       <a class="back" href="../index.html">← Experiments</a>
     </div>
     <div class="bottom">
-      <span>WebGL / Point field</span>
+      <span>WebGL / Solid mesh</span>
       <span class="hint">Drag to rotate 390°<br>Move vertically to explore</span>
     </div>
   </main>
@@ -46,7 +46,7 @@
   <script>
     (() => {
       const canvas = document.getElementById('scene');
-      const gl = canvas.getContext('webgl', { antialias: true, alpha: true });
+      const gl = canvas.getContext('webgl', { antialias: true, alpha: true, depth: true });
       if (!gl) {
         document.body.insertAdjacentHTML('beforeend', '<p style="position:fixed;inset:50% 20px auto;text-align:center;color:white">WebGL is not supported by this browser.</p>');
         return;
@@ -54,7 +54,6 @@
 
       const vertex = `
         attribute vec3 aPosition;
-        attribute float aSize;
         attribute vec3 aColor;
         uniform mat4 uProjection;
         uniform mat4 uView;
@@ -66,24 +65,13 @@
           // Keep every point and its glow steady; no twinkling or vertical wobble.
           vec4 viewPosition = uView * vec4(p, 1.0);
           gl_Position = uProjection * viewPosition;
-          gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           vColor = aColor;
         }`;
       const fragment = `
         precision mediump float;
         varying vec3 vColor;
         void main() {
-          vec2 c = gl_PointCoord - 0.5;
-          float d = length(c);
-          if (d > 0.5) discard;
-
-          // Bright, sharp point with a clearly visible soft shadow-like halo.
-          float core = 1.0 - smoothstep(0.10, 0.15, d);
-          float halo = exp(-d * d * 22.0) * 0.42;
-          float alpha = max(core, halo);
-          if (alpha < 0.006) discard;
-
-          gl_FragColor = vec4(vColor, alpha);
+          gl_FragColor = vec4(vColor, 1.0);
         }`;
 
       function shader(type, source) {
@@ -100,15 +88,12 @@
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);
 
-      const positions = [], sizes = [], colors = [];
-      const palette = [
-        [1.00, 1.00, 1.00], // white
-        [0.34, 0.92, 0.48], // green
-        [0.66, 0.38, 0.94], // purple
-        [0.28, 0.68, 1.00], // blue
-        [1.00, 0.42, 0.70], // pink
-        [1.00, 0.58, 0.24]  // orange
-      ];
+      const positions = [], colors = [], indices = [];
+      const uintIndexExtension = gl.getExtension('OES_element_index_uint');
+      if (!uintIndexExtension) {
+        document.body.insertAdjacentHTML('beforeend', '<p style="position:fixed;inset:50% 20px auto;text-align:center;color:white">This browser does not support large terrain meshes.</p>');
+        return;
+      }
       const columns = 600, rows = 400;
       // Five isolated hills on a broad, flat plain; the center hill is tallest.
       const peaks = [
@@ -169,7 +154,6 @@
           const x = (i / (columns - 1) - 0.5) * 25;
           const y = mountain(x, z);
           positions.push(x, y, z);
-          sizes.push(1.0 + Math.random() * 0.55);
 
           // Sunlight comes from the east at 10 AM, with a moderately elevated angle.
           const normalStep = 0.045;
@@ -214,6 +198,18 @@
           colors.push(red, green, blue);
         }
       }
+
+      // Connect neighboring grid cells into two triangles each.
+      for (let j = 0; j < rows - 1; j++) {
+        for (let i = 0; i < columns - 1; i++) {
+          const a = j * columns + i;
+          const b = a + 1;
+          const c = a + columns;
+          const d = c + 1;
+          indices.push(a, c, b, b, c, d);
+        }
+      }
+
       function buffer(name, data, size) {
         const b = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, b);
@@ -223,14 +219,14 @@
         gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0);
       }
       buffer('aPosition', positions, 3);
-      buffer('aSize', sizes, 1);
       buffer('aColor', colors, 3);
+      const indexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(indices), gl.STATIC_DRAW);
 
       const projectionLoc = gl.getUniformLocation(program, 'uProjection');
       const viewLoc = gl.getUniformLocation(program, 'uView');
-      const timeLoc = gl.getUniformLocation(program, 'uTime');
-      const ratioLoc = gl.getUniformLocation(program, 'uPixelRatio');
-      const count = positions.length / 3;
+      const count = indices.length;
       const pointer = { x: 0, y: 0 };
       let rotation = 0;
       let dragging = false;
@@ -285,17 +281,17 @@
         canvas.height = Math.floor(innerHeight * dpr);
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.uniformMatrix4fv(projectionLoc, false, perspective(Math.PI / 3.1, canvas.width / canvas.height, 0.1, 100));
-        gl.uniform1f(ratioLoc, dpr);
       }
       window.addEventListener('resize', resize);
       resize();
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.disable(gl.BLEND);
       gl.clearColor(0, 0, 0, 0);
 
       function render(ms) {
         const t = ms * 0.001;
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         const radius = 19.5;
         const eye = [
           Math.sin(rotation) * radius,
@@ -303,8 +299,7 @@
           Math.cos(rotation) * radius
         ];
         gl.uniformMatrix4fv(viewLoc, false, lookAt(eye, [0, 1.2, 0]));
-        gl.uniform1f(timeLoc, t);
-        gl.drawArrays(gl.POINTS, 0, count);
+        gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_INT, 0);
         requestAnimationFrame(render);
       }
       requestAnimationFrame(render);
