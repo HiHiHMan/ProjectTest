@@ -66,7 +66,7 @@
           // Keep every point and its glow steady; no twinkling or vertical wobble.
           vec4 viewPosition = uView * vec4(p, 1.0);
           gl_Position = uProjection * viewPosition;
-          gl_PointSize = aSize * 1.45 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
+          gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           vColor = aColor;
         }`;
       const fragment = `
@@ -75,12 +75,13 @@
         void main() {
           vec2 c = gl_PointCoord - 0.5;
           float d = length(c);
+          if (d > 0.5) discard;
 
-          // A crisp bright center surrounded by a visible, soft glow.
-          float core = 1.0 - smoothstep(0.17, 0.27, d);
-          float halo = exp(-d * d * 20.0) * 0.28;
+          // Bright, sharp point with a clearly visible soft shadow-like halo.
+          float core = 1.0 - smoothstep(0.10, 0.15, d);
+          float halo = exp(-d * d * 22.0) * 0.42;
           float alpha = max(core, halo);
-          if (alpha < 0.004) discard;
+          if (alpha < 0.006) discard;
 
           gl_FragColor = vec4(vColor, alpha);
         }`;
