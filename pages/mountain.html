@@ -72,9 +72,11 @@
           vec4 clipPosition = uProjection * viewPosition;
           gl_Position = clipPosition;
           vec2 pointPixels = (clipPosition.xy / clipPosition.w * 0.5 + 0.5) * uResolution;
-          float mouseDistance = distance(pointPixels, uMousePixels);
-          vHover = uHoverActive * (1.0 - smoothstep(24.5, 25.0, mouseDistance));
           gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
+          float mouseDistance = distance(pointPixels, uMousePixels);
+          float pointRadius = gl_PointSize * 0.5;
+          // Focus follows each point's actual rendered size and circular shape.
+          vHover = uHoverActive * (1.0 - smoothstep(max(0.0, pointRadius - 1.0), pointRadius, mouseDistance));
           vColor = aColor;
         }`;
       const fragment = `
