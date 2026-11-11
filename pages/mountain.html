@@ -119,31 +119,49 @@
         [7.0, 6.5, 5.2, 5.2]
       ];
 
+      // Broad mountain bodies with irregular ridgelines and several sharp summits.
+      const summitDetails = [
+        [-7.8, -6.7, 2.8, 1.05], [-6.2, -6.0, 2.35, 0.8],
+        [6.2, -6.9, 4.4, 1.0], [7.8, -5.9, 3.65, 0.85],
+        [-0.8, -0.6, 7.4, 1.0], [0.9, 0.5, 6.15, 0.85], [1.4, -0.8, 5.7, 0.72],
+        [-7.8, 6.2, 3.5, 0.95], [-6.2, 7.0, 2.75, 0.8],
+        [6.2, 6.0, 5.2, 1.0], [7.8, 7.0, 4.2, 0.8]
+      ];
+
       function mountain(x, z) {
         let h = 0;
 
         for (const [px, pz, height, radius] of peaks) {
           const dx = x - px;
           const dz = z - pz;
-
-          // Steep mountain sides with a narrow summit, rather than soft dome-shaped hills.
           const distance = Math.sqrt(dx * dx * 0.82 + dz * dz * 0.48);
-          const slope = Math.max(0, 1 - distance / radius);
-          if (slope <= 0) continue;
 
-          const mainPeak = height * Math.pow(slope, 1.18);
-          const rockyRidges =
-            Math.sin(dx * 2.1 + dz * 0.7) * 0.11 +
-            Math.sin(dz * 2.8 - dx * 0.55) * 0.08 +
-            Math.abs(Math.sin(dx * 1.35 + dz * 1.7)) * 0.13;
-
-          h = Math.max(h, mainPeak + rockyRidges * slope);
+          // A wide, rounded mountain mass with shoulders instead of a straight cone.
+          const body = height * Math.exp(-Math.pow(distance / radius, 1.65) * 1.55);
+          h = Math.max(h, body);
         }
 
-        // Keep the surrounding landscape completely flat.
+        // Add uneven, offset summits to create varied ridges and secondary peaks.
+        for (const [sx, sz, summitHeight, spread] of summitDetails) {
+          const dx = x - sx;
+          const dz = z - sz;
+          const d2 = dx * dx * 0.9 + dz * dz * 0.62;
+          const summit = summitHeight * Math.exp(-d2 / (spread * spread));
+          h = Math.max(h, summit);
+        }
+
+        // Subtle rocky variation, strongest on the mountain slopes and ridges.
+        if (h > 0.08) {
+          const roughness =
+            Math.sin(x * 1.35 + z * 0.72) * 0.13 +
+            Math.sin(z * 2.15 - x * 0.48) * 0.10 +
+            Math.sin(x * 2.7 + z * 1.9) * 0.045;
+          h = Math.max(0, h + roughness * Math.min(1, h * 0.42));
+        }
+
+        // The land outside the five mountain masses remains flat.
         return h;
       }
-
       // Three staggered mountain ranges, with continuous point coverage.
       for (let j = 0; j < rows; j++) {
         const z = (j / (rows - 1) - 0.5) * 25;
