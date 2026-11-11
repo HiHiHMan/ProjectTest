@@ -139,11 +139,12 @@
       window.addEventListener('resize', resize);
       resize();
 
-      function addParticle(x, y, vx, vy, color, life, size, gravity, drag, split = false) {
+      function addParticle(x, y, vx, vy, color, life, size, gravity, drag, split = false, trail = false) {
         if (particles.length >= capacity) return;
         particles.push({
           x, y, vx, vy, color, life, maxLife: life,
-          size, gravity, drag, split, twinkle: Math.random() * 8
+          size, gravity, drag, split, trail, trailTimer: 0,
+          twinkle: Math.random() * 8
         });
       }
 
@@ -200,9 +201,9 @@
       }
 
       function burst(x, y, color) {
-        // Occasional golden willow shells: long sparks that slowly bend and hang downward.
-        if (Math.random() < 0.22) {
-          const willowCount = 155 + Math.floor(Math.random() * 75);
+        // Frequent golden willow shells: long, clearly visible trails that cascade downward.
+        if (Math.random() < 0.48) {
+          const willowCount = 230 + Math.floor(Math.random() * 90);
           const rotation = Math.random() * Math.PI * 2;
           const willowColors = [
             [1.00, 0.82, 0.42],
@@ -211,16 +212,16 @@
           ];
           for (let i = 0; i < willowCount; i++) {
             const angle = rotation + (i / willowCount) * Math.PI * 2;
-            const speed = 72 + Math.random() * 92;
-            const life = 2.6 + Math.random() * 1.45;
+            const speed = 52 + Math.random() * 78;
+            const life = 3.8 + Math.random() * 1.5;
             const willowColor = willowColors[Math.floor(Math.random() * willowColors.length)];
             addParticle(
               x, y,
               Math.cos(angle) * speed * (0.88 + Math.random() * 0.24),
               Math.sin(angle) * speed * (0.88 + Math.random() * 0.24),
-              willowColor, life, 1.45 + Math.random() * 1.35,
-              112 + Math.random() * 42, 0.993,
-              Math.random() < 0.035
+              willowColor, life, 2.0 + Math.random() * 1.35,
+              165 + Math.random() * 55, 0.997,
+              false, true
             );
           }
 
@@ -365,6 +366,20 @@
             if (p.split) secondaryBurst(p.x, p.y, p.color);
             particles.splice(i, 1);
             continue;
+          }
+          if (p.trail) {
+            p.trailTimer -= dt;
+            if (p.trailTimer <= 0) {
+              addParticle(
+                p.x, p.y,
+                (Math.random() - 0.5) * 9,
+                10 + Math.random() * 22,
+                p.color, 0.48 + Math.random() * 0.28,
+                1.0 + Math.random() * 0.8,
+                115, 0.965
+              );
+              p.trailTimer = 0.045;
+            }
           }
           p.vx *= Math.pow(p.drag, dt * 60);
           p.vy *= Math.pow(p.drag, dt * 60);
