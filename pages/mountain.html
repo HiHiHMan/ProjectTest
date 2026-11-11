@@ -70,7 +70,7 @@
           p.y += cos(p.z * 0.55 + uTime * 0.22) * (aWater > 0.5 ? 0.045 : 0.025);
           vec4 viewPosition = uView * vec4(p, 1.0);
           gl_Position = uProjection * viewPosition;
-          gl_PointSize = aSize * uPixelRatio * (25.0 / max(1.0, -viewPosition.z));
+          gl_PointSize = aSize * uPixelRatio * (31.0 / max(1.0, -viewPosition.z));
           vShade = aShade;
           vWater = aWater;
           vDepth = clamp((-viewPosition.z - 5.0) / 32.0, 0.0, 1.0);
@@ -111,7 +111,7 @@
       gl.useProgram(program);
 
       const positions = [], sizes = [], shades = [], waters = [];
-      const columns = 220, rows = 150;
+      const columns = 340, rows = 230;
       const ridgeCenters = [-8.0, 0.0, 8.0];
       const peaks = [
         [-8.5, -8.0, 3.9, 5.2], [-3.0, -8.0, 5.0, 4.2], [3.4, -8.0, 3.6, 5.0], [8.0, -8.0, 4.3, 4.6],
@@ -142,7 +142,7 @@
             : mountain(x, z);
           positions.push(x, y, z);
           const peakFactor = Math.min(1, Math.max(0, y) / 5.8);
-          sizes.push(isWater ? 1.45 + Math.random() * 1.2 : 1.25 + Math.random() * 1.45 + peakFactor * 0.55);
+          sizes.push(isWater ? 2.0 + Math.random() * 1.0 : 1.9 + Math.random() * 1.25 + peakFactor * 0.45);
           shades.push(isWater ? 0.35 + Math.random() * 0.45 : Math.min(1, 0.2 + peakFactor * 0.72 + Math.random() * 0.13));
           waters.push(isWater ? 1 : 0);
         }
