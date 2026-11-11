@@ -75,8 +75,16 @@
         varying vec3 vColor;
         void main() {
           vec2 c = gl_PointCoord - 0.5;
-          if (length(c) > 0.5) discard;
-          gl_FragColor = vec4(vColor, 1.0);
+          float d = length(c);
+          if (d > 0.5) discard;
+
+          // Crisp point core with a very subtle soft halo.
+          float core = 1.0 - smoothstep(0.36, 0.43, d);
+          float halo = exp(-d * d * 30.0) * 0.10;
+          float alpha = max(core, halo);
+          if (alpha < 0.006) discard;
+
+          gl_FragColor = vec4(vColor, alpha);
         }`;
 
       function shader(type, source) {
@@ -209,7 +217,8 @@
       }
       window.addEventListener('resize', resize);
       resize();
-      gl.disable(gl.BLEND);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
       gl.clearColor(0, 0, 0, 0);
 
       function render(ms) {
