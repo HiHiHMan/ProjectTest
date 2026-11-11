@@ -138,12 +138,30 @@
       window.addEventListener('resize', resize);
       resize();
 
-      function addParticle(x, y, vx, vy, color, life, size, gravity, drag) {
+      function addParticle(x, y, vx, vy, color, life, size, gravity, drag, split = false) {
         if (particles.length >= capacity) return;
         particles.push({
           x, y, vx, vy, color, life, maxLife: life,
-          size, gravity, drag, twinkle: Math.random() * 8
+          size, gravity, drag, split, twinkle: Math.random() * 8
         });
+      }
+
+      // A small percentage of sparks split again near the end of their flight.
+      function secondaryBurst(x, y, color) {
+        const count = 11 + Math.floor(Math.random() * 10);
+        const rotation = Math.random() * Math.PI * 2;
+        const speed = 24 + Math.random() * 30;
+        for (let i = 0; i < count; i++) {
+          const angle = rotation + (i / count) * Math.PI * 2;
+          const life = 0.42 + Math.random() * 0.42;
+          addParticle(
+            x, y,
+            Math.cos(angle) * speed * (0.7 + Math.random() * 0.5),
+            Math.sin(angle) * speed * (0.7 + Math.random() * 0.5),
+            color, life, 1.2 + Math.random() * 1.4,
+            105, 0.975
+          );
+        }
       }
 
       function launch(x = width * (0.16 + Math.random() * 0.68), targetY) {
@@ -163,17 +181,26 @@
         const count = 115 + Math.floor(Math.random() * 95);
         const baseSpeed = 85 + Math.random() * 115;
         const rotation = Math.random() * Math.PI * 2;
+        const useGradient = Math.random() < 0.38;
+        const accent = palette[Math.floor(Math.random() * palette.length)];
         for (let i = 0; i < count; i++) {
           const angle = rotation + (i / count) * Math.PI * 2;
           let speed = baseSpeed * (0.72 + Math.random() * 0.42);
           if (pattern < 0.24) speed *= i % 2 ? 0.48 : 1.0;
           if (pattern > 0.76) speed *= 0.72 + Math.random() * 0.5;
           const life = 1.25 + Math.random() * 1.25;
+          // Some shells blend two hues around the burst for a flowing color gradient.
+          const blend = useGradient ? 0.5 - Math.cos((i / count) * Math.PI * 2) * 0.5 : 0;
+          const particleColor = color.map((channel, index) =>
+            channel * (1 - blend) + accent[index] * blend
+          );
           addParticle(
             x, y,
             Math.cos(angle) * speed,
             Math.sin(angle) * speed,
-            color, life, 2.0 + Math.random() * 2.3, 82 + Math.random() * 42, 0.986
+            particleColor, life, 2.0 + Math.random() * 2.3,
+            82 + Math.random() * 42, 0.986,
+            Math.random() < 0.075
           );
         }
 
@@ -222,6 +249,7 @@
           const p = particles[i];
           p.life -= dt;
           if (p.life <= 0) {
+            if (p.split) secondaryBurst(p.x, p.y, p.color);
             particles.splice(i, 1);
             continue;
           }
