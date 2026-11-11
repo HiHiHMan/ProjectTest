@@ -169,11 +169,48 @@
           const y = mountain(x, z);
           positions.push(x, y, z);
           sizes.push(1.0 + Math.random() * 0.55);
-          // Keep white dominant (75%); distribute accent colors across the remaining points.
-          const roll = Math.random();
-          const colorIndex = roll < 0.75 ? 0 : 1 + Math.floor(Math.random() * (palette.length - 1));
-          const color = palette[colorIndex];
-          colors.push(color[0], color[1], color[2]);
+
+          // Sunlight comes from the east at 10 AM, with a moderately elevated angle.
+          const normalStep = 0.045;
+          const dx = (mountain(x + normalStep, z) - mountain(x - normalStep, z)) / (normalStep * 2);
+          const dz = (mountain(x, z + normalStep) - mountain(x, z - normalStep)) / (normalStep * 2);
+          const normalLength = Math.hypot(dx, 1, dz);
+          const nx = -dx / normalLength;
+          const ny = 1 / normalLength;
+          const nz = -dz / normalLength;
+          const diffuse = Math.max(0, nx * 0.68 + ny * 0.62 + nz * 0.39);
+
+          // Unlit faces stay black; the light-facing slopes gradually brighten.
+          const light = Math.max(0, Math.min(1, (diffuse - 0.08) / 0.72));
+          let red = light;
+          let green = light;
+          let blue = light;
+
+          // Add only a restrained rainbow tint to the brightest ridges and summits.
+          if (light > 0.78) {
+            const hue = (Math.sin(x * 0.31 + z * 0.19) + 1) * 0.5;
+            const rainbow = [
+              [1.00, 0.48, 0.58],
+              [1.00, 0.72, 0.42],
+              [0.78, 0.92, 0.48],
+              [0.42, 0.88, 0.82],
+              [0.48, 0.66, 1.00],
+              [0.76, 0.54, 1.00]
+            ];
+            const band = hue * (rainbow.length - 1);
+            const index = Math.floor(band);
+            const next = Math.min(rainbow.length - 1, index + 1);
+            const mix = band - index;
+            const tint = rainbow[index].map((value, channel) =>
+              value * (1 - mix) + rainbow[next][channel] * mix
+            );
+            const amount = (light - 0.78) * 0.42;
+            red = red * (1 - amount) + tint[0] * amount;
+            green = green * (1 - amount) + tint[1] * amount;
+            blue = blue * (1 - amount) + tint[2] * amount;
+          }
+
+          colors.push(red, green, blue);
         }
       }
       function buffer(name, data, size) {
@@ -252,7 +289,7 @@
       window.addEventListener('resize', resize);
       resize();
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
       gl.clearColor(0, 0, 0, 0);
 
       function render(ms) {
