@@ -149,10 +149,37 @@
       const ratioLoc = gl.getUniformLocation(program, 'uPixelRatio');
       const count = positions.length / 3;
       const pointer = { x: 0, y: 0 };
-      window.addEventListener('pointermove', e => {
-        pointer.x = (e.clientX / innerWidth - 0.5) * 1.2;
+      let rotation = 0;
+      let dragging = false;
+      let lastX = 0;
+      const maxRotation = 390 * Math.PI / 180;
+
+      canvas.style.touchAction = 'none';
+      canvas.style.cursor = 'grab';
+
+      canvas.addEventListener('pointerdown', e => {
+        dragging = true;
+        lastX = e.clientX;
+        canvas.setPointerCapture(e.pointerId);
+        canvas.style.cursor = 'grabbing';
+      });
+
+      canvas.addEventListener('pointermove', e => {
+        if (dragging) {
+          rotation += (e.clientX - lastX) * 0.008;
+          rotation = Math.max(-maxRotation / 2, Math.min(maxRotation / 2, rotation));
+          lastX = e.clientX;
+        }
         pointer.y = (e.clientY / innerHeight - 0.5) * 0.7;
       }, { passive: true });
+
+      function stopDragging() {
+        dragging = false;
+        canvas.style.cursor = 'grab';
+      }
+      canvas.addEventListener('pointerup', stopDragging);
+      canvas.addEventListener('pointercancel', stopDragging);
+      canvas.addEventListener('lostpointercapture', stopDragging);
 
       function perspective(fov, aspect, near, far) {
         const f = 1 / Math.tan(fov / 2), nf = 1 / (near - far);
@@ -186,7 +213,12 @@
       function render(ms) {
         const t = ms * 0.001;
         gl.clear(gl.COLOR_BUFFER_BIT);
-        const eye = [pointer.x * 1.4, 8.2 + pointer.y * 1.2, 19.5];
+        const radius = 19.5;
+        const eye = [
+          Math.sin(rotation) * radius,
+          8.2 + pointer.y * 1.2,
+          Math.cos(rotation) * radius
+        ];
         gl.uniformMatrix4fv(viewLoc, false, lookAt(eye, [0, 1.2, 0]));
         gl.uniform1f(timeLoc, t);
         gl.drawArrays(gl.POINTS, 0, count);
