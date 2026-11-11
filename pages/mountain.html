@@ -137,7 +137,8 @@
           const normalized = distance / outline;
 
           // Keep one rounded summit while giving the slopes a less uniform profile.
-          const body = height * Math.exp(-Math.pow(normalized, 1.75) * 1.6);
+          // Slightly tighten only the upper profile for a subtly pointed summit.
+          const body = height * Math.exp(-Math.pow(normalized, 1.38) * 1.6);
           h = Math.max(h, body);
         }
 
