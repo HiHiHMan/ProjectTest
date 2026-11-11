@@ -63,8 +63,7 @@
         varying vec3 vColor;
         void main() {
           vec3 p = aPosition;
-          p.y += sin(p.x * 0.42 + uTime * 0.35) * 0.035;
-          p.y += cos(p.z * 0.55 + uTime * 0.22) * 0.025;
+          // Keep every point and its glow steady; no twinkling or vertical wobble.
           vec4 viewPosition = uView * vec4(p, 1.0);
           gl_Position = uProjection * viewPosition;
           gl_PointSize = aSize * 1.45 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
