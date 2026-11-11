@@ -101,23 +101,14 @@
       gl.useProgram(program);
 
       const positions = [], sizes = [], colors = [];
-      const rainbow = [
-        [1.00, 0.12, 0.12], // red
-        [1.00, 0.48, 0.08], // orange
-        [1.00, 0.90, 0.12], // yellow
-        [0.25, 0.90, 0.30], // green
-        [0.10, 0.78, 1.00], // cyan
-        [0.18, 0.34, 1.00], // blue
-        [0.62, 0.20, 1.00]  // violet
+      const palette = [
+        [1.00, 1.00, 1.00], // white
+        [0.34, 0.92, 0.48], // green
+        [0.66, 0.38, 0.94], // purple
+        [0.28, 0.68, 1.00], // blue
+        [1.00, 0.42, 0.70], // pink
+        [1.00, 0.58, 0.24]  // orange
       ];
-      function rainbowColor(t) {
-        const scaled = t * (rainbow.length - 1);
-        const index = Math.min(rainbow.length - 2, Math.floor(scaled));
-        const mix = scaled - index;
-        return rainbow[index].map((value, channel) =>
-          value * (1 - mix) + rainbow[index + 1][channel] * mix
-        );
-      }
       const columns = 600, rows = 400;
       const peaks = [
         [-8.5, -8.0, 3.9, 5.2], [-3.0, -8.0, 5.0, 4.2], [3.4, -8.0, 3.6, 5.0], [8.0, -8.0, 4.3, 4.6],
@@ -144,10 +135,10 @@
           const y = mountain(x, z);
           positions.push(x, y, z);
           sizes.push(1.0 + Math.random() * 0.55);
-          // 60% white points; the remaining points follow a smooth rainbow gradient.
-          const isWhite = Math.random() < 0.60;
-          const gradientPosition = (i / (columns - 1) + (j / (rows - 1)) * 0.12) % 1;
-          const color = isWhite ? [1.0, 1.0, 1.0] : rainbowColor(gradientPosition);
+          // Keep white dominant (75%); distribute accent colors across the remaining points.
+          const roll = Math.random();
+          const colorIndex = roll < 0.75 ? 0 : 1 + Math.floor(Math.random() * (palette.length - 1));
+          const color = palette[colorIndex];
           colors.push(color[0], color[1], color[2]);
         }
       }
