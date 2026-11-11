@@ -128,10 +128,10 @@
 
       // Three staggered mountain ranges, with continuous point coverage.
       for (let j = 0; j < rows; j++) {
+        const z = (j / (rows - 1) - 0.5) * 25;
         for (let i = 0; i < columns; i++) {
-          // Randomize each point inside its grid cell to avoid visible rows or patterns.
-          const x = ((i + Math.random()) / columns - 0.5) * 25;
-          const z = ((j + Math.random()) / rows - 0.5) * 25;
+          // Restore the regular point grid pattern.
+          const x = (i / (columns - 1) - 0.5) * 25;
           const y = mountain(x, z);
           positions.push(x, y, z);
           sizes.push(1.0 + Math.random() * 0.55);
