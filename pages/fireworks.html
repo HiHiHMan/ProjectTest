@@ -199,12 +199,18 @@
           rocket.x += rocket.vx * dt;
           rocket.y += rocket.vy * dt;
           if (rocket.trailTimer <= 0) {
+            // A dense, warm spark trail makes the rocket's upward path readable.
             addParticle(
-              rocket.x, rocket.y, (Math.random() - 0.5) * 24, 35 + Math.random() * 65,
-              rocket.color, 0.28 + Math.random() * 0.22, 1.8 + Math.random() * 1.4,
-              55, 0.94
+              rocket.x + (Math.random() - 0.5) * 5,
+              rocket.y + 3,
+              (Math.random() - 0.5) * 30,
+              75 + Math.random() * 85,
+              Math.random() < 0.45 ? [1.0, 0.88, 0.58] : rocket.color,
+              0.34 + Math.random() * 0.24,
+              2.0 + Math.random() * 1.8,
+              75, 0.93
             );
-            rocket.trailTimer = 0.022;
+            rocket.trailTimer = 0.012;
           }
           if (rocket.y <= rocket.targetY || rocket.vy >= -35) {
             burst(rocket.x, rocket.y, rocket.color);
@@ -242,6 +248,30 @@
           vertexData[offset + 4] = p.color[1];
           vertexData[offset + 5] = p.color[2];
           vertexData[offset + 6] = alpha;
+          vertexCount++;
+        }
+
+        // Render each rising rocket itself: a colored halo plus a hot white core.
+        for (let i = 0; i < rockets.length && vertexCount + 2 <= capacity; i++) {
+          const rocket = rockets[i];
+          let offset = vertexCount * stride;
+          vertexData[offset] = rocket.x;
+          vertexData[offset + 1] = rocket.y;
+          vertexData[offset + 2] = 15;
+          vertexData[offset + 3] = rocket.color[0];
+          vertexData[offset + 4] = rocket.color[1];
+          vertexData[offset + 5] = rocket.color[2];
+          vertexData[offset + 6] = 0.9;
+          vertexCount++;
+
+          offset = vertexCount * stride;
+          vertexData[offset] = rocket.x;
+          vertexData[offset + 1] = rocket.y;
+          vertexData[offset + 2] = 6;
+          vertexData[offset + 3] = 1;
+          vertexData[offset + 4] = 0.97;
+          vertexData[offset + 5] = 0.82;
+          vertexData[offset + 6] = 1;
           vertexCount++;
         }
 
