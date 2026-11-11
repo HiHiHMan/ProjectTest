@@ -74,8 +74,7 @@
           vec2 pointPixels = (clipPosition.xy / clipPosition.w * 0.5 + 0.5) * uResolution;
           float mouseDistance = distance(pointPixels, uMousePixels);
           vHover = uHoverActive * (1.0 - smoothstep(24.5, 25.0, mouseDistance));
-          float baseSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
-          gl_PointSize = baseSize * mix(1.0, 2.8, vHover);
+          gl_PointSize = aSize * 3.2 * uPixelRatio * (20.0 / max(1.0, -viewPosition.z));
           vColor = aColor;
         }`;
       const fragment = `
@@ -92,10 +91,8 @@
           float halo = exp(-d * d * 22.0) * 0.42;
           float alpha = max(core, halo);
 
-          // The focused point glows as a whole, not just the pixels under the cursor.
+          // Change only the color of the focused point.
           vec3 pointColor = mix(vColor, vec3(1.0), vHover);
-          float hoverGlow = vHover * exp(-d * d * 7.0);
-          alpha = max(alpha, hoverGlow);
           if (alpha < 0.006) discard;
 
           gl_FragColor = vec4(pointColor, alpha);
