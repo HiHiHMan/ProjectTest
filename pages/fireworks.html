@@ -200,7 +200,16 @@
         });
       }
 
+      function burstFlash(x, y, color) {
+        // A brief white-hot core and colored halo make the instant of detonation pop.
+        addParticle(x, y, 0, 0, [1.0, 1.0, 0.96], 0.16, 78, 0, 0.72);
+        addParticle(x, y, 0, 0, color, 0.24, 112, 0, 0.78);
+        addParticle(x, y, 0, 0, [1.0, 0.88, 0.66], 0.12, 38, 0, 0.7);
+      }
+
       function burst(x, y, color) {
+        burstFlash(x, y, color);
+
         // Frequent golden willow shells: long, clearly visible trails that cascade downward.
         if (Math.random() < 0.48) {
           const willowCount = 230 + Math.floor(Math.random() * 90);
