@@ -87,9 +87,9 @@
           float halo = exp(-d * d * 22.0) * 0.42;
           float alpha = max(core, halo);
 
-          // Circular focus area: 10 x 10 pixels (5 px radius).
+          // Circular focus area: 50 x 50 pixels (25 px radius).
           float screenDistance = distance(gl_FragCoord.xy, uMousePixels);
-          float hover = uHoverActive * (1.0 - smoothstep(4.5, 5.0, screenDistance));
+          float hover = uHoverActive * (1.0 - smoothstep(24.5, 25.0, screenDistance));
           vec3 pointColor = mix(vColor, vec3(1.0), hover);
           float hoverGlow = hover * exp(-d * d * 10.0) * 0.9;
           alpha = max(alpha, hoverGlow);
