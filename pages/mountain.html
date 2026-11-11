@@ -127,7 +127,10 @@
           const y = mountain(x, z);
           positions.push(x, y, z);
           sizes.push(1.0 + Math.random() * 0.55);
-          const color = palette[Math.floor(Math.random() * palette.length)];
+          // Keep white dominant (75%); distribute accent colors across the remaining points.
+          const roll = Math.random();
+          const colorIndex = roll < 0.75 ? 0 : 1 + Math.floor(Math.random() * (palette.length - 1));
+          const color = palette[colorIndex];
           colors.push(color[0], color[1], color[2]);
         }
       }
