@@ -39,6 +39,32 @@
       opacity: 0.6;
       animation: starFloat 2.2s ease-in-out infinite;
     }
+    .star-sparks {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 49%;
+      width: 0;
+      height: 0;
+      animation: starFloat 2.2s ease-in-out infinite;
+    }
+    .star-spark {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #fff 0%, #fff4b0 38%, #ffc83d 100%);
+      box-shadow: 0 0 4px rgba(255, 244, 180, .95), 0 0 9px rgba(255, 190, 35, .8);
+      opacity: 0;
+      animation: sparkFly var(--duration) ease-out var(--delay) infinite;
+    }
+    @keyframes sparkFly {
+      0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(.45); }
+      12% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(0px - var(--distance))) scale(.12); }
+    }
     .star {
       position: absolute;
       z-index: 1;
@@ -106,6 +132,23 @@
     const glow = document.createElement('span');
     glow.className = 'star-glow';
     starField.appendChild(glow);
+
+    const sparks = document.createElement('span');
+    sparks.className = 'star-sparks';
+    starField.appendChild(sparks);
+
+    for (let i = 0; i < 20; i++) {
+      const spark = document.createElement('span');
+      const angle = (i * 18) + (Math.random() * 12 - 6);
+      const distance = 18 + Math.random() * 20;
+      const duration = 1.1 + Math.random() * 0.7;
+      spark.className = 'star-spark';
+      spark.style.setProperty('--angle', angle + 'deg');
+      spark.style.setProperty('--distance', distance + 'px');
+      spark.style.setProperty('--duration', duration + 's');
+      spark.style.setProperty('--delay', (-Math.random() * duration) + 's');
+      sparks.appendChild(spark);
+    }
 
     const star = document.createElement('span');
     star.className = 'star';
