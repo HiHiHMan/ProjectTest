@@ -12,14 +12,32 @@
       margin: 0;
     }
     body {
+      position: relative;
       min-height: 100vh;
       display: grid;
       place-items: center;
       overflow: hidden;
       background: #000;
     }
+    .star-field {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      width: var(--star-size);
+      height: var(--star-size);
+      background: #ffe58a;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 35%, 39% 35%);
+      filter: drop-shadow(0 0 2px #ffd54a) drop-shadow(0 0 5px rgba(255, 210, 70, .9));
+      opacity: var(--star-opacity);
+    }
     .girl-wrap {
       position: relative;
+      z-index: 1;
       display: inline-block;
       max-width: 70vw;
       max-height: 45vh;
@@ -49,9 +67,22 @@
   </style>
 </head>
 <body>
+  <div class="star-field" id="starField" aria-hidden="true"></div>
   <div class="girl-wrap">
     <img class="girl-image" src="../images/girl.png" alt="Girl">
     <img class="girl-blur" src="../images/girl.png" alt="" aria-hidden="true">
   </div>
+  <script>
+    const starField = document.getElementById('starField');
+    for (let i = 0; i < 45; i++) {
+      const star = document.createElement('span');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.setProperty('--star-size', (3 + Math.random() * 4) + 'px');
+      star.style.setProperty('--star-opacity', (0.55 + Math.random() * 0.45).toFixed(2));
+      starField.appendChild(star);
+    }
+  </script>
 </body>
 </html>
