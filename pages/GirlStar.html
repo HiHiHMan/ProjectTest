@@ -82,9 +82,14 @@
         drop-shadow(0 0 28px var(--star-color));
       opacity: 1;
     }
-    .rainbow-star.five-point,
-    .rainbow-star.four-point {
-      clip-path: path("M 9 1.2 C 10.5 1.2 10.6 4.5 11.8 5.5 C 13.1 6.6 16.7 5.7 17.5 7 C 18.2 8.3 14.3 9.7 13.2 10.8 C 12.1 12 14.9 15.5 13.8 16.4 C 12.7 17.3 10.1 14.4 9 14.1 C 7.9 14.4 5.3 17.3 4.2 16.4 C 3.1 15.5 5.9 12 4.8 10.8 C 3.7 9.7 -0.2 8.3 0.5 7 C 1.3 5.7 4.9 6.6 6.2 5.5 C 7.4 4.5 7.5 1.2 9 1.2 Z");
+    .rainbow-star svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .rainbow-star svg path {
+      fill: var(--star-color);
     }
     .star {
       position: absolute;
@@ -199,6 +204,20 @@
         '--star-color',
         rainbowColors[Math.floor(Math.random() * rainbowColors.length)]
       );
+
+      const starSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      starSvg.setAttribute('viewBox', '0 0 182 182');
+      starSvg.setAttribute('aria-hidden', 'true');
+
+      const starPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      starPath.setAttribute(
+        'd',
+        decorativeStar.classList.contains('five-point')
+          ? 'M77.2839 10.3648 C81.7742 -3.45491 101.325 -3.45494 105.816 10.3647 L117.144 45.231 C119.152 51.4113 124.912 55.5958 131.41 55.5958 H168.071 C182.602 55.5958 188.643 74.19 176.888 82.731 L147.229 104.28 C141.971 108.099 139.771 114.87 141.779 121.05 L153.108 155.916 C157.598 169.736 141.781 181.228 130.026 172.687 L100.367 151.138 C95.1092 147.319 87.9903 147.319 82.733 151.138 L53.0739 172.687 C41.3182 181.228 25.501 169.736 29.9913 155.916 L41.32 121.05 C43.3281 114.87 41.1283 108.099 35.871 104.28 L6.21195 82.731 C-5.54375 74.19 0.497856 55.5958 15.0287 55.5958 H51.6893 C58.1877 55.5958 63.947 51.4114 65.9551 45.231 Z'
+          : 'M91 4 C96 4 98 31 106 39 C114 47 142 48 147 54 C152 60 130 76 124 82 C118 88 132 112 127 117 C122 122 101 105 91 105 C81 105 60 122 55 117 C50 112 64 88 58 82 C52 76 30 60 35 54 C40 48 68 47 76 39 C84 31 86 4 91 4 Z'
+      );
+      starSvg.appendChild(starPath);
+      decorativeStar.appendChild(starSvg);
       girlWrap.appendChild(decorativeStar);
     }
 
