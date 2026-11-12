@@ -137,9 +137,9 @@
     sparks.className = 'star-sparks';
     starField.appendChild(sparks);
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 40; i++) {
       const spark = document.createElement('span');
-      const angle = (i * 18) + (Math.random() * 12 - 6);
+      const angle = (i * 9) + (Math.random() * 8 - 4);
       const distance = 18 + Math.random() * 20;
       const duration = 1.1 + Math.random() * 0.7;
       spark.className = 'star-spark';
