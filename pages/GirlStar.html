@@ -26,8 +26,25 @@
       pointer-events: none;
       z-index: 2;
     }
+    .star-glow {
+      position: absolute;
+      left: 50%;
+      top: 49%;
+      width: 76px;
+      height: 76px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 245, 180, .85) 0%, rgba(255, 210, 70, .48) 22%, rgba(255, 170, 0, .2) 48%, transparent 72%);
+      filter: blur(5px);
+      animation: glowPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: .65; transform: translate(-50%, -50%) scale(.85); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    }
     .star {
       position: absolute;
+      z-index: 1;
       left: 50%;
       top: 49%;
       width: 18px;
@@ -85,6 +102,10 @@
   </div>
   <script>
     const starField = document.getElementById('starField');
+    const glow = document.createElement('span');
+    glow.className = 'star-glow';
+    starField.appendChild(glow);
+
     const star = document.createElement('span');
     star.className = 'star';
     starField.appendChild(star);
