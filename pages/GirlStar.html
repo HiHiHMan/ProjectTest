@@ -74,8 +74,13 @@
       top: var(--y);
       transform: translate(-50%, -50%) scale(var(--star-scale));
       background: var(--star-color);
-      filter: drop-shadow(0 0 3px var(--star-color)) drop-shadow(0 0 7px var(--star-color));
-      opacity: .9;
+      filter:
+        drop-shadow(0 0 2px #fff)
+        drop-shadow(0 0 5px var(--star-color))
+        drop-shadow(0 0 11px var(--star-color))
+        drop-shadow(0 0 20px var(--star-color))
+        drop-shadow(0 0 32px var(--star-color));
+      opacity: 1;
     }
     .rainbow-star.five-point {
       clip-path: path("M 50 2 C 55 2 57 29 62 34 C 67 39 94 31 97 37 C 100 43 77 57 75 64 C 73 71 89 92 84 97 C 79 102 57 82 50 82 C 43 82 21 102 16 97 C 11 92 27 71 25 64 C 23 57 0 43 3 37 C 6 31 33 39 38 34 C 43 29 45 2 50 2 Z");
