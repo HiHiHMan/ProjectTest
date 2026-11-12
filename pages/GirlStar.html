@@ -68,11 +68,11 @@
     .rainbow-star {
       position: absolute;
       z-index: 0;
-      width: var(--size);
-      height: var(--size);
+      width: 100px;
+      height: 100px;
       left: var(--x);
       top: var(--y);
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(var(--star-scale));
       background: var(--star-color);
       filter: drop-shadow(0 0 3px var(--star-color)) drop-shadow(0 0 7px var(--star-color));
       opacity: .9;
@@ -191,7 +191,7 @@
         (Math.random() < 0.5 ? 'five-point' : 'four-point');
       decorativeStar.style.setProperty('--x', x + '%');
       decorativeStar.style.setProperty('--y', y + '%');
-      decorativeStar.style.setProperty('--size', (5 + Math.random() * 10) + 'px');
+      decorativeStar.style.setProperty('--star-scale', (0.05 + Math.random() * 0.10).toFixed(3));
       decorativeStar.style.setProperty(
         '--star-color',
         rainbowColors[Math.floor(Math.random() * rainbowColors.length)]
