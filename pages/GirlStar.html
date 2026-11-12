@@ -73,13 +73,13 @@
       left: var(--x);
       top: var(--y);
       transform: translate(-50%, -50%);
-      background: var(--star-color);
+      background: radial-gradient(ellipse at 32% 24%, #ffffff 0%, var(--star-color) 42%, var(--star-color) 72%, #171020 100%);
       filter:
-        drop-shadow(0 0 2px #fff)
-        drop-shadow(0 0 5px var(--star-color))
-        drop-shadow(0 0 11px var(--star-color))
-        drop-shadow(0 0 20px var(--star-color))
-        drop-shadow(0 0 32px var(--star-color));
+        drop-shadow(0 2px 2px rgba(0, 0, 0, .95))
+        drop-shadow(0 0 3px #ffffff)
+        drop-shadow(0 0 7px var(--star-color))
+        drop-shadow(0 0 15px var(--star-color))
+        drop-shadow(0 0 28px var(--star-color));
       opacity: 1;
     }
     .rainbow-star.five-point,
