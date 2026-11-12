@@ -36,7 +36,7 @@
       isolation: isolate;
       background: radial-gradient(ellipse at 32% 24%, #fffde2 0%, #fff1a8 16%, #ffde6d 38%, #f5b936 68%, #a96b12 100%);
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 35%, 39% 35%);
-      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 3px #fff7c2) drop-shadow(0 0 7px #ffe36b) drop-shadow(0 0 15px #ffc400) drop-shadow(0 0 28px rgba(255, 190, 0, 1));
+      filter: drop-shadow(0 2px 2px #8a4b00) drop-shadow(0 0 3px #fff4ad) drop-shadow(0 0 7px #ffdf45) drop-shadow(0 0 15px #ffb800) drop-shadow(0 0 28px rgba(255, 174, 0, 1)) drop-shadow(0 0 42px rgba(184, 105, 0, .85));
       animation: starPulse 1.8s ease-in-out infinite;
     }
     .star::before {
@@ -44,16 +44,17 @@
       position: absolute;
       inset: 0;
       z-index: -1;
-      background: #000;
-      transform: translate(3px, 4px);
-      filter: blur(1.5px);
+      background: #d88900;
+      transform: translate(2px, 3px) scale(1.08);
+      filter: blur(2px);
+      opacity: .9;
     }
     @keyframes starPulse {
       0%, 100% {
-        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 3px #fff7c2) drop-shadow(0 0 7px #ffe36b) drop-shadow(0 0 15px #ffc400) drop-shadow(0 0 28px rgba(255, 190, 0, 1));
+        filter: drop-shadow(0 2px 2px #8a4b00) drop-shadow(0 0 3px #fff4ad) drop-shadow(0 0 7px #ffdf45) drop-shadow(0 0 15px #ffb800) drop-shadow(0 0 28px rgba(255, 174, 0, 1)) drop-shadow(0 0 42px rgba(184, 105, 0, .85));
       }
       50% {
-        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px #fff0a0) drop-shadow(0 0 24px #ffd000) drop-shadow(0 0 42px rgba(255, 180, 0, 1));
+        filter: drop-shadow(0 2px 2px #a65c00) drop-shadow(0 0 5px #fff9d6) drop-shadow(0 0 12px #fff0a0) drop-shadow(0 0 24px #ffc928) drop-shadow(0 0 42px rgba(255, 180, 0, 1)) drop-shadow(0 0 58px rgba(184, 105, 0, .95));
       }
     }
     .girl-wrap {
