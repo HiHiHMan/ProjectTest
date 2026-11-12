@@ -65,6 +65,22 @@
       12% { opacity: 1; }
       100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(0px - var(--distance))) scale(.12); }
     }
+    .rainbow-star {
+      position: absolute;
+      width: var(--size);
+      height: var(--size);
+      left: var(--x);
+      top: var(--y);
+      background: var(--star-color);
+      filter: drop-shadow(0 0 3px var(--star-color)) drop-shadow(0 0 7px var(--star-color));
+      opacity: .9;
+    }
+    .rainbow-star.five-point {
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 35%, 39% 35%);
+    }
+    .rainbow-star.four-point {
+      clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+    }
     .star {
       position: absolute;
       z-index: 1;
@@ -154,6 +170,33 @@
   </div>
   <script>
     const starField = document.getElementById('starField');
+
+    const rainbowColors = [
+      '#ff3b30', '#ff8c00', '#ffd60a',
+      '#34c759', '#0a84ff', '#5856d6', '#bf5af2'
+    ];
+
+    for (let i = 0; i < 34; i++) {
+      const decorativeStar = document.createElement('span');
+      const x = Math.random() * 96 + 2;
+      let y = Math.random() * 94 + 3;
+
+      // เว้นพื้นที่ตรงกลางไว้ให้ตัวละครเด่นชัด
+      if (x > 34 && x < 66 && y > 24 && y < 76) {
+        y = y < 50 ? Math.random() * 16 + 3 : Math.random() * 16 + 81;
+      }
+
+      decorativeStar.className = 'rainbow-star ' +
+        (Math.random() < 0.5 ? 'five-point' : 'four-point');
+      decorativeStar.style.setProperty('--x', x + 'vw');
+      decorativeStar.style.setProperty('--y', y + 'vh');
+      decorativeStar.style.setProperty('--size', (5 + Math.random() * 10) + 'px');
+      decorativeStar.style.setProperty(
+        '--star-color',
+        rainbowColors[Math.floor(Math.random() * rainbowColors.length)]
+      );
+      starField.appendChild(decorativeStar);
+    }
     const glow = document.createElement('span');
     glow.className = 'star-glow';
     starField.appendChild(glow);
