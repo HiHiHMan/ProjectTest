@@ -28,12 +28,14 @@
     }
     .star {
       position: absolute;
-      width: var(--star-size);
-      height: var(--star-size);
+      left: 50%;
+      top: 50%;
+      width: 35px;
+      height: 35px;
+      transform: translate(-50%, -50%);
       background: #ffe58a;
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 35%, 39% 35%);
       filter: drop-shadow(0 0 2px #ffd54a) drop-shadow(0 0 5px rgba(255, 210, 70, .9));
-      opacity: var(--star-opacity);
     }
     .girl-wrap {
       position: relative;
@@ -74,15 +76,9 @@
   </div>
   <script>
     const starField = document.getElementById('starField');
-    for (let i = 0; i < 45; i++) {
-      const star = document.createElement('span');
-      star.className = 'star';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.setProperty('--star-size', (3 + Math.random() * 4) + 'px');
-      star.style.setProperty('--star-opacity', (0.55 + Math.random() * 0.45).toFixed(2));
-      starField.appendChild(star);
-    }
+    const star = document.createElement('span');
+    star.className = 'star';
+    starField.appendChild(star);
   </script>
 </body>
 </html>
