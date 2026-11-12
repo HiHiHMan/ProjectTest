@@ -67,19 +67,21 @@
     }
     .rainbow-star {
       position: absolute;
+      z-index: 0;
       width: var(--size);
       height: var(--size);
       left: var(--x);
       top: var(--y);
+      transform: translate(-50%, -50%);
       background: var(--star-color);
       filter: drop-shadow(0 0 3px var(--star-color)) drop-shadow(0 0 7px var(--star-color));
       opacity: .9;
     }
     .rainbow-star.five-point {
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 35%, 39% 35%);
+      clip-path: path("M 50 2 C 55 2 57 29 62 34 C 67 39 94 31 97 37 C 100 43 77 57 75 64 C 73 71 89 92 84 97 C 79 102 57 82 50 82 C 43 82 21 102 16 97 C 11 92 27 71 25 64 C 23 57 0 43 3 37 C 6 31 33 39 38 34 C 43 29 45 2 50 2 Z");
     }
     .rainbow-star.four-point {
-      clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+      clip-path: path("M 50 2 C 57 2 62 37 68 43 C 74 49 98 43 98 50 C 98 57 74 51 68 57 C 62 63 57 98 50 98 C 43 98 38 63 32 57 C 26 51 2 57 2 50 C 2 43 26 49 32 43 C 38 37 43 2 50 2 Z");
     }
     .star {
       position: absolute;
@@ -171,32 +173,32 @@
   <script>
     const starField = document.getElementById('starField');
 
+    const girlWrap = document.querySelector('.girl-wrap');
     const rainbowColors = [
       '#ff3b30', '#ff8c00', '#ffd60a',
       '#34c759', '#0a84ff', '#5856d6', '#bf5af2'
     ];
 
+    // กระจายดาวให้อยู่ภายในบริเวณแสงวงรีด้านหลัง Girl
     for (let i = 0; i < 34; i++) {
       const decorativeStar = document.createElement('span');
-      const x = Math.random() * 96 + 2;
-      let y = Math.random() * 94 + 3;
-
-      // เว้นพื้นที่ตรงกลางไว้ให้ตัวละครเด่นชัด
-      if (x > 34 && x < 66 && y > 24 && y < 76) {
-        y = y < 50 ? Math.random() * 16 + 3 : Math.random() * 16 + 81;
-      }
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * 0.88;
+      const x = 50 + Math.cos(angle) * 22 * radius;
+      const y = 48 + Math.sin(angle) * 29 * radius;
 
       decorativeStar.className = 'rainbow-star ' +
         (Math.random() < 0.5 ? 'five-point' : 'four-point');
-      decorativeStar.style.setProperty('--x', x + 'vw');
-      decorativeStar.style.setProperty('--y', y + 'vh');
+      decorativeStar.style.setProperty('--x', x + '%');
+      decorativeStar.style.setProperty('--y', y + '%');
       decorativeStar.style.setProperty('--size', (5 + Math.random() * 10) + 'px');
       decorativeStar.style.setProperty(
         '--star-color',
         rainbowColors[Math.floor(Math.random() * rainbowColors.length)]
       );
-      starField.appendChild(decorativeStar);
+      girlWrap.appendChild(decorativeStar);
     }
+
     const glow = document.createElement('span');
     glow.className = 'star-glow';
     starField.appendChild(glow);
