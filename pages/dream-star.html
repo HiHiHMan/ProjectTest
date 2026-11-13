@@ -101,7 +101,14 @@
             alpha: .08 + Math.random() * .28
           })),
           symbol: Math.random() < .5 ? '✦' : '✧',
-          fontSize: 10 + Math.random() * 5
+          fontSize: 10 + Math.random() * 5,
+          // Noise เม็ดเล็ก ๆ บนพื้นผิวตัวดาว
+          glyphNoise: Array.from({ length: 34 }, () => ({
+            angle: Math.random() * Math.PI * 2,
+            radius: Math.random(),
+            size: .2 + Math.random() * .55,
+            alpha: .12 + Math.random() * .34
+          }))
         };
       });
     }
@@ -161,6 +168,19 @@
         ctx.shadowColor = star.color;
         ctx.shadowBlur = 10;
         ctx.fillText(star.symbol, star.x, star.y);
+
+        // แต้ม Noise สีอ่อนลงบนตัวดาว ให้พื้นผิวดูมีเกรน
+        star.glyphNoise.forEach(grain => {
+          const angle = grain.angle;
+          const radius = grain.radius * star.fontSize * .34;
+          const x = star.x + Math.cos(angle) * radius;
+          const y = star.y + Math.sin(angle) * radius;
+          ctx.beginPath();
+          ctx.arc(x, y, grain.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
+          ctx.fill();
+        });
+
         ctx.restore();
       });
       requestAnimationFrame(draw);
