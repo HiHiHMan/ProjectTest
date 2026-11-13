@@ -87,7 +87,7 @@
         return {
           x,
           y: cloudBottom + height * trailLength,
-          color: ['#FF4FA3', '#FF8C42', '#FFD84D', '#65E6A5', '#42C9FF', '#587BFF', '#B879FF'][Math.floor(Math.random() * 7)],
+          color: gradientColors[Math.floor(Math.random() * gradientColors.length)],
           trailColor: gradientColors[Math.floor(Math.random() * gradientColors.length)],
           // เริ่มเส้นลึกเข้าไปในกลุ่มเมฆ เพื่อให้แสงแนบติดกับเมฆมากขึ้น
           trailStartY: cloudBottom - 28,
@@ -101,14 +101,7 @@
             alpha: .08 + Math.random() * .28
           })),
           symbol: Math.random() < .5 ? '✦' : '✧',
-          fontSize: 10 + Math.random() * 5,
-          // Noise เม็ดเล็ก ๆ บนพื้นผิวตัวดาว
-          glyphNoise: Array.from({ length: 12 }, () => ({
-            angle: Math.random() * Math.PI * 2,
-            radius: Math.random() * .55,
-            size: .2 + Math.random() * .25,
-            alpha: .10 + Math.random() * .18
-          }))
+          fontSize: 10 + Math.random() * 5
         };
       });
     }
@@ -161,27 +154,13 @@
           ctx.fill();
         });
 
-        ctx.save();
-        ctx.globalAlpha = brightness;
         ctx.font = `${star.fontSize}px Georgia, serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = star.color;
         ctx.shadowColor = star.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.fillText(star.symbol, star.x, star.y);
-
-        // Noise เม็ดเล็กและจาง เพื่อเพิ่มพื้นผิวโดยไม่บดบังรูปดาว
-        ctx.shadowBlur = 0;
-        star.glyphNoise.forEach(grain => {
-          const radius = grain.radius * star.fontSize * .20;
-          const x = star.x + Math.cos(grain.angle) * radius;
-          const y = star.y + Math.sin(grain.angle) * radius;
-          ctx.beginPath();
-          ctx.arc(x, y, grain.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
-          ctx.fill();
-        });
         ctx.restore();
       });
       requestAnimationFrame(draw);
