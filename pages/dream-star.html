@@ -103,7 +103,7 @@
             alpha: .08 + Math.random() * .28
           })),
           symbol: Math.random() < .5 ? '✦' : '✧',
-          fontSize: 10 + Math.random() * 4,
+          fontSize: 16 + Math.random() * 5,
           // เกรน noise เล็ก ๆ สำหรับพื้นผิวภายในดาว
           glyphNoise: Array.from({ length: 14 }, () => ({
             x: (Math.random() - .5) * 7,
@@ -121,6 +121,10 @@
       height = window.innerHeight;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
+      canvas.style.position = 'fixed';
+      canvas.style.inset = '0';
+      canvas.style.zIndex = '9999';
+      canvas.style.pointerEvents = 'none';
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -148,9 +152,9 @@
         ctx.moveTo(star.x, tailY);
         ctx.lineTo(star.x, star.y);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 1.5 + pulse * .35;
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = 'transparent';
+        ctx.lineWidth = 2 + pulse * .7;
+        ctx.shadowBlur = 7;
+        ctx.shadowColor = star.trailColor;
         ctx.stroke();
         ctx.restore();
 
@@ -168,7 +172,7 @@
         ctx.textBaseline = 'middle';
         ctx.fillStyle = star.color;
         ctx.shadowColor = star.color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 16;
         ctx.fillText(star.symbol, star.x, star.y);
 
         // แต้ม noise บนบริเวณดาว เพิ่มพื้นผิวละเอียดโดยไม่เพิ่มแสงฟุ้ง
