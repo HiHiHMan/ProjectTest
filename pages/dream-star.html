@@ -39,6 +39,7 @@
   (() => {
     const canvas = document.querySelector('.hanging-stars');
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const colors = ['#fff2c6', '#dce8ff', '#f8ddff', '#d7fff5'];
     const gradientColors = [
       '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8', '#FF8C42',
@@ -72,14 +73,15 @@
 
     function createStars() {
       const cloudWidth = Math.min(width * .9, 660);
+      const cloudScale = cloudWidth / 660;
       const spread = cloudWidth * .39;
-      const cloudLeft = (width - 660) / 2;
+      const cloudLeft = (width - cloudWidth) / 2;
       const cloudTop = 48;
 
       stars = Array.from({ length: 32 }, () => {
         const x = width / 2 + (Math.random() - .5) * spread * 2;
-        const localX = x - cloudLeft;
-        const cloudBottom = cloudTop + getCloudBottom(localX);
+        const localX = (x - cloudLeft) / cloudScale;
+        const cloudBottom = cloudTop + getCloudBottom(localX) * cloudScale;
 
         // สุ่มระยะห่างหลายระดับ ให้บางเส้นยาวเด่นและบางเส้นสั้นกว่ากลุ่มชัดเจน
         const trailLength = [0.14, 0.17, 0.20, 0.24, 0.28, 0.34, 0.42, 0.52][Math.floor(Math.random() * 8)];
@@ -101,7 +103,7 @@
             alpha: .08 + Math.random() * .28
           })),
           symbol: Math.random() < .5 ? '✦' : '✧',
-          fontSize: 6 + Math.random() * 3,
+          fontSize: 10 + Math.random() * 4,
           // เกรน noise เล็ก ๆ สำหรับพื้นผิวภายในดาว
           glyphNoise: Array.from({ length: 14 }, () => ({
             x: (Math.random() - .5) * 7,
@@ -176,7 +178,6 @@
           ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
           ctx.fill();
         });
-        ctx.restore();
       });
       requestAnimationFrame(draw);
     }
@@ -358,8 +359,6 @@
     }
 
     canvas.style.cssText = 'position:absolute;inset:0;z-index:2;pointer-events:none;';
-    const hangingStars = document.querySelector('.hanging-stars');
-    hangingStars.style.cssText = 'position:absolute;inset:0;z-index:4;pointer-events:none;';
     gl.clearColor(0, 0, 0, 0);
     resize();
     window.addEventListener('resize', resize, { passive: true });
