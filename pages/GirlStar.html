@@ -284,12 +284,12 @@
           float wave = 0.5 + 0.5 * cos(v_points * angle);
           float edgeRadius = 0.56 + 0.28 * pow(wave, 1.35);
           float edge = 1.0 - smoothstep(edgeRadius - 0.045, edgeRadius + 0.025, radius);
-          float glow = exp(-max(radius - edgeRadius, 0.0) * 9.0)
-                     * (1.0 - smoothstep(edgeRadius, 1.55, radius));
+          float glow = exp(-max(radius - edgeRadius, 0.0) * 4.5)
+                     * (1.0 - smoothstep(edgeRadius, 1.9, radius));
           float twinkle = 0.88 + 0.12 * sin(u_time * 1.7 + v_phase);
-          float alpha = clamp(edge + glow * 0.42, 0.0, 1.0) * twinkle;
+          float alpha = clamp(edge + glow * 0.58, 0.0, 1.0) * twinkle;
           vec3 brightColor = mix(v_color, vec3(1.0), edge * 0.12);
-          vec3 finalColor = brightColor * (edge * 1.45 + glow * 1.05) * twinkle;
+          vec3 finalColor = (brightColor * edge * 1.45 + v_color * glow * 1.8) * twinkle;
 
           if (alpha < 0.015) discard;
           gl_FragColor = vec4(finalColor, alpha);
