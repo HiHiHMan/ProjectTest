@@ -26,6 +26,18 @@
       pointer-events: none;
       z-index: 2;
     }
+    /* Fine film grain over the central star, sparks and glow */
+    .star-field::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: .16;
+      mix-blend-mode: screen;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
     .star-glow {
       position: absolute;
       left: 50%;
@@ -111,6 +123,18 @@
       display: inline-block;
       max-width: 70vw;
       max-height: 45vh;
+    }
+    /* Subtle grain texture over the Girl image and WebGL stars */
+    .girl-wrap::after {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      inset: 0;
+      pointer-events: none;
+      opacity: .13;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
     }
     .girl-wrap::before {
       content: "";
