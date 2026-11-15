@@ -93,6 +93,8 @@
       throw new Error(gl.getProgramInfoLog(program));
     }
     gl.useProgram(program);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     const positionBuffer = gl.createBuffer();
     const colorBuffer = gl.createBuffer();
@@ -172,11 +174,10 @@
           if (!visible) continue;
 
           positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
-          const boost = hasTransparency ? 1 : Math.min(1, 0.35 + distance / 150);
           colors.push(
-            Math.min(1, (r / 255) * boost + 0.08),
-            Math.min(1, (g / 255) * boost + 0.07),
-            Math.min(1, (b / 255) * boost + 0.04)
+            0.22 + (r / 255) * 0.78,
+            0.20 + (g / 255) * 0.76,
+            0.18 + (b / 255) * 0.74
           );
         }
       }
