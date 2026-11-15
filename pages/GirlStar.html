@@ -26,18 +26,21 @@
       pointer-events: none;
       z-index: 2;
     }
-    /* Fine film grain over the central star, sparks and glow */
-    .star-field::after {
-      content: "";
+    .ly-3-noise {
       position: absolute;
-      inset: 0;
+      top: 24px;
+      left: 50%;
+      width: 780px;
+      height: 414px;
+      transform: translateX(-50%);
       z-index: 3;
       pointer-events: none;
-      opacity: .16;
-      mix-blend-mode: screen;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-      background-size: 180px 180px;
+      opacity: 0.85;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
     }
+
     .star-glow {
       position: absolute;
       left: 50%;
@@ -124,35 +127,7 @@
       max-width: 70vw;
       max-height: 45vh;
     }
-    /* Subtle grain texture over the Girl image and WebGL stars */
-    .girl-wrap::after {
-      content: "";
-      position: absolute;
-      z-index: 3;
-      inset: 0;
-      pointer-events: none;
-      opacity: .13;
-      mix-blend-mode: soft-light;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-      background-size: 180px 180px;
-    }
-    .girl-wrap::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      left: 50%;
-      top: 48%;
-      width: 48%;
-      height: 62%;
-      transform: translate(-50%, -50%);
-      border-radius: 48% 52% 28% 28% / 34% 34% 66% 66%;
-      background:
-        radial-gradient(ellipse at 50% 42%, rgba(255, 255, 235, .62) 0%, rgba(255, 239, 190, .34) 28%, rgba(255, 218, 145, .16) 55%, transparent 76%),
-        repeating-conic-gradient(from 0deg at 50% 50%, rgba(255, 246, 215, .18) 0deg 4deg, transparent 4deg 22deg);
-      filter: blur(10px);
-      opacity: .82;
-      pointer-events: none;
-    }
+
     .girl-image {
       position: relative;
       z-index: 1;
@@ -187,6 +162,7 @@
     <img class="girl-image" src="../images/girl.png" alt="Girl">
     <img class="girl-blur" src="../images/girl.png" alt="" aria-hidden="true">
   </div>
+  <div class="ly-3-noise" aria-hidden="true"></div>
   <script>
     const starField = document.getElementById('starField');
 
