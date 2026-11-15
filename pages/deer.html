@@ -182,11 +182,12 @@
         }
       }
 
-      const targetCount = foregroundSamples;
+      // Increase sampling density while keeping point placement irregular.
+      const targetCount = foregroundSamples * 4;
       const positions = [];
       const colors = [];
       let attempts = 0;
-      const maxAttempts = Math.max(targetCount * 24, 1000);
+      const maxAttempts = Math.max(targetCount * 32, 1000);
 
       while (positions.length / 2 < targetCount && attempts < maxAttempts) {
         attempts++;
