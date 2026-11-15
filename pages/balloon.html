@@ -18,7 +18,7 @@
     .strings path{fill:none;stroke:rgba(230,235,255,.82);stroke-width:1.45;stroke-linecap:round;filter:drop-shadow(0 0 2px rgba(210,225,255,.45))}
     .balloon{--color:#ff6f91;position:absolute;z-index:2;width:22%;height:auto;aspect-ratio:0.88/1;overflow:visible;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;background:radial-gradient(ellipse at 25% 17%,rgba(255,255,255,.98) 0 1.2%,rgba(255,255,255,.78) 2.5%,rgba(255,255,255,.12) 7%,transparent 19%),radial-gradient(ellipse at 31% 29%,rgba(255,255,255,.34),transparent 30%),radial-gradient(ellipse at 76% 76%,rgba(5,8,28,.2),transparent 38%),radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--color) 19%,transparent) 0%,color-mix(in srgb,var(--color) 13%,transparent) 48%,color-mix(in srgb,var(--color) 8%,transparent) 82%,rgba(10,12,30,.055) 100%);border:1px solid rgba(255,255,255,.30);box-shadow:inset 8px 5px 12px rgba(255,255,255,.32),inset 2px 0 4px rgba(255,255,255,.48),inset -12px -17px 24px rgba(0,0,0,.2),inset 0 -4px 8px rgba(255,255,255,.18),0 0 9px rgba(255,255,255,.16),0 13px 25px rgba(0,0,0,.2);transform-origin:50% 100%;animation:balloon-sway var(--duration,4.5s) ease-in-out var(--delay,0s) infinite alternate}
     .balloon::before{content:"";position:absolute;left:50%;bottom:-10px;width:13px;height:15px;border-radius:2px 2px 5px 5px;background:linear-gradient(110deg,color-mix(in srgb,var(--color) 55%,white),var(--color) 48%,color-mix(in srgb,var(--color) 55%,black));clip-path:polygon(18% 0,82% 0,70% 35%,100% 65%,50% 100%,0 65%,30% 35%);transform:translateX(-50%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
-    .flower-pattern{position:absolute;inset:2% 3% 5%;z-index:1;overflow:hidden;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;pointer-events:none}.balloon-flower{position:absolute;display:block;line-height:1;transform:translate(-50%,-50%);transform-origin:center;filter:drop-shadow(0 1px 1px rgba(35,8,20,.42)) drop-shadow(0 0 2px rgba(255,255,255,.25));}
+    .flower-pattern{position:absolute;inset:2% 3% 5%;z-index:1;overflow:hidden;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;pointer-events:none}.balloon-flower{position:absolute;display:block;line-height:1;transform:translate(-50%,-50%);transform-origin:center;animation:flower-drift var(--flower-duration,4s) ease-in-out var(--flower-delay,0s) infinite alternate;filter:drop-shadow(0 1px 1px rgba(35,8,20,.42)) drop-shadow(0 0 2px rgba(255,255,255,.25));}
     .balloon::after{content:"";position:absolute;left:24%;top:15%;width:13%;height:27%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.68),rgba(255,255,255,0));transform:rotate(24deg);filter:blur(1px)}
     .b1{--color:#ff91aa;left:10%;top:26%;width:24%;--duration:4.8s;--delay:-1s}
     .b2{--color:#fff19a;left:35%;top:9%;width:24%;--duration:5.2s;--delay:-2.2s}
@@ -36,6 +36,7 @@
     .ribbon{position:absolute;left:50%;top:85%;width:2px;height:10%;background:linear-gradient(#f6b8ca,transparent);transform:translateX(-50%) rotate(2deg);transform-origin:top}
     .caption{position:absolute;bottom:clamp(24px,5vh,48px);z-index:3;color:rgba(255,255,255,.58);font-size:12px;letter-spacing:.12em;text-align:center}
     @keyframes balloon-sway{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-7px)}}
+    @keyframes flower-drift{0%,100%{translate:0 0;rotate:0deg}50%{translate:var(--flower-x,3px) var(--flower-y,-4px);rotate:var(--flower-rotate,10deg)}}
     @keyframes bouquet-float{0%,100%{translate:0 5px}50%{translate:0 -9px}}
     @media(max-width:520px){.bouquet{width:96vw;height:min(72vh,570px);min-height:350px}.balloon{box-shadow:inset -6px -9px 14px rgba(0,0,0,.13),inset 4px 4px 10px rgba(255,255,255,.18),0 8px 17px rgba(0,0,0,.18)}.heading{top:7vh}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
@@ -92,6 +93,11 @@
             (0.58 + curveX * 0.42).toFixed(2) + "," +
             (0.68 + curveY * 0.32).toFixed(2) + ") rotate(" +
             (Math.random() * 36 - 18).toFixed(1) + "deg)";
+          flower.style.setProperty("--flower-x", (Math.random() * 6 - 3).toFixed(1) + "px");
+          flower.style.setProperty("--flower-y", (Math.random() * 8 - 4).toFixed(1) + "px");
+          flower.style.setProperty("--flower-rotate", (Math.random() * 24 - 12).toFixed(1) + "deg");
+          flower.style.setProperty("--flower-duration", (3.2 + Math.random() * 2.8).toFixed(1) + "s");
+          flower.style.setProperty("--flower-delay", (-Math.random() * 5).toFixed(1) + "s");
           pattern.appendChild(flower);
         }
       });
