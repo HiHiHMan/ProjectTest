@@ -8,7 +8,8 @@
   <style>
     *{box-sizing:border-box}
     html,body{width:100%;height:100%;margin:0}
-    body{overflow:hidden;display:grid;place-items:center;color:#344b63;background:radial-gradient(ellipse at 50% 38%,rgba(255,255,255,.18),transparent 48%),radial-gradient(circle at 18% 20%,rgba(255,190,215,.12),transparent 24%),#0096ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}\n    body::before{content:"";position:fixed;inset:0;z-index:10;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");background-size:180px 180px;mix-blend-mode:multiply}
+    body{overflow:hidden;display:grid;place-items:center;color:#344b63;background:radial-gradient(ellipse at 50% 34%,rgba(255,255,255,.34) 0%,rgba(255,255,255,.12) 28%,transparent 58%),radial-gradient(ellipse at 12% 82%,rgba(111,210,255,.42) 0%,transparent 42%),radial-gradient(ellipse at 88% 12%,rgba(0,66,190,.24) 0%,transparent 38%),linear-gradient(145deg,#35b5ff 0%,#0096ff 42%,#0875df 100%);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    .ly-3-noise{position:absolute;top:24px;left:50%;width:780px;height:414px;transform:translateX(-50%);z-index:3;pointer-events:none;opacity:.85;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:80px 80px}
     .scene{position:relative;display:grid;place-items:center;width:100%;height:100%;min-height:420px;isolation:isolate}
     .glow{position:absolute;width:min(72vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(95,169,220,.18),rgba(153,200,255,.045) 48%,transparent 72%);filter:blur(12px);pointer-events:none}
     .heading{position:absolute;top:clamp(30px,8vh,76px);z-index:3;text-align:center;letter-spacing:.22em;font-size:clamp(11px,1.8vw,14px);font-weight:500;color:rgba(48,75,101,.72)}
@@ -48,6 +49,7 @@
 <body>
   <main class="scene" aria-label="ช่อลูกโป่งหลากสี">
     <div class="glow" aria-hidden="true"></div>
+    <div class="ly-3-noise" aria-hidden="true"></div>
     <header class="heading">A LITTLE BUNDLE OF JOY<strong>Balloon Bouquet</strong></header>
     <div class="bouquet" aria-hidden="true">
       <svg class="strings" viewBox="0 0 560 650" preserveAspectRatio="none">
