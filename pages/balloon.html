@@ -72,7 +72,7 @@
       const flowers = ["🌸", "🏵️", "💮"];
       document.querySelectorAll(".balloon").forEach((balloon) => {
         const pattern = balloon.querySelector(".flower-pattern");
-        const amount = 19;
+        const amount = 9;
         for (let i = 0; i < amount; i++) {
           let x, y;
           do {
@@ -86,7 +86,7 @@
           flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
           flower.style.left = (50 + x * 47) + "%";
           flower.style.top = (50 + y * 46) + "%";
-          flower.style.fontSize = (11 + Math.random() * 7) + "px";
+          flower.style.fontSize = (10 + Math.random() * 4) + "px";
           flower.style.opacity = (0.58 + curveX * curveY * 0.38).toFixed(2);
           flower.style.transform = "translate(-50%,-50%) scale(" +
             (0.58 + curveX * 0.42).toFixed(2) + "," +
