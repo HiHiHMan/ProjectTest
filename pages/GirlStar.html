@@ -72,6 +72,7 @@
       border-radius: 50%;
       background: linear-gradient(to bottom, #fff 0%, #fff4b0 38%, #ffc83d 100%);
       box-shadow: 0 0 5px rgba(255, 244, 180, .95), 0 0 10px rgba(255, 190, 35, .8);
+      filter: blur(0.5px);
       opacity: 0;
       animation: sparkFly var(--duration) ease-out var(--delay) infinite;
     }
@@ -89,6 +90,7 @@
       height: 100%;
       overflow: visible;
       pointer-events: none;
+      filter: blur(0.7px);
     }
     .star {
       position: absolute;
@@ -100,7 +102,7 @@
       transform: translate(-50%, -50%);
       background: radial-gradient(ellipse at 32% 24%, #fffde2 0%, #fff1a8 16%, #ffde6d 38%, #f5b936 68%, #a96b12 100%);
       clip-path: path("M 9 1.2 C 10.5 1.2 10.6 4.5 11.8 5.5 C 13.1 6.6 16.7 5.7 17.5 7 C 18.2 8.3 14.3 9.7 13.2 10.8 C 12.1 12 14.9 15.5 13.8 16.4 C 12.7 17.3 10.1 14.4 9 14.1 C 7.9 14.4 5.3 17.3 4.2 16.4 C 3.1 15.5 5.9 12 4.8 10.8 C 3.7 9.7 -0.2 8.3 0.5 7 C 1.3 5.7 4.9 6.6 6.2 5.5 C 7.4 4.5 7.5 1.2 9 1.2 Z");
-      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 3px #fff7c2) drop-shadow(0 0 7px #ffe36b) drop-shadow(0 0 15px #ffc400) drop-shadow(0 0 28px rgba(255, 190, 0, 1));
+      filter: blur(0.7px) drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 3px #fff7c2) drop-shadow(0 0 7px #ffe36b) drop-shadow(0 0 15px #ffc400) drop-shadow(0 0 28px rgba(255, 190, 0, 1));
       animation: starTwinkle .9s ease-in-out infinite, starFloat 2.2s ease-in-out infinite;
     }
     @keyframes starFloat {
@@ -111,12 +113,12 @@
       0%, 100% {
         opacity: .75;
         background: radial-gradient(ellipse at 32% 24%, #fffde2 0%, #fff1a8 16%, #ffde6d 38%, #f5b936 68%, #a96b12 100%);
-        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 4px #ffe36b) drop-shadow(0 0 12px #ffc400) drop-shadow(0 0 24px rgba(255, 190, 0, .9));
+        filter: blur(0.7px) drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 4px #ffe36b) drop-shadow(0 0 12px #ffc400) drop-shadow(0 0 24px rgba(255, 190, 0, .9));
       }
       50% {
         opacity: 1;
         background: radial-gradient(ellipse at 32% 24%, #ffffff 0%, #fffef0 18%, #fff1b8 42%, #f5c95b 72%, #b87919 100%);
-        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 5px #fff) drop-shadow(0 0 14px #fff) drop-shadow(0 0 28px rgba(210, 225, 255, 1)) drop-shadow(0 0 48px rgba(255, 255, 255, 1));
+        filter: blur(0.7px) drop-shadow(0 2px 2px rgba(0, 0, 0, .95)) drop-shadow(0 0 5px #fff) drop-shadow(0 0 14px #fff) drop-shadow(0 0 28px rgba(210, 225, 255, 1)) drop-shadow(0 0 48px rgba(255, 255, 255, 1));
       }
     }
     .girl-wrap {
