@@ -3,32 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deer</title>
+  <title>Deer — WebGL Points</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       margin: 0;
-    }
-    body {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
       overflow: hidden;
       background: #080b10;
     }
-    .deer-image {
+    body {
+      display: grid;
+      place-items: center;
+    }
+    canvas {
       display: block;
-      max-width: 70vw;
-      max-height: 70vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
+      width: 100vw;
+      height: 100vh;
+    }
+    #status {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      color: rgba(210,225,240,.65);
+      font: 12px/1.4 Arial, sans-serif;
+      letter-spacing: .12em;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <img class="deer-image" src="../images/deer.png" alt="Deer">
+  <canvas id="scene"></canvas>
+  <div id="status">GENERATING DEER POINT CLOUD</div>
+
+  <script>
+    const canvas = document.getElementById('scene');
+    const gl = canvas.getContext('webgl', { alpha: false, antialias: true });
+    const status = document.getElementById('status');
+
+    if (!gl) {
+      status.textContent = 'WEBGL IS NOT SUPPORTED';
+      throw new Error('WebGL is not supported');
+    }
+
+    const vertexSource = `
+      attribute vec2 aPosition;
+      attribute vec3 aColor;
+      uniform vec2 uFit;
+      uniform float uPointSize;
+      varying vec3 vColor;
+
+      void main() {
+        gl_Position = vec4(aPosition * uFit, 0.0, 1.0);
+        gl_PointSize = uPointSize;
+        vColor = aColor;
+      }
+    `;
+
+    const fragmentSource = `
+      precision mediump float;
+      varying vec3 vColor;
+
+      void main() {
+        vec2 p = gl_PointCoord - vec2(0.5);
+        float d = length(p);
+        if (d > 0.5) discard;
+        float alpha = 1.0 - smoothstep(0.28, 0.5, d);
+        gl_FragColor = vec4(vColor, alpha);
+      }
+    `;
+
+    function makeShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        throw new Error(gl.getShaderInfoLog(shader));
+      }
+      return shader;
+    }
+
+    const program = gl.createProgram();
+    gl.attachShader(program, makeShader(gl.VERTEX_SHADER, vertexSource));
+    gl.attachShader(program, makeShader(gl.FRAGMENT_SHADER, fragmentSource));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(program));
+    }
+    gl.useProgram(program);
+
+    const positionBuffer = gl.createBuffer();
+    const colorBuffer = gl.createBuffer();
+    const aPosition = gl.getAttribLocation(program, 'aPosition');
+    const aColor = gl.getAttribLocation(program, 'aColor');
+    const uFit = gl.getUniformLocation(program, 'uFit');
+    const uPointSize = gl.getUniformLocation(program, 'uPointSize');
+
+    let sourceWidth = 1;
+    let sourceHeight = 1;
+    let pointCount = 0;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.floor(window.innerWidth * dpr);
+      const height = Math.floor(window.innerHeight * dpr);
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+      gl.viewport(0, 0, width, height);
+
+      const maxWidth = width * 0.72;
+      const maxHeight = height * 0.72;
+      const scale = Math.min(maxWidth / sourceWidth, maxHeight / sourceHeight);
+      const fitWidth = sourceWidth * scale / width;
+      const fitHeight = sourceHeight * scale / height;
+      gl.uniform2f(uFit, fitWidth, fitHeight);
+      gl.uniform1f(uPointSize, Math.max(1.5, 2.1 * dpr));
+    }
+
+    function buildPoints(image) {
+      const sampleCanvas = document.createElement('canvas');
+      const sampleContext = sampleCanvas.getContext('2d', { willReadFrequently: true });
+      const maxSide = 900;
+      const ratio = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+      sourceWidth = Math.max(1, Math.round(image.naturalWidth * ratio));
+      sourceHeight = Math.max(1, Math.round(image.naturalHeight * ratio));
+      sampleCanvas.width = sourceWidth;
+      sampleCanvas.height = sourceHeight;
+      sampleContext.drawImage(image, 0, 0, sourceWidth, sourceHeight);
+
+      const pixels = sampleContext.getImageData(0, 0, sourceWidth, sourceHeight).data;
+      const corners = [
+        0,
+        (sourceWidth - 1) * 4,
+        ((sourceHeight - 1) * sourceWidth) * 4,
+        ((sourceHeight * sourceWidth) - 1) * 4
+      ];
+      const background = [0, 0, 0];
+      corners.forEach(index => {
+        background[0] += pixels[index];
+        background[1] += pixels[index + 1];
+        background[2] += pixels[index + 2];
+      });
+      background.forEach((value, i) => background[i] = value / corners.length);
+      const hasTransparency = (() => {
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] < 245) return true;
+        }
+        return false;
+      })();
+
+      const positions = [];
+      const colors = [];
+      const step = Math.max(2, Math.round(Math.max(sourceWidth, sourceHeight) / 420));
+
+      for (let y = 0; y < sourceHeight; y += step) {
+        for (let x = 0; x < sourceWidth; x += step) {
+          const index = (y * sourceWidth + x) * 4;
+          const r = pixels[index];
+          const g = pixels[index + 1];
+          const b = pixels[index + 2];
+          const alpha = pixels[index + 3] / 255;
+          const distance = Math.hypot(r - background[0], g - background[1], b - background[2]);
+          const visible = hasTransparency ? alpha > 0.12 : distance > 30;
+          if (!visible) continue;
+
+          positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
+          const boost = hasTransparency ? 1 : Math.min(1, 0.35 + distance / 150);
+          colors.push(
+            Math.min(1, (r / 255) * boost + 0.08),
+            Math.min(1, (g / 255) * boost + 0.07),
+            Math.min(1, (b / 255) * boost + 0.04)
+          );
+        }
+      }
+
+      pointCount = positions.length / 2;
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(aPosition);
+      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(aColor);
+      gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
+
+      resize();
+      status.textContent = pointCount.toLocaleString() + ' POINTS';
+    }
+
+    const image = new Image();
+    image.onload = () => {
+      try {
+        buildPoints(image);
+        render();
+      } catch (error) {
+        console.error(error);
+        status.textContent = 'COULD NOT BUILD POINTS FROM IMAGE';
+      }
+    };
+    image.onerror = () => status.textContent = 'IMAGE NOT FOUND';
+    image.src = '../images/deer.png';
+
+    function render() {
+      gl.clearColor(0.031, 0.043, 0.063, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.POINTS, 0, pointCount);
+    }
+
+    window.addEventListener('resize', resize);
+  </script>
 </body>
 </html>
