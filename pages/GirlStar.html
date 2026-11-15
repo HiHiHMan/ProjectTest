@@ -17,7 +17,7 @@
       display: grid;
       place-items: center;
       overflow: hidden;
-      background: #000;
+      background: #555;
     }
     .star-field {
       position: fixed;
@@ -27,18 +27,17 @@
       z-index: 2;
     }
     .ly-3-noise {
-      position: absolute;
-      top: 24px;
-      left: 50%;
-      width: 780px;
-      height: 414px;
-      transform: translateX(-50%);
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: none;
       z-index: 3;
       pointer-events: none;
-      opacity: 0.85;
-      mix-blend-mode: overlay;
+      opacity: 0.28;
+      mix-blend-mode: soft-light;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 80px 80px;
+      background-size: 110px 110px;
     }
 
     .star-glow {
