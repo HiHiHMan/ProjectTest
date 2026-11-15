@@ -168,9 +168,10 @@
     const starField = document.getElementById('starField');
 
     const girlWrap = document.querySelector('.girl-wrap');
+    // ใช้ครบทั้ง 10 สี และปรับให้เข้ม/อิ่มสีขึ้น
     const rainbowColors = [
-      '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
-      '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
+      '#241044', '#713CB8', '#416BCB', '#A88432', '#D94D80',
+      '#D95718', '#D51D79', '#A87916', '#145CCB', '#0B2D7A'
     ];
 
     // วาดดาวตกแต่งทั้งหมดด้วย WebGL บน Canvas เดียว
@@ -183,7 +184,8 @@
       const radius = Math.sqrt(Math.random()) * 0.88;
       const x = 0.5 + Math.cos(angle) * 0.22 * radius;
       const y = 0.48 + Math.sin(angle) * 0.29 * radius;
-      const color = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+      // วนใช้สีตามลำดับ เพื่อให้ดาวมีครบทุกสีแน่นอน
+      const color = rainbowColors[i % rainbowColors.length];
       const points = Math.random() < 0.5 ? 5 : 4;
 
       starData.push({
@@ -291,8 +293,8 @@
 
           // ไล่เฉดสีแบบนุ่ม: กลางสว่าง ขอบเป็นสีพาสเทลประจำดาว
           float centerLight = 1.0 - smoothstep(0.0, 0.98, radius);
-          vec3 starGradient = mix(v_color * 1.04, mix(v_color, vec3(1.0), 0.24), centerLight);
-          vec3 finalColor = (starGradient * edge * 1.18 + v_color * glow * 0.76) * twinkle;
+          vec3 starGradient = mix(v_color * 0.96, mix(v_color, vec3(1.0), 0.08), centerLight);
+          vec3 finalColor = (starGradient * edge * 1.08 + v_color * glow * 0.58) * twinkle;
 
           if (alpha < 0.015) discard;
           gl_FragColor = vec4(finalColor, alpha);
