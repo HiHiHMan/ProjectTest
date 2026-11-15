@@ -65,31 +65,15 @@
       12% { opacity: 1; }
       100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(0px - var(--distance))) scale(.12); }
     }
-    .rainbow-star {
+    .rainbow-star-canvas {
       position: absolute;
       z-index: 0;
-      width: 18px;
-      height: 18px;
-      left: var(--x);
-      top: var(--y);
-      transform: translate(-50%, -50%);
-      background: var(--star-color);
-      filter:
-        drop-shadow(0 2px 2px rgba(0, 0, 0, .95))
-        drop-shadow(0 0 3px #ffffff)
-        drop-shadow(0 0 7px var(--star-color))
-        drop-shadow(0 0 15px var(--star-color))
-        drop-shadow(0 0 28px var(--star-color));
-      opacity: 1;
-    }
-    .rainbow-star svg {
+      inset: 0;
       display: block;
       width: 100%;
       height: 100%;
       overflow: visible;
-    }
-    .rainbow-star svg path {
-      fill: var(--star-color);
+      pointer-events: none;
     }
     .star {
       position: absolute;
@@ -175,6 +159,7 @@
 <body>
   <div class="star-field" id="starField" aria-hidden="true"></div>
   <div class="girl-wrap">
+    <canvas class="rainbow-star-canvas" aria-hidden="true"></canvas>
     <img class="girl-image" src="../images/girl.png" alt="Girl">
     <img class="girl-blur" src="../images/girl.png" alt="" aria-hidden="true">
   </div>
@@ -187,38 +172,209 @@
       '#2bc260', '#2092fa', '#5d56d8', '#b34fdc'
     ];
 
-    // กระจายดาวให้อยู่ภายในบริเวณแสงวงรีด้านหลัง Girl
-    for (let i = 0; i < 34; i++) {
-      const decorativeStar = document.createElement('span');
+    // วาดดาวตกแต่งทั้งหมดด้วย WebGL บน Canvas เดียว
+    const starCanvas = document.querySelector('.rainbow-star-canvas');
+    const starCount = 34;
+    const starData = [];
+
+    for (let i = 0; i < starCount; i++) {
       const angle = Math.random() * Math.PI * 2;
       const radius = Math.sqrt(Math.random()) * 0.88;
-      const x = 50 + Math.cos(angle) * 22 * radius;
-      const y = 48 + Math.sin(angle) * 29 * radius;
+      const x = 0.5 + Math.cos(angle) * 0.22 * radius;
+      const y = 0.48 + Math.sin(angle) * 0.29 * radius;
+      const color = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+      const points = Math.random() < 0.5 ? 5 : 4;
 
-      decorativeStar.className = 'rainbow-star ' +
-        (Math.random() < 0.5 ? 'five-point' : 'four-point');
-      decorativeStar.style.setProperty('--x', x + '%');
-      decorativeStar.style.setProperty('--y', y + '%');
-      decorativeStar.style.setProperty('--star-scale', '1');
-      decorativeStar.style.setProperty(
-        '--star-color',
-        rainbowColors[Math.floor(Math.random() * rainbowColors.length)]
-      );
+      starData.push({
+        x,
+        y,
+        color: [
+          parseInt(color.slice(1, 3), 16) / 255,
+          parseInt(color.slice(3, 5), 16) / 255,
+          parseInt(color.slice(5, 7), 16) / 255
+        ],
+        points,
+        size: 22 + Math.random() * 5,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
 
-      const starSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      starSvg.setAttribute('viewBox', '0 0 182 182');
-      starSvg.setAttribute('aria-hidden', 'true');
+    const gl = starCanvas.getContext('webgl', {
+      alpha: true,
+      antialias: true,
+      premultipliedAlpha: false
+    });
 
-      const starPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      starPath.setAttribute(
-        'd',
-        decorativeStar.classList.contains('five-point')
-          ? 'M77.2839 10.3648 C81.7742 -3.45491 101.325 -3.45494 105.816 10.3647 L117.144 45.231 C119.152 51.4113 124.912 55.5958 131.41 55.5958 H168.071 C182.602 55.5958 188.643 74.19 176.888 82.731 L147.229 104.28 C141.971 108.099 139.771 114.87 141.779 121.05 L153.108 155.916 C157.598 169.736 141.781 181.228 130.026 172.687 L100.367 151.138 C95.1092 147.319 87.9903 147.319 82.733 151.138 L53.0739 172.687 C41.3182 181.228 25.501 169.736 29.9913 155.916 L41.32 121.05 C43.3281 114.87 41.1283 108.099 35.871 104.28 L6.21195 82.731 C-5.54375 74.19 0.497856 55.5958 15.0287 55.5958 H51.6893 C58.1877 55.5958 63.947 51.4114 65.9551 45.231 Z'
-          : 'M91 4 C96 4 98 31 106 39 C114 47 142 48 147 54 C152 60 130 76 124 82 C118 88 132 112 127 117 C122 122 101 105 91 105 C81 105 60 122 55 117 C50 112 64 88 58 82 C52 76 30 60 35 54 C40 48 68 47 76 39 C84 31 86 4 91 4 Z'
-      );
-      starSvg.appendChild(starPath);
-      decorativeStar.appendChild(starSvg);
-      girlWrap.appendChild(decorativeStar);
+    if (!gl) {
+      // Fallback สำหรับอุปกรณ์ที่ไม่รองรับ WebGL
+      const ctx = starCanvas.getContext('2d');
+      const drawFallbackStars = () => {
+        const rect = girlWrap.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        starCanvas.width = Math.round(rect.width * dpr);
+        starCanvas.height = Math.round(rect.height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, rect.width, rect.height);
+
+        starData.forEach((item) => {
+          const color = 'rgb(' + item.color.map(v => Math.round(v * 255)).join(',') + ')';
+          const cx = item.x * rect.width;
+          const cy = item.y * rect.height;
+          const outer = item.size * 0.42;
+          const inner = outer * 0.58;
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 13;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+
+          for (let j = 0; j < item.points * 2; j++) {
+            const a = -Math.PI / 2 + j * Math.PI / item.points;
+            const radius = j % 2 === 0 ? outer : inner;
+            const px = Math.cos(a) * radius;
+            const py = Math.sin(a) * radius;
+            if (j === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        });
+      };
+
+      drawFallbackStars();
+      window.addEventListener('resize', drawFallbackStars);
+    } else {
+      const vertexSource = `
+        attribute vec2 a_center;
+        attribute vec3 a_color;
+        attribute float a_size;
+        attribute float a_points;
+        attribute float a_phase;
+        uniform float u_dpr;
+        varying vec3 v_color;
+        varying float v_points;
+        varying float v_phase;
+
+        void main() {
+          gl_Position = vec4(a_center.x * 2.0 - 1.0, 1.0 - a_center.y * 2.0, 0.0, 1.0);
+          gl_PointSize = a_size * u_dpr;
+          v_color = a_color;
+          v_points = a_points;
+          v_phase = a_phase;
+        }
+      `;
+
+      const fragmentSource = `
+        precision mediump float;
+        uniform float u_time;
+        varying vec3 v_color;
+        varying float v_points;
+        varying float v_phase;
+
+        void main() {
+          vec2 p = (gl_PointCoord - 0.5) * 2.0;
+          float radius = length(p);
+          float angle = atan(p.y, p.x);
+          float wave = 0.5 + 0.5 * cos(v_points * angle);
+          float edgeRadius = 0.56 + 0.28 * pow(wave, 1.35);
+          float edge = 1.0 - smoothstep(edgeRadius - 0.045, edgeRadius + 0.025, radius);
+          float glow = exp(-max(radius - edgeRadius, 0.0) * 9.0)
+                     * (1.0 - smoothstep(edgeRadius, 1.55, radius));
+          float twinkle = 0.88 + 0.12 * sin(u_time * 1.7 + v_phase);
+          float alpha = clamp(edge + glow * 0.42, 0.0, 1.0) * twinkle;
+          vec3 brightColor = mix(v_color, vec3(1.0), edge * 0.2);
+          vec3 finalColor = brightColor * (edge * 1.15 + glow * 0.72) * twinkle;
+
+          if (alpha < 0.015) discard;
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `;
+
+      const compileShader = (type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.error('Star shader error:', gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      };
+
+      const vertexShader = compileShader(gl.VERTEX_SHADER, vertexSource);
+      const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+
+      if (vertexShader && fragmentShader) {
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          gl.useProgram(program);
+
+          const attributes = {
+            center: gl.getAttribLocation(program, 'a_center'),
+            color: gl.getAttribLocation(program, 'a_color'),
+            size: gl.getAttribLocation(program, 'a_size'),
+            points: gl.getAttribLocation(program, 'a_points'),
+            phase: gl.getAttribLocation(program, 'a_phase')
+          };
+          const uniforms = {
+            dpr: gl.getUniformLocation(program, 'u_dpr'),
+            time: gl.getUniformLocation(program, 'u_time')
+          };
+
+          const makeBuffer = (location, size, values) => {
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(values), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(location);
+            gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+            return buffer;
+          };
+
+          makeBuffer(attributes.center, 2, starData.flatMap(item => [item.x, item.y]));
+          makeBuffer(attributes.color, 3, starData.flatMap(item => item.color));
+          makeBuffer(attributes.size, 1, starData.map(item => item.size));
+          makeBuffer(attributes.points, 1, starData.map(item => item.points));
+          makeBuffer(attributes.phase, 1, starData.map(item => item.phase));
+
+          const resizeStarCanvas = () => {
+            const rect = girlWrap.getBoundingClientRect();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            starCanvas.width = Math.max(1, Math.round(rect.width * dpr));
+            starCanvas.height = Math.max(1, Math.round(rect.height * dpr));
+            gl.viewport(0, 0, starCanvas.width, starCanvas.height);
+            gl.uniform1f(uniforms.dpr, dpr);
+          };
+
+          const resizeObserver = new ResizeObserver(resizeStarCanvas);
+          resizeObserver.observe(girlWrap);
+          window.addEventListener('resize', resizeStarCanvas);
+          resizeStarCanvas();
+
+          gl.enable(gl.BLEND);
+          gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+          gl.clearColor(0, 0, 0, 0);
+
+          const renderStars = (timestamp) => {
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.uniform1f(uniforms.time, timestamp * 0.001);
+            gl.drawArrays(gl.POINTS, 0, starData.length);
+            requestAnimationFrame(renderStars);
+          };
+
+          requestAnimationFrame(renderStars);
+        } else {
+          console.error('Unable to link star WebGL program:', gl.getProgramInfoLog(program));
+        }
+      }
     }
 
     const glow = document.createElement('span');
