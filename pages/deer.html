@@ -189,10 +189,10 @@
 
       // Use Poisson-like dart throwing: points remain irregular but avoid
       // unnatural clumps and large accidental gaps.
-      const targetCount = foregroundSamples * 4;
+      const targetCount = foregroundSamples * 8;
       const positions = [];
       const colors = [];
-      const minDistance = 1.7;
+      const minDistance = 1.25;
       const cellSize = minDistance / Math.SQRT2;
       const gridWidth = Math.ceil(sourceWidth / cellSize);
       const gridHeight = Math.ceil(sourceHeight / cellSize);
@@ -220,7 +220,7 @@
       };
 
       let attempts = 0;
-      const maxAttempts = Math.max(targetCount * 50, 5000);
+      const maxAttempts = Math.max(targetCount * 80, 8000);
       while (positions.length / 2 < targetCount && attempts < maxAttempts) {
         attempts++;
         const x = Math.random() * sourceWidth;
