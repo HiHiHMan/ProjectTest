@@ -139,11 +139,11 @@
       window.addEventListener('resize', resize);
       resize();
 
-      function addParticle(x, y, vx, vy, color, life, size, gravity, drag, split = false, trail = false) {
+      function addParticle(x, y, vx, vy, color, life, size, gravity, drag, split = false, trail = false, opacity = 1) {
         if (particles.length >= capacity) return;
         particles.push({
           x, y, vx, vy, color, life, maxLife: life,
-          size, gravity, drag, split, trail, trailTimer: 0,
+          size, gravity, drag, split, trail, trailTimer: 0, opacity,
           twinkle: Math.random() * 8
         });
       }
@@ -201,6 +201,8 @@
       }
 
       function burstFlash(x, y, color) {
+        // A soft, wide glow briefly illuminates the surrounding sky at the explosion point.
+        addParticle(x, y, 0, 0, color, 0.62, 360, 0, 0.9, false, false, 0.14);
         // A brief white-hot core and colored halo make the instant of detonation pop.
         addParticle(x, y, 0, 0, [1.0, 1.0, 0.96], 0.16, 78, 0, 0.72);
         addParticle(x, y, 0, 0, color, 0.24, 112, 0, 0.78);
@@ -408,7 +410,7 @@
           const p = particles[i];
           const fade = Math.pow(Math.max(0, p.life / p.maxLife), 0.72);
           const flicker = 0.78 + Math.sin(p.life * 24 + p.twinkle) * 0.22;
-          const alpha = fade * flicker;
+          const alpha = fade * flicker * (p.opacity ?? 1);
           const offset = vertexCount * stride;
           vertexData[offset] = p.x;
           vertexData[offset + 1] = p.y;
