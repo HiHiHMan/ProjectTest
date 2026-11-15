@@ -208,14 +208,16 @@
       const targetCount = foregroundSamples * 12;
       const positions = [];
       const colors = [];
-      const minDistance = 0.9;
-      const cellSize = minDistance / Math.SQRT2;
+      const minDarkSpacing = 0.75;
+      const maxBrightSpacing = 2.2;
+      const cellSize = maxBrightSpacing / Math.SQRT2;
+      const pointSpacings = [];
       const gridWidth = Math.ceil(sourceWidth / cellSize);
       const gridHeight = Math.ceil(sourceHeight / cellSize);
       const grid = new Int32Array(gridWidth * gridHeight);
       grid.fill(-1);
 
-      const isFarEnough = (x, y) => {
+      const isFarEnough = (x, y, spacing) => {
         const gx = Math.floor(x / cellSize);
         const gy = Math.floor(y / cellSize);
         for (let oy = -2; oy <= 2; oy++) {
@@ -229,7 +231,8 @@
             const py = positions[pointIndex * 2 + 1];
             const dx = (px + 1) * 0.5 * sourceWidth - x;
             const dy = (1 - py) * 0.5 * sourceHeight - y;
-            if (dx * dx + dy * dy < minDistance * minDistance) return false;
+            const requiredSpacing = Math.max(spacing, pointSpacings[pointIndex]);
+            if (dx * dx + dy * dy < requiredSpacing * requiredSpacing) return false;
           }
         }
         return true;
@@ -243,19 +246,22 @@
         const y = Math.random() * sourceHeight;
         const ix = Math.floor(x);
         const iy = Math.floor(y);
-        if (!isForeground(ix, iy) || !isFarEnough(x, y)) continue;
+        if (!isForeground(ix, iy)) continue;
 
         const pixelIndex = (iy * sourceWidth + ix) * 4;
         const r = pixels[pixelIndex] / 255;
         const g = pixels[pixelIndex + 1] / 255;
         const b = pixels[pixelIndex + 2] / 255;
         const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        const spacing = minDarkSpacing + luminance * (maxBrightSpacing - minDarkSpacing);
+        if (!isFarEnough(x, y, spacing)) continue;
         const shade = Math.pow(luminance, 0.9);
         const gray = 0.035 + shade * 0.88;
 
         const pointIndex = positions.length / 2;
         positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
         colors.push(gray, gray, gray);
+        pointSpacings.push(spacing);
 
         const gx = Math.floor(x / cellSize);
         const gy = Math.floor(y / cellSize);
