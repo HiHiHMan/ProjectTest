@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090d20">
+  <meta name="theme-color" content="#dff3ff">
   <title>Balloon Bouquet</title>
   <style>
     *{box-sizing:border-box}
     html,body{width:100%;height:100%;margin:0}
-    body{overflow:hidden;display:grid;place-items:center;color:#fff;background:radial-gradient(ellipse at 50% 38%,rgba(63,73,133,.34),transparent 48%),radial-gradient(circle at 18% 20%,rgba(255,151,190,.10),transparent 24%),linear-gradient(160deg,#11172f 0%,#090d20 58%,#050711 100%);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    body{overflow:hidden;display:grid;place-items:center;color:#344b63;background:radial-gradient(ellipse at 50% 38%,rgba(255,255,255,.72),transparent 48%),radial-gradient(circle at 18% 20%,rgba(255,190,215,.28),transparent 24%),linear-gradient(160deg,#eaf8ff 0%,#d9f0ff 58%,#c9e8fa 100%);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}\n    body::before{content:"";position:fixed;inset:0;z-index:10;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");background-size:180px 180px;mix-blend-mode:multiply}
     .scene{position:relative;display:grid;place-items:center;width:100%;height:100%;min-height:420px;isolation:isolate}
-    .glow{position:absolute;width:min(72vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(153,164,255,.15),rgba(153,164,255,.035) 48%,transparent 72%);filter:blur(12px);pointer-events:none}
-    .heading{position:absolute;top:clamp(30px,8vh,76px);z-index:3;text-align:center;letter-spacing:.22em;font-size:clamp(11px,1.8vw,14px);font-weight:500;color:rgba(255,255,255,.68)}
-    .heading strong{display:block;margin-top:10px;color:#fff;font-size:clamp(23px,4vw,36px);font-weight:400;letter-spacing:.08em}
+    .glow{position:absolute;width:min(72vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(95,169,220,.18),rgba(153,200,255,.045) 48%,transparent 72%);filter:blur(12px);pointer-events:none}
+    .heading{position:absolute;top:clamp(30px,8vh,76px);z-index:3;text-align:center;letter-spacing:.22em;font-size:clamp(11px,1.8vw,14px);font-weight:500;color:rgba(48,75,101,.72)}
+    .heading strong{display:block;margin-top:10px;color:#385873;font-size:clamp(23px,4vw,36px);font-weight:400;letter-spacing:.08em}
     .bouquet{position:relative;width:min(88vw,560px);height:min(78vh,650px);min-height:390px;max-height:650px;margin-top:5vh;animation:bouquet-float 5.5s ease-in-out infinite}
     .strings{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0}
     .strings path{fill:none;stroke:rgba(230,235,255,.82);stroke-width:1.45;stroke-linecap:round;filter:drop-shadow(0 0 2px rgba(210,225,255,.45))}
@@ -37,7 +37,7 @@
     .tie::after{right:0;transform:scaleX(-1) rotate(24deg)}
     .tie span{position:absolute;left:50%;top:7px;width:7px;height:7px;border-radius:50%;background:#ffd8e3;transform:translateX(-50%)}
     .ribbon{position:absolute;left:50%;top:85%;width:2px;height:10%;background:linear-gradient(#f6b8ca,transparent);transform:translateX(-50%) rotate(2deg);transform-origin:top}
-    .caption{position:absolute;bottom:clamp(24px,5vh,48px);z-index:3;color:rgba(255,255,255,.58);font-size:12px;letter-spacing:.12em;text-align:center}
+    .caption{position:absolute;bottom:clamp(24px,5vh,48px);z-index:3;color:rgba(48,75,101,.62);font-size:12px;letter-spacing:.12em;text-align:center}
     @keyframes balloon-sway{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-7px)}}
     @keyframes flower-drift{0%,100%{translate:0 0;rotate:0deg}50%{translate:var(--flower-x,3px) var(--flower-y,-4px);rotate:var(--flower-rotate,10deg)}}
     @keyframes bouquet-float{0%,100%{translate:0 5px}50%{translate:0 -9px}}
