@@ -35,7 +35,7 @@
     .tie span{position:absolute;left:50%;top:7px;width:7px;height:7px;border-radius:50%;background:#ffd8e3;transform:translateX(-50%)}
     .ribbon{position:absolute;left:50%;top:85%;width:2px;height:10%;background:linear-gradient(#f6b8ca,transparent);transform:translateX(-50%) rotate(2deg);transform-origin:top}
     .caption{position:absolute;bottom:clamp(24px,5vh,48px);z-index:3;color:rgba(255,255,255,.58);font-size:12px;letter-spacing:.12em;text-align:center}
-    @keyframes balloon-sway{from{transform:rotate(-3deg) translateY(0)}to{transform:rotate(3deg) translateY(-9px)}}
+    @keyframes balloon-sway{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-7px)}}
     @keyframes bouquet-float{0%,100%{translate:0 5px}50%{translate:0 -9px}}
     @media(max-width:520px){.bouquet{width:96vw;height:min(72vh,570px);min-height:350px}.balloon{box-shadow:inset -6px -9px 14px rgba(0,0,0,.13),inset 4px 4px 10px rgba(255,255,255,.18),0 8px 17px rgba(0,0,0,.18)}.heading{top:7vh}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
