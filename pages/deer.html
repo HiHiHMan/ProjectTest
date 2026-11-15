@@ -187,35 +187,63 @@
         }
       }
 
-      // Increase sampling density while keeping point placement irregular.
+      // Use Poisson-like dart throwing: points remain irregular but avoid
+      // unnatural clumps and large accidental gaps.
       const targetCount = foregroundSamples * 4;
       const positions = [];
       const colors = [];
-      let attempts = 0;
-      const maxAttempts = Math.max(targetCount * 32, 1000);
+      const minDistance = 1.7;
+      const cellSize = minDistance / Math.SQRT2;
+      const gridWidth = Math.ceil(sourceWidth / cellSize);
+      const gridHeight = Math.ceil(sourceHeight / cellSize);
+      const grid = new Int32Array(gridWidth * gridHeight);
+      grid.fill(-1);
 
+      const isFarEnough = (x, y) => {
+        const gx = Math.floor(x / cellSize);
+        const gy = Math.floor(y / cellSize);
+        for (let oy = -2; oy <= 2; oy++) {
+          for (let ox = -2; ox <= 2; ox++) {
+            const nx = gx + ox;
+            const ny = gy + oy;
+            if (nx < 0 || ny < 0 || nx >= gridWidth || ny >= gridHeight) continue;
+            const pointIndex = grid[ny * gridWidth + nx];
+            if (pointIndex < 0) continue;
+            const px = positions[pointIndex * 2];
+            const py = positions[pointIndex * 2 + 1];
+            const dx = (px + 1) * 0.5 * sourceWidth - x;
+            const dy = (1 - py) * 0.5 * sourceHeight - y;
+            if (dx * dx + dy * dy < minDistance * minDistance) return false;
+          }
+        }
+        return true;
+      };
+
+      let attempts = 0;
+      const maxAttempts = Math.max(targetCount * 50, 5000);
       while (positions.length / 2 < targetCount && attempts < maxAttempts) {
         attempts++;
-        const x = Math.floor(Math.random() * sourceWidth);
-        const y = Math.floor(Math.random() * sourceHeight);
-        if (!isForeground(x, y)) continue;
+        const x = Math.random() * sourceWidth;
+        const y = Math.random() * sourceHeight;
+        const ix = Math.floor(x);
+        const iy = Math.floor(y);
+        if (!isForeground(ix, iy) || !isFarEnough(x, y)) continue;
 
-        const index = (y * sourceWidth + x) * 4;
-        const r = pixels[index] / 255;
-        const g = pixels[index + 1] / 255;
-        const b = pixels[index + 2] / 255;
-
-        // Convert the source image to grayscale: dark values become deep charcoal,
-        // while highlights become soft silver rather than colored light.
+        const pixelIndex = (iy * sourceWidth + ix) * 4;
+        const r = pixels[pixelIndex] / 255;
+        const g = pixels[pixelIndex + 1] / 255;
+        const b = pixels[pixelIndex + 2] / 255;
         const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
         const shade = Math.pow(luminance, 0.9);
         const gray = 0.035 + shade * 0.88;
 
-        positions.push(
-          (x / sourceWidth) * 2 - 1,
-          1 - (y / sourceHeight) * 2
-        );
+        const pointIndex = positions.length / 2;
+        positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
         colors.push(gray, gray, gray);
+
+        const gx = Math.floor(x / cellSize);
+        const gy = Math.floor(y / cellSize);
+        grid[gy * gridWidth + gx] = pointIndex;
       }
 
       pointCount = positions.length / 2;
