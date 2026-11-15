@@ -19,7 +19,10 @@
     .balloon{--color:#ff6f91;position:absolute;z-index:2;width:22%;height:auto;aspect-ratio:0.88/1;overflow:visible;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;background:radial-gradient(ellipse at 25% 17%,rgba(255,255,255,.98) 0 1.2%,rgba(255,255,255,.78) 2.5%,rgba(255,255,255,.12) 7%,transparent 19%),radial-gradient(ellipse at 31% 29%,rgba(255,255,255,.34),transparent 30%),radial-gradient(ellipse at 76% 76%,rgba(5,8,28,.2),transparent 38%),radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--color) 19%,transparent) 0%,color-mix(in srgb,var(--color) 13%,transparent) 48%,color-mix(in srgb,var(--color) 8%,transparent) 82%,rgba(10,12,30,.055) 100%);border:1px solid rgba(255,255,255,.30);box-shadow:inset 8px 5px 12px rgba(255,255,255,.32),inset 2px 0 4px rgba(255,255,255,.48),inset -12px -17px 24px rgba(0,0,0,.2),inset 0 -4px 8px rgba(255,255,255,.18),0 0 9px rgba(255,255,255,.16),0 13px 25px rgba(0,0,0,.2);transform-origin:50% 100%;animation:balloon-sway var(--duration,4.5s) ease-in-out var(--delay,0s) infinite alternate}
     .balloon::before{content:"";position:absolute;left:50%;bottom:-10px;width:13px;height:15px;border-radius:2px 2px 5px 5px;background:linear-gradient(110deg,color-mix(in srgb,var(--color) 55%,white),var(--color) 48%,color-mix(in srgb,var(--color) 55%,black));clip-path:polygon(18% 0,82% 0,70% 35%,100% 65%,50% 100%,0 65%,30% 35%);transform:translateX(-50%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
     .flower-pattern{position:absolute;inset:2% 3% 5%;z-index:1;overflow:hidden;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;pointer-events:none}.balloon-flower{position:absolute;display:block;line-height:1;transform:translate(-50%,-50%);transform-origin:center;animation:flower-drift var(--flower-duration,4s) ease-in-out var(--flower-delay,0s) infinite alternate;filter:drop-shadow(0 1px 1px rgba(35,8,20,.42)) drop-shadow(0 0 2px rgba(255,255,255,.25));}
-    .balloon::after{content:"";position:absolute;left:24%;top:15%;width:13%;height:27%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.68),rgba(255,255,255,0));transform:rotate(24deg);filter:blur(1px)}
+    .balloon::after{content:"";position:absolute;left:24%;top:15%;width:13%;height:27%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.08) 65%,transparent);transform:rotate(24deg);filter:blur(1px)}
+    .balloon-glints{position:absolute;inset:0;z-index:2;overflow:hidden;border-radius:50% 50% 47% 47% / 43% 43% 57% 57%;pointer-events:none}
+    .balloon-glint{position:absolute;display:block;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.98) 0%,rgba(255,255,255,.78) 22%,rgba(255,255,255,.18) 58%,transparent 76%);filter:blur(.25px);animation:glint-twinkle var(--glint-duration,3s) ease-in-out var(--glint-delay,0s) infinite alternate}
+    @keyframes glint-twinkle{0%,100%{opacity:.28;scale:.72}50%{opacity:1;scale:1.18}}
     .b1{--color:#ff91aa;left:10%;top:26%;width:24%;--duration:4.8s;--delay:-1s}
     .b2{--color:#fff19a;left:35%;top:9%;width:24%;--duration:5.2s;--delay:-2.2s}
     .b3{--color:#d9a0ff;left:60%;top:26%;width:24%;--duration:4.4s;--delay:-.7s}
@@ -57,13 +60,13 @@
         <path d="M437 420 C420 495 355 535 280 550"/>
         <path d="M280 550 C280 580 286 610 280 635"/>
       </svg>
-      <div class="balloon b1"><span class="flower-pattern"></span></div>
-      <div class="balloon b5"><span class="flower-pattern"></span></div>
-      <div class="balloon b2"><span class="flower-pattern"></span></div>
-      <div class="balloon b4"><span class="flower-pattern"></span></div>
-      <div class="balloon b7"><span class="flower-pattern"></span></div>
-      <div class="balloon b6"><span class="flower-pattern"></span></div>
-      <div class="balloon b3"><span class="flower-pattern"></span></div>
+      <div class="balloon b1"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b5"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b2"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b4"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b7"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b6"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
+      <div class="balloon b3"><span class="balloon-glints"></span><span class="flower-pattern"></span></div>
       <div class="tie"><span></span></div><div class="ribbon"></div>
     </div>
     <p class="caption">A COLORFUL MOMENT, JUST FOR YOU</p>
@@ -72,6 +75,19 @@
     (() => {
       const flowers = ["🌸", "🏵️", "💮"];
       document.querySelectorAll(".balloon").forEach((balloon) => {
+        const glints = balloon.querySelector(".balloon-glints");
+        for (let i = 0; i < 18; i++) {
+          const dot = document.createElement("i");
+          dot.className = "balloon-glint";
+          dot.style.left = (8 + Math.random() * 84) + "%";
+          dot.style.top = (7 + Math.random() * 84) + "%";
+          const diameter = 3 + Math.random() * 6;
+          dot.style.width = diameter + "px";
+          dot.style.height = diameter + "px";
+          dot.style.setProperty("--glint-duration", (1.8 + Math.random() * 3.5).toFixed(1) + "s");
+          dot.style.setProperty("--glint-delay", (-Math.random() * 4).toFixed(1) + "s");
+          glints.appendChild(dot);
+        }
         const pattern = balloon.querySelector(".flower-pattern");
         const amount = 9;
         for (let i = 0; i < amount; i++) {
