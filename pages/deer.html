@@ -256,7 +256,7 @@
         const spacing = minDarkSpacing + luminance * (maxBrightSpacing - minDarkSpacing);
         if (!isFarEnough(x, y, spacing)) continue;
         const shade = Math.pow(luminance, 0.9);
-        const gray = 0.035 + shade * 0.88;
+        const gray = luminance < 0.38 ? 0 : 0.035 + shade * 0.88;
 
         const pointIndex = positions.length / 2;
         positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
