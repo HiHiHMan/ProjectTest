@@ -123,7 +123,7 @@
       const fitWidth = sourceWidth * scale / width;
       const fitHeight = sourceHeight * scale / height;
       gl.uniform2f(uFit, fitWidth, fitHeight);
-      gl.uniform1f(uPointSize, Math.max(1.5, 2.1 * dpr));
+      gl.uniform1f(uPointSize, Math.max(0.65, 0.8 * dpr));
     }
 
     function buildPoints(image) {
