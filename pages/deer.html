@@ -255,8 +255,12 @@
         const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
         const spacing = minDarkSpacing + luminance * (maxBrightSpacing - minDarkSpacing);
         if (!isFarEnough(x, y, spacing)) continue;
-        const shade = Math.pow(luminance, 0.9);
-        const gray = luminance < 0.38 ? 0 : 0.035 + shade * 0.88;
+        // Keep deep shadows pure black, then transition smoothly through gray to white.
+        const fadeStart = 0.22;
+        const fadeEnd = 0.82;
+        const t = Math.max(0, Math.min(1, (luminance - fadeStart) / (fadeEnd - fadeStart)));
+        const smoothShade = t * t * (3 - 2 * t);
+        const gray = smoothShade * 0.96;
 
         const pointIndex = positions.length / 2;
         positions.push((x / sourceWidth) * 2 - 1, 1 - (y / sourceHeight) * 2);
