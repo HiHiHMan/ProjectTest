@@ -170,8 +170,8 @@
 
     const girlWrap = document.querySelector('.girl-wrap');
     const rainbowColors = [
-      '#ff8294', '#ffb36b', '#ffe58a',
-      '#8fe0ad', '#82c8f4', '#a9a0ef', '#d5a0e8'
+      '#f36f86', '#f69a4e', '#f2cf55',
+      '#65c98b', '#55aee8', '#8b7de0', '#c17bd4'
     ];
 
     // วาดดาวตกแต่งทั้งหมดด้วย WebGL บน Canvas เดียว
@@ -288,12 +288,12 @@
           float glow = exp(-max(radius - edgeRadius, 0.0) * 3.2)
                      * (1.0 - smoothstep(edgeRadius, 2.0, radius));
           float twinkle = 0.94 + 0.06 * sin(u_time * 1.4 + v_phase);
-          float alpha = clamp(edge + glow * 0.24, 0.0, 1.0) * twinkle;
+          float alpha = clamp(edge + glow * 0.30, 0.0, 1.0) * twinkle;
 
           // ไล่เฉดสีแบบนุ่ม: กลางสว่าง ขอบเป็นสีพาสเทลประจำดาว
           float centerLight = 1.0 - smoothstep(0.0, 0.98, radius);
-          vec3 starGradient = mix(v_color * 0.82, mix(v_color, vec3(1.0), 0.48), centerLight);
-          vec3 finalColor = (starGradient * edge * 1.18 + v_color * glow * 0.52) * twinkle;
+          vec3 starGradient = mix(v_color * 0.92, mix(v_color, vec3(1.0), 0.34), centerLight);
+          vec3 finalColor = (starGradient * edge * 1.18 + v_color * glow * 0.68) * twinkle;
 
           if (alpha < 0.015) discard;
           gl_FragColor = vec4(finalColor, alpha);
