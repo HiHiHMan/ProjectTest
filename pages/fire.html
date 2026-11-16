@@ -62,11 +62,8 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float bottomEdge=-.315-f.y;
       float signedShape=max(sideDistance,max(topEdge,bottomEdge));
 
-      // Strong diffusion: remove the sharp cutout and spread the flame into soft light
-      float softMask=1.0-smoothstep(-.055,.24,signedShape);
-      float mediumBlur=exp(-max(signedShape,0.0)*10.0)*.82;
-      float wideBlur=exp(-max(signedShape,0.0)*4.8)*.62;
-      float flameMask=clamp(softMask*.48+mediumBlur*.62+wideBlur*.38,0.0,1.0);
+      // Keep blur close to the flame edge; remove the wide aura
+      float flameMask=1.0-smoothstep(-.018,.075,signedShape);
 
       // Natural heat gradient from a pale hot base through gold and orange to red
       float edge=clamp(abs(f.x-center)/max(halfWidth,.001),0.0,1.0);
@@ -84,9 +81,8 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       fireColor=mix(fireColor,yellow,smoothstep(.66,.84,heat));
       fireColor=mix(fireColor,hotWhite,smoothstep(.84,.98,heat));
 
-      // Strongly blurred flame body with a gentle, soft center
-      col=mix(col,fireColor,clamp(flameMask*.82,0.0,1.0));
-      col+=fireColor*mediumBlur*.12;
+      // Soft edge only; no light spill beyond the flame silhouette
+      col=mix(col,fireColor,clamp(flameMask,0.0,1.0));
 
       // Tiny glowing embers drifting upward
       for(int i=0;i<18;i++){
