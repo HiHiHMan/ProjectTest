@@ -46,14 +46,20 @@
       top: 50%;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      overflow: hidden;
-      clip-path: circle(50% at 50% 50%);
       background: #138f21;
-      background:
-        radial-gradient(ellipse at 34% 36%, rgba(175, 255, 36, 0.98) 0%, rgba(175, 255, 36, 0.72) 24%, transparent 58%),
-        radial-gradient(ellipse at 73% 69%, rgba(252, 233, 61, 0.96) 0%, rgba(252, 233, 61, 0.62) 22%, transparent 54%),
-        radial-gradient(ellipse at 52% 52%, #138f21 0%, #138f21 68%);
-      filter: url(#turbulent-blend);
+    }
+
+    .turbulent-gradient {
+      position: absolute;
+      z-index: -1;
+      width: 460px;
+      height: 460px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      border-radius: 50%;
+      pointer-events: none;
     }
 
     .glass-box {
@@ -68,13 +74,27 @@
   </style>
 </head>
 <body>
-  <svg aria-hidden="true" width="0" height="0" style="position:absolute">
-    <filter id="turbulent-blend" x="-12%" y="-12%" width="124%" height="124%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="8" result="turbulence"/>
-      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="42" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
   <main class="content box-glass" aria-label="5 by 5 glass box grid">
+    <svg class="turbulent-gradient" aria-hidden="true" viewBox="0 0 460 460">
+      <defs>
+        <clipPath id="gradient-circle-clip">
+          <circle cx="230" cy="230" r="230"/>
+        </clipPath>
+        <radialGradient id="tri-color-gradient" cx="50%" cy="50%" r="72%">
+          <stop offset="0%" stop-color="#138f21"/>
+          <stop offset="48%" stop-color="#138f21"/>
+          <stop offset="78%" stop-color="#AFFF24"/>
+          <stop offset="100%" stop-color="#FCE93D"/>
+        </radialGradient>
+        <filter id="turbulent-blend" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+      <g clip-path="url(#gradient-circle-clip)">
+        <rect width="460" height="460" fill="url(#tri-color-gradient)" filter="url(#turbulent-blend)"/>
+      </g>
+    </svg>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
