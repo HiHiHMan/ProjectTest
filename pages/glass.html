@@ -90,8 +90,8 @@
         inset 7px 7px 13px rgb(85 85 85 / 23%),
         inset 3px 3px 6px rgb(85 85 85 / 15%),
         inset -2px -2px 5px rgb(255 255 255 / 12%);
-      backdrop-filter: blur(50px) saturate(var(--glass-saturation));
-      -webkit-backdrop-filter: blur(50px) saturate(var(--glass-saturation));
+      backdrop-filter: blur(15px) saturate(var(--glass-saturation));
+      -webkit-backdrop-filter: blur(15px) saturate(var(--glass-saturation));
     }
 
     .glass-filter-defs {
@@ -181,13 +181,6 @@
       background:
         linear-gradient(90deg, rgb(255 255 255 / 8%), transparent 78%),
         radial-gradient(ellipse 90% 70% at 100% 50%, rgb(0 0 0 / 8%), transparent 72%);
-    }
-
-    @supports (backdrop-filter: url(#liquid-glass-filter)) {
-      .glass-box {
-        backdrop-filter: url(#liquid-glass-filter) blur(50px) saturate(var(--glass-saturation));
-        -webkit-backdrop-filter: blur(50px) saturate(var(--glass-saturation));
-      }
     }
 
     @media (max-width: 360px) {
