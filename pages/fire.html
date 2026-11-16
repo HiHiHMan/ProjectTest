@@ -52,11 +52,13 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       // A single lively flame, shaped by animated procedural noise
       vec2 f=p-vec2(0.0,.30);
       float n=fbm(vec2(f.x*8.0+time*.42,f.y*5.5-time*1.45));
-      float sway=sin(time*1.7+f.y*9.0)*.018+(n-.5)*.085;
-      float width=.105*(1.0-smoothstep(-.12,.24,f.y));
-      width*=.72+.42*noise(vec2(f.x*24.0-time*.7,f.y*17.0+time));
-      float body=abs(f.x-sway)-width;
-      float taper=f.y+.30+.13*noise(vec2(f.x*10.0+time*.3,f.y*7.0-time));
+      float height=clamp((f.y+.31)/.56,0.0,1.0);
+      float sway=sin(time*1.35+f.y*7.0)*.025+(n-.5)*.055;
+      float width=.112*sqrt(max(0.0,1.0-height*height));
+      width*=.78+.30*noise(vec2(f.x*19.0-time*.8,f.y*13.0+time));
+      width+=.012*sin(height*17.0-time*2.0);
+      float body=abs(f.x-sway)-max(width,0.0);
+      float taper=f.y+.30+.085*noise(vec2(f.x*13.0+time*.4,f.y*8.0-time*1.2));
       float flame=1.0-smoothstep(-.012,.018,max(body,taper));
       flame*=smoothstep(-.31,-.23,f.y);
 
@@ -67,9 +69,11 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
         float offset=(fi-1.0)*.052;
         float pulse=sin(time*(1.8+fi*.23)+fi*2.1)*.018;
         vec2 q=f-vec2(offset+pulse,.012*fi);
-        float w=.040*(1.0-smoothstep(-.10,.15,q.y));
-        float side=abs(q.x-(n-.5)*.055)-w;
-        float tip=q.y+.20+.07*noise(vec2(q.x*16.0+time*.5,q.y*9.0-time*1.4));
+        float tongueHeight=clamp((q.y+.13)/.34,0.0,1.0);
+        float w=.034*sqrt(max(0.0,1.0-tongueHeight*tongueHeight));
+        float curl=sin(q.y*18.0-time*2.2+fi*1.7)*.012;
+        float side=abs(q.x-(n-.5)*.045-curl)-w;
+        float tip=q.y+.20+.045*noise(vec2(q.x*18.0+time*.6,q.y*11.0-time*1.6));
         tongues=max(tongues,1.0-smoothstep(-.008,.014,max(side,tip)));
       }
       flame=max(flame,tongues*.82);
