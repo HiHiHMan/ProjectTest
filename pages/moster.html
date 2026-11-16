@@ -28,6 +28,8 @@
     }
     main {
       position: relative;
+      z-index: 11;
+      isolation: isolate;
       width: min(48vw, 48vh, 360px);
       aspect-ratio: 1;
     }
@@ -53,7 +55,7 @@
       position: absolute;
       top: -55%;
       left: -32%;
-      z-index: 11;
+      z-index: 3;
       width: 164%;
       height: 210%;
       overflow: visible;
