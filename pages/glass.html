@@ -74,8 +74,16 @@
       pointer-events: none;
     }
 
+    .glass-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .glass-box {
       position: relative;
+      z-index: 1;
       overflow: hidden;
       width: 100%;
       aspect-ratio: 1;
@@ -190,6 +198,7 @@
 </head>
 <body>
 <main class="content box-glass" aria-label="5 by 5 glass box grid">
+    <div class="glass-overlay" aria-hidden="true"></div>
     <div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div>
     <div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div>
     <div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div><div class="glass-box"><span class="glass-facet facet-top"></span><span class="glass-facet facet-right"></span><span class="glass-facet facet-bottom"></span><span class="glass-facet facet-left"></span></div>
