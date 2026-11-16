@@ -27,11 +27,32 @@
     }
 
     .content.box-glass {
+      position: relative;
+      isolation: isolate;
       display: grid;
       grid-template-columns: repeat(5, 100px);
       grid-template-rows: repeat(5, 100px);
       gap: 0;
       padding: 12px;
+    }
+
+    .content.box-glass::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 460px;
+      height: 460px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 34% 30%,
+        #c8f5b8 0%,
+        #75cf79 38%,
+        #27864b 72%,
+        #145b35 100%
+      );
     }
 
     .glass-box {
