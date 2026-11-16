@@ -105,7 +105,13 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       // Brighter inner core fades smoothly into the orange outer flame
       float core=exp(-pow(abs(f.x)/.052,2.0))* (1.0-smoothstep(-.22,.24,f.y));
       fireColor=mix(fireColor,vec3(1.0,.94,.62),core*.48);
-      col=mix(col,fireColor,clamp(body,0.0,1.0));
+      // Soft blur around the flame silhouette, plus a wider warm halo
+      float softBody=smoothstep(-.10,.72,shape+silhouetteNoise);
+      float flameMask=clamp(body*.68+softBody*.32,0.0,1.0);
+      float flameHalo=exp(-max(0.0,.48-shape)*10.0)*.30;
+      vec3 blurredColor=mix(col,fireColor,clamp(flameMask,0.0,1.0));
+      col=mix(col,blurredColor,clamp(body,0.0,1.0));
+      col+=fireColor*flameHalo;
 
       // Tiny glowing embers drifting upward
       for(int i=0;i<18;i++){
