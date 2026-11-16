@@ -49,49 +49,63 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       vec2 f=(p-vec2(0.0,-.17))*1.8;
       float flow=fbm(vec2(f.x*5.5-time*.28,f.y*4.5-time*.85));
       float detail=fbm(vec2(f.x*11.0-time*.42,f.y*8.0-time*1.2));
-      // A single continuous flame profile: rounded belly, tapering to one tip
-      float center=sin(time*1.0+f.y*4.2)*.010
-                 +sin(time*.7+f.y*7.0)*.005
-                 +(flow-.5)*.010;
-      vec2 q=vec2(f.x-center,f.y);
+      // Curved flame silhouette: full rounded lower body and a clean sharp tip
+      float center=sin(time*.95+f.y*4.0)*.012
+                 +sin(time*.62+f.y*7.2)*.005
+                 +(flow-.5)*.008;
+      float tipLean=sin(time*1.15)*.018;
+      vec2 q=vec2(f.x-center-tipLean*smoothstep(.02,.36,f.y),f.y);
 
       float bottom=-.315;
-      float top=.365;
+      float top=.385;
       float t=clamp((q.y-bottom)/(top-bottom),0.0,1.0);
-      float belly=smoothstep(0.0,.22,t);
-      float taper=pow(max(1.0-t,0.0),.82);
-      float flameWidth=.205*belly*taper*(.90+.16*sin(3.14159*t));
 
-      float tipWaver=sin(time*1.25)*.010+sin(time*1.9+1.0)*.004;
-      float widthWaver=(flow-.5)*.010+(detail-.5)*.003;
-      flameWidth=max(flameWidth+widthWaver*belly,0.0);
+      // Rounded shoulder that narrows continuously into a pointed crown
+      float lowerBulb=smoothstep(0.0,.13,t);
+      float upperTaper=pow(max(1.0-t,0.0),1.12);
+      float shoulder=1.0+.24*sin(3.14159*clamp(t,0.0,1.0));
+      float flameWidth=.225*lowerBulb*upperTaper*shoulder;
+
+      // Gentle curved edge motion, strongest around the upper half
+      float widthWaver=(flow-.5)*.006+(detail-.5)*.002;
+      flameWidth=max(flameWidth+widthWaver*lowerBulb,0.0);
+      float tipWaver=sin(time*1.25)*.012+sin(time*1.9+1.0)*.004;
+
       float sideDistance=abs(q.x)-flameWidth;
       float bottomDistance=bottom-q.y;
       float topDistance=q.y-(top+tipWaver);
       float signedShape=max(sideDistance,max(bottomDistance,topDistance));
 
-      // Slightly soften the silhouette edge, keeping the flame body solid
-      float flameMask=1.0-smoothstep(-.008,.018,signedShape);
+      // Smooth antialiased boundary without a visible halo
+      float flameMask=1.0-smoothstep(-.006,.014,signedShape);
 
-      // Color follows the profile: bright core, golden mid-layer, red outer edge
+      // Layered curved gradient: red rim, orange body, golden and pale-hot core
       float edge=clamp(abs(q.x)/max(flameWidth,.001),0.0,1.0);
-      float heightFade=smoothstep(-.10,.365,q.y);
-      float edgeFade=smoothstep(.22,.98,edge);
-      float heat=clamp(1.0-edgeFade*.66-heightFade*.30
-                       +(flow-.5)*.025+(detail-.5)*.015,0.0,1.0);
+      float tipFade=smoothstep(.02,.385,q.y);
+      float variation=(flow-.5)*.018+(detail-.5)*.012;
 
-      vec3 deepRed=vec3(.30,.002,.0002);
-      vec3 red=vec3(.72,.012,.0004);
-      vec3 orange=vec3(1.0,.075,.001);
-      vec3 gold=vec3(1.0,.29,.004);
-      vec3 yellow=vec3(1.0,.65,.10);
-      vec3 hotWhite=vec3(1.0,.92,.66);
+      vec3 deepRed=vec3(.32,.002,.0002);
+      vec3 red=vec3(.82,.018,.0005);
+      vec3 orange=vec3(1.0,.105,.001);
+      vec3 gold=vec3(1.0,.38,.012);
+      vec3 yellow=vec3(1.0,.72,.20);
+      vec3 hotWhite=vec3(1.0,.94,.72);
 
-      vec3 fireColor=mix(deepRed,red,smoothstep(.02,.22,heat));
-      fireColor=mix(fireColor,orange,smoothstep(.20,.43,heat));
-      fireColor=mix(fireColor,gold,smoothstep(.40,.64,heat));
-      fireColor=mix(fireColor,yellow,smoothstep(.62,.84,heat));
-      fireColor=mix(fireColor,hotWhite,smoothstep(.82,.98,heat));
+      float rim=smoothstep(.96,.52,edge);
+      float orangeBand=1.0-smoothstep(.42,.78,edge);
+      float goldBand=1.0-smoothstep(.18,.54,edge);
+      float core=1.0-smoothstep(.02,.34,edge);
+
+      vec3 fireColor=deepRed;
+      fireColor=mix(fireColor,red,rim);
+      fireColor=mix(fireColor,orange,orangeBand);
+      fireColor=mix(fireColor,gold,goldBand);
+      fireColor=mix(fireColor,yellow,core);
+      fireColor=mix(fireColor,hotWhite,smoothstep(.48,.92,core));
+
+      // The pointed tip naturally cools from gold to orange-red
+      fireColor=mix(fireColor,red,smoothstep(.12,.98,tipFade)*.72);
+      fireColor+=variation*vec3(.35,.20,.04);
 
       // Soft edge only; no light spill beyond the flame silhouette
       col=mix(col,fireColor,clamp(flameMask,0.0,1.0));
