@@ -55,17 +55,19 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float center=sin(time*1.15+f.y*5.0)*.018
                  +sin(time*.73+f.y*9.0)*.010
                  +(flow-.5)*.035;
-      float halfWidth=.145*pow(max(0.0,1.0-vertical),.58)+.006;
+      float halfWidth=.190*pow(max(0.0,1.0-vertical),.48)+.009;
       halfWidth*=.88+.12*sin(vertical*8.0-time*1.1);
       float sideDistance=abs(f.x-center)-halfWidth;
 
-      // Three uneven peaks create a naturally split flame tip
+      // Five irregular peaks create a fuller flame with a clearly split crown
       float tipX=f.x-center;
-      float tipLeft=.105*exp(-pow((tipX+.064+sin(time*1.7)*.009)/.027,2.0));
-      float tipMiddle=.132*exp(-pow((tipX-sin(time*1.25)*.012)/.030,2.0));
-      float tipRight=.092*exp(-pow((tipX-.066+sin(time*1.5+1.2)*.010)/.025,2.0));
-      float tipHeight=max(tipMiddle,max(tipLeft,tipRight));
-      float topEdge=f.y-(.145+tipHeight+(flow-.5)*.025+(detail-.5)*.018);
+      float tipA=.105*exp(-pow((tipX+.128+sin(time*1.55)*.010)/.030,2.0));
+      float tipB=.145*exp(-pow((tipX+.064+sin(time*1.9+1.1)*.009)/.027,2.0));
+      float tipC=.112*exp(-pow((tipX-sin(time*1.25)*.012)/.032,2.0));
+      float tipD=.158*exp(-pow((tipX-.070+sin(time*1.65+2.0)*.011)/.029,2.0));
+      float tipE=.098*exp(-pow((tipX-.137+sin(time*1.8+2.8)*.008)/.026,2.0));
+      float tipHeight=max(max(tipA,tipB),max(tipC,max(tipD,tipE)));
+      float topEdge=f.y-(.105+tipHeight+(flow-.5)*.025+(detail-.5)*.018);
       float bottomEdge=-.315-f.y;
       float signedShape=max(sideDistance,max(topEdge,bottomEdge));
 
