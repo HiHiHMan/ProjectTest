@@ -73,23 +73,22 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float shoulderBlend=smoothstep(.12,.56,t);
       float flameWidth=mix(lowerRound,upperTaper,shoulderBlend);
 
-      // Side tongues: short triangular flares break outward from both edges.
-      // Staggered heights and widths keep them from looking like a regular saw.
-      float flareL1=pow(max(1.0-abs((t-.61)/.075),0.0),.72)*.030;
-      float flareL2=pow(max(1.0-abs((t-.79)/.060),0.0),.72)*.026;
-      float flareL3=pow(max(1.0-abs((t-.91)/.050),0.0),.72)*.018;
-      float flareR1=pow(max(1.0-abs((t-.69)/.065),0.0),.72)*.028;
-      float flareR2=pow(max(1.0-abs((t-.86)/.055),0.0),.72)*.022;
-      float sideFlares=max(max(flareL1,flareL2),flareL3);
-      sideFlares=max(sideFlares,max(flareR1,flareR2));
-      flameWidth+=sideFlares;
+      // Dragon-fruit bracts: long, tapered triangular lobes grow outward
+      // from alternating points along the flame's left and right edges.
+      float flareL1=pow(max(1.0-abs((t-.56)/.090),0.0),.78)*.050;
+      float flareL2=pow(max(1.0-abs((t-.75)/.082),0.0),.78)*.042;
+      float flareL3=pow(max(1.0-abs((t-.91)/.065),0.0),.78)*.030;
+      float flareR1=pow(max(1.0-abs((t-.65)/.088),0.0),.78)*.046;
+      float flareR2=pow(max(1.0-abs((t-.84)/.075),0.0),.78)*.036;
+      float leftWidth=flameWidth+max(flareL1,max(flareL2,flareL3));
+      float rightWidth=flameWidth+max(flareR1,flareR2);
 
       // Keep the silhouette stable; only a tiny ripple travels along its edge.
       float widthWaver=(flow-.5)*.003+(detail-.5)*.0015;
       flameWidth=max(flameWidth+widthWaver*(1.0-smoothstep(.70,1.0,t)),0.0);
       float tipWaver=sin(time*1.18)*.014+sin(time*1.85+1.0)*.005;
 
-      float sideDistance=abs(q.x)-flameWidth;
+      float sideDistance=max(q.x-rightWidth,-q.x-leftWidth);
       float bottomDistance=bottom-q.y;
       float topDistance=q.y-(top+tipWaver);
       float signedShape=max(sideDistance,max(bottomDistance,topDistance));
