@@ -74,21 +74,26 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       // Soft focus around the flame edge without a broad outer aura
       float flameMask=1.0-smoothstep(-.028,.052,signedShape);
 
-      // Natural heat gradient from a pale hot base through gold and orange to red
+      // Smooth continuous heat gradient: hottest at the lower center,
+      // fading through yellow and orange into red near the sides and tip.
       float edge=clamp(abs(q.x)/.205,0.0,1.0);
-      float turbulence=(flow-.5)*.16+(detail-.5)*.10;
-      float heat=clamp(1.0-vertical*.48-edge*.42+turbulence,0.0,1.0);
-      vec3 deepRed=vec3(.42,.009,.001);
-      vec3 redOrange=vec3(.88,.045,.002);
-      vec3 orange=vec3(1.0,.19,.006);
-      vec3 gold=vec3(1.0,.51,.035);
-      vec3 yellow=vec3(1.0,.82,.28);
-      vec3 hotWhite=vec3(1.0,.96,.70);
-      vec3 fireColor=mix(deepRed,redOrange,smoothstep(.06,.30,heat));
-      fireColor=mix(fireColor,orange,smoothstep(.27,.50,heat));
-      fireColor=mix(fireColor,gold,smoothstep(.47,.69,heat));
-      fireColor=mix(fireColor,yellow,smoothstep(.66,.84,heat));
-      fireColor=mix(fireColor,hotWhite,smoothstep(.84,.98,heat));
+      float sideCool=smoothstep(.08,.98,edge);
+      float tipCool=smoothstep(-.015,.305,f.y);
+      float turbulence=(flow-.5)*.055+(detail-.5)*.035;
+      float heat=clamp(.98-sideCool*.48-tipCool*.34+turbulence,0.0,1.0);
+
+      vec3 deepRed=vec3(.34,.004,.0005);
+      vec3 redOrange=vec3(.78,.025,.001);
+      vec3 orange=vec3(1.0,.105,.002);
+      vec3 gold=vec3(1.0,.36,.012);
+      vec3 yellow=vec3(1.0,.68,.12);
+      vec3 hotWhite=vec3(1.0,.91,.58);
+
+      vec3 fireColor=mix(deepRed,redOrange,smoothstep(.02,.24,heat));
+      fireColor=mix(fireColor,orange,smoothstep(.22,.46,heat));
+      fireColor=mix(fireColor,gold,smoothstep(.43,.66,heat));
+      fireColor=mix(fireColor,yellow,smoothstep(.63,.83,heat));
+      fireColor=mix(fireColor,hotWhite,smoothstep(.81,.97,heat));
 
       // Soft edge only; no light spill beyond the flame silhouette
       col=mix(col,fireColor,clamp(flameMask,0.0,1.0));
