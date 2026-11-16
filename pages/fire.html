@@ -49,23 +49,22 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       vec2 f=(p-vec2(0.0,-.17))*1.8;
       float flow=fbm(vec2(f.x*5.5-time*.28,f.y*4.5-time*.85));
       float detail=fbm(vec2(f.x*11.0-time*.42,f.y*8.0-time*1.2));
-      float vertical=clamp((f.y+.30)/.60,0.0,1.0);
-
-      // Rounded lower belly and one smoothly tapering pointed top
+      // Round bulb blended into a triangular, pointed upper flame
+      float t=clamp((f.y+.30)/.60,0.0,1.0);
       float center=sin(time*1.15+f.y*5.0)*.012
                  +sin(time*.73+f.y*9.0)*.007
                  +(flow-.5)*.022;
-      float t=clamp((f.y+.30)/.60,0.0,1.0);
-      float belly= sqrt(max(0.0,1.0-pow((t-.28)/.72,2.0)));
-      float halfWidth=.235*belly;
-      halfWidth*=.97+.03*sin(vertical*7.0-time*.9);
+
+      // Lower half: circular arc. Upper half: smooth triangular taper.
+      float bulbWidth=.225*sqrt(max(0.0,1.0-pow((t-.37)/.37,2.0)));
+      float taperWidth=.225*pow(max(0.0,(1.0-t)/.63),.92);
+      float halfWidth=mix(bulbWidth,taperWidth,smoothstep(.34,.42,t));
+      halfWidth*=.98+.02*sin(vertical*7.0-time*.9);
       float sideDistance=abs(f.x-center)-halfWidth;
 
-      // The base curves upward at the sides instead of being cut flat
       float tipWaver=sin(time*1.55)*.010+sin(time*2.3+1.0)*.005;
       float topEdge=f.y-(.30+tipWaver);
-      float baseCurve=-.30+.105*pow(clamp(abs(f.x-center)/.235,0.0,1.0),2.0);
-      float bottomEdge=baseCurve-f.y;
+      float bottomEdge=-.30-f.y;
       float signedShape=max(sideDistance,max(topEdge,bottomEdge));
 
       // Soft focus around the flame edge without a broad outer aura
