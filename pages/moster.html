@@ -66,14 +66,190 @@
       background: radial-gradient(circle at 80% -55%, #343434 0%, #171717 24%, #080808 52%, #000000 76%);
       box-shadow: inset -18px -22px 34px rgb(0 0 0 / 78%), inset 10px 8px 20px rgb(255 255 255 / 8%), 0 24px 48px rgb(0 0 0 / 18%);
     }
+    #fire-particles {
+      position: absolute;
+      inset: -32%;
+      z-index: 3;
+      width: 164%;
+      height: 164%;
+      overflow: visible;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
-  <main aria-label="Black sphere">
+  <main aria-label="Black sphere with rising black particles">
     <div class="sphere-wrap" role="img" aria-label="A black sphere">
       <div class="sphere"></div>
     </div>
     <div class="ly-3-noise" aria-hidden="true"></div>
+    <canvas id="fire-particles" aria-hidden="true"></canvas>
   </main>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('fire-particles');
+      const gl = canvas.getContext('webgl', {
+        alpha: true,
+        antialias: true,
+        premultipliedAlpha: false
+      });
+      if (!gl) return;
+
+      const vertexSource = `
+        attribute vec2 a_position;
+        attribute float a_size;
+        attribute float a_alpha;
+        uniform vec2 u_resolution;
+        varying float v_alpha;
+        void main() {
+          vec2 clip = (a_position / u_resolution) * 2.0 - 1.0;
+          gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
+          gl_PointSize = a_size;
+          v_alpha = a_alpha;
+        }
+      `;
+      const fragmentSource = `
+        precision mediump float;
+        varying float v_alpha;
+        void main() {
+          vec2 p = gl_PointCoord - 0.5;
+          float d = length(p);
+          float edge = 1.0 - smoothstep(0.34, 0.5, d);
+          if (edge < 0.01) discard;
+          gl_FragColor = vec4(0.0, 0.0, 0.0, v_alpha * edge);
+        }
+      `;
+
+      function compile(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.warn(gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vs = compile(gl.VERTEX_SHADER, vertexSource);
+      const fs = compile(gl.FRAGMENT_SHADER, fragmentSource);
+      if (!vs || !fs) return;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      gl.useProgram(program);
+
+      const positionLocation = gl.getAttribLocation(program, 'a_position');
+      const sizeLocation = gl.getAttribLocation(program, 'a_size');
+      const alphaLocation = gl.getAttribLocation(program, 'a_alpha');
+      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+      const PARTICLE_COUNT = 950;
+      const particles = [];
+      const random = (min, max) => min + Math.random() * (max - min);
+
+      function respawn(p, initial = false) {
+        const angle = random(0, Math.PI * 2);
+        const radius = random(0.38, 0.52);
+        p.angle = angle;
+        p.radius = radius;
+        p.x = Math.cos(angle) * radius;
+        p.y = Math.sin(angle) * radius;
+        p.vx = random(-0.22, 0.22) + Math.cos(angle) * random(0.05, 0.2);
+        p.vy = -random(0.42, 1.15);
+        p.life = initial ? random(0, 1) : 0;
+        p.maxLife = random(0.65, 1.45);
+        p.size = random(1.8, 5.2);
+        p.seed = random(0, Math.PI * 2);
+        p.drift = random(0.25, 1.1);
+      }
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = {};
+        respawn(p, true);
+        particles.push(p);
+      }
+
+      const data = new Float32Array(PARTICLE_COUNT * 4);
+      let width = 1;
+      let height = 1;
+      let dpr = 1;
+      let previousTime = 0;
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = rect.width;
+        height = rect.height;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+      }
+
+      function frame(time) {
+        const dt = Math.min((time - previousTime) / 1000 || 0, 0.032);
+        previousTime = time;
+        const elapsed = time * 0.001;
+        const cx = canvas.width * 0.5;
+        const cy = canvas.height * 0.5;
+        const sphereRadius = Math.min(width, height) * dpr * 0.305;
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const p = particles[i];
+          p.life += dt / p.maxLife;
+          if (p.life >= 1 || Math.abs(p.x) > 1.12 || p.y < -1.05) {
+            respawn(p);
+          }
+
+          const turbulence = Math.sin(elapsed * 2.4 + p.seed + p.life * 5) * p.drift;
+          p.x += (p.vx + turbulence * 0.075) * dt;
+          p.y += p.vy * dt;
+          p.vx *= 0.995;
+
+          const rise = Math.sin(Math.min(p.life, 1) * Math.PI);
+          const fadeIn = Math.min(p.life * 5, 1);
+          const fadeOut = Math.min((1 - p.life) * 3.5, 1);
+          const alpha = Math.max(0, fadeIn * fadeOut * (0.32 + rise * 0.55));
+          const flicker = 0.78 + 0.22 * Math.sin(elapsed * 13 + p.seed);
+
+          const index = i * 4;
+          data[index] = cx + p.x * sphereRadius;
+          data[index + 1] = cy - p.y * sphereRadius;
+          data[index + 2] = p.size * dpr * flicker;
+          data[index + 3] = alpha;
+        }
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+
+        const stride = 4 * Float32Array.BYTES_PER_ELEMENT;
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, stride, 0);
+        gl.enableVertexAttribArray(sizeLocation);
+        gl.vertexAttribPointer(sizeLocation, 1, gl.FLOAT, false, stride, 2 * Float32Array.BYTES_PER_ELEMENT);
+        gl.enableVertexAttribArray(alphaLocation);
+        gl.vertexAttribPointer(alphaLocation, 1, gl.FLOAT, false, stride, 3 * Float32Array.BYTES_PER_ELEMENT);
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.drawArrays(gl.POINTS, 0, PARTICLE_COUNT);
+        requestAnimationFrame(frame);
+      }
+
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      requestAnimationFrame(frame);
+    })();
+  </script>
 </body>
 </html>
