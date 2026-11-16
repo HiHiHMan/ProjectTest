@@ -100,7 +100,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      box-shadow: inset 7px 7px 14px rgb(198 198 198 / 12%);
+      box-shadow: inset 5px 5px 10px rgb(198 198 198 / 16%);
     }
 
     .preview iframe {
