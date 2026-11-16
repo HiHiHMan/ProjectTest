@@ -33,19 +33,42 @@
           transparent 72%),
         #000000;
     }
+    .sphere-wrap {
+      position: relative;
+      width: min(48vw, 48vh, 360px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      isolation: isolate;
+    }
     .sphere {
-  filter: blur(25px);
-  width: min(48vw, 48vh, 360px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 80% -55%, #343434 0%, #171717 24%, #080808 52%, #000000 76%);
-  box-shadow: inset -18px -22px 34px rgb(0 0 0 / 78%), inset 10px 8px 20px rgb(255 255 255 / 8%), 0 24px 48px rgb(0 0 0 / 18%);
-}
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      filter: blur(25px);
+      background: radial-gradient(circle at 80% -55%, #343434 0%, #171717 24%, #080808 52%, #000000 76%);
+      box-shadow: inset -18px -22px 34px rgb(0 0 0 / 78%), inset 10px 8px 20px rgb(255 255 255 / 8%), 0 24px 48px rgb(0 0 0 / 18%);
+    }
+    .ly-3-noise {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.85;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+    }
   </style>
 </head>
 <body>
   <main aria-label="Black sphere">
-    <div class="sphere" role="img" aria-label="A black sphere"></div>
+    <div class="sphere-wrap" role="img" aria-label="A black sphere">
+      <div class="sphere"></div>
+      <div class="ly-3-noise" aria-hidden="true"></div>
+    </div>
   </main>
 </body>
 </html>
