@@ -66,11 +66,11 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float bottomEdge=-.315-f.y;
       float signedShape=max(sideDistance,max(topEdge,bottomEdge));
 
-      // Soft edge and broad optical blur: several layers of warm diffusion
-      float crispMask=1.0-smoothstep(-.006,.020,signedShape);
-      float softMask=1.0-smoothstep(-.025,.105,signedShape);
-      float wideBlur=exp(-max(signedShape,0.0)*18.0)*.72;
-      float flameMask=clamp(max(crispMask*.34,softMask*.72)+wideBlur*.55,0.0,1.0);
+      // Strong diffusion: remove the sharp cutout and spread the flame into soft light
+      float softMask=1.0-smoothstep(-.055,.24,signedShape);
+      float mediumBlur=exp(-max(signedShape,0.0)*10.0)*.82;
+      float wideBlur=exp(-max(signedShape,0.0)*4.8)*.62;
+      float flameMask=clamp(softMask*.48+mediumBlur*.62+wideBlur*.38,0.0,1.0);
 
       // Natural heat gradient from a pale hot base through gold and orange to red
       float edge=clamp(abs(f.x-center)/max(halfWidth,.001),0.0,1.0);
@@ -88,15 +88,17 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       fireColor=mix(fireColor,yellow,smoothstep(.66,.84,heat));
       fireColor=mix(fireColor,hotWhite,smoothstep(.84,.98,heat));
 
-      // Broad, heavily diffused glow behind the flame
-      float glowCore=exp(-pow(f.x/.105,2.0)-pow((f.y+.10)/.25,2.0));
-      float glowOuter=exp(-pow(f.x/.22,2.0)-pow((f.y+.02)/.39,2.0));
-      col+=vec3(1.0,.20,.018)*glowOuter*.16;
-      col+=vec3(1.0,.43,.055)*glowCore*.20;
+      // Large multi-layer bloom around the flame
+      float glowCore=exp(-pow(f.x/.13,2.0)-pow((f.y+.10)/.28,2.0));
+      float glowMid=exp(-pow(f.x/.23,2.0)-pow((f.y+.02)/.43,2.0));
+      float glowOuter=exp(-pow(f.x/.34,2.0)-pow((f.y+.00)/.58,2.0));
+      col+=vec3(1.0,.13,.008)*glowOuter*.22;
+      col+=vec3(1.0,.27,.018)*glowMid*.23;
+      col+=vec3(1.0,.48,.065)*glowCore*.20;
 
-      // Composite a soft blurred flame instead of hard, string-like edges
-      col=mix(col,fireColor,clamp(flameMask,0.0,1.0));
-      col+=fireColor*wideBlur*.10;
+      // Strongly blurred flame body with a gentle, soft center
+      col=mix(col,fireColor,clamp(flameMask*.82,0.0,1.0));
+      col+=fireColor*mediumBlur*.12;
 
       // Tiny glowing embers drifting upward
       for(int i=0;i<18;i++){
