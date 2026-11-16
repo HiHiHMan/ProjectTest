@@ -49,27 +49,29 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       vec2 f=(p-vec2(0.0,-.17))*1.8;
       float flow=fbm(vec2(f.x*5.5-time*.28,f.y*4.5-time*.85));
       float detail=fbm(vec2(f.x*11.0-time*.42,f.y*8.0-time*1.2));
-      // Round bulb blended into a triangular, pointed upper flame
+      // Teardrop silhouette: rounded circular belly smoothly joined to a tapered point
       float vertical=clamp((f.y+.30)/.60,0.0,1.0);
-      float t=vertical;
-      float center=sin(time*1.15+f.y*5.0)*.012
-                 +sin(time*.73+f.y*9.0)*.007
-                 +(flow-.5)*.022;
+      float center=sin(time*1.15+f.y*5.0)*.010
+                 +sin(time*.73+f.y*9.0)*.006
+                 +(flow-.5)*.018;
 
-      // Lower half: circular arc. Upper half: smooth triangular taper.
-      float bulbWidth=.245*sqrt(max(0.0,1.0-pow((t-.22)/.32,2.0)));
-      float taperWidth=.245*pow(max(0.0,(1.0-t)/.52),1.05);
-      float halfWidth=mix(bulbWidth,taperWidth,smoothstep(.44,.56,t));
-      halfWidth*=.98+.02*sin(vertical*7.0-time*.9);
-      float sideDistance=abs(f.x-center)-halfWidth;
+      vec2 q=vec2(f.x-center,f.y);
+      float roundBody=length(q-vec2(0.0,-.115))-.185;
+
+      float triangleHalfWidth=.205*clamp((.305-f.y)/.355,0.0,1.0);
+      float triangleSide=abs(q.x)-triangleHalfWidth;
+      float triangleBottom=-.045-f.y;
+      float triangleTop=f.y-.305;
+      float pointedTop=max(triangleSide,max(triangleBottom,triangleTop));
+
+      // Smooth union removes the seam between the round belly and pointed crown
+      float blend=.045;
+      float h=max(blend-abs(roundBody-pointedTop),0.0)/blend;
+      float signedShape=min(roundBody,pointedTop)-h*h*blend*.25;
 
       float tipWaver=sin(time*1.55)*.010+sin(time*2.3+1.0)*.005;
-      float topEdge=f.y-(.30+tipWaver);
-      // Curved bottom edge: fuller round belly, no flat cut-off
-      float baseCurve=-.30+.115*pow(clamp(abs(f.x-center)/.16,0.0,1.0),2.0);
-      float bottomEdge=baseCurve-f.y;
-      float signedShape=max(sideDistance,max(topEdge,bottomEdge));
-
+      signedShape += max(q.y,0.0)*tipWaver*2.0;
+      float edge=clamp(abs(q.x)/.205,0.0,1.0);
       // Soft focus around the flame edge without a broad outer aura
       float flameMask=1.0-smoothstep(-.028,.052,signedShape);
 
