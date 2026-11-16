@@ -79,17 +79,32 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
         tongues=max(tongues,tongue);
       }
 
-      // Add irregular ripples to the silhouette so it never reads as a clean cone
-      float silhouetteNoise=(noise(vec2(f.x*34.0+time*.8,f.y*19.0-time*2.1))-.5)*.014;
-      float body= max(base,tongues);
-      body= smoothstep(.36,.68,body+silhouetteNoise*4.0);
+      // Soft, irregular flame edge
+      float silhouetteNoise=(noise(vec2(f.x*34.0+time*.8,f.y*19.0-time*2.1))-.5)*.10;
+      float shape=max(base,tongues);
+      float body=smoothstep(.02,.34,shape+silhouetteNoise);
 
-      // Hot yellow-white center, orange outer edges
-      float core=1.0-smoothstep(.012,.105,abs(f.x)+max(f.y+.24,0.0)*.30);
-      float lowerGlow=1.0-smoothstep(-.34,-.02,f.y);
-      vec3 fireColor=mix(vec3(1.0,.105,.008),vec3(1.0,.48,.055),clamp(core,0.0,1.0));
-      fireColor=mix(fireColor,vec3(1.0,.88,.42),smoothstep(.72,1.0,core));
-      fireColor*=.88+.12*flow;
+      // Multi-stop heat gradient: white-hot base, golden core, orange body, red tips
+      float vertical=clamp((f.y+.30)/.56,0.0,1.0);
+      float edge=clamp(abs(f.x)/.145,0.0,1.0);
+      float turbulence=(flow-.5)*.20+(noise(vec2(f.x*25.0-time*.9,f.y*18.0-time*2.4))-.5)*.12;
+      float heat=clamp(1.0-vertical*.52-edge*.48+turbulence,0.0,1.0);
+
+      vec3 deepRed=vec3(.48,.012,.001);
+      vec3 redOrange=vec3(.92,.055,.002);
+      vec3 orange=vec3(1.0,.22,.008);
+      vec3 gold=vec3(1.0,.57,.055);
+      vec3 yellow=vec3(1.0,.88,.38);
+      vec3 hotWhite=vec3(1.0,.98,.78);
+      vec3 fireColor=mix(deepRed,redOrange,smoothstep(.08,.32,heat));
+      fireColor=mix(fireColor,orange,smoothstep(.28,.52,heat));
+      fireColor=mix(fireColor,gold,smoothstep(.48,.70,heat));
+      fireColor=mix(fireColor,yellow,smoothstep(.68,.86,heat));
+      fireColor=mix(fireColor,hotWhite,smoothstep(.88,1.0,heat));
+
+      // Brighter inner core fades smoothly into the orange outer flame
+      float core=exp(-pow(abs(f.x)/.052,2.0))* (1.0-smoothstep(-.22,.24,f.y));
+      fireColor=mix(fireColor,vec3(1.0,.94,.62),core*.48);
       col=mix(col,fireColor,clamp(body,0.0,1.0));
 
       // Tiny glowing embers drifting upward
