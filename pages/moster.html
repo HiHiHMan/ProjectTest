@@ -156,16 +156,15 @@
       const random = (min, max) => min + Math.random() * (max - min);
 
       function respawn(p, initial = false) {
-        const angle = random(0, Math.PI * 2);
-        const radius = random(0.38, 0.52);
-        p.angle = angle;
-        p.radius = radius;
-        p.x = Math.cos(angle) * radius;
-        p.y = Math.sin(angle) * radius;
-        p.vx = random(-0.22, 0.22) + Math.cos(angle) * random(0.05, 0.2);
-        p.vy = -random(0.42, 1.15);
+        // Ignite from points spread across the sphere's upper surface.
+        const surfaceX = random(-0.88, 0.88);
+        const surfaceY = Math.sqrt(1 - surfaceX * surfaceX);
+        p.x = surfaceX + random(-0.025, 0.025);
+        p.y = surfaceY + random(-0.015, 0.015);
+        p.vx = random(-0.2, 0.2) + surfaceX * 0.12;
+        p.vy = random(0.42, 0.95);
         p.life = initial ? random(0, 1) : 0;
-        p.maxLife = random(0.65, 1.45);
+        p.maxLife = random(0.55, 1.2);
         p.size = random(1.8, 5.2);
         p.seed = random(0, Math.PI * 2);
         p.drift = random(0.25, 1.1);
