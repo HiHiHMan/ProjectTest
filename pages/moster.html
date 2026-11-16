@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#eeeeee">
+  <title>Moster — Black Sphere</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; margin: 0; }
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: #eeeeee;
+    }
+    .sphere {
+      width: min(48vw, 48vh, 360px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 27%,
+          #343434 0%,
+          #171717 24%,
+          #080808 52%,
+          #000000 76%);
+      box-shadow:
+        inset -18px -22px 34px rgb(0 0 0 / 78%),
+        inset 10px 8px 20px rgb(255 255 255 / 8%),
+        0 24px 48px rgb(0 0 0 / 18%);
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="Black sphere">
+    <div class="sphere" role="img" aria-label="A black sphere"></div>
+  </main>
+</body>
+</html>
