@@ -49,38 +49,48 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float glow=exp(-dot(p-vec2(0.0,.04),p-vec2(0.0,.04))*17.0);
       col+=vec3(.30,.095,.012)*glow*.48;
 
-      // A single lively flame, shaped by animated procedural noise
+      // Organic flame: a broad rounded base with several independently curling tongues
       vec2 f=p-vec2(0.0,.30);
-      float n=fbm(vec2(f.x*8.0+time*.42,f.y*5.5-time*1.45));
-      float height=clamp((f.y+.31)/.56,0.0,1.0);
-      float sway=sin(time*1.35+f.y*7.0)*.025+(n-.5)*.055;
-      float width=.112*sqrt(max(0.0,1.0-height*height));
-      width*=.78+.30*noise(vec2(f.x*19.0-time*.8,f.y*13.0+time));
-      width+=.012*sin(height*17.0-time*2.0);
-      float body=abs(f.x-sway)-max(width,0.0);
-      float taper=f.y+.30+.085*noise(vec2(f.x*13.0+time*.4,f.y*8.0-time*1.2));
-      float flame=1.0-smoothstep(-.012,.018,max(body,taper));
-      flame*=smoothstep(-.31,-.23,f.y);
+      float flow=fbm(vec2(f.x*10.0-time*.45,f.y*8.0-time*1.35));
+      float warp=(flow-.5)*.035;
 
-      // Smaller tongues make the silhouette flicker naturally
+      // Rounded, wide lower body (not a triangular cone)
+      float baseX=f.x-sin(time*1.7+f.y*8.0)*.012-warp;
+      float baseEllipse=length(vec2(baseX/.137,(f.y+.205)/.177));
+      float base=1.0-smoothstep(.91,1.04,baseEllipse);
+
+      // Four separate tongues rise from the base, each with its own bend and height
       float tongues=0.0;
-      for(int i=0;i<3;i++){
+      for(int i=0;i<4;i++){
         float fi=float(i);
-        float offset=(fi-1.0)*.052;
-        float pulse=sin(time*(1.8+fi*.23)+fi*2.1)*.018;
-        vec2 q=f-vec2(offset+pulse,.012*fi);
-        float tongueHeight=clamp((q.y+.13)/.34,0.0,1.0);
-        float w=.034*sqrt(max(0.0,1.0-tongueHeight*tongueHeight));
-        float curl=sin(q.y*18.0-time*2.2+fi*1.7)*.012;
-        float side=abs(q.x-(n-.5)*.045-curl)-w;
-        float tip=q.y+.20+.045*noise(vec2(q.x*18.0+time*.6,q.y*11.0-time*1.6));
-        tongues=max(tongues,1.0-smoothstep(-.008,.014,max(side,tip)));
+        float side=fi-1.5;
+        float bottom=-.205+abs(side)*.012;
+        float height=.235+mod(fi*1.73,3.0)*.055;
+        float h=(f.y-bottom)/height;
+        float active=step(0.0,h)*step(h,1.0);
+        float taper=pow(max(0.0,1.0-h),.62);
+        float w=(.043+(.012*(1.0-abs(side))))*taper+.002;
+        float bend=sin(time*(1.65+fi*.21)+h*4.8+fi*1.9)*(.012+h*.018);
+        bend+=(flow-.5)*.025;
+        float center=side*.050+bend;
+        float edge=abs(f.x-center)-w;
+        float tongue=1.0-smoothstep(-.006,.009,edge);
+        tongue*=active;
+        tongues=max(tongues,tongue);
       }
-      flame=max(flame,tongues*.82);
-      float inner=1.0-smoothstep(.0,.095,abs(f.x-sway)*1.1+max(f.y+.25,0.0)*.25);
-      vec3 fireColor=mix(vec3(1.0,.12,.012),vec3(1.0,.72,.20),clamp(inner,0.0,1.0));
-      fireColor=mix(fireColor,vec3(1.0,.91,.52),smoothstep(.68,1.0,inner));
-      col=mix(col,fireColor,clamp(flame,0.0,1.0));
+
+      // Add irregular ripples to the silhouette so it never reads as a clean cone
+      float silhouetteNoise=(noise(vec2(f.x*34.0+time*.8,f.y*19.0-time*2.1))-.5)*.014;
+      float body= max(base,tongues);
+      body= smoothstep(.36,.68,body+silhouetteNoise*4.0);
+
+      // Hot yellow-white center, orange outer edges
+      float core=1.0-smoothstep(.012,.105,abs(f.x)+max(f.y+.24,0.0)*.30);
+      float lowerGlow=1.0-smoothstep(-.34,-.02,f.y);
+      vec3 fireColor=mix(vec3(1.0,.105,.008),vec3(1.0,.48,.055),clamp(core,0.0,1.0));
+      fireColor=mix(fireColor,vec3(1.0,.88,.42),smoothstep(.72,1.0,core));
+      fireColor*=.88+.12*flow;
+      col=mix(col,fireColor,clamp(body,0.0,1.0));
 
       // Tiny glowing embers drifting upward
       for(int i=0;i<18;i++){
