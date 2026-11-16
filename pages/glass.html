@@ -87,32 +87,41 @@
       z-index: 1;
       pointer-events: none;
       width: calc(100% - 18px);
-      height: 5px;
+      height: 9px;
       left: 9px;
-      top: calc(50% - 2.5px);
+      top: calc(50% - 4.5px);
       background: linear-gradient(
-        to right,
+        to bottom,
         transparent 0%,
-        rgb(255 255 255 / 8%) 18%,
-        rgb(255 255 255 / 38%) 50%,
-        rgb(255 255 255 / 8%) 82%,
+        rgb(255 255 255 / 28%) 22%,
+        rgb(0 0 0 / 8%) 48%,
+        rgb(0 0 0 / 10%) 58%,
+        rgb(255 255 255 / 22%) 82%,
         transparent 100%
       );
-      filter: blur(4px);
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 18%,
+        #000 82%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 18%,
+        #000 82%,
+        transparent 100%
+      );
+      filter: blur(3px);
     }
 
     .glass-box::before {
       transform: rotate(45deg);
-      box-shadow:
-        0 2px 7px rgb(255 255 255 / 18%),
-        0 -1px 5px rgb(255 255 255 / 42%);
     }
 
     .glass-box::after {
       transform: rotate(-45deg);
-      box-shadow:
-        0 2px 7px rgb(255 255 255 / 18%),
-        0 -1px 5px rgb(255 255 255 / 42%);
     }
 
     .ly-3-noise {
