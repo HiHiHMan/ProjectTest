@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>Glass — Grid Experiment</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background-color: #fff;
+      background-image:
+        linear-gradient(to right, #eeeeee 1px, transparent 1px),
+        linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .content.box-glass {
+      display: grid;
+      grid-template-columns: repeat(5, 40px);
+      grid-template-rows: repeat(5, 40px);
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .glass-box {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #dedede;
+      background: rgb(255 255 255 / 58%);
+      backdrop-filter: blur(2px);
+    }
+  </style>
+</head>
+<body>
+  <main class="content box-glass" aria-label="5 by 5 glass box grid">
+    <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
+    <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
+    <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
+    <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
+    <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
+  </main>
+</body>
+</html>
