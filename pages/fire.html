@@ -49,35 +49,37 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       vec2 f=(p-vec2(0.0,-.17))*1.8;
       float flow=fbm(vec2(f.x*5.5-time*.28,f.y*4.5-time*.85));
       float detail=fbm(vec2(f.x*11.0-time*.42,f.y*8.0-time*1.2));
-      // Rounded flame belly flowing into one elegant curved, pointed tip
-      float center=sin(time*.92+f.y*4.1)*.010
-                 +sin(time*.66+f.y*7.0)*.004
-                 +(flow-.5)*.007;
-      float tipLean=sin(time*1.12)*.020;
-      vec2 q=vec2(f.x-center-tipLean*smoothstep(.015,.37,f.y),f.y);
+      // Water-drop silhouette: rounded base, continuously curved shoulders,
+      // and two sides meeting at one precise pointed tip.
+      float center=sin(time*.92+f.y*4.1)*.008
+                 +sin(time*.66+f.y*7.0)*.003
+                 +(flow-.5)*.006;
+      float tipLean=sin(time*1.12)*.016;
+      vec2 q=vec2(f.x-center-tipLean*smoothstep(.0,.39,f.y),f.y);
 
       float bottom=-.315;
       float top=.390;
       float t=clamp((q.y-bottom)/(top-bottom),0.0,1.0);
 
-      // Elliptical lower cap transitions smoothly into a long tapered crown
-      float bulbWidth=.225*sqrt(max(1.0-pow((t-.25)/.27,2.0),0.0));
-      float crownWidth=.225*pow(max((1.0-t)/.73,0.0),1.28);
-      float join=smoothstep(.42,.58,t);
-      float flameWidth=mix(bulbWidth,crownWidth,join);
+      // The lower half is a circular bulb. Above its widest point,
+      // a smooth taper draws both curved sides into a single sharp tip.
+      float lowerRound=.225*sqrt(max(1.0-pow((t-.275)/.275,2.0),0.0));
+      float upperTaper=.225*pow(max((1.0-t)/.725,0.0),1.18);
+      float shoulderBlend=smoothstep(.235,.335,t);
+      float flameWidth=mix(lowerRound,upperTaper,shoulderBlend);
 
-      // Subtle flowing movement along the curved sides
-      float widthWaver=(flow-.5)*.005+(detail-.5)*.002;
-      flameWidth=max(flameWidth+widthWaver*(1.0-smoothstep(.72,1.0,t)),0.0);
-      float tipWaver=sin(time*1.18)*.012+sin(time*1.85+1.0)*.004;
+      // Keep the silhouette stable; only a tiny ripple travels along its edge.
+      float widthWaver=(flow-.5)*.003+(detail-.5)*.0015;
+      flameWidth=max(flameWidth+widthWaver*(1.0-smoothstep(.70,1.0,t)),0.0);
+      float tipWaver=sin(time*1.18)*.010+sin(time*1.85+1.0)*.003;
 
       float sideDistance=abs(q.x)-flameWidth;
       float bottomDistance=bottom-q.y;
       float topDistance=q.y-(top+tipWaver);
       float signedShape=max(sideDistance,max(bottomDistance,topDistance));
 
-      // Clean, softly antialiased curved outline
-      float flameMask=1.0-smoothstep(-.007,.012,signedShape);
+      // Fine antialiasing preserves the rounded base and pointed apex.
+      float flameMask=1.0-smoothstep(-.006,.010,signedShape);
 
       // Smooth radial gradient follows the curved flame cross-section
       float edge=clamp(abs(q.x)/max(flameWidth,.001),0.0,1.0);
