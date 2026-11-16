@@ -86,44 +86,33 @@
       position: absolute;
       z-index: 1;
       pointer-events: none;
-      background: rgb(0 0 0 / 13%);
-      filter: blur(1.5px);
-    }
-
-    .glass-box::before,
-    .glass-box::after {
       width: calc(100% - 18px);
-      height: 1px;
+      height: 3px;
       left: 9px;
-      top: 50%;
-      -webkit-mask-image: linear-gradient(
+      top: calc(50% - 1.5px);
+      background: linear-gradient(
         to right,
         transparent 0%,
-        #000 22%,
-        #000 78%,
+        rgb(0 0 0 / 4%) 15%,
+        rgb(0 0 0 / 22%) 50%,
+        rgb(0 0 0 / 4%) 85%,
         transparent 100%
       );
-      mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        #000 22%,
-        #000 78%,
-        transparent 100%
-      );
+      filter: blur(2px);
     }
 
     .glass-box::before {
       transform: rotate(45deg);
       box-shadow:
-        0 1px 2px rgb(0 0 0 / 20%),
-        0 -1px 2px rgb(255 255 255 / 65%);
+        0 2px 5px rgb(0 0 0 / 18%),
+        0 -1px 4px rgb(255 255 255 / 55%);
     }
 
     .glass-box::after {
       transform: rotate(-45deg);
       box-shadow:
-        0 1px 2px rgb(0 0 0 / 20%),
-        0 -1px 2px rgb(255 255 255 / 65%);
+        0 2px 5px rgb(0 0 0 / 18%),
+        0 -1px 4px rgb(255 255 255 / 55%);
     }
 
     .ly-3-noise {
