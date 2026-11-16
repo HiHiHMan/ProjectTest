@@ -61,17 +61,18 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float top=.390;
       float t=clamp((q.y-bottom)/(top-bottom),0.0,1.0);
 
-      // The lower half is a circular bulb. Above its widest point,
-      // a smooth taper draws both curved sides into a single sharp tip.
+      // Rounded lower body flowing into a broad, elliptical upper taper.
+      // The curved profile avoids long straight sides and a needle-like apex.
       float lowerRound=.225*sqrt(max(1.0-pow((t-.275)/.275,2.0),0.0));
-      float upperTaper=.225*pow(max((1.0-t)/.725,0.0),1.18);
+      float upperU=clamp((t-.275)/.725,0.0,1.0);
+      float upperTaper=.225*sqrt(max(1.0-upperU*upperU,0.0));
       float shoulderBlend=smoothstep(.235,.335,t);
       float flameWidth=mix(lowerRound,upperTaper,shoulderBlend);
 
       // Keep the silhouette stable; only a tiny ripple travels along its edge.
       float widthWaver=(flow-.5)*.003+(detail-.5)*.0015;
       flameWidth=max(flameWidth+widthWaver*(1.0-smoothstep(.70,1.0,t)),0.0);
-      float tipWaver=sin(time*1.18)*.010+sin(time*1.85+1.0)*.003;
+      float tipWaver=sin(time*1.18)*.014+sin(time*1.85+1.0)*.005;
 
       float sideDistance=abs(q.x)-flameWidth;
       float bottomDistance=bottom-q.y;
