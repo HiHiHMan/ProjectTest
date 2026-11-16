@@ -61,11 +61,13 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float top=.390;
       float t=clamp((q.y-bottom)/(top-bottom),0.0,1.0);
 
-      // Rounded lower body flowing into a broad, elliptical upper taper.
-      // The curved profile avoids long straight sides and a needle-like apex.
+      // Rounded lower body with a restrained upper curve.
+      // A mostly gentle taper keeps the sides from looking overly rounded.
       float lowerRound=.225*sqrt(max(1.0-pow((t-.275)/.275,2.0),0.0));
       float upperU=clamp((t-.275)/.725,0.0,1.0);
-      float upperTaper=.225*sqrt(max(1.0-upperU*upperU,0.0));
+      float softTaper=.225*(1.0-upperU);
+      float curvedTaper=.225*sqrt(max(1.0-upperU*upperU,0.0));
+      float upperTaper=mix(softTaper,curvedTaper,.28);
       float shoulderBlend=smoothstep(.235,.335,t);
       float flameWidth=mix(lowerRound,upperTaper,shoulderBlend);
 
