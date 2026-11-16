@@ -81,26 +81,6 @@
 </head>
 <body>
   <main class="content box-glass" aria-label="5 by 5 glass box grid">
-    <svg class="turbulent-gradient" aria-hidden="true" viewBox="0 0 460 460">
-      <defs>
-        <clipPath id="gradient-circle-clip">
-          <circle cx="230" cy="230" r="230"/>
-        </clipPath>
-        <radialGradient id="tri-color-gradient" cx="50%" cy="50%" r="72%">
-          <stop offset="0%" stop-color="#138f21"/>
-          <stop offset="48%" stop-color="#138f21"/>
-          <stop offset="78%" stop-color="#AFFF24"/>
-          <stop offset="100%" stop-color="#FCE93D"/>
-        </radialGradient>
-        <filter id="turbulent-blend" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="8" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="34" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-      </defs>
-      <g clip-path="url(#gradient-circle-clip)">
-        <rect width="460" height="460" fill="url(#tri-color-gradient)" filter="url(#turbulent-blend)"/>
-      </g>
-    </svg>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
     <div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div><div class="glass-box"></div>
