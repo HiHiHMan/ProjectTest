@@ -170,23 +170,14 @@
     .facet-bottom {
       clip-path: polygon(100% 100%, 0 100%, 50% 50%);
       background:
-        linear-gradient(0deg, rgb(0 0 0 / 8%), transparent 78%),
-        radial-gradient(ellipse 70% 90% at 50% 0%, rgb(0 0 0 / 8%), transparent 72%);
-    }
-
-    .facet-bottom::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      clip-path: polygon(12% 100%, 88% 100%, 50% 55%);
-      background: linear-gradient(
-        0deg,
-        rgb(55 55 55 / 22%) 0%,
-        rgb(75 75 75 / 12%) 42%,
-        transparent 100%
-      );
-      filter: blur(7px);
-      opacity: .85;
+        radial-gradient(ellipse 78% 58% at 50% 100%,
+          rgb(65 65 65 / 18%) 0%,
+          rgb(75 75 75 / 10%) 38%,
+          rgb(90 90 90 / 4%) 66%,
+          transparent 100%),
+        linear-gradient(0deg, rgb(70 70 70 / 7%), transparent 82%);
+      filter: blur(9px);
+      opacity: .8;
     }
 
     .facet-left {
