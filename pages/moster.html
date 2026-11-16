@@ -45,36 +45,32 @@
       border-radius: 50%;
       isolation: isolate;
     }
-    .ly-3-noise {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      z-index: 2;
-      pointer-events: none;
-      opacity: 0.12;
-      mix-blend-mode: soft-light;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0.333 0.333 0.333 0 0 0.333 0.333 0.333 0 0 0.333 0.333 0.333 0 0 0.333 0.333 0.333 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 80px 80px;
-      background-repeat: repeat;
-    }
     .sphere {
       position: relative;
       z-index: 1;
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      filter: blur(25px);
+      filter: url(#sphereNoise);
       background: radial-gradient(circle at 80% -55%, #343434 0%, #171717 24%, #080808 52%, #000000 76%);
       box-shadow: inset -18px -22px 34px rgb(0 0 0 / 78%), inset 10px 8px 20px rgb(255 255 255 / 8%), 0 24px 48px rgb(0 0 0 / 18%);
     }
   </style>
 </head>
 <body>
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute">
+    <filter id="sphereNoise" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="25" result="blurredSphere"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise"/>
+      <feBlend in="blurredSphere" in2="monoNoise" mode="soft-light" result="texturedSphere"/>
+      <feComposite in="texturedSphere" in2="blurredSphere" operator="in"/>
+    </filter>
+  </svg>
   <main aria-label="Black sphere">
     <div class="sphere-wrap" role="img" aria-label="A black sphere">
       <div class="sphere"></div>
     </div>
-    <div class="ly-3-noise" aria-hidden="true"></div>
   </main>
 </body>
 </html>
