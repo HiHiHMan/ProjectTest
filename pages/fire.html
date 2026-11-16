@@ -51,19 +51,26 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       float detail=fbm(vec2(f.x*11.0-time*.42,f.y*8.0-time*1.2));
       float vertical=clamp((f.y+.30)/.57,0.0,1.0);
 
-      // Wide rounded foot that gradually narrows upward; no separate tentacle shapes
+      // Rounded flame body with several separated, dancing tips
       float center=sin(time*1.15+f.y*5.0)*.018
                  +sin(time*.73+f.y*9.0)*.010
                  +(flow-.5)*.035;
-      float halfWidth=.145*pow(max(0.0,1.0-vertical),.72)+.006;
+      float halfWidth=.145*pow(max(0.0,1.0-vertical),.58)+.006;
       halfWidth*=.88+.12*sin(vertical*8.0-time*1.1);
       float sideDistance=abs(f.x-center)-halfWidth;
-      float topEdge=f.y-(.255+(flow-.5)*.065+(detail-.5)*.035);
+
+      // Three uneven peaks create a naturally split flame tip
+      float tipX=f.x-center;
+      float tipLeft=.105*exp(-pow((tipX+.064+sin(time*1.7)*.009)/.027,2.0));
+      float tipMiddle=.132*exp(-pow((tipX-sin(time*1.25)*.012)/.030,2.0));
+      float tipRight=.092*exp(-pow((tipX-.066+sin(time*1.5+1.2)*.010)/.025,2.0));
+      float tipHeight=max(tipMiddle,max(tipLeft,tipRight));
+      float topEdge=f.y-(.145+tipHeight+(flow-.5)*.025+(detail-.5)*.018);
       float bottomEdge=-.315-f.y;
       float signedShape=max(sideDistance,max(topEdge,bottomEdge));
 
-      // Keep blur close to the flame edge; remove the wide aura
-      float flameMask=1.0-smoothstep(-.018,.075,signedShape);
+      // Soft focus around the flame edge without a broad outer aura
+      float flameMask=1.0-smoothstep(-.028,.052,signedShape);
 
       // Natural heat gradient from a pale hot base through gold and orange to red
       float edge=clamp(abs(f.x-center)/max(halfWidth,.001),0.0,1.0);
