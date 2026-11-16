@@ -97,12 +97,12 @@
 
     .preview iframe {
       display: block;
-      width: 200%;
-      height: 200%;
+      width: 250%;
+      height: 250%;
       border: 0;
       background: #000;
       pointer-events: none;
-      transform: scale(.5);
+      transform: scale(.4);
       transform-origin: top left;
     }
 
