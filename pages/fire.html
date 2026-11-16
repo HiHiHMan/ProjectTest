@@ -86,12 +86,18 @@ canvas{display:block;width:100%;height:100%;position:fixed;inset:0}
       // Fine antialiasing preserves the rounded base and pointed apex.
       float flameMask=1.0-smoothstep(-.006,.010,signedShape);
 
-      // A small central notch divides the very end into two soft flickering tips.
-      float notchWidth=.010+(.004*sin(time*2.0+1.0));
-      float notchAcross=1.0-smoothstep(notchWidth,notchWidth+.008,abs(q.x));
-      float notchDepth=smoothstep(top-.105,top-.025,q.y);
-      float splitNotch=notchAcross*notchDepth*smoothstep(.20,.34,t);
-      flameMask*=1.0-splitNotch*.82;
+      // Several soft cuts create multiple lively tongues at the flame tip.
+      // Positions follow the local width so the splits remain proportional.
+      float tipX=q.x/max(flameWidth,.001);
+      float tipZone=smoothstep(top-.17,top-.035,q.y);
+      float notchA=(1.0-smoothstep(.075,.19,abs(tipX+.48)))
+                 *smoothstep(top-.105,top-.025,q.y);
+      float notchB=(1.0-smoothstep(.065,.17,abs(tipX-.02)))
+                 *smoothstep(top-.145,top-.035,q.y);
+      float notchC=(1.0-smoothstep(.075,.19,abs(tipX-.53)))
+                 *smoothstep(top-.085,top-.018,q.y);
+      float splitNotches=max(notchA,max(notchB,notchC))*tipZone;
+      flameMask*=1.0-splitNotches*.88;
 
       // Smooth radial gradient follows the curved flame cross-section
       float edge=clamp(abs(q.x)/max(flameWidth,.001),0.0,1.0);
