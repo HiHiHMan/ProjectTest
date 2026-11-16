@@ -194,6 +194,10 @@
           const turbulence = Math.sin(elapsed * 2.4 + p.seed + p.life * 5) * p.drift;
           p.x += (p.vx + turbulence * 0.075) * dt;
           p.y += p.vy * dt;
+
+          // Keep the rising particles inside a tapered, triangular flame silhouette.
+          const flameWidth = Math.max(0.035, 0.82 * (1.08 - p.y) / 0.63);
+          p.x = Math.max(-flameWidth, Math.min(flameWidth, p.x));
           p.vx *= 0.995;
 
           const rise = Math.sin(Math.min(p.life, 1) * Math.PI);
