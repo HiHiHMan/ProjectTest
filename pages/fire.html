@@ -104,7 +104,7 @@
           const h = (size - 1 - y) / size;
           const rise = Math.max(0, 1 - h);
           const topBreath = 0.94 + 0.035 * Math.sin(t * 2.1) + 0.02 * Math.sin(t * 3.7 + 1.2);
-          const flameHeight = size * 0.82 + 8 * Math.sin(t * 1.6);
+          const flameHeight = size * 0.93 + 3 * Math.sin(t * 1.6);
           const baseY = size - 1;
           const topY = baseY - flameHeight;
           const localY = y - topY;
@@ -133,9 +133,9 @@
           const lobe2 = Math.exp(-Math.pow((q - (0.69 + 0.07 * Math.sin(t * 1.8 + 2))) / 0.14, 2));
           const foot = 1 + 0.38 * (1 - smooth(0.0, 0.48, q));
           const rootBulge = 1 + 0.12 * Math.exp(-Math.pow(q / 0.13, 2));
-          const wantedWidth = (size * 0.43 * taper * foot * rootBulge) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
+          const wantedWidth = (size * 0.40 * taper * foot * rootBulge) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
           // Keep the entire flame silhouette inside the canvas bounds.
-          const halfWidth = Math.max(0, Math.min(wantedWidth, center - 3, size - center - 3));
+          const halfWidth = Math.max(0, Math.min(wantedWidth, center - 12, size - center - 12));
 
           if (halfWidth < 0.5) continue;
 
