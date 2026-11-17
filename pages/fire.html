@@ -104,8 +104,10 @@
           const h = (size - 1 - y) / size;
           const rise = Math.max(0, 1 - h);
           const topBreath = 0.94 + 0.035 * Math.sin(t * 2.1) + 0.02 * Math.sin(t * 3.7 + 1.2);
-          const flameHeight = size * topBreath;
-          const localY = y - (size - flameHeight);
+          const flameHeight = size * topBreath - 24;
+          const baseY = size - 12;
+          const topY = baseY - flameHeight;
+          const localY = y - topY;
 
           if (localY < 0 || localY > flameHeight) continue;
 
@@ -119,7 +121,7 @@
           const sway = Math.sin(flow) * 13 * Math.pow(q, 1.55)
                      + Math.sin(t * 5.3 - q * 15.0 + 0.8) * 5.5 * Math.pow(q, 2.1)
                      + Math.sin(t * 1.4 + q * 5.0) * 2.8;
-          const center = size * 0.5 + Math.max(-14, Math.min(14, sway));
+          const center = size * 0.5 + Math.max(-8, Math.min(8, sway));
 
           // Several independently moving tongues make the outline split,
           // merge and reform instead of deforming one static flame image.
@@ -132,7 +134,7 @@
           const foot = 1 + 0.22 * (1 - smooth(0.02, 0.34, q));
           const wantedWidth = (size * 0.46 * taper * foot) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
           // Keep the entire flame silhouette inside the canvas bounds.
-          const halfWidth = Math.min(wantedWidth, center - 2, size - center - 2);
+          const halfWidth = Math.min(wantedWidth, center - 14, size - center - 14);
 
           if (halfWidth < 0.5) continue;
 
