@@ -114,28 +114,42 @@
         ctx.clearRect(0, 0, outputSize, outputSize);
 
         const t = time * 0.001;
-        // The lower flame remains steady. A travelling wave accelerates toward
-        // the tip, where it bends sharply and releases in quick, uneven swishes.
-        for (let y = 0; y < outputSize; y += 1) {
-          const heightRatio = 1 - y / outputSize;
-          const envelope = Math.pow(heightRatio, 2.15);
-          const gust = Math.sin(t * 1.35 + 0.6);
-          const wavePhase = t * 3.15 - heightRatio * 3.4 + gust * 0.7;
+        const gust = Math.sin(t * 0.83 + 0.7);
+        const gustPulse = Math.sin(t * 1.7 - 0.4);
 
-          const broadBend = Math.sin(wavePhase) * 25 * envelope;
-          const quickFlick = Math.sin(t * 7.2 - heightRatio * 7.8 + gust) * 6.5
-                           * Math.pow(heightRatio, 2.7);
-          const irregularRipple = Math.sin(t * 4.6 - heightRatio * 5.1 + 1.2)
-                                * 3.2 * Math.pow(heightRatio, 1.7);
-          const snap = Math.pow(Math.max(0, Math.sin(t * 2.05 + 0.4)), 5)
-                     * Math.sin(wavePhase * 0.72) * 9 * Math.pow(heightRatio, 2.4);
-          const drift = broadBend + quickFlick + irregularRipple + snap;
-          const ripple = Math.sin(wavePhase * 0.82) * 1.1 * envelope;
+        // Re-map every horizontal band: the silhouette itself stretches,
+        // pinches, leans and ripples instead of merely sliding side to side.
+        for (let y = 0; y < outputSize; y += 1) {
+          const h = 1 - y / outputSize;
+          const tip = Math.pow(h, 1.8);
+          const phase = t * 2.25 - h * 4.1 + gust * 0.9;
+
+          const lean = Math.sin(phase) * 21 * tip;
+          const quickSnap = Math.sin(t * 6.4 - h * 8.5 + gustPulse) * 7.5
+                          * Math.pow(h, 2.6);
+          const sideRipple = Math.sin(t * 4.1 - h * 10.5 + 1.4)
+                           * 4.2 * Math.pow(h, 1.35);
+          const centerShift = lean + quickSnap + sideRipple;
+
+          // Width changes travel upward like a living flame, with irregular
+          // pinches near the tip and softer breathing through the middle.
+          const widthWave = Math.sin(t * 2.0 - h * 5.2 + 0.5)
+                          * 0.17 * Math.pow(h, 1.25);
+          const narrowWave = Math.sin(t * 3.7 - h * 9.0 + 2.1)
+                           * 0.075 * Math.pow(h, 1.8);
+          const widthScale = Math.max(0.62, 1 + widthWave + narrowWave);
+
+          const verticalRipple = Math.sin(phase * 0.72 + 0.8) * 2.1 * tip
+                               + Math.sin(t * 3.1 - h * 6.0) * 1.1 * h;
+          const sourceY = Math.max(0, Math.min(outputSize - 1.01, y + verticalRipple));
+          const sourceHeight = 1.5;
+          const drawWidth = outputSize * widthScale;
+          const drawX = (outputSize - drawWidth) / 2 + centerShift;
 
           ctx.drawImage(
             surface,
-            0, y, outputSize, 2,
-            drift, y + ripple, outputSize, 2
+            0, sourceY, outputSize, sourceHeight,
+            drawX, y, drawWidth, 1.35
           );
         }
       }
