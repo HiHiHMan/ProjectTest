@@ -21,7 +21,7 @@
     }
     #pixel-fire {
       display: block; width: 100%; height: 100%;
-      image-rendering: pixelated;
+      image-rendering: auto;
     }
     .heat {
       position: absolute; z-index: 1; inset: 0; pointer-events: none;
@@ -84,73 +84,57 @@
       const canvas = document.getElementById('pixel-fire');
       const ctx = canvas.getContext('2d');
       const source = new Image();
-      const sampleStep = 3;
       const outputSize = 200;
-      let pixels = null;
-      let sourceWidth = 0;
-      let sourceHeight = 0;
-      let scale = 1;
-      let offsetX = 0;
-      let offsetY = 0;
-      let frame = 0;
+      const surface = document.createElement('canvas');
+      surface.width = surface.height = outputSize;
+      const surfaceCtx = surface.getContext('2d');
+      let ready = false;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       source.src = '../images/fire.png';
       source.onload = () => {
-        sourceWidth = source.naturalWidth;
-        sourceHeight = source.naturalHeight;
+        const scale = outputSize / Math.max(source.naturalWidth, source.naturalHeight);
+        const width = source.naturalWidth * scale;
+        const height = source.naturalHeight * scale;
+        const x = (outputSize - width) / 2;
+        const y = (outputSize - height) / 2;
 
-        const sampleCanvas = document.createElement('canvas');
-        sampleCanvas.width = sourceWidth;
-        sampleCanvas.height = sourceHeight;
-        const sampleContext = sampleCanvas.getContext('2d', { willReadFrequently: true });
-        sampleContext.drawImage(source, 0, 0);
-        pixels = sampleContext.getImageData(0, 0, sourceWidth, sourceHeight).data;
-
-        scale = outputSize / Math.max(sourceWidth, sourceHeight);
-        offsetX = (outputSize - sourceWidth * scale) / 2;
-        offsetY = (outputSize - sourceHeight * scale) / 2;
-        sampleCanvas.width = sampleCanvas.height = 1;
+        surfaceCtx.clearRect(0, 0, outputSize, outputSize);
+        surfaceCtx.imageSmoothingEnabled = true;
+        surfaceCtx.imageSmoothingQuality = 'high';
+        surfaceCtx.drawImage(source, x, y, width, height);
+        ready = true;
 
         if (reduceMotion) drawFrame(0);
         else requestAnimationFrame(animate);
       };
 
       function drawFrame(time) {
-        if (!pixels) return;
+        if (!ready) return;
         ctx.clearRect(0, 0, outputSize, outputSize);
 
         const t = time * 0.001;
-        const cell = sampleStep * scale;
-        for (let y = 0; y < sourceHeight; y += sampleStep) {
-          for (let x = 0; x < sourceWidth; x += sampleStep) {
-            const i = (y * sourceWidth + x) * 4;
-            const alpha = pixels[i + 3] / 255;
-            if (alpha < 0.08) continue;
+        // Warp the complete raster surface in horizontal slices. The base stays
+        // anchored while the upper flame bends as one continuous, flowing shape.
+        for (let y = 0; y < outputSize; y += 1) {
+          const heightRatio = 1 - y / outputSize;
+          const envelope = Math.pow(heightRatio, 1.35);
+          const slowWave = Math.sin(t * 1.65 - y * 0.038);
+          const fastWave = Math.sin(t * 2.35 - y * 0.075 + 0.8);
+          const drift = slowWave * 12 * envelope + fastWave * 3.5 * envelope;
+          const ripple = Math.sin(t * 2.1 - y * 0.055) * 0.65 * envelope;
 
-            const heightRatio = 1 - y / sourceHeight;
-            const phase = t * (2.2 + heightRatio * 2.8) + x * 0.075 + y * 0.018;
-            const sway = Math.sin(phase) * (1.2 + heightRatio * 5.5)
-                       + Math.sin(phase * 0.53 + y * 0.035) * heightRatio * 2.5;
-            const rise = Math.sin(t * 2.5 + x * 0.04 + y * 0.025) * heightRatio * 2.2;
-            const flicker = 0.88 + (Math.sin(phase * 1.7) * 0.08);
-
-            ctx.globalAlpha = alpha * flicker;
-            ctx.fillStyle = 'rgb(' + pixels[i] + ',' + pixels[i + 1] + ',' + pixels[i + 2] + ')';
-            ctx.fillRect(
-              offsetX + x * scale + sway,
-              offsetY + y * scale + rise,
-              cell + 0.35,
-              cell + 0.35
-            );
-          }
+          ctx.drawImage(
+            surface,
+            0, y, outputSize, 2,
+            drift, y + ripple, outputSize, 2
+          );
         }
-        ctx.globalAlpha = 1;
       }
 
       function animate(timestamp) {
         drawFrame(timestamp);
-        frame = requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
       }
 
       source.onerror = () => {
