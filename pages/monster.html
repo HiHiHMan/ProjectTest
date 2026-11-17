@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090d">
+  <title>Monster — ProjectTest</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: #08090d;
+    }
+    .monster {
+      display: block;
+      width: min(250px, calc(100vw - 32px));
+      height: auto;
+      object-fit: contain;
+    }
+    .back {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      padding: 10px 15px;
+      border: 1px solid rgb(255 255 255 / 16%);
+      border-radius: 999px;
+      color: #d9dce5;
+      background: rgb(255 255 255 / 5%);
+      font: 11px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .12em;
+      text-decoration: none;
+    }
+    .back:hover { background: rgb(255 255 255 / 10%); }
+    @media (max-width: 600px) {
+      .back { top: 16px; left: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <img class="monster" src="../images/mon.png" alt="Monster">
+  <a class="back" href="../index.html">← Experiments</a>
+</body>
+</html>
