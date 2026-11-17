@@ -82,113 +82,113 @@
   <script>
     (() => {
       const canvas = document.getElementById('pixel-fire');
-      const ctx = canvas.getContext('2d', { alpha: true });
+      const ctx = canvas.getContext('2d');
       const size = 240;
       canvas.width = canvas.height = size;
 
-      const frame = ctx.createImageData(size, size);
-      const pixels = frame.data;
+      const source = new Image();
+      const surface = document.createElement('canvas');
+      surface.width = surface.height = size;
+      const surfaceCtx = surface.getContext('2d');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let ready = false;
+      let sourceWidth = 0;
+      let sourceHeight = 0;
+      let sourceX = 0;
+      let sourceY = 0;
 
-      // Procedural flame: no image texture or fixed source silhouette.
-      function smooth(a, b, value) {
-        const x = Math.max(0, Math.min(1, (value - a) / (b - a)));
-        return x * x * (3 - 2 * x);
-      }
+      source.onload = () => {
+        // Find the actual non-transparent flame pixels, excluding the empty
+        // padding around the artwork so the complete flame can be fitted.
+        const scan = document.createElement('canvas');
+        scan.width = source.naturalWidth;
+        scan.height = source.naturalHeight;
+        const scanCtx = scan.getContext('2d', { willReadFrequently: true });
+        scanCtx.drawImage(source, 0, 0);
+        const data = scanCtx.getImageData(0, 0, scan.width, scan.height).data;
 
-      function drawFrame(timestamp) {
-        const t = reduceMotion ? 0 : timestamp * 0.001;
-        pixels.fill(0);
-
-        for (let y = 0; y < size; y++) {
-          const h = (size - 1 - y) / size;
-          const rise = Math.max(0, 1 - h);
-          const topBreath = 0.94 + 0.035 * Math.sin(t * 2.1) + 0.02 * Math.sin(t * 3.7 + 1.2);
-          const flameHeight = size * 0.93 + 3 * Math.sin(t * 1.6);
-          const baseY = size - 1;
-          const topY = baseY - flameHeight;
-          const localY = y - topY;
-
-          if (localY < 0 || localY > flameHeight) continue;
-
-          const q = 1 - localY / flameHeight;
-          const bodyTaper = Math.pow(Math.max(0, 1 - q), 0.72);
-          // Preserve a visible pointed tip instead of collapsing to zero width.
-          const tipTaper = 0.105 * Math.exp(-Math.pow((q - 0.965) / 0.075, 2));
-          const taper = Math.max(bodyTaper, tipTaper);
-          const flow = t * 2.7 - q * 8.2;
-
-          const sway = Math.sin(flow) * 13 * Math.pow(q, 1.55)
-                     + Math.sin(t * 5.3 - q * 15.0 + 0.8) * 5.5 * Math.pow(q, 2.1)
-                     + Math.sin(t * 1.4 + q * 5.0) * 2.8;
-          const center = size * 0.5 + Math.max(-8, Math.min(8, sway));
-
-          // Several independently moving tongues make the outline split,
-          // merge and reform instead of deforming one static flame image.
-          const tongueA = Math.sin(t * 3.1 - q * 13.0) * 0.12;
-          const tongueB = Math.sin(t * 4.6 - q * 20.0 + 1.7) * 0.075;
-          const tongueC = Math.sin(t * 2.0 - q * 7.0 + 2.4) * 0.07;
-          const edgeNoise = tongueA + tongueB + tongueC;
-          const lobe1 = Math.exp(-Math.pow((q - (0.34 + 0.05 * Math.sin(t * 2.2))) / 0.18, 2));
-          const lobe2 = Math.exp(-Math.pow((q - (0.69 + 0.07 * Math.sin(t * 1.8 + 2))) / 0.14, 2));
-          const foot = 1 + 0.38 * (1 - smooth(0.0, 0.48, q));
-          const rootBulge = 1 + 0.12 * Math.exp(-Math.pow(q / 0.13, 2));
-          const wantedWidth = (size * 0.40 * taper * foot * rootBulge) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
-          // Keep the entire flame silhouette inside the canvas bounds.
-          const halfWidth = Math.max(0, Math.min(wantedWidth, center - 12, size - center - 12));
-
-          if (halfWidth < 0.5) continue;
-
-          for (let x = 0; x < size; x++) {
-            const dx = Math.abs(x - center) / halfWidth;
-            const turbulence = (
-              Math.sin(x * 0.105 + y * 0.072 - t * 5.0) +
-              Math.sin(x * 0.047 - y * 0.13 + t * 3.8) * 0.55 +
-              Math.sin(x * 0.19 + y * 0.035 - t * 7.2) * 0.22
-            ) * (0.025 + q * 0.055);
-
-            const boundary = 1 + turbulence;
-            const outer = 1 - smooth(boundary - 0.11, boundary + 0.055, dx);
-            if (outer <= 0) continue;
-
-            const innerWidth = 0.58 + 0.08 * Math.sin(t * 2.6 - q * 10 + x * 0.025);
-            const core = 1 - smooth(innerWidth - 0.08, innerWidth + 0.1, dx);
-            const hot = core * (0.78 + 0.22 * Math.sin(t * 3.4 - q * 8 + x * 0.018));
-            const base = smooth(0.02, 0.92, q);
-
-            let red, green, blue;
-            if (core > 0.55) {
-              red = 255;
-              green = 244 - 34 * base;
-              blue = 174 - 115 * base;
-            } else {
-              const edge = smooth(0.45, 1.0, dx);
-              red = 255;
-              green = 178 - 126 * edge - 28 * base;
-              blue = 54 - 48 * edge - 18 * base;
+        let minX = scan.width, minY = scan.height, maxX = -1, maxY = -1;
+        for (let y = 0; y < scan.height; y++) {
+          for (let x = 0; x < scan.width; x++) {
+            if (data[(y * scan.width + x) * 4 + 3] > 8) {
+              minX = Math.min(minX, x);
+              minY = Math.min(minY, y);
+              maxX = Math.max(maxX, x);
+              maxY = Math.max(maxY, y);
             }
-
-            const root = 1 - smooth(0.02, 0.24, q);
-            const baseFill = 1 - smooth(0.0, 0.18, q);
-            const alpha = Math.min(1, outer * (0.96 + hot * 0.04) * (0.96 + root * 0.04 + baseFill * 0.02));
-            const index = (y * size + x) * 4;
-            pixels[index] = red;
-            pixels[index + 1] = Math.max(0, green);
-            pixels[index + 2] = Math.max(0, blue);
-            pixels[index + 3] = Math.round(alpha * 255);
           }
         }
 
-        ctx.putImageData(frame, 0, 0);
+        if (maxX < minX || maxY < minY) return;
+
+        const cropW = maxX - minX + 1;
+        const cropH = maxY - minY + 1;
+        const fitScale = Math.min(150 / cropW, 220 / cropH);
+        sourceWidth = cropW * fitScale;
+        sourceHeight = cropH * fitScale;
+        sourceX = (size - sourceWidth) / 2;
+        sourceY = (size - sourceHeight) / 2 + 2;
+
+        surfaceCtx.clearRect(0, 0, size, size);
+        surfaceCtx.imageSmoothingEnabled = true;
+        surfaceCtx.imageSmoothingQuality = 'high';
+        surfaceCtx.drawImage(
+          source,
+          minX, minY, cropW, cropH,
+          sourceX, sourceY, sourceWidth, sourceHeight
+        );
+
+        ready = true;
+        drawFrame(0);
+        if (!reduceMotion) requestAnimationFrame(animate);
+      };
+
+      source.onerror = () => {
+        console.error('Unable to load images/fire.png');
+      };
+      source.src = '../images/fire.png';
+
+      function drawFrame(timestamp) {
+        if (!ready) return;
+        const t = reduceMotion ? 0 : timestamp * 0.001;
+        ctx.clearRect(0, 0, size, size);
+
+        // Deform the original flame silhouette in flowing horizontal bands.
+        // Its original outline and color regions remain the source of the fire.
+        const bands = Math.ceil(sourceHeight);
+        for (let row = 0; row < bands; row++) {
+          const q = 1 - row / sourceHeight; // 1 at the tip, 0 at the base
+          const tipWeight = Math.pow(Math.max(0, q), 1.7);
+          const midWeight = Math.sin(Math.PI * Math.min(1, Math.max(0, q)));
+
+          const broadSway = Math.sin(t * 2.1 - q * 4.8) * 10 * tipWeight;
+          const quickFlick = Math.sin(t * 5.8 - q * 13.5 + 0.7) * 5.5 * tipWeight;
+          const smallRipple = Math.sin(t * 3.7 - q * 9.0 + 1.9) * 2.2 * midWeight;
+          const shift = broadSway + quickFlick + smallRipple;
+
+          const breathing = 1
+            + Math.sin(t * 2.4 - q * 5.2) * 0.075 * midWeight
+            + Math.sin(t * 4.6 - q * 11.0) * 0.035 * tipWeight;
+          const pinch = 1 - 0.045 * Math.max(0, Math.sin(t * 3.0 - q * 8.0)) * tipWeight;
+          const drawWidth = sourceWidth * breathing * pinch;
+          const drawX = sourceX + (sourceWidth - drawWidth) / 2 + shift;
+
+          const sy = sourceY + row;
+          const dy = sourceY + row + Math.sin(t * 3.0 - q * 7.0) * 1.2 * tipWeight;
+          const safeX = Math.max(2, Math.min(size - drawWidth - 2, drawX));
+
+          ctx.drawImage(
+            surface,
+            sourceX, sy, sourceWidth, 1.5,
+            safeX, dy, Math.min(drawWidth, size - safeX - 2), 1.5
+          );
+        }
       }
 
       function animate(timestamp) {
         drawFrame(timestamp);
-        if (!reduceMotion) requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
       }
-
-      drawFrame(0);
-      if (!reduceMotion) requestAnimationFrame(animate);
     })();
   </script>
 </body>
