@@ -188,7 +188,7 @@
             canvas.height = height;
           }
           gl.viewport(0, 0, width, height);
-          gl.uniform1f(uPointSize, 0.9 * dpr);
+          gl.uniform1f(uPointSize, 1.25 * dpr);
           render();
         }
 
@@ -249,13 +249,14 @@
             }
           }
 
-          const targetCount = Math.max(100, foregroundSamples * 5);
+          const targetCount = Math.max(250, foregroundSamples * 18);
           const positions = [];
           const colors = [];
           const spacings = [];
-          const minSpacing = 3.0;
-          const maxSpacing = 5.5;
-          const cellSize = maxSpacing / Math.SQRT2;
+          const minSpacing = 1.25;
+          const maxSpacing = 2.0;
+          const cellSize = minSpacing / Math.SQRT2;
+          const neighborRange = Math.ceil(maxSpacing / cellSize) + 1;
           const gridWidth = Math.ceil(width / cellSize);
           const gridHeight = Math.ceil(height / cellSize);
           const grid = new Int32Array(gridWidth * gridHeight);
@@ -264,8 +265,8 @@
           function farEnough(x, y, spacing) {
             const gx = Math.floor(x / cellSize);
             const gy = Math.floor(y / cellSize);
-            for (let oy = -2; oy <= 2; oy++) {
-              for (let ox = -2; ox <= 2; ox++) {
+            for (let oy = -neighborRange; oy <= neighborRange; oy++) {
+              for (let ox = -neighborRange; ox <= neighborRange; ox++) {
                 const nx = gx + ox;
                 const ny = gy + oy;
                 if (nx < 0 || ny < 0 || nx >= gridWidth || ny >= gridHeight) continue;
@@ -296,12 +297,12 @@
             const blue = pixels[pixel + 2] / 255;
             const alpha = pixels[pixel + 3] / 255;
             const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-            const spacing = minSpacing + luminance * (maxSpacing - minSpacing);
+            const spacing = minSpacing + (1 - luminance) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
             const index = positions.length / 2;
             positions.push((x / width) * 2 - 1, 1 - (y / height) * 2);
-            colors.push(red, green, blue, alpha);
+            colors.push(0, 0, 0, alpha);
             spacings.push(spacing);
 
             const gx = Math.floor(x / cellSize);
