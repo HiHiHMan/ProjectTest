@@ -176,9 +176,11 @@
 
         let pointCount = 0;
         let dpr = 1;
+        let imageHeightRatio = 1;
 
         function resize() {
           const rect = canvas.getBoundingClientRect();
+          canvas.style.height = (rect.width * imageHeightRatio) + 'px';
           dpr = Math.min(window.devicePixelRatio || 1, 2);
           const width = Math.max(1, Math.round(rect.width * dpr));
           const height = Math.max(1, Math.round(rect.height * dpr));
@@ -198,6 +200,7 @@
           const ratio = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
           const width = Math.max(1, Math.round(image.naturalWidth * ratio));
           const height = Math.max(1, Math.round(image.naturalHeight * ratio));
+          imageHeightRatio = height / width;
 
           sampleCanvas.width = width;
           sampleCanvas.height = height;
@@ -248,12 +251,12 @@
             }
           }
 
-          const targetCount = Math.max(250, foregroundSamples * 18);
+          const targetCount = Math.max(300, foregroundSamples * 24);
           const positions = [];
           const colors = [];
           const spacings = [];
-          const minSpacing = 1.25;
-          const maxSpacing = 2.0;
+          const minSpacing = 0.65;
+          const maxSpacing = 2.1;
           const cellSize = minSpacing / Math.SQRT2;
           const neighborRange = Math.ceil(maxSpacing / cellSize) + 1;
           const gridWidth = Math.ceil(width / cellSize);
@@ -281,7 +284,7 @@
           }
 
           let attempts = 0;
-          const maxAttempts = Math.max(targetCount * 35, 10000);
+          const maxAttempts = Math.max(targetCount * 45, 15000);
           while (positions.length / 2 < targetCount && attempts < maxAttempts) {
             attempts++;
             const x = Math.random() * width;
@@ -296,12 +299,13 @@
             const blue = pixels[pixel + 2] / 255;
             const alpha = pixels[pixel + 3] / 255;
             const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-            const spacing = minSpacing + (1 - luminance) * (maxSpacing - minSpacing);
+            // Dark pixels get tighter spacing, creating a denser, solid black fill.
+            const spacing = minSpacing + Math.pow(luminance, 1.5) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
             const index = positions.length / 2;
             positions.push((x / width) * 2 - 1, 1 - (y / height) * 2);
-            colors.push(0, 0, 0, alpha);
+            colors.push(0, 0, 0, 1.0);
             spacings.push(spacing);
 
             const gx = Math.floor(x / cellSize);
@@ -320,7 +324,6 @@
           gl.enableVertexAttribArray(aColor);
           gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
 
-          canvas.style.aspectRatio = width + ' / ' + height;
           resize();
         }
 
