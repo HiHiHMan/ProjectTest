@@ -140,7 +140,7 @@
           vec2 p = gl_PointCoord - vec2(0.5);
           float d = length(p);
           if (d > 0.5) discard;
-          float alpha = 1.0 - smoothstep(0.28, 0.5, d);
+          float alpha = 1.0 - smoothstep(0.46, 0.5, d);
           gl_FragColor = vec4(vColor.rgb, vColor.a * alpha);
         }
       `;
@@ -189,7 +189,7 @@
             canvas.height = height;
           }
           gl.viewport(0, 0, width, height);
-          gl.uniform1f(uPointSize, 1.25 * dpr);
+          gl.uniform1f(uPointSize, 1.6 * dpr);
           render();
         }
 
@@ -255,8 +255,8 @@
           const positions = [];
           const colors = [];
           const spacings = [];
-          const minSpacing = 0.65;
-          const maxSpacing = 2.1;
+          const minSpacing = 0.45;
+          const maxSpacing = 3.2;
           const cellSize = minSpacing / Math.SQRT2;
           const neighborRange = Math.ceil(maxSpacing / cellSize) + 1;
           const gridWidth = Math.ceil(width / cellSize);
@@ -300,7 +300,7 @@
             const alpha = pixels[pixel + 3] / 255;
             const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
             // Dark pixels get tighter spacing, creating a denser, solid black fill.
-            const spacing = minSpacing + Math.pow(luminance, 1.5) * (maxSpacing - minSpacing);
+            const spacing = minSpacing + Math.pow(luminance, 2.2) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
             const index = positions.length / 2;
