@@ -23,9 +23,8 @@
     .monster-wrap {
       position: relative;
       width: min(100px, calc(100vw - 32px));
-      animation: monster-float 4.8s ease-in-out infinite;
-      transform-origin: 50% 85%;
-      will-change: transform;
+      animation: none;
+      transform: none;
     }
     .monster {
       display: block;
@@ -65,7 +64,7 @@
       46% { clip-path: inset(47% 0 47% 0 round 50%); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .monster-wrap, .monster-eye { animation: none; }
+      .monster-eye { animation: none; }
     }
     .back {
       position: fixed;
