@@ -18,16 +18,40 @@
       background:
         radial-gradient(ellipse at 50% 100%, #57200b 0%, #1c0b05 35%, #090503 76%);
     }
+    .fire-pair {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: min(420px, calc(100vw - 32px));
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      transform: translate(-50%, -50%);
+      align-items: center;
+    }
+    .fire-tile {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+    }
+    .fire-image, .fire-pixel-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mix-blend-mode: screen;
+    }
     .fire-image {
-      position: absolute; left: 50%; top: 50%;
-      width: 200px; height: 200px;
-      object-fit: contain; object-position: center;
-      transform: translate(-50%, -50%) scale(.82);
       opacity: .92;
       filter: saturate(1.2) contrast(1.08);
-      transform-origin: 50% 100%;
-      animation: fire-breathe 5.8s ease-in-out infinite alternate;
-      mix-blend-mode: screen;
+      transform-origin: 50% 65%;
+      animation: fire-breathe 2.8s ease-in-out infinite alternate;
+    }
+    .fire-pixel-canvas {
+      overflow: visible;
+      filter: saturate(1.18) contrast(1.08);
     }
     .heat {
       position: absolute; inset: 0; pointer-events: none;
@@ -71,9 +95,9 @@
       animation: rise var(--duration) linear var(--delay) infinite;
     }
     @keyframes fire-breathe {
-      0% { transform: translate(-50%, -50%) scale(.82) translateY(0); filter: saturate(1.1) contrast(1.05) brightness(.92); }
+      0% { transform: scale(.96, 1); filter: saturate(1.1) contrast(1.05) brightness(.92); }
       50% { filter: saturate(1.35) contrast(1.12) brightness(1.08); }
-      100% { transform: translate(-50%, -50%) scale(.8569) translateY(-.6%); filter: saturate(1.2) contrast(1.1) brightness(1.02); }
+      100% { transform: scale(1.02, 1.045); filter: saturate(1.2) contrast(1.1) brightness(1.02); }
     }
     @keyframes heat-flicker {
       0%, 100% { opacity: .55; }
@@ -92,6 +116,7 @@
       .title { top: 13%; }
       h1 { font-size: 22px; letter-spacing: .3em; }
       .subtitle { font-size: 8px; letter-spacing: .2em; }
+      .fire-pair { gap: 12px; width: min(420px, calc(100vw - 28px)); }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
@@ -100,7 +125,14 @@
 </head>
 <body>
   <main class="scene">
-    <img class="fire-image" src="../images/fire.png" alt="" aria-hidden="true">
+    <div class="fire-pair" aria-label="เปลวไฟสองรูปแบบ">
+      <div class="fire-tile">
+        <img class="fire-image" src="../images/fire.png" alt="" aria-hidden="true">
+      </div>
+      <div class="fire-tile">
+        <canvas class="fire-pixel-canvas" width="200" height="200" aria-hidden="true"></canvas>
+      </div>
+    </div>
     <div class="heat"></div>
     <div class="embers" aria-hidden="true">
       <i class="ember" style="--x:8%;--size:3px;--duration:8s;--delay:-2s;--drift:25px"></i>
@@ -119,5 +151,89 @@
     <h1>FIRE</h1>
     <p class="subtitle">A STUDY OF LIGHT · HEAT · MOTION</p>
   </header>
+  <script>
+    (() => {
+      const source = document.querySelector('.fire-image');
+      const canvas = document.querySelector('.fire-pixel-canvas');
+      const ctx = canvas.getContext('2d', { alpha: true });
+      const size = 200;
+      const cell = 3;
+      let pixels = [];
+      let frameId = 0;
+      let startTime = 0;
+
+      function buildPixels() {
+        const sample = document.createElement('canvas');
+        sample.width = size;
+        sample.height = size;
+        const sampleCtx = sample.getContext('2d', { willReadFrequently: true });
+        sampleCtx.clearRect(0, 0, size, size);
+        sampleCtx.drawImage(source, 0, 0, size, size);
+
+        const image = sampleCtx.getImageData(0, 0, size, size);
+        const data = image.data;
+        pixels = [];
+
+        for (let y = 0; y < size; y += cell) {
+          for (let x = 0; x < size; x += cell) {
+            const index = (y * size + x) * 4;
+            const red = data[index];
+            const green = data[index + 1];
+            const blue = data[index + 2];
+            const alpha = data[index + 3];
+            const brightness = red + green + blue;
+
+            if (alpha < 18 || brightness < 55) continue;
+
+            pixels.push({
+              x, y,
+              r: red, g: green, b: blue,
+              a: alpha / 255,
+              seed: Math.random() * Math.PI * 2
+            });
+          }
+        }
+      }
+
+      function animate(time) {
+        if (!startTime) startTime = time;
+        const t = (time - startTime) / 1000;
+        ctx.clearRect(0, 0, size, size);
+
+        for (const p of pixels) {
+          const height = 1 - p.y / size;
+          const wave = Math.sin(t * 3.2 + p.seed + p.y * 0.035);
+          const flutter = Math.sin(t * 6.1 + p.seed * 1.7 + p.x * 0.025);
+          const driftX = wave * (1.2 + height * 4.2) + flutter * height * 1.8;
+          const driftY = -Math.max(0, wave) * height * 3.2;
+          const flicker = 0.88 + (Math.sin(t * 8 + p.seed) + 1) * 0.09;
+
+          ctx.fillStyle = 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',' + (p.a * flicker) + ')';
+          ctx.fillRect(p.x + driftX, p.y + driftY, cell + 0.5, cell + 0.5);
+        }
+
+        frameId = requestAnimationFrame(animate);
+      }
+
+      function start() {
+        if (!source.complete || !source.naturalWidth) return;
+        cancelAnimationFrame(frameId);
+        buildPixels();
+        startTime = 0;
+        frameId = requestAnimationFrame(animate);
+      }
+
+      if (source.complete) start();
+      else source.addEventListener('load', start, { once: true });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(frameId);
+        else if (pixels.length) {
+          startTime = 0;
+          frameId = requestAnimationFrame(animate);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
