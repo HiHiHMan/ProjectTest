@@ -110,7 +110,10 @@
           if (localY < 0 || localY > flameHeight) continue;
 
           const q = 1 - localY / flameHeight;
-          const taper = Math.pow(Math.max(0, 1 - q), 0.72);
+          const bodyTaper = Math.pow(Math.max(0, 1 - q), 0.72);
+          // Preserve a visible pointed tip instead of collapsing to zero width.
+          const tipTaper = 0.105 * Math.exp(-Math.pow((q - 0.965) / 0.075, 2));
+          const taper = Math.max(bodyTaper, tipTaper);
           const flow = t * 2.7 - q * 8.2;
 
           const sway = Math.sin(flow) * 13 * Math.pow(q, 1.55)
