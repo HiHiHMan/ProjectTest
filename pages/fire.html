@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090503">
+  <title>Fire — ProjectTest</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      background: #090503;
+      color: #f8e6d2;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    .scene {
+      position: fixed; inset: 0; overflow: hidden; isolation: isolate;
+      background:
+        radial-gradient(ellipse at 50% 100%, #57200b 0%, #1c0b05 35%, #090503 76%);
+    }
+    .fire-image {
+      position: absolute; inset: -5%;
+      width: 110%; height: 110%;
+      object-fit: contain; object-position: center bottom;
+      opacity: .92;
+      filter: saturate(1.2) contrast(1.08);
+      transform-origin: 50% 100%;
+      animation: fire-breathe 5.8s ease-in-out infinite alternate;
+      mix-blend-mode: screen;
+    }
+    .heat {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 90%, rgb(255 105 18 / 22%), transparent 48%),
+        linear-gradient(0deg, rgb(10 4 1 / 30%), transparent 40%);
+      animation: heat-flicker 2.6s steps(5, end) infinite;
+    }
+    .vignette {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 55%, transparent 30%, rgb(0 0 0 / 54%) 100%);
+    }
+    .back {
+      position: fixed; top: 28px; left: 30px; z-index: 3;
+      padding: 10px 15px; border: 1px solid rgb(255 207 163 / 20%);
+      border-radius: 999px; background: rgb(15 8 4 / 48%);
+      color: #f3d2b3; text-decoration: none; font-size: 10px;
+      letter-spacing: .15em; text-transform: uppercase;
+      backdrop-filter: blur(12px); transition: .2s ease;
+    }
+    .back:hover { border-color: rgb(255 173 104 / 60%); background: rgb(50 20 8 / 70%); }
+    .title {
+      position: fixed; z-index: 2; top: 9%; left: 0; width: 100%;
+      text-align: center; pointer-events: none;
+      text-shadow: 0 0 28px rgb(255 105 24 / 35%);
+    }
+    h1 {
+      margin: 0; color: #ffe3c5; font-size: clamp(22px, 4vw, 44px);
+      font-weight: 500; letter-spacing: .42em; text-indent: .42em;
+    }
+    .subtitle {
+      margin: 13px 0 0; color: rgb(255 202 158 / 58%);
+      font-size: 9px; letter-spacing: .3em;
+    }
+    .embers { position: absolute; inset: 0; pointer-events: none; }
+    .ember {
+      position: absolute; bottom: -12px; left: var(--x);
+      width: var(--size); height: var(--size); border-radius: 50%;
+      background: #ffb35d; opacity: 0;
+      box-shadow: 0 0 10px 3px rgb(255 103 23 / 70%);
+      animation: rise var(--duration) linear var(--delay) infinite;
+    }
+    @keyframes fire-breathe {
+      0% { transform: scale(1) translateY(0); filter: saturate(1.1) contrast(1.05) brightness(.92); }
+      50% { filter: saturate(1.35) contrast(1.12) brightness(1.08); }
+      100% { transform: scale(1.045) translateY(-.6%); filter: saturate(1.2) contrast(1.1) brightness(1.02); }
+    }
+    @keyframes heat-flicker {
+      0%, 100% { opacity: .55; }
+      35% { opacity: .9; }
+      62% { opacity: .68; }
+      78% { opacity: 1; }
+    }
+    @keyframes rise {
+      0% { transform: translate3d(0, 0, 0) scale(.5); opacity: 0; }
+      12% { opacity: .8; }
+      75% { opacity: .55; }
+      100% { transform: translate3d(var(--drift), -110vh, 0) scale(.1); opacity: 0; }
+    }
+    @media (max-width: 600px) {
+      .back { top: 17px; left: 17px; }
+      .title { top: 13%; }
+      h1 { font-size: 22px; letter-spacing: .3em; }
+      .subtitle { font-size: 8px; letter-spacing: .2em; }
+      .fire-image { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <img class="fire-image" src="../images/fire.png" alt="" aria-hidden="true">
+    <div class="heat"></div>
+    <div class="embers" aria-hidden="true">
+      <i class="ember" style="--x:8%;--size:3px;--duration:8s;--delay:-2s;--drift:25px"></i>
+      <i class="ember" style="--x:17%;--size:2px;--duration:10s;--delay:-7s;--drift:-18px"></i>
+      <i class="ember" style="--x:29%;--size:4px;--duration:9s;--delay:-4s;--drift:32px"></i>
+      <i class="ember" style="--x:42%;--size:2px;--duration:11s;--delay:-8s;--drift:-24px"></i>
+      <i class="ember" style="--x:56%;--size:3px;--duration:8s;--delay:-5s;--drift:20px"></i>
+      <i class="ember" style="--x:68%;--size:2px;--duration:12s;--delay:-3s;--drift:-30px"></i>
+      <i class="ember" style="--x:81%;--size:4px;--duration:9s;--delay:-9s;--drift:18px"></i>
+      <i class="ember" style="--x:93%;--size:2px;--duration:10s;--delay:-6s;--drift:-22px"></i>
+    </div>
+    <div class="vignette"></div>
+  </main>
+  <a class="back" href="../index.html">← Experiments</a>
+  <header class="title">
+    <h1>FIRE</h1>
+    <p class="subtitle">A STUDY OF LIGHT · HEAT · MOTION</p>
+  </header>
+</body>
+</html>
