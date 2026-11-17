@@ -299,7 +299,13 @@
             const blue = pixels[pixel + 2] / 255;
             const alpha = pixels[pixel + 3] / 255;
             const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-            // Dark pixels get tighter spacing, creating a denser, solid black fill.
+
+            // Use both density probability and spacing: dark pixels stay solid,
+            // while gray and white pixels lose most of their sample points.
+            const darkness = 1 - luminance;
+            const keepProbability = Math.pow(darkness, 2.4);
+            if (Math.random() > keepProbability) continue;
+
             const spacing = minSpacing + Math.pow(luminance, 2.2) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
