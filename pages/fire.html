@@ -20,6 +20,7 @@
     }
     .fire-pair {
       position: absolute;
+      z-index: 2;
       left: 50%; top: 50%;
       width: min(420px, calc(100vw - 32px));
       display: grid;
@@ -54,14 +55,14 @@
       filter: saturate(1.18) contrast(1.08);
     }
     .heat {
-      position: absolute; inset: 0; pointer-events: none;
+      position: absolute; z-index: 1; inset: 0; pointer-events: none;
       background:
         radial-gradient(ellipse at 50% 90%, rgb(255 105 18 / 22%), transparent 48%),
         linear-gradient(0deg, rgb(10 4 1 / 30%), transparent 40%);
       animation: heat-flicker 2.6s steps(5, end) infinite;
     }
     .vignette {
-      position: absolute; inset: 0; pointer-events: none;
+      position: absolute; z-index: 1; inset: 0; pointer-events: none;
       background: radial-gradient(ellipse at 50% 55%, transparent 30%, rgb(0 0 0 / 54%) 100%);
     }
     .back {
@@ -86,7 +87,7 @@
       margin: 13px 0 0; color: rgb(255 202 158 / 58%);
       font-size: 9px; letter-spacing: .3em;
     }
-    .embers { position: absolute; inset: 0; pointer-events: none; }
+    .embers { position: absolute; z-index: 3; inset: 0; pointer-events: none; }
     .ember {
       position: absolute; bottom: -12px; left: var(--x);
       width: var(--size); height: var(--size); border-radius: 50%;
@@ -157,7 +158,7 @@
       const canvas = document.querySelector('.fire-pixel-canvas');
       const ctx = canvas.getContext('2d', { alpha: true });
       const size = 200;
-      const cell = 3;
+      const cell = 2;
       let pixels = [];
       let frameId = 0;
       let startTime = 0;
@@ -223,8 +224,18 @@
         frameId = requestAnimationFrame(animate);
       }
 
-      if (source.complete) start();
-      else source.addEventListener('load', start, { once: true });
+      if (source.complete && source.naturalWidth > 0) {
+        start();
+      } else {
+        source.addEventListener('load', start, { once: true });
+      }
+      source.addEventListener('error', () => {
+        ctx.clearRect(0, 0, size, size);
+        ctx.fillStyle = '#ff8a00';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Image could not load', size / 2, size / 2);
+      }, { once: true });
 
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) cancelAnimationFrame(frameId);
