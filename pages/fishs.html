@@ -238,18 +238,29 @@
           vertex(f, c[0], c[1], tint, angle);
         }
 
+        function tailVertex(f, lx, ly, tint, wag) {
+          const pivotX = -0.49;
+          const rotatedX = (lx - pivotX) * Math.cos(wag) - ly * Math.sin(wag) + pivotX;
+          const rotatedY = (lx - pivotX) * Math.sin(wag) + ly * Math.cos(wag);
+          vertex(f, rotatedX, rotatedY, tint, f.angle);
+        }
+
+        function tailTriangle(f, a, b, c, tint, wag) {
+          tailVertex(f, a[0], a[1], tint, wag);
+          tailVertex(f, b[0], b[1], tint, wag);
+          tailVertex(f, c[0], c[1], tint, wag);
+        }
+
         fish.forEach(f => {
           const base = f.color;
           const light = base.map(v => Math.min(1, v * 1.16 + 0.08));
           const dark = base.map(v => v * 0.66);
           const tailTint = base.map(v => v * 0.82);
           const wag = Math.sin(now * 0.009 + f.tailPhase) * 0.34;
-          const tailAngle = f.angle + wag;
-
-          // Forked tail swings from side to side as the fish swims.
-          triangle(f, [-0.49, 0], [-1.08, 0.43], [-0.82, 0.015], tailTint, tailAngle);
-          triangle(f, [-0.49, 0], [-0.82, -0.015], [-1.08, -0.43], tailTint, tailAngle);
-          triangle(f, [-0.52, 0], [-0.78, 0.015], [-0.78, -0.015], light, tailAngle);
+          // Forked tail swings around its root, not around the fish center.
+          tailTriangle(f, [-0.49, 0], [-1.08, 0.43], [-0.82, 0.015], tailTint, wag);
+          tailTriangle(f, [-0.49, 0], [-0.82, -0.015], [-1.08, -0.43], tailTint, wag);
+          tailTriangle(f, [-0.52, 0], [-0.78, 0.015], [-0.78, -0.015], light, wag);
 
           // Paired pectoral fins visible from above.
           triangle(f, [0.02, 0.20], [-0.30, 0.48], [-0.20, 0.12], dark);
