@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#08090d">
+  <meta name="theme-color" content="#eeeeee">
   <title>Monster — ProjectTest</title>
   <style>
     * { box-sizing: border-box; }
@@ -13,15 +13,16 @@
       margin: 0;
     }
     body {
+      position: relative;
       min-height: 100vh;
       display: grid;
       place-items: center;
       overflow: hidden;
-      background: #08090d;
+      background: #eeeeee;
     }
     .monster {
       display: block;
-      width: min(250px, calc(100vw - 32px));
+      width: min(150px, calc(100vw - 32px));
       height: auto;
       object-fit: contain;
     }
@@ -30,15 +31,29 @@
       top: 24px;
       left: 24px;
       padding: 10px 15px;
-      border: 1px solid rgb(255 255 255 / 16%);
+      border: 1px solid rgb(0 0 0 / 16%);
       border-radius: 999px;
-      color: #d9dce5;
-      background: rgb(255 255 255 / 5%);
+      color: #333333;
+      background: rgb(255 255 255 / 35%);
       font: 11px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
       letter-spacing: .12em;
       text-decoration: none;
     }
-    .back:hover { background: rgb(255 255 255 / 10%); }
+    .back:hover { background: rgb(255 255 255 / 65%); }
+    .ly-3-noise {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      width: 780px;
+      height: 414px;
+      transform: translateX(-50%);
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.85;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+    }
     @media (max-width: 600px) {
       .back { top: 16px; left: 16px; }
     }
@@ -47,5 +62,6 @@
 <body>
   <img class="monster" src="../images/mon.png" alt="Monster">
   <a class="back" href="../index.html">← Experiments</a>
+  <div class="ly-3-noise" aria-hidden="true"></div>
 </body>
 </html>
