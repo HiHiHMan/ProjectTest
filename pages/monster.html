@@ -33,7 +33,7 @@
       height: auto;
       object-fit: contain;
       opacity: .95;
-      filter: blur(.35px);
+      filter: none;
     }
     .monster-source { display: none; }
     .monster-eye {
@@ -147,10 +147,10 @@
           if (color.a < 0.08) discard;
 
           float distanceFromCenter = length(local);
-          float radius = 0.43;
+          float radius = 0.42;
           if (distanceFromCenter > radius) discard;
 
-          float edge = 1.0 - smoothstep(radius - 0.045, radius, distanceFromCenter);
+          float edge = 1.0 - smoothstep(radius - 0.025, radius, distanceFromCenter);
           gl_FragColor = vec4(color.rgb, color.a * edge);
         }
       `;
@@ -193,8 +193,8 @@
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
         const imageLocation = gl.getUniformLocation(program, 'u_image');
         const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
@@ -218,7 +218,7 @@
           gl.clearColor(0, 0, 0, 0);
           gl.clear(gl.COLOR_BUFFER_BIT);
           gl.uniform2f(resolutionLocation, width, height);
-          gl.uniform1f(cellLocation, 2.6 * dpr);
+          gl.uniform1f(cellLocation, 5.2 * dpr);
           gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
