@@ -114,15 +114,23 @@
         ctx.clearRect(0, 0, outputSize, outputSize);
 
         const t = time * 0.001;
-        // Warp the complete raster surface in horizontal slices. The base stays
-        // anchored while the upper flame bends as one continuous, flowing shape.
+        // The lower flame remains steady. A travelling wave accelerates toward
+        // the tip, where it bends sharply and releases in quick, uneven swishes.
         for (let y = 0; y < outputSize; y += 1) {
           const heightRatio = 1 - y / outputSize;
-          const envelope = Math.pow(heightRatio, 1.35);
-          const slowWave = Math.sin(t * 1.65 - y * 0.038);
-          const fastWave = Math.sin(t * 2.35 - y * 0.075 + 0.8);
-          const drift = slowWave * 12 * envelope + fastWave * 3.5 * envelope;
-          const ripple = Math.sin(t * 2.1 - y * 0.055) * 0.65 * envelope;
+          const envelope = Math.pow(heightRatio, 2.15);
+          const gust = Math.sin(t * 1.35 + 0.6);
+          const wavePhase = t * 3.15 - heightRatio * 3.4 + gust * 0.7;
+
+          const broadBend = Math.sin(wavePhase) * 25 * envelope;
+          const quickFlick = Math.sin(t * 7.2 - heightRatio * 7.8 + gust) * 6.5
+                           * Math.pow(heightRatio, 2.7);
+          const irregularRipple = Math.sin(t * 4.6 - heightRatio * 5.1 + 1.2)
+                                * 3.2 * Math.pow(heightRatio, 1.7);
+          const snap = Math.pow(Math.max(0, Math.sin(t * 2.05 + 0.4)), 5)
+                     * Math.sin(wavePhase * 0.72) * 9 * Math.pow(heightRatio, 2.4);
+          const drift = broadBend + quickFlick + irregularRipple + snap;
+          const ripple = Math.sin(wavePhase * 0.82) * 1.1 * envelope;
 
           ctx.drawImage(
             surface,
