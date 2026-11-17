@@ -104,8 +104,8 @@
           const h = (size - 1 - y) / size;
           const rise = Math.max(0, 1 - h);
           const topBreath = 0.94 + 0.035 * Math.sin(t * 2.1) + 0.02 * Math.sin(t * 3.7 + 1.2);
-          const flameHeight = size * topBreath - 24;
-          const baseY = size - 12;
+          const flameHeight = size * 0.82 + 8 * Math.sin(t * 1.6);
+          const baseY = size - 1;
           const topY = baseY - flameHeight;
           const localY = y - topY;
 
@@ -131,10 +131,11 @@
           const edgeNoise = tongueA + tongueB + tongueC;
           const lobe1 = Math.exp(-Math.pow((q - (0.34 + 0.05 * Math.sin(t * 2.2))) / 0.18, 2));
           const lobe2 = Math.exp(-Math.pow((q - (0.69 + 0.07 * Math.sin(t * 1.8 + 2))) / 0.14, 2));
-          const foot = 1 + 0.22 * (1 - smooth(0.02, 0.34, q));
-          const wantedWidth = (size * 0.46 * taper * foot) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
+          const foot = 1 + 0.38 * (1 - smooth(0.0, 0.48, q));
+          const rootBulge = 1 + 0.12 * Math.exp(-Math.pow(q / 0.13, 2));
+          const wantedWidth = (size * 0.43 * taper * foot * rootBulge) * (1 + edgeNoise + 0.16 * lobe1 - 0.12 * lobe2);
           // Keep the entire flame silhouette inside the canvas bounds.
-          const halfWidth = Math.min(wantedWidth, center - 14, size - center - 14);
+          const halfWidth = Math.max(0, Math.min(wantedWidth, center - 3, size - center - 3));
 
           if (halfWidth < 0.5) continue;
 
@@ -168,7 +169,8 @@
             }
 
             const root = 1 - smooth(0.02, 0.24, q);
-            const alpha = Math.min(1, outer * (0.94 + hot * 0.06) * (0.94 + root * 0.06));
+            const baseFill = 1 - smooth(0.0, 0.18, q);
+            const alpha = Math.min(1, outer * (0.96 + hot * 0.04) * (0.96 + root * 0.04 + baseFill * 0.02));
             const index = (y * size + x) * 4;
             pixels[index] = red;
             pixels[index + 1] = Math.max(0, green);
