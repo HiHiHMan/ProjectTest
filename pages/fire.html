@@ -19,20 +19,9 @@
       aspect-ratio: 1; transform: translate(-50%, -50%);
       filter: drop-shadow(0 0 22px rgb(255 91 12 / 28%));
     }
-    .pixel-fire {
-      position: absolute; inset: 0;
-      overflow: visible; contain: layout style;
+    #pixel-fire {
+      display: block; width: 100%; height: 100%;
       image-rendering: pixelated;
-    }
-    .fire-pixel {
-      position: absolute;
-      width: var(--pixel-size); height: var(--pixel-size);
-      left: var(--x); top: var(--y);
-      background: var(--pixel-color);
-      opacity: var(--pixel-alpha);
-      transform-origin: 50% 100%;
-      animation: pixel-flame var(--duration) ease-in-out var(--delay) infinite alternate;
-      will-change: transform, opacity;
     }
     .heat {
       position: absolute; z-index: 1; inset: 0; pointer-events: none;
@@ -60,24 +49,6 @@
     }
     h1 { margin: 0; color: #ffe3c5; font-size: clamp(22px, 4vw, 44px); font-weight: 500; letter-spacing: .42em; text-indent: .42em; }
     .subtitle { margin: 13px 0 0; color: rgb(255 202 158 / 58%); font-size: 9px; letter-spacing: .3em; }
-    @keyframes pixel-flame {
-      0% {
-        transform: translate3d(calc(var(--sway) * -1), 1px, 0) scaleY(.96) scaleX(1.02);
-        opacity: calc(var(--pixel-alpha) * .88);
-      }
-      35% {
-        transform: translate3d(var(--sway), -2px, 0) scaleY(1.06) scaleX(.96);
-        opacity: var(--pixel-alpha);
-      }
-      70% {
-        transform: translate3d(calc(var(--sway) * -.45), -4px, 0) scaleY(1.1) scaleX(1.04);
-        opacity: calc(var(--pixel-alpha) * .92);
-      }
-      100% {
-        transform: translate3d(calc(var(--sway) * .8), -1px, 0) scaleY(.98) scaleX(.94);
-        opacity: calc(var(--pixel-alpha) * .82);
-      }
-    }
     @keyframes heat-flicker {
       0%, 100% { opacity: .48; }
       35% { opacity: .9; }
@@ -91,14 +62,14 @@
       .subtitle { font-size: 8px; letter-spacing: .2em; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .fire-pixel, .heat { animation: none !important; }
+      .heat { animation: none !important; }
     }
   </style>
 </head>
 <body>
   <main class="scene">
     <div class="fire-stage">
-      <div class="pixel-fire" id="pixel-fire" aria-hidden="true"></div>
+      <canvas id="pixel-fire" width="200" height="200" aria-hidden="true"></canvas>
     </div>
     <div class="heat"></div>
     <div class="vignette"></div>
@@ -110,66 +81,82 @@
   </header>
   <script>
     (() => {
-      const host = document.getElementById('pixel-fire');
+      const canvas = document.getElementById('pixel-fire');
+      const ctx = canvas.getContext('2d');
       const source = new Image();
+      const sampleStep = 3;
+      const outputSize = 200;
+      let pixels = null;
+      let sourceWidth = 0;
+      let sourceHeight = 0;
+      let scale = 1;
+      let offsetX = 0;
+      let offsetY = 0;
+      let frame = 0;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       source.src = '../images/fire.png';
-
       source.onload = () => {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d', { willReadFrequently: true });
-        const sampleStep = 4;
-        const sourceWidth = source.naturalWidth;
-        const sourceHeight = source.naturalHeight;
+        sourceWidth = source.naturalWidth;
+        sourceHeight = source.naturalHeight;
 
-        canvas.width = sourceWidth;
-        canvas.height = sourceHeight;
-        context.clearRect(0, 0, sourceWidth, sourceHeight);
-        context.drawImage(source, 0, 0);
-        const pixels = context.getImageData(0, 0, sourceWidth, sourceHeight).data;
+        const sampleCanvas = document.createElement('canvas');
+        sampleCanvas.width = sourceWidth;
+        sampleCanvas.height = sourceHeight;
+        const sampleContext = sampleCanvas.getContext('2d', { willReadFrequently: true });
+        sampleContext.drawImage(source, 0, 0);
+        pixels = sampleContext.getImageData(0, 0, sourceWidth, sourceHeight).data;
 
-        const scale = 200 / Math.max(sourceWidth, sourceHeight);
-        const renderedWidth = sourceWidth * scale;
-        const renderedHeight = sourceHeight * scale;
-        const offsetX = (200 - renderedWidth) / 2;
-        const offsetY = (200 - renderedHeight) / 2;
-        const fragment = document.createDocumentFragment();
+        scale = outputSize / Math.max(sourceWidth, sourceHeight);
+        offsetX = (outputSize - sourceWidth * scale) / 2;
+        offsetY = (outputSize - sourceHeight * scale) / 2;
+        sampleCanvas.width = sampleCanvas.height = 1;
 
-        host.style.width = '100%';
-        host.style.height = '100%';
-
-        for (let y = 0; y < sourceHeight; y += sampleStep) {
-          for (let x = 0; x < sourceWidth; x += sampleStep) {
-            const index = (y * sourceWidth + x) * 4;
-            const alpha = pixels[index + 3] / 255;
-            if (alpha < 0.08) continue;
-
-            const red = pixels[index];
-            const green = pixels[index + 1];
-            const blue = pixels[index + 2];
-            const element = document.createElement('i');
-            const pixelX = offsetX + x * scale;
-            const pixelY = offsetY + y * scale;
-            const pixelSize = Math.max(sampleStep * scale, 1);
-
-            element.className = 'fire-pixel';
-            element.style.setProperty('--x', pixelX + 'px');
-            element.style.setProperty('--y', pixelY + 'px');
-            element.style.setProperty('--pixel-size', pixelSize + 'px');
-            element.style.setProperty('--pixel-color', 'rgb(' + red + ' ' + green + ' ' + blue + ')');
-            element.style.setProperty('--pixel-alpha', alpha.toFixed(3));
-            element.style.setProperty('--sway', (1 + Math.random() * 5).toFixed(2) + 'px');
-            element.style.setProperty('--duration', (0.38 + Math.random() * 0.72).toFixed(2) + 's');
-            element.style.setProperty('--delay', (-Math.random() * 1.2).toFixed(2) + 's');
-            fragment.appendChild(element);
-          }
-        }
-
-        host.appendChild(fragment);
-        canvas.width = canvas.height = 1;
+        if (reduceMotion) drawFrame(0);
+        else requestAnimationFrame(animate);
       };
 
+      function drawFrame(time) {
+        if (!pixels) return;
+        ctx.clearRect(0, 0, outputSize, outputSize);
+
+        const t = time * 0.001;
+        const cell = sampleStep * scale;
+        for (let y = 0; y < sourceHeight; y += sampleStep) {
+          for (let x = 0; x < sourceWidth; x += sampleStep) {
+            const i = (y * sourceWidth + x) * 4;
+            const alpha = pixels[i + 3] / 255;
+            if (alpha < 0.08) continue;
+
+            const heightRatio = 1 - y / sourceHeight;
+            const phase = t * (2.2 + heightRatio * 2.8) + x * 0.075 + y * 0.018;
+            const sway = Math.sin(phase) * (1.2 + heightRatio * 5.5)
+                       + Math.sin(phase * 0.53 + y * 0.035) * heightRatio * 2.5;
+            const rise = Math.sin(t * 2.5 + x * 0.04 + y * 0.025) * heightRatio * 2.2;
+            const flicker = 0.88 + (Math.sin(phase * 1.7) * 0.08);
+
+            ctx.globalAlpha = alpha * flicker;
+            ctx.fillStyle = 'rgb(' + pixels[i] + ',' + pixels[i + 1] + ',' + pixels[i + 2] + ')';
+            ctx.fillRect(
+              offsetX + x * scale + sway,
+              offsetY + y * scale + rise,
+              cell + 0.35,
+              cell + 0.35
+            );
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function animate(timestamp) {
+        drawFrame(timestamp);
+        frame = requestAnimationFrame(animate);
+      }
+
       source.onerror = () => {
-        host.textContent = 'Unable to build pixel flame';
+        ctx.fillStyle = '#ff7a18';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Fire texture unavailable', 18, 100);
       };
     })();
   </script>
