@@ -146,11 +146,21 @@
         f.targetY = clamp(ty, 0.09, 0.91);
         const dx = f.targetX - f.x;
         const dy = f.targetY - f.y;
-        // X travel stays on a straight horizontal line; Y travel follows a curved arc.
-        f.mode = forceCurve || Math.abs(dy) > Math.abs(dx) * 0.82 ? 'curve' : 'straight';
-        const direction = Math.random() < 0.5 ? -1 : 1;
-        f.controlX = (f.startX + f.targetX) * 0.5 + direction * (0.055 + Math.random() * 0.09);
-        f.duration = clamp(Math.hypot(dx * innerWidth, dy * innerHeight) / (70 + Math.random() * 55), 1.8, 7.5);
+        // Horizontal-only movement is straight. Any Y displacement must follow a curved arc.
+        const dxPx = dx * innerWidth;
+        const dyPx = dy * innerHeight;
+        const distance = Math.hypot(dxPx, dyPx);
+        f.mode = forceCurve || Math.abs(dyPx) > 1 ? 'curve' : 'straight';
+
+        // Place the Bezier control point perpendicular to the travel direction.
+        // This also creates a visible curve when the fish moves almost vertically.
+        const bendDirection = Math.random() < 0.5 ? -1 : 1;
+        const bend = (32 + Math.random() * 72) * bendDirection;
+        const perpendicularX = distance > 0 ? -dyPx / distance : 0;
+        const perpendicularY = distance > 0 ? dxPx / distance : 1;
+        f.controlX = (f.startX + f.targetX) * 0.5 + (perpendicularX * bend) / innerWidth;
+        f.controlY = (f.startY + f.targetY) * 0.5 + (perpendicularY * bend) / innerHeight;
+        f.duration = clamp(distance / (70 + Math.random() * 55), 1.8, 7.5);
         f.elapsed = 0;
       }
 
@@ -189,7 +199,7 @@
         } else {
           const one = 1 - eased;
           nx = one * one * f.startX + 2 * one * eased * f.controlX + eased * eased * f.targetX;
-          ny = f.startY + (f.targetY - f.startY) * eased;
+          ny = one * one * f.startY + 2 * one * eased * f.controlY + eased * eased * f.targetY;
         }
         const vx = nx - f.x;
         const vy = ny - f.y;
