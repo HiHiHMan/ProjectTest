@@ -44,7 +44,7 @@
       background: #ffffff;
       box-shadow: 0 0 5px rgb(255 255 255 / 24%);
       transform: translate(-50%, -50%);
-      animation: eye-look 5.6s ease-in-out infinite;
+      animation: eye-look 5.6s ease-in-out infinite, eye-blink 5.2s ease-in-out infinite;
       will-change: transform;
     }
     .monster-eye--left { left: 28.6%; }
@@ -58,6 +58,10 @@
       20%, 34% { transform: translate(calc(-50% + 2px), calc(-50% - 1px)); }
       42%, 58% { transform: translate(calc(-50% - 2px), calc(-50% + 1px)); }
       66%, 82% { transform: translate(-50%, calc(-50% - 1.5px)); }
+    }
+    @keyframes eye-blink {
+      0%, 44%, 48%, 100% { clip-path: inset(0 0 0 0 round 50%); }
+      46% { clip-path: inset(47% 0 47% 0 round 50%); }
     }
     @media (prefers-reduced-motion: reduce) {
       .monster-wrap, .monster-eye { animation: none; }
