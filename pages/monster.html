@@ -111,11 +111,7 @@
     (() => {
       const canvas = document.getElementById('monster-dots');
       const source = document.getElementById('monster-source');
-      const gl = canvas.getContext('webgl', {
-        alpha: true,
-        antialias: true,
-        premultipliedAlpha: false
-      });
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
 
       if (!gl) {
         canvas.style.display = 'none';
@@ -125,121 +121,237 @@
       }
 
       const vertexSource = `
-        attribute vec2 a_position;
+        attribute vec2 aPosition;
+        attribute vec4 aColor;
+        uniform float uPointSize;
+        varying vec4 vColor;
+
         void main() {
-          gl_Position = vec4(a_position, 0.0, 1.0);
+          gl_Position = vec4(aPosition, 0.0, 1.0);
+          gl_PointSize = uPointSize;
+          vColor = aColor;
         }
       `;
 
       const fragmentSource = `
         precision mediump float;
-        uniform sampler2D u_image;
-        uniform vec2 u_resolution;
-        uniform float u_cellSize;
+        varying vec4 vColor;
 
         void main() {
-          vec2 cell = floor(gl_FragCoord.xy / u_cellSize);
-          vec2 local = fract(gl_FragCoord.xy / u_cellSize) - 0.5;
-          vec2 samplePoint = (cell + 0.5) * u_cellSize;
-          vec2 uv = samplePoint / u_resolution;
-
-          vec4 color = texture2D(u_image, uv);
-          if (color.a < 0.08) discard;
-
-          float distanceFromCenter = length(local);
-          float radius = 0.42;
-          if (distanceFromCenter > radius) discard;
-
-          float edge = 1.0 - smoothstep(radius - 0.025, radius, distanceFromCenter);
-          gl_FragColor = vec4(color.rgb, color.a * edge);
+          vec2 p = gl_PointCoord - vec2(0.5);
+          float d = length(p);
+          if (d > 0.5) discard;
+          float alpha = 1.0 - smoothstep(0.40, 0.5, d);
+          gl_FragColor = vec4(vColor.rgb, vColor.a * alpha);
         }
       `;
 
-      function compileShader(type, sourceText) {
+      function makeShader(type, sourceText) {
         const shader = gl.createShader(type);
         gl.shaderSource(shader, sourceText);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          gl.deleteShader(shader);
-          throw new Error('WebGL shader compilation failed');
+          throw new Error(gl.getShaderInfoLog(shader));
         }
         return shader;
       }
 
       try {
         const program = gl.createProgram();
-        gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vertexSource));
-        gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragmentSource));
+        gl.attachShader(program, makeShader(gl.VERTEX_SHADER, vertexSource));
+        gl.attachShader(program, makeShader(gl.FRAGMENT_SHADER, fragmentSource));
         gl.linkProgram(program);
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          throw new Error('WebGL program linking failed');
+          throw new Error(gl.getProgramInfoLog(program));
         }
 
         gl.useProgram(program);
-        const vertices = new Float32Array([
-          -1, -1, 1, -1, -1, 1,
-          -1, 1, 1, -1, 1, 1
-        ]);
-        const buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-        const position = gl.getAttribLocation(program, 'a_position');
-        gl.enableVertexAttribArray(position);
-        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-        const texture = gl.createTexture();
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-        const imageLocation = gl.getUniformLocation(program, 'u_image');
-        const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-        const cellLocation = gl.getUniformLocation(program, 'u_cellSize');
-        gl.uniform1i(imageLocation, 0);
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        function render() {
-          const rect = canvas.getBoundingClientRect();
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const width = Math.max(1, Math.round(rect.width * dpr));
-          const height = Math.max(1, Math.round(width * source.naturalHeight / source.naturalWidth));
+        const positionBuffer = gl.createBuffer();
+        const colorBuffer = gl.createBuffer();
+        const aPosition = gl.getAttribLocation(program, 'aPosition');
+        const aColor = gl.getAttribLocation(program, 'aColor');
+        const uPointSize = gl.getUniformLocation(program, 'uPointSize');
 
+        let pointCount = 0;
+        let dpr = 1;
+
+        function resize() {
+          const rect = canvas.getBoundingClientRect();
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const width = Math.max(1, Math.round(rect.width * dpr));
+          const height = Math.max(1, Math.round(rect.height * dpr));
           if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
           }
-
           gl.viewport(0, 0, width, height);
+          gl.uniform1f(uPointSize, 1.65 * dpr);
+          render();
+        }
+
+        function buildPoints(image) {
+          const sampleCanvas = document.createElement('canvas');
+          const ctx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+          const maxSide = 500;
+          const ratio = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+          const width = Math.max(1, Math.round(image.naturalWidth * ratio));
+          const height = Math.max(1, Math.round(image.naturalHeight * ratio));
+
+          sampleCanvas.width = width;
+          sampleCanvas.height = height;
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(image, 0, 0, width, height);
+
+          const pixels = ctx.getImageData(0, 0, width, height).data;
+          const corners = [
+            0,
+            (width - 1) * 4,
+            ((height - 1) * width) * 4,
+            (height * width - 1) * 4
+          ];
+          const background = [0, 0, 0];
+          corners.forEach(i => {
+            background[0] += pixels[i];
+            background[1] += pixels[i + 1];
+            background[2] += pixels[i + 2];
+          });
+          background.forEach((v, i) => background[i] = v / corners.length);
+
+          let hasTransparency = false;
+          for (let i = 3; i < pixels.length; i += 4) {
+            if (pixels[i] < 245) {
+              hasTransparency = true;
+              break;
+            }
+          }
+
+          function isForeground(x, y) {
+            const i = (y * width + x) * 4;
+            if (pixels[i + 3] < 32) return false;
+            if (hasTransparency) return true;
+            const distance = Math.hypot(
+              pixels[i] - background[0],
+              pixels[i + 1] - background[1],
+              pixels[i + 2] - background[2]
+            );
+            return distance > 24;
+          }
+
+          // Random point sampling keeps the organic, scattered look of deer.html.
+          const scanStep = Math.max(2, Math.round(Math.max(width, height) / 420));
+          let foregroundSamples = 0;
+          for (let y = 0; y < height; y += scanStep) {
+            for (let x = 0; x < width; x += scanStep) {
+              if (isForeground(x, y)) foregroundSamples++;
+            }
+          }
+
+          const targetCount = Math.max(100, foregroundSamples * 5);
+          const positions = [];
+          const colors = [];
+          const spacings = [];
+          const minSpacing = 3.0;
+          const maxSpacing = 5.5;
+          const cellSize = maxSpacing / Math.SQRT2;
+          const gridWidth = Math.ceil(width / cellSize);
+          const gridHeight = Math.ceil(height / cellSize);
+          const grid = new Int32Array(gridWidth * gridHeight);
+          grid.fill(-1);
+
+          function farEnough(x, y, spacing) {
+            const gx = Math.floor(x / cellSize);
+            const gy = Math.floor(y / cellSize);
+            for (let oy = -2; oy <= 2; oy++) {
+              for (let ox = -2; ox <= 2; ox++) {
+                const nx = gx + ox;
+                const ny = gy + oy;
+                if (nx < 0 || ny < 0 || nx >= gridWidth || ny >= gridHeight) continue;
+                const index = grid[ny * gridWidth + nx];
+                if (index < 0) continue;
+                const px = (positions[index * 2] + 1) * 0.5 * width;
+                const py = (1 - positions[index * 2 + 1]) * 0.5 * height;
+                const required = Math.max(spacing, spacings[index]);
+                if ((px - x) ** 2 + (py - y) ** 2 < required ** 2) return false;
+              }
+            }
+            return true;
+          }
+
+          let attempts = 0;
+          const maxAttempts = Math.max(targetCount * 35, 10000);
+          while (positions.length / 2 < targetCount && attempts < maxAttempts) {
+            attempts++;
+            const x = Math.random() * width;
+            const y = Math.random() * height;
+            const ix = Math.min(width - 1, Math.floor(x));
+            const iy = Math.min(height - 1, Math.floor(y));
+            if (!isForeground(ix, iy)) continue;
+
+            const pixel = (iy * width + ix) * 4;
+            const red = pixels[pixel] / 255;
+            const green = pixels[pixel + 1] / 255;
+            const blue = pixels[pixel + 2] / 255;
+            const alpha = pixels[pixel + 3] / 255;
+            const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+            const spacing = minSpacing + luminance * (maxSpacing - minSpacing);
+            if (!farEnough(x, y, spacing)) continue;
+
+            const index = positions.length / 2;
+            positions.push((x / width) * 2 - 1, 1 - (y / height) * 2);
+            colors.push(red, green, blue, alpha);
+            spacings.push(spacing);
+
+            const gx = Math.floor(x / cellSize);
+            const gy = Math.floor(y / cellSize);
+            grid[gy * gridWidth + gx] = index;
+          }
+
+          pointCount = positions.length / 2;
+          gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aPosition);
+          gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aColor);
+          gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
+
+          canvas.style.aspectRatio = width + ' / ' + height;
+          resize();
+        }
+
+        function render() {
           gl.clearColor(0, 0, 0, 0);
           gl.clear(gl.COLOR_BUFFER_BIT);
-          gl.uniform2f(resolutionLocation, width, height);
-          gl.uniform1f(cellLocation, 5.2 * dpr);
-          gl.drawArrays(gl.TRIANGLES, 0, 6);
+          gl.drawArrays(gl.POINTS, 0, pointCount);
         }
 
         source.addEventListener('load', () => {
-          gl.bindTexture(gl.TEXTURE_2D, texture);
-          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
-          canvas.style.aspectRatio = source.naturalWidth + ' / ' + source.naturalHeight;
-          render();
-          source.style.display = 'none';
+          try {
+            buildPoints(source);
+            source.style.display = 'none';
+          } catch (error) {
+            console.error(error);
+            canvas.style.display = 'none';
+            source.className = 'monster';
+            source.style.display = 'block';
+          }
         }, { once: true });
 
         if (source.complete && source.naturalWidth) {
-          source.dispatchEvent(new Event('load'));
+          buildPoints(source);
         }
         if ('ResizeObserver' in window) {
-          new ResizeObserver(render).observe(canvas.parentElement);
+          new ResizeObserver(resize).observe(canvas.parentElement);
         } else {
-          window.addEventListener('resize', render);
+          window.addEventListener('resize', resize);
         }
       } catch (error) {
+        console.error(error);
         canvas.style.display = 'none';
         source.className = 'monster';
         source.style.display = 'block';
