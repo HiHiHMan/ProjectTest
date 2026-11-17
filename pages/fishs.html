@@ -118,7 +118,8 @@
       gl.bindVertexArray(vao);
       const buffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      const VERTICES_PER_FISH = 51;\n      gl.bufferData(gl.ARRAY_BUFFER, COUNT * VERTICES_PER_FISH * 5 * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
+      const VERTICES_PER_FISH = 51;
+      gl.bufferData(gl.ARRAY_BUFFER, COUNT * VERTICES_PER_FISH * 5 * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
       const stride = 5 * Float32Array.BYTES_PER_ELEMENT;
       const positionLoc = gl.getAttribLocation(program, 'aPosition');
       const colorLoc = gl.getAttribLocation(program, 'aColor');
