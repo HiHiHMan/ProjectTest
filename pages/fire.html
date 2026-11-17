@@ -19,10 +19,10 @@
         radial-gradient(ellipse at 50% 100%, #57200b 0%, #1c0b05 35%, #090503 76%);
     }
     .fire-image {
-      position: absolute; left: 50%; bottom: 0;
+      position: absolute; left: 50%; top: 50%;
       width: 200px; height: 200px;
-      object-fit: contain; object-position: center bottom;
-      transform: translateX(-50%) scale(.82);
+      object-fit: contain; object-position: center;
+      transform: translate(-50%, -50%) scale(.82);
       opacity: .92;
       filter: saturate(1.2) contrast(1.08);
       transform-origin: 50% 100%;
@@ -71,9 +71,9 @@
       animation: rise var(--duration) linear var(--delay) infinite;
     }
     @keyframes fire-breathe {
-      0% { transform: translateX(-50%) scale(.82) translateY(0); filter: saturate(1.1) contrast(1.05) brightness(.92); }
+      0% { transform: translate(-50%, -50%) scale(.82) translateY(0); filter: saturate(1.1) contrast(1.05) brightness(.92); }
       50% { filter: saturate(1.35) contrast(1.12) brightness(1.08); }
-      100% { transform: translateX(-50%) scale(.8569) translateY(-.6%); filter: saturate(1.2) contrast(1.1) brightness(1.02); }
+      100% { transform: translate(-50%, -50%) scale(.8569) translateY(-.6%); filter: saturate(1.2) contrast(1.1) brightness(1.02); }
     }
     @keyframes heat-flicker {
       0%, 100% { opacity: .55; }
