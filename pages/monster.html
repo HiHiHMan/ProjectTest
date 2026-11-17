@@ -251,7 +251,9 @@
             }
           }
 
-          const targetCount = Math.max(300, foregroundSamples * 24);
+          // Fixed sampling budget: do not keep sampling until a target point
+          // count is reached, otherwise sparse bright areas get overfilled.
+          const sampleBudget = Math.max(300, foregroundSamples * 24);
           const positions = [];
           const colors = [];
           const spacings = [];
@@ -284,8 +286,7 @@
           }
 
           let attempts = 0;
-          const maxAttempts = Math.max(targetCount * 45, 15000);
-          while (positions.length / 2 < targetCount && attempts < maxAttempts) {
+          while (attempts < sampleBudget) {
             attempts++;
             const x = Math.random() * width;
             const y = Math.random() * height;
@@ -302,8 +303,12 @@
 
             // Use both density probability and spacing: dark pixels stay solid,
             // while gray and white pixels lose most of their sample points.
-            const darkness = 1 - luminance;
-            const keepProbability = Math.pow(darkness, 2.4);
+            // Ignore light pixels; progressively thin mid-gray pixels.
+            // Only near-black pixels retain the full sampling density.
+            const darkRange = 0.72;
+            if (luminance >= darkRange) continue;
+            const darkness = (darkRange - luminance) / darkRange;
+            const keepProbability = Math.pow(darkness, 3.0);
             if (Math.random() > keepProbability) continue;
 
             const spacing = minSpacing + Math.pow(luminance, 2.2) * (maxSpacing - minSpacing);
