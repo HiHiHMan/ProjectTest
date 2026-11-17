@@ -44,7 +44,7 @@
   <a class="back" href="../index.html">← PROJECTS</a>
   <header class="title">
     <h1>Fire</h1>
-    <p>Flowing in an endless curve</p>
+    <p>Triangular flame · S formation</p>
   </header>
   <script>
     (() => {
@@ -76,28 +76,59 @@
         return { x, y, envelope };
       }
 
-      function drawCore(time) {
-        const points = [];
-        for (let i = 0; i <= 100; i++) points.push(curve(i / 100));
+      function drawTriangle(x, y, size, angle, color, alpha, glow = 0) {
         ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        for (const [color, width, blur, alpha] of [
-          ['#ff3b08', 72, 48, .12],
-          ['#ff5a12', 38, 30, .2],
-          ['#ff9a24', 15, 18, .32],
-          ['#ffe2a0', 4, 9, .45]
-        ]) {
-          ctx.beginPath();
-          points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
-          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-          ctx.strokeStyle = color; ctx.lineWidth = width;
-          ctx.globalAlpha = alpha * (.82 + Math.sin(time * .002 + width) * .18);
-          ctx.shadowColor = color; ctx.shadowBlur = blur;
-          ctx.stroke();
-        }
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = glow;
+        ctx.beginPath();
+        ctx.moveTo(0, -size * 1.25);
+        ctx.lineTo(size * .78, size * .72);
+        ctx.lineTo(-size * .78, size * .72);
+        ctx.closePath();
+        ctx.fill();
         ctx.restore();
       }
 
+      // Build the S-shaped flame from layered triangular shards.
+      function drawCore(time) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i = 0; i < 260; i++) {
+          const t = (i + .5) / 260;
+          const base = curve(t);
+          const spread = (8 + 24 * base.envelope) * (1 - t * .22);
+          const side = Math.sin(i * 127.1) * .5 + Math.sin(i * 31.7) * .5;
+          const x = base.x + side * spread + Math.sin(time * .0018 + i * .73) * 5;
+          const y = base.y + Math.cos(time * .0012 + i * .41) * 3;
+          const size = (3 + (1 - t) * 5 + (Math.sin(i * 8.3) + 1) * 2) * (.45 + base.envelope * .65);
+          const hue = 10 + (Math.sin(i * 2.13 + time * .0007) + 1) * 17;
+          const light = 48 + (Math.sin(i * 4.7 + time * .001) + 1) * 18;
+          const angle = Math.sin(i * 1.9 + time * .0015) * .42;
+          drawTriangle(x, y, size, angle, `hsl(${hue}, 100%, ${light}%)`, .22 + base.envelope * .55, size * 2.8);
+        }
+
+        // A few brighter, larger shards define the S silhouette.
+        for (let i = 0; i < 42; i++) {
+          const t = (i + .5) / 42;
+          const base = curve(t);
+          const pulse = .8 + Math.sin(time * .003 + i * 1.7) * .2;
+          const size = (7 + 7 * base.envelope) * pulse;
+          drawTriangle(
+            base.x + Math.sin(time * .001 + i) * 4,
+            base.y,
+            size,
+            Math.sin(time * .0017 + i * .6) * .28,
+            i % 4 === 0 ? '#ffe5a1' : (i % 2 ? '#ff9a25' : '#ff5414'),
+            .62,
+            18
+          );
+        }
+        ctx.restore();
+      }
       function frame(time) {
         ctx.clearRect(0, 0, w, h);
         const glow = ctx.createRadialGradient(w * .5, h * .67, 0, w * .5, h * .67, Math.min(w, h) * .48);
@@ -124,9 +155,7 @@
           ctx.fillStyle = `hsl(${hue}, 100%, ${t > .78 ? 78 : 58}%)`;
           ctx.shadowColor = t > .72 ? '#ffd98b' : '#ff5a12';
           ctx.shadowBlur = size * 5;
-          ctx.beginPath();
-          ctx.ellipse(x, y, size * .55, size * (1.2 + Math.random()), -.25, 0, TAU);
-          ctx.fill();
+          drawTriangle(x, y, size * 1.35, Math.sin(time * .002 + p.phase) * .5, ctx.fillStyle, alpha, size * 3);
         }
         ctx.restore();
         requestAnimationFrame(frame);
