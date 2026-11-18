@@ -512,8 +512,10 @@
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"] small{color:#456b50}
 #principles-ux .uxp-slice-card b{font-size:12px}
 #principles-ux .uxp-slice-card>span:last-child{font-size:8px;opacity:.7}
+#principles-ux .uxp-slice-card.is-pressing{transform:scale(.96);border-color:#f97316;filter:saturate(1.12);transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .16s,filter .16s}
 #principles-ux .uxp-slice-card.is-holding{opacity:0!important;pointer-events:none}
-#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0) scale(1.04) rotate(-2deg);transition:transform .065s linear!important;will-change:transform;filter:drop-shadow(0 18px 22px #29252438);}
+#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;gap:5px!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0) scale(.82) rotate(-5deg);transition:transform .18s cubic-bezier(.18,.82,.25,1)!important;will-change:transform;filter:drop-shadow(0 18px 22px #29252438);transform-origin:center}
+#principles-ux .uxp-slice-ghost.is-grabbed{transform:translate3d(0,0,0) scale(1.06) rotate(-2deg)}
 #principles-ux .uxp-slice-ghost.is-flying{transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .22s ease!important;}
 #principles-ux .uxp-slice-controls button{width:27px;height:27px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#57534e;cursor:pointer}
 #principles-ux .uxp-slice-controls span{font-size:8px;color:#a8a29e;text-align:center}
@@ -1186,7 +1188,7 @@
       const choose=i=>{selected=(i+cards.length)%cards.length;toast.textContent='';render();};
       const commit=()=>{const card=cards[selected],theme=card.dataset.appealTheme,host=demo.closest('.uxp-card');toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=theme;if(host){host.dataset.appealConfirmed=theme;host.classList.add('is-appeal-confirmed');}};
       const clearDrag=()=>{
-        if(dragCard)dragCard.classList.remove('is-holding');
+        if(dragCard)dragCard.classList.remove('is-holding','is-pressing');
         if(ghost){ghost.remove();ghost=null;}
         dragCard=null;dragging=false;demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
       };
@@ -1216,14 +1218,17 @@
         const hit=event.target.closest('[data-slice-index]');
         const index=hit?cards.indexOf(hit):selected;pressedIndex=index;
         pointerId=event.pointerId;startX=lastX=event.clientX;startY=lastY=event.clientY;moved=false;
+        if(hit)hit.classList.add('is-pressing');
         try{windowEl.setPointerCapture(event.pointerId);}catch{}
         holdTimer=setTimeout(()=>{
           if(moved)return;
           choose(index);dragging=true;dragCard=cards[selected];
+          dragCard.classList.remove('is-pressing');
           const rect=dragCard.getBoundingClientRect();
           ghost=dragCard.cloneNode(true);ghost.classList.remove('is-holding');ghost.classList.add('uxp-slice-ghost');
           ghost.setAttribute('aria-hidden','true');ghost.style.left=rect.left+'px';ghost.style.top=rect.top+'px';ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';
-          document.body.appendChild(ghost);
+          document.querySelector('#principles-ux').appendChild(ghost);
+          requestAnimationFrame(()=>{if(ghost)ghost.classList.add('is-grabbed');});
           dragCard.classList.add('is-holding');demo.classList.add('is-dragging');
         },320);
       });
@@ -1241,6 +1246,7 @@
       const release=event=>{
         if(pointerId!==event.pointerId)return;
         clearTimeout(holdTimer);
+        cards.forEach(card=>card.classList.remove('is-pressing'));
         if(dragging)finish();
         else{
           const dx=event.clientX-startX;
@@ -1253,7 +1259,7 @@
         pointerId=null;
       };
       windowEl.addEventListener('pointerup',release);
-      windowEl.addEventListener('pointercancel',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging){toast.textContent='';clearDrag();}pointerId=null;});
+      windowEl.addEventListener('pointercancel',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging){toast.textContent='';clearDrag();}cards.forEach(card=>card.classList.remove('is-pressing'));pointerId=null;});
       windowEl.addEventListener('lostpointercapture',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging){toast.textContent='';clearDrag();}pointerId=null;});
       prev.addEventListener('click',()=>choose(selected-1));
       next.addEventListener('click',()=>choose(selected+1));
