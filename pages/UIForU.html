@@ -1196,9 +1196,9 @@
         const pad=64;
         const dropped=lastX>=rect.left-pad&&lastX<=rect.right+pad&&lastY>=rect.top-pad&&lastY<=rect.bottom+pad;
         if(dropped&&ghost){
-          const cardRect=ghost.getBoundingClientRect();
-          const dx=rect.left+rect.width/2-(cardRect.left+cardRect.width/2);
-          const dy=rect.top+rect.height/2-(cardRect.top+cardRect.height/2);
+          const baseLeft=parseFloat(ghost.style.left),baseTop=parseFloat(ghost.style.top);
+          const dx=rect.left+rect.width/2-(baseLeft+ghost.offsetWidth/2);
+          const dy=rect.top+rect.height/2-(baseTop+ghost.offsetHeight/2);
           ghost.classList.add('is-flying');
           ghost.style.transform='translate3d('+dx+'px,'+dy+'px,0) scale(.28) rotate(8deg)';
           confirm.classList.add('is-drop-ready');
