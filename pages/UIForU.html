@@ -438,8 +438,54 @@
       });
       const lines=sourceScript.split('\n');
       const matched=lines.filter(line=>Array.from(tokens).some(token=>line.includes(token)));
-      if(!matched.length)return '';
-      return "const $ = (id) => document.getElementById(id);\n"+matched.join('\n');
+      const title=card.querySelector('h3')?.textContent.trim();
+      const extras={
+        'Rich Text Toolbar': \`document.querySelectorAll('.rich-editor').forEach(editor=>{
+  const content=editor.querySelector('.rich-content');
+  editor.querySelectorAll('[data-rich-command]').forEach(button=>button.addEventListener('click',()=>{
+    content.focus();
+    document.execCommand(button.dataset.richCommand,false,null);
+    editor.querySelector('[data-rich-status]').textContent='Applied '+button.getAttribute('aria-label')+' formatting.';
+  }));
+});\`,
+        'Sticky Toolbar': \`document.querySelectorAll('.sticky-demo').forEach(demo=>{
+  demo.querySelectorAll('[data-sticky-action]').forEach(button=>button.addEventListener('click',()=>{
+    demo.querySelector('[data-sticky-status]').textContent=button.dataset.stickyAction+' action selected.';
+  }));
+});\`,
+        'Booking Calendar': \`document.querySelectorAll('.booking-calendar').forEach(calendar=>{
+  let shown=new Date();shown.setDate(1);
+  let selected='';
+  const monthLabel=calendar.querySelector('[data-booking-month]');
+  const days=calendar.querySelector('[data-booking-days]');
+  const status=calendar.querySelector('[data-booking-status]');
+  const render=()=>{
+    monthLabel.textContent=shown.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    days.replaceChildren();
+    const offset=shown.getDay();
+    const total=new Date(shown.getFullYear(),shown.getMonth()+1,0).getDate();
+    for(let i=0;i<offset;i++)days.append(document.createElement('span'));
+    for(let day=1;day<=total;day++){
+      const button=document.createElement('button');
+      const value=shown.getFullYear()+'-'+String(shown.getMonth()+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      button.type='button';button.textContent=day;button.dataset.date=value;
+      button.classList.toggle('selected',selected===value);
+      button.addEventListener('click',()=>{
+        selected=value;
+        status.textContent='Selected booking date: '+new Date(shown.getFullYear(),shown.getMonth(),day).toLocaleDateString('en-US',{dateStyle:'long'});
+        render();
+      });
+      days.append(button);
+    }
+  };
+  calendar.querySelector('[data-booking-prev]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()-1);render();});
+  calendar.querySelector('[data-booking-next]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()+1);render();});
+  render();
+});\`
+      };
+      const extra=extras[title]||'';
+      if(!matched.length&&!extra)return '';
+      return "const $ = (id) => document.getElementById(id);\n"+matched.join('\n')+(extra?'\n'+extra:'');
     }
     document.querySelectorAll('.card').forEach(card=>{
       const demo=card.querySelector('.demo');
