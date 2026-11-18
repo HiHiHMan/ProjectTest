@@ -1172,7 +1172,7 @@
       const toast=demo.querySelector('[data-slice-toast]');
       const prev=demo.querySelector('[data-slice-prev]');
       const next=demo.querySelector('[data-slice-next]');
-      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0,moved=false;
+      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0,moved=false,pressedIndex=0;
       const render=()=>{
         cards.forEach((card,i)=>{card.classList.toggle('is-active',i===selected);card.setAttribute('aria-pressed',String(i===selected));});
         count.textContent=String(selected+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
@@ -1199,7 +1199,7 @@
         if(event.pointerType==='mouse'&&event.button!==0)return;
         if(pointerId!==null)return;
         const hit=event.target.closest('[data-slice-index]');
-        const index=hit?cards.indexOf(hit):selected;
+        const index=hit?cards.indexOf(hit):selected;pressedIndex=index;
         pointerId=event.pointerId;startX=lastX=event.clientX;startY=lastY=event.clientY;moved=false;
         try{windowEl.setPointerCapture(event.pointerId);}catch{}
         holdTimer=setTimeout(()=>{
@@ -1228,9 +1228,8 @@
           const dx=event.clientX-startX;
           if(Math.abs(dx)>35)choose(selected+(dx<0?1:-1));
           else{
-            const hit=event.target.closest?.('[data-slice-index]');
-            if(hit)choose(cards.indexOf(hit));
-            else if(!moved)choose(selected+1);
+            if(pressedIndex!==selected)choose(pressedIndex);
+            else if(!moved&&event.target===windowEl)choose(selected+1);
           }
         }
         pointerId=null;
