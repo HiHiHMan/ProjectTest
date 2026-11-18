@@ -512,18 +512,17 @@
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"] small{color:#456b50}
 #principles-ux .uxp-slice-card b{font-size:12px}
 #principles-ux .uxp-slice-card>span:last-child{font-size:8px;opacity:.7}
-#principles-ux .uxp-slice-card.is-pressing{transform:scale(.96);border-color:#f97316;filter:saturate(1.12);transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .16s,filter .16s}
+#principles-ux .uxp-slice-card.is-pressing{transform:scale(.98);border:2px solid #f97316;filter:saturate(1.12);transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .16s,filter .16s}
 #principles-ux .uxp-slice-card.is-holding{opacity:0!important;pointer-events:none}
-#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;gap:5px!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0) scale(.82) rotate(-5deg);transition:transform .18s cubic-bezier(.18,.82,.25,1)!important;will-change:transform;filter:drop-shadow(0 18px 22px #29252438);transform-origin:center}
-#principles-ux .uxp-slice-ghost.is-grabbed{transform:translate3d(0,0,0) scale(1.06) rotate(-2deg)}
+#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;gap:5px!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0);transition:border-color .16s!important;will-change:transform;border:2px solid #f97316!important;box-sizing:border-box;transform-origin:center}
+#principles-ux .uxp-slice-ghost.is-grabbed{transform:translate3d(0,0,0);border-color:#ea580c!important}
 #principles-ux .uxp-slice-ghost.is-flying{transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .22s ease!important}
-#principles-ux .uxp-slice-ghost{box-shadow:0 0 0 1px #fff8,0 12px 26px #29252430,0 0 calc(var(--pull-glow,0)*34px) calc(var(--pull-glow,0)*12px) #f97316}
-#principles-ux .uxp-slice-confirm{box-shadow:0 0 calc(var(--pull-glow,0)*34px) calc(var(--pull-glow,0)*10px) #f9731670}
+#principles-ux .uxp-slice-confirm{--proximity:0;filter:brightness(calc(1 + var(--proximity)*.55));}
 #principles-ux .uxp-slice-controls button{width:27px;height:27px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#57534e;cursor:pointer}
 #principles-ux .uxp-slice-controls span{font-size:8px;color:#a8a29e;text-align:center}
-#principles-ux .uxp-slice-confirm{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:1px solid #ea580c;border-radius:8px;background:#f97316;color:#fff;font-size:10px;font-weight:800;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}
-#principles-ux .uxp-slice-confirm.is-drop-ready{background:#15803d;border-color:#15803d;transform:scale(1.025);box-shadow:0 0 0 4px #16a34a20}
-#principles-ux .uxp-slice-confirm:active{transform:scale(.98)}
+#principles-ux .uxp-slice-confirm{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:1px solid #ea580c;border-radius:8px;background:#f97316;color:#fff;font-size:10px;font-weight:800;cursor:pointer;transition:filter .12s,border-color .12s,background .12s}
+#principles-ux .uxp-slice-confirm.is-drop-ready{background:#15803d;border-color:#14532d;filter:brightness(1.28)}
+#principles-ux .uxp-slice-confirm:active{filter:brightness(1.12)}
 #principles-ux .uxp-slice-toast{min-height:0;font-size:9px;color:#15803d;text-align:center}
 #principles-ux .uxp-slice-toast:empty{display:none}
 #principles-ux .uxp-slice-demo.is-dragging .uxp-slice-card:not(.is-holding){pointer-events:none;filter:grayscale(1);opacity:.18}
@@ -1190,21 +1189,22 @@
       const clearDrag=()=>{
         if(dragCard)dragCard.classList.remove('is-holding','is-pressing');
         if(ghost){ghost.remove();ghost=null;}
-        confirm.style.removeProperty('--pull-glow');
+        confirm.style.removeProperty('--proximity');
         dragCard=null;dragging=false;demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
       };
       const finish=()=>{
         if(!dragging)return;
         const rect=confirm.getBoundingClientRect();
-        const pad=64;
-        const ghostCenterX=parseFloat(ghost?.style.left||'0')+(ghost?.offsetWidth||0)/2;
-        const dropped=ghost&&ghostCenterX>=rect.left-pad&&ghostCenterX<=rect.right+pad&&lastY>=rect.top-pad&&lastY<=rect.bottom+pad;
+        const cardRect=ghost?.getBoundingClientRect();
+        const gapX=cardRect?Math.max(rect.left-cardRect.right,cardRect.left-rect.right,0):Infinity;
+        const gapY=cardRect?Math.max(rect.top-cardRect.bottom,cardRect.top-rect.bottom,0):Infinity;
+        const dropped=!!ghost&&Math.hypot(gapX,gapY)<=24;
         if(dropped&&ghost){
           const baseLeft=parseFloat(ghost.style.left),baseTop=parseFloat(ghost.style.top);
           const dx=rect.left+rect.width/2-(baseLeft+ghost.offsetWidth/2);
           const dy=rect.top+rect.height/2-(baseTop+ghost.offsetHeight/2);
           ghost.classList.add('is-flying');
-          ghost.style.transform='translate3d('+dx+'px,'+dy+'px,0) scale(.28) rotate(8deg)';
+          ghost.style.transform='translate3d('+dx+'px,'+dy+'px,0) scale(.28)';
           confirm.classList.add('is-drop-ready');
           const flying=ghost;
           setTimeout(()=>{commit();clearDrag();},260);
@@ -1240,16 +1240,18 @@
         const dx=event.clientX-startX,dy=event.clientY-startY;
         if(Math.hypot(dx,dy)>10)moved=true;
         if(dragging&&ghost){
-          const r=confirm.getBoundingClientRect(),pad=48;
-          const fixedCenterX=parseFloat(ghost.style.left)+ghost.offsetWidth/2;
-          const centerY=event.clientY;
-          const targetY=r.top+r.height/2;
-          const distance=Math.abs(targetY-centerY);
-          const strength=Math.max(0,1-distance/260);
-          ghost.style.transform='translate3d(0,'+dy+'px,0) scale(1.04) rotate(0deg)';
-          ghost.style.setProperty('--pull-glow',strength.toFixed(2));
-          confirm.style.setProperty('--pull-glow',strength.toFixed(2));
-          confirm.classList.toggle('is-drop-ready',fixedCenterX>=r.left-pad&&fixedCenterX<=r.right+pad&&event.clientY>=r.top-pad&&event.clientY<=r.bottom+pad);
+          const cardRect=ghost.getBoundingClientRect();
+          const targetRect=confirm.getBoundingClientRect();
+          const gapX=Math.max(targetRect.left-cardRect.right,cardRect.left-targetRect.right,0);
+          const gapY=Math.max(targetRect.top-cardRect.bottom,cardRect.top-targetRect.bottom,0);
+          const distance=Math.hypot(gapX,gapY);
+          const proximity=Math.max(0,Math.min(1,1-distance/260));
+          const fixedLeft=parseFloat(ghost.style.left);
+          ghost.style.transform='translate3d(0,'+dy+'px,0)';
+          ghost.style.style;
+          ghost.style.borderColor=proximity>.72?'#15803d':proximity>.35?'#f97316':'#ea580c';
+          confirm.style.setProperty('--proximity',proximity.toFixed(3));
+          confirm.classList.toggle('is-drop-ready',distance<=24);
         }else if(moved){clearTimeout(holdTimer);}
       });
       const release=event=>{
