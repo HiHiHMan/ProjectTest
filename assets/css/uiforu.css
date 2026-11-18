@@ -575,27 +575,29 @@
 @keyframes uxp-message-pop{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 
-/* Staging the Focus — create a clear visual spotlight on the primary action */
-#principles-ux .uxp-focus-demo{position:relative;display:grid;gap:11px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .35s,border-color .35s,box-shadow .35s}
-#principles-ux .uxp-focus-header{display:flex;align-items:center;justify-content:space-between;transition:opacity .3s,filter .3s}
-#principles-ux .uxp-focus-header>span{font-size:8px;font-weight:800;letter-spacing:.14em;color:#a8a29e}
-#principles-ux .uxp-focus-header>b{font-size:10px;color:#292524}
-#principles-ux .uxp-focus-detail{display:grid;gap:8px;transition:opacity .35s,filter .35s,transform .35s}
-#principles-ux .uxp-focus-detail>div:not(.uxp-focus-total){display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #f0eeeb;border-radius:8px;background:#fff}
-#principles-ux .uxp-focus-icon{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:#f5f5f4;color:#78716c;font-size:13px}
-#principles-ux .uxp-focus-detail>div>span:nth-child(2){display:grid;gap:2px;min-width:0}
-#principles-ux .uxp-focus-detail b{font-size:9px;color:#44403c}
-#principles-ux .uxp-focus-detail small{font-size:8px;color:#a8a29e;white-space:nowrap}
-#principles-ux .uxp-focus-detail em{margin-left:auto;color:#c2410c;font-size:7px;font-style:normal;font-weight:800}
-#principles-ux .uxp-focus-total{display:flex;justify-content:space-between;padding:3px 2px 0;color:#78716c;font-size:9px}
-#principles-ux .uxp-focus-total b{font-size:12px;color:#292524}
+/* Staging the Focus — select any element and isolate it visually */
+#principles-ux .uxp-focus-demo{position:relative;display:grid;gap:12px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .3s,border-color .3s,box-shadow .3s}
+#principles-ux .uxp-focus-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#principles-ux .uxp-focus-header>span{font-size:8px;font-weight:800;letter-spacing:.12em;color:#a8a29e}
+#principles-ux .uxp-focus-header>b{font-size:9px;color:#57534e}
+#principles-ux .uxp-focus-palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#principles-ux .uxp-focus-swatch{display:grid;justify-items:center;gap:5px;min-width:0;padding:8px 4px;border:1px solid #eee9e4;border-radius:9px;background:#fff;cursor:pointer;transition:opacity .3s,filter .3s,transform .3s,box-shadow .3s,border-color .3s}
+#principles-ux .uxp-focus-swatch>span{display:block;width:100%;height:27px;border-radius:5px;transition:transform .3s,box-shadow .3s}
+#principles-ux .uxp-focus-swatch small{font-size:8px;color:#57534e}
+#principles-ux .swatch-orange>span{background:linear-gradient(135deg,#fdba74,#ea580c)}
+#principles-ux .swatch-blue>span{background:linear-gradient(135deg,#93c5fd,#2563eb)}
+#principles-ux .swatch-green>span{background:linear-gradient(135deg,#86efac,#16a34a)}
+#principles-ux .swatch-purple>span{background:linear-gradient(135deg,#c4b5fd,#7c3aed)}
+#principles-ux .swatch-pink>span{background:linear-gradient(135deg,#f9a8d4,#db2777)}
+#principles-ux .swatch-dark>span{background:linear-gradient(135deg,#78716c,#292524)}
+#principles-ux .uxp-focus-swatch:hover{transform:translateY(-2px);border-color:#fdba74}
+#principles-ux .uxp-focus-swatch:focus-visible{outline:2px solid #f97316;outline-offset:3px}
+#principles-ux .uxp-focus-demo.focus-preview{border-color:#f97316;background:#fffaf5;box-shadow:0 0 0 4px #fed7aa88,0 12px 24px #9a34121a}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-muted{opacity:.13;filter:grayscale(1);transform:scale(.94)}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused{z-index:1;transform:scale(1.08);border:2px solid #f97316;background:#fff;box-shadow:0 0 0 4px #fed7aa,0 9px 20px #f9731640}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused>span{transform:scale(1.04);box-shadow:0 0 0 3px #fff,0 0 0 5px #f97316}
 #principles-ux .uxp-focus-hint{display:none;justify-content:center;align-items:center;min-height:22px;padding:4px 8px;border-radius:6px;background:#292524;color:#fff;font-size:8px;font-weight:800;letter-spacing:.13em}
-#principles-ux .uxp-focus-cta{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:42px;align-self:stretch;transition:transform .3s,box-shadow .3s,filter .3s}
-#principles-ux .uxp-focus-cta span{font-size:15px}
-#principles-ux .uxp-focus-demo.focus-preview{border:2px solid #f97316;background:linear-gradient(145deg,#fff7ed,#fff);box-shadow:0 0 0 5px #fed7aa88,0 14px 28px #9a34121c}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-header{opacity:.18;filter:blur(1px)}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-detail{opacity:.07;filter:grayscale(1) blur(1.5px);transform:scale(.96);pointer-events:none}
 #principles-ux .uxp-focus-demo.focus-preview .uxp-focus-hint{display:flex;animation:uxp-focus-hint-in .25s ease-out both}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-cta{transform:translateY(-2px) scale(1.035);box-shadow:0 0 0 5px #fed7aa,0 0 0 9px #fed7aa55,0 10px 25px #f9731666;filter:saturate(1.2);animation:uxp-focus-pulse 1.8s ease-in-out infinite}
+#principles-ux .uxp-focus-reset{justify-self:end;padding:5px 9px;border:1px solid #e7e5e4;border-radius:6px;background:#fff;color:#78716c;font-size:8px;cursor:pointer}
+#principles-ux .uxp-focus-reset:hover{border-color:#fdba74;color:#c2410c}
 @keyframes uxp-focus-hint-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-@keyframes uxp-focus-pulse{0%,100%{box-shadow:0 0 0 5px #fed7aa,0 0 0 9px #fed7aa55,0 10px 25px #f9731666}50%{box-shadow:0 0 0 7px #fed7aa,0 0 0 13px #fed7aa33,0 12px 29px #f9731677}}
