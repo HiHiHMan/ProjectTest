@@ -88,6 +88,9 @@
     .password-wrap{display:flex;width:100%;gap:8px}.password-wrap .field{flex:1}
     .hint{width:100%;color:#888;font-size:12px;line-height:16px}
     footer{margin-top:48px;color:#999;font-size:12px;line-height:16px;text-align:center}
+    .footer-download{width:min(520px,100%);margin:0 auto 28px;padding:20px;border:1px solid var(--line);border-radius:14px;background:#fff;display:grid;justify-items:center;gap:10px}
+    .footer-download .code-download{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--accent-dark)}
+    .footer-download p{max-width:440px;margin:0;color:var(--muted);font-size:12px;line-height:19px}
 
     .sample-card{width:100%;display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px}.sample-card strong{font-size:16px;line-height:24px;font-weight:600}
     .crumb-menu,.popover-wrap{position:relative}.segments{display:flex;width:100%;padding:4px;border-radius:10px;background:#f3f1ee;gap:4px}.segment{flex:1;border:0;border-radius:7px;padding:8px 6px;background:transparent;color:#777;font-size:12px;cursor:pointer}.segment.active{background:#fff;color:#c2410c;box-shadow:0 1px 3px #0001}
@@ -388,7 +391,7 @@
 <article class="card"><div class="card-head"><h3>Password Strength</h3><span class="number">183</span></div><div class="demo"><div class="sample-list"><b>Password Strength</b><span>✓ First item</span><span>○ Second item</span><span>○ Third item</span></div></div><p class="desc">Give guidance on password strength.</p></article>
 <article class="card"><div class="card-head"><h3>IP Allowlist</h3><span class="number">184</span></div><div class="demo"><div class="allowlist-demo"><label for="allowIp">Add IP address</label><div class="allowlist-entry"><input id="allowIp" class="field" placeholder="203.0.113.10" inputmode="decimal"><button class="btn" type="button" data-ip-add>Add</button></div><div class="allowlist-list" data-ip-list><div><code>192.0.2.10</code><span>Approved</span><button type="button" data-ip-remove aria-label="Remove 192.0.2.10">×</button></div><div><code>198.51.100.24</code><span>Approved</span><button type="button" data-ip-remove aria-label="Remove 198.51.100.24">×</button></div></div><output class="allowlist-status" data-ip-status aria-live="polite">Only listed addresses are allowed.</output></div></div><p class="desc">Validate IPv4 addresses and manage a sample allowlist.</p></article>
 <article class="card"><div class="card-head"><h3>Login Activity</h3><span class="number">185</span></div><div class="demo"><div class="sample-dialog"><b>Login Activity</b><span class="hint">Contextual actions and information</span><button class="btn secondary" data-sample-action>Open preview</button></div></div><p class="desc">Review recent account access events.</p></article></div></section>
-    <footer>UIForU · 185 interface components</footer>
+    <footer><div class="footer-download"><a class="code-download" href="../assets/css/uiforu.css" download="uiforu.css"><span aria-hidden="true">↓</span> Download CSS file</a><p>ดาวน์โหลดไฟล์ <strong>uiforu.css</strong> ซึ่งเป็นไฟล์ Stylesheet (สไตล์ชีต) ที่เก็บโค้ด CSS สำหรับกำหนดหน้าตา สี ระยะห่าง และรูปแบบการแสดงผลของหน้า UIForU</p></div><div>UIForU · 185 interface components</div></footer>
   </main>
   <script>
     const $ = (id) => document.getElementById(id);
@@ -492,7 +495,7 @@
       if(!demo)return;
       const tools=document.createElement('div');
       tools.className='code-tools';
-      tools.innerHTML='<div style="display:flex;align-items:center;gap:8px"><button class="code-toggle" type="button" aria-expanded="false">View code</button><a class="code-download" href="../assets/css/uiforu.css" download="uiforu.css">Download CSS</a></div><span class="code-note">Complete component source</span>';
+      tools.innerHTML='<button class="code-toggle" type="button" aria-expanded="false">View code</button><span class="code-note">Complete component source</span>';
       const panel=document.createElement('div');
       panel.className='code-panel';
       panel.hidden=true;
