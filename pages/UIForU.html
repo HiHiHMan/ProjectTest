@@ -497,7 +497,7 @@
 #principles-ux .uxp-slice-top,#principles-ux .uxp-slice-controls{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #principles-ux .uxp-slice-top{font-size:8px;font-weight:800;letter-spacing:.12em;color:#a8a29e}
 #principles-ux .uxp-slice-top output{font-variant-numeric:tabular-nums}
-#principles-ux .uxp-slice-window{overflow:visible;padding:3px 0 7px;touch-action:none;cursor:grab}
+#principles-ux .uxp-slice-window{width:100%;min-width:0;overflow:hidden;padding:3px 0 7px;touch-action:none;cursor:grab}
 #principles-ux .uxp-slice-window:active{cursor:grabbing}
 #principles-ux .uxp-slice-track{display:flex;gap:9px;transition:transform .48s cubic-bezier(.2,.8,.2,1);will-change:transform}
 #principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
@@ -527,7 +527,6 @@
 #principles-ux .uxp-slice-toast{min-height:0;font-size:9px;color:#15803d;text-align:center}
 #principles-ux .uxp-slice-toast:empty{display:none}
 #principles-ux .uxp-slice-demo.is-dragging .uxp-slice-card:not(.is-holding){pointer-events:none;filter:grayscale(1);opacity:.18}
-#principles-ux .uxp-slice-demo.is-dragging .uxp-slice-window{overflow:visible}
 @media(prefers-reduced-motion:reduce){#principles-ux .uxp-slice-track,#principles-ux .uxp-slice-card,#principles-ux .uxp-slice-confirm,#principles-ux .uxp-slice-ghost{transition:none!important}}
 </style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
