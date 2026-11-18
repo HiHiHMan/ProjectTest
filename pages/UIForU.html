@@ -57,6 +57,31 @@
     .pill{display:inline-flex;align-items:center;border:1px solid #e5e5e5;border-radius:99px;padding:5px 9px;color:#666;background:#fafafa;font-size:10px}
     .progress{width:100%;height:7px;border-radius:20px;background:#eee;overflow:hidden}
     .progress span{display:block;width:68%;height:100%;border-radius:20px;background:#333}
+
+    .textarea{resize:vertical;min-height:58px}
+    .demo-stack{display:flex;flex-direction:column;align-items:stretch;width:100%;gap:8px}
+    .file-input{width:100%;font-size:10px;color:#777}
+    .file-input::file-selector-button{border:1px solid #ddd;border-radius:7px;background:#f7f7f7;padding:7px 9px;margin-right:8px;color:#333;font-size:10px;cursor:pointer}
+    .mini-link{color:#555;font-size:10px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+    .avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e8e8e8;color:#444;font-size:10px;font-weight:700}
+    .avatar-group{display:flex;align-items:center}.avatar-group .avatar{margin-left:-8px;border:2px solid white}.avatar-group .avatar:first-child{margin-left:0}
+    .crumbs{display:flex;align-items:center;gap:7px;color:#999;font-size:10px}.crumbs strong{color:#333;font-weight:600}
+    .alert{width:100%;padding:10px 12px;border:1px solid #e3e3e3;border-radius:8px;background:#f8f8f8;color:#555;font-size:10px;display:flex;justify-content:space-between;gap:8px}
+    .alert button{border:0;background:none;color:#888;cursor:pointer}
+    .accordion{width:100%;border:1px solid #e7e7e7;border-radius:8px;padding:10px 12px;color:#555;font-size:10px}
+    .accordion summary{cursor:pointer;color:#333;font-weight:600}.accordion p{margin:9px 0 0;color:#888;line-height:1.5}
+    .dropdown{position:relative}.dropdown-menu{position:absolute;z-index:5;top:calc(100% + 5px);left:0;min-width:130px;padding:5px;border:1px solid #e5e5e5;border-radius:9px;background:white;box-shadow:0 8px 24px #00000012}
+    .dropdown-menu button{display:block;width:100%;padding:8px;border:0;border-radius:5px;background:white;text-align:left;color:#555;font-size:10px;cursor:pointer}.dropdown-menu button:hover{background:#f3f3f3}
+    .tooltip-wrap{position:relative}.tooltip-wrap:hover:after,.tooltip-wrap:focus-within:after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 8px;border-radius:5px;background:#222;color:white;font-size:9px}
+    .mini-table{width:100%;border-collapse:collapse;font-size:10px}.mini-table th,.mini-table td{padding:7px 5px;border-bottom:1px solid #eee;text-align:left}.mini-table th{color:#999;font-weight:500}.mini-table td{color:#555}
+    .stepper{display:flex;align-items:center;gap:7px;width:100%}.stepper button{width:27px;height:27px;border:1px solid #ddd;border-radius:7px;background:#fff;color:#333;cursor:pointer}.stepper output{min-width:20px;text-align:center;font-size:11px}
+    .toast{padding:9px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;box-shadow:0 5px 18px #0000000d;color:#555;font-size:10px}
+    .skeleton{width:100%;display:grid;gap:7px}.skeleton i{display:block;height:8px;border-radius:5px;background:linear-gradient(90deg,#eee,#f7f7f7,#eee);background-size:200% 100%;animation:shimmer 1.5s linear infinite}.skeleton i:nth-child(2){width:72%}.skeleton i:nth-child(3){width:48%}
+    @keyframes shimmer{to{background-position:-200% 0}}
+    .empty-state{width:100%;padding:10px;text-align:center;color:#999;font-size:10px}.empty-state strong{display:block;margin-bottom:5px;color:#555;font-size:12px}
+    dialog{width:min(300px,calc(100% - 32px));border:1px solid #ddd;border-radius:14px;padding:20px;color:#222;box-shadow:0 18px 60px #0003}dialog::backdrop{background:#0006}dialog h4{margin:0 0 8px;font-size:14px}dialog p{color:#777;font-size:11px;line-height:1.6}
+    .password-wrap{display:flex;width:100%;gap:6px}.password-wrap .field{flex:1}
+
     .hint{width:100%;color:#999;font-size:10px}
     footer{margin-top:38px;color:#aaa;font-size:10px;text-align:center}
     @media(max-width:760px){.page{width:min(100% - 32px,560px);padding-top:36px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px;min-height:210px}}
@@ -68,7 +93,7 @@
   <main class="page">
     <div class="topline"><p class="eyebrow">Interface collection / 01</p><a class="back" href="../index.html">← PROJECTS</a></div>
     <header><h1>UIForU<span style="color:#aaa">.</span></h1><p class="intro">A small collection of everyday interface components. Explore each element, try its interaction, and use it as a starting point for your next project.</p></header>
-    <div class="section-meta"><h2>Components</h2><span>12 ELEMENTS</span></div>
+    <div class="section-meta"><h2>Components</h2><span>30 ELEMENTS</span></div>
     <section class="grid" aria-label="UI component examples">
       <article class="card"><div class="card-head"><h3>Buttons</h3><span class="number">01</span></div><div class="demo"><button class="btn" id="actionBtn">Primary action</button><button class="btn secondary" id="secondaryBtn">Secondary</button><span class="hint" id="buttonMessage">Click to try the buttons.</span></div><p class="desc">Clear actions with primary and secondary emphasis.</p></article>
       <article class="card"><div class="card-head"><h3>Text Input</h3><span class="number">02</span></div><div class="demo"><input class="field" id="nameInput" type="text" placeholder="Type something..."><span class="hint" id="inputMessage">Your text appears here.</span></div><p class="desc">A simple field for entering a short text value.</p></article>
@@ -82,6 +107,25 @@
       <article class="card"><div class="card-head"><h3>Search</h3><span class="number">10</span></div><div class="demo"><div class="search"><input class="field" id="searchDemo" type="search" placeholder="Search components..."></div><span class="hint" id="searchMessage">Try searching for a component.</span></div><p class="desc">Find relevant content using a short keyword.</p></article>
       <article class="card"><div class="card-head"><h3>Badges</h3><span class="number">11</span></div><div class="demo"><span class="pill">Default</span><span class="pill">Published</span><span class="pill">v1.0</span></div><p class="desc">Small labels for status, category, or metadata.</p></article>
       <article class="card"><div class="card-head"><h3>Progress Bar</h3><span class="number">12</span></div><div class="demo" style="display:block"><div class="progress"><span></span></div><span class="hint" style="display:block;margin-top:10px">68% completed</span></div><p class="desc">Show completion progress for an ongoing task.</p></article>
+
+      <article class="card"><div class="card-head"><h3>Textarea</h3><span class="number">13</span></div><div class="demo"><textarea class="field textarea" placeholder="Write a message..."></textarea></div><p class="desc">Enter longer text such as notes, comments, or descriptions.</p></article>
+      <article class="card"><div class="card-head"><h3>Date Picker</h3><span class="number">14</span></div><div class="demo"><input class="field" type="date" aria-label="Choose date"></div><p class="desc">Choose a calendar date for forms and scheduling.</p></article>
+      <article class="card"><div class="card-head"><h3>Time Picker</h3><span class="number">15</span></div><div class="demo"><input class="field" type="time" aria-label="Choose time"></div><p class="desc">Select a specific time using the native time control.</p></article>
+      <article class="card"><div class="card-head"><h3>File Upload</h3><span class="number">16</span></div><div class="demo demo-stack"><input class="file-input" id="fileDemo" type="file"><span class="hint" id="fileMessage">Choose a file to preview its name.</span></div><p class="desc">Attach a local file to a form or workflow.</p></article>
+      <article class="card"><div class="card-head"><h3>Modal</h3><span class="number">17</span></div><div class="demo"><button class="btn" id="openModal">Open dialog</button></div><p class="desc">Focus attention on a short task or important message.</p></article>
+      <article class="card"><div class="card-head"><h3>Tooltip</h3><span class="number">18</span></div><div class="demo"><span class="tooltip-wrap" data-tip="Helpful extra information"><button class="btn secondary">Hover or focus me</button></span></div><p class="desc">Reveal a brief hint without taking up permanent space.</p></article>
+      <article class="card"><div class="card-head"><h3>Accordion</h3><span class="number">19</span></div><div class="demo"><details class="accordion"><summary>What is an accordion?</summary><p>A collapsible section that shows details when expanded.</p></details></div><p class="desc">Show and hide content to keep a page compact.</p></article>
+      <article class="card"><div class="card-head"><h3>Dropdown Menu</h3><span class="number">20</span></div><div class="demo"><div class="dropdown"><button class="btn secondary" id="dropdownToggle" aria-expanded="false">More actions ⌄</button><div class="dropdown-menu" id="dropdownMenu" hidden><button data-action="Edit">Edit item</button><button data-action="Duplicate">Duplicate</button><button data-action="Archive">Archive</button></div></div><span class="hint" id="dropdownMessage">Choose an action.</span></div><p class="desc">Group less-frequent actions into a compact menu.</p></article>
+      <article class="card"><div class="card-head"><h3>Data Table</h3><span class="number">21</span></div><div class="demo"><table class="mini-table"><thead><tr><th>Name</th><th>Status</th><th>Qty</th></tr></thead><tbody><tr><td>Alpha</td><td>Ready</td><td>12</td></tr><tr><td>Beta</td><td>Pending</td><td>08</td></tr></tbody></table></div><p class="desc">Present structured records in rows and columns.</p></article>
+      <article class="card"><div class="card-head"><h3>Avatar Group</h3><span class="number">22</span></div><div class="demo"><div class="avatar-group"><span class="avatar">JD</span><span class="avatar">MK</span><span class="avatar">AL</span><span class="avatar">+4</span></div><span class="hint">7 team members</span></div><p class="desc">Represent people or participants in a shared space.</p></article>
+      <article class="card"><div class="card-head"><h3>Breadcrumbs</h3><span class="number">23</span></div><div class="demo"><nav class="crumbs" aria-label="Breadcrumb"><span>Home</span><span>/</span><span>Library</span><span>/</span><strong>Components</strong></nav></div><p class="desc">Show the current page location within a hierarchy.</p></article>
+      <article class="card"><div class="card-head"><h3>Alert</h3><span class="number">24</span></div><div class="demo"><div class="alert" id="alertDemo"><span>Changes saved successfully.</span><button id="dismissAlert" aria-label="Dismiss alert">×</button></div><button class="mini-link" id="restoreAlert">Restore alert</button></div><p class="desc">Display a noticeable inline status or feedback message.</p></article>
+      <article class="card"><div class="card-head"><h3>Stepper</h3><span class="number">25</span></div><div class="demo"><div class="stepper"><button id="stepDown" aria-label="Decrease">−</button><output id="stepValue">1</output><button id="stepUp" aria-label="Increase">+</button><span class="hint">of 5 steps</span></div></div><p class="desc">Move through a multi-step process in sequence.</p></article>
+      <article class="card"><div class="card-head"><h3>Toast</h3><span class="number">26</span></div><div class="demo"><button class="btn secondary" id="showToast">Show notification</button><div class="toast" id="toastMessage" hidden>✓ Changes saved</div></div><p class="desc">Give temporary feedback after a user action.</p></article>
+      <article class="card"><div class="card-head"><h3>Skeleton</h3><span class="number">27</span></div><div class="demo"><div class="skeleton" aria-label="Loading content"><i></i><i></i><i></i></div></div><p class="desc">Preview the shape of content while data is loading.</p></article>
+      <article class="card"><div class="card-head"><h3>Password</h3><span class="number">28</span></div><div class="demo"><div class="password-wrap"><input class="field" id="passwordDemo" type="password" value="samplepass" aria-label="Password"><button class="btn secondary" id="togglePassword">Show</button></div></div><p class="desc">Enter a private value with a visibility control.</p></article>
+      <article class="card"><div class="card-head"><h3>Copy to Clipboard</h3><span class="number">29</span></div><div class="demo"><button class="btn secondary" id="copyDemo">Copy UIForU</button><span class="hint" id="copyMessage">Copy a reusable text value.</span></div><p class="desc">Quickly copy text for use in another place.</p></article>
+      <article class="card"><div class="card-head"><h3>Empty State</h3><span class="number">30</span></div><div class="demo"><div class="empty-state"><strong>No items yet</strong>Your list will appear here.</div></div><p class="desc">Explain what to expect when a section has no data.</p></article>
     </section>
     <footer>UIForU · Minimal interface components</footer>
   </main>
@@ -99,6 +143,26 @@
     document.querySelector('.page-btn[data-page="1"]').classList.add('active');
     document.querySelector('.tabs').addEventListener('click', e => {const btn=e.target.closest('[data-tab]');if(!btn)return;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));const copy={Overview:'A quick overview of this section.',Details:'More information and configuration details.',Activity:'Recent updates and activity history.'};$('tabContent').textContent=copy[btn.dataset.tab];});
     $('searchDemo').addEventListener('input', e => $('searchMessage').textContent = e.target.value ? 'Searching for “'+e.target.value+'”…' : 'Try searching for a component.');
+
+    $('fileDemo').addEventListener('change', e => $('fileMessage').textContent = e.target.files[0] ? e.target.files[0].name : 'Choose a file to preview its name.');
+    const modal = document.createElement('dialog');
+    modal.innerHTML = '<h4>Quick confirmation</h4><p>This is an example modal dialog. Close it to return to the components.</p><button class="btn" id="closeModal">Close</button>';
+    document.body.appendChild(modal);
+    $('openModal').addEventListener('click', () => modal.showModal());
+    modal.addEventListener('click', e => {if(e.target.id==='closeModal'||e.target===modal)modal.close();});
+    $('dropdownToggle').addEventListener('click', () => {const menu=$('dropdownMenu');menu.hidden=!menu.hidden;$('dropdownToggle').setAttribute('aria-expanded',String(!menu.hidden));});
+    $('dropdownMenu').addEventListener('click', e => {const item=e.target.closest('[data-action]');if(!item)return;$('dropdownMessage').textContent='Action: '+item.dataset.action;$('dropdownMenu').hidden=true;$('dropdownToggle').setAttribute('aria-expanded','false');});
+    $('dismissAlert').addEventListener('click', () => $('alertDemo').hidden=true);
+    $('restoreAlert').addEventListener('click', () => $('alertDemo').hidden=false);
+    let step=1;
+    function updateStep(){ $('stepValue').textContent=step; $('stepDown').disabled=step===1; $('stepUp').disabled=step===5; }
+    $('stepDown').addEventListener('click',()=>{step=Math.max(1,step-1);updateStep();});
+    $('stepUp').addEventListener('click',()=>{step=Math.min(5,step+1);updateStep();});
+    updateStep();
+    $('showToast').addEventListener('click',()=>{$('toastMessage').hidden=false;$('toastMessage').textContent='✓ Changes saved';});
+    $('togglePassword').addEventListener('click',()=>{const field=$('passwordDemo');field.type=field.type==='password'?'text':'password';$('togglePassword').textContent=field.type==='password'?'Show':'Hide';});
+    $('copyDemo').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('UIForU');$('copyMessage').textContent='Copied to clipboard.';}catch{$('copyMessage').textContent='Clipboard access is unavailable.';}});
+
   </script>
 </body>
 </html>
