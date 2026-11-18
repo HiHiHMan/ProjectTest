@@ -415,7 +415,28 @@
     .uxp-dropdown:not(.is-open) .uxp-radial-item{transition-delay:0ms}
     .uxp-dropdown .uxp-radial-item:hover{border-color:#fdba74;background:#fffaf5}
     @media(prefers-reduced-motion:reduce){.uxp-dropdown *{transition:none!important}}
-  </style>
+  
+    /* Follow Through: the action button leads, then the cart icon catches up. */
+    .uxp-action[data-uxp="follow"].follow-lead{animation:uxp-follow-button .62s cubic-bezier(.2,.8,.25,1)}
+    .uxp-cart-icon.follow-trail{animation:uxp-follow-icon .78s cubic-bezier(.2,.8,.25,1)}
+    @keyframes uxp-follow-button{
+      0%{transform:translateX(0) rotate(0) scale(1)}
+      24%{transform:translateX(22px) rotate(3deg) scale(1.04)}
+      48%{transform:translateX(15px) rotate(-2deg) scale(.98)}
+      72%{transform:translateX(19px) rotate(1deg) scale(1.01)}
+      100%{transform:translateX(0) rotate(0) scale(1)}
+    }
+    @keyframes uxp-follow-icon{
+      0%,18%{transform:translateX(0) rotate(0)}
+      42%{transform:translateX(12px) rotate(12deg)}
+      64%{transform:translateX(7px) rotate(-8deg)}
+      82%{transform:translateX(10px) rotate(4deg)}
+      100%{transform:translateX(0) rotate(0)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .uxp-action[data-uxp="follow"].follow-lead,.uxp-cart-icon.follow-trail{animation:none!important}
+    }
+</style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
 </head>
 <body>
@@ -962,7 +983,7 @@
         if(action==='radial-item'){const demo=card.querySelector('[data-radial-menu]');demo.classList.remove('is-open');const toggle=demo.querySelector('[data-uxp="radial-menu"]');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Expand quick actions');demo.querySelectorAll('.uxp-radial-item').forEach(item=>{item.tabIndex=-1;});say(button.dataset.label+' selected. Menu closed.');}
         if(action==='radial-menu'){const demo=card.querySelector('[data-radial-menu]'),open=!demo.classList.contains('is-open');demo.classList.toggle('is-open',open);button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Collapse quick actions':'Expand quick actions');demo.querySelectorAll('.uxp-radial-item').forEach(item=>{item.tabIndex=open?0:-1;});say(open?'Panel expanded · Choose a quick action.':'Panel collapsed · Quick actions are hidden.');}
         if(action==='step'){const steps=[...card.querySelectorAll('.uxp-step')],active=steps.findIndex(x=>x.classList.contains('active')),next=Math.min(active+1,steps.length-1);steps.forEach((x,i)=>{x.classList.toggle('active',i===next);x.classList.toggle('done',i<next);});card.querySelector('[data-uxp-step-title]').textContent=['Cart confirmed','Delivery details','Payment ready'][next];card.querySelector('[data-uxp-step-copy]').textContent=['Your items are ready.','Your delivery details are next.','Choose a payment method to finish.'][next];button.textContent=next===2?'Complete ✓':'Next step →';}
-        if(action==='follow'){const icon=card.querySelector('.uxp-cart-icon');icon.classList.remove('trail');void icon.offsetWidth;icon.classList.add('trail');say('Another item added · Bag updated');}
+        if(action==='follow'){const icon=card.querySelector('.uxp-cart-icon');button.classList.remove('follow-lead');icon.classList.remove('follow-trail');void button.offsetWidth;button.classList.add('follow-lead');icon.classList.add('follow-trail');button.addEventListener('animationend',()=>button.classList.remove('follow-lead'),{once:true});icon.addEventListener('animationend',()=>icon.classList.remove('follow-trail'),{once:true});say('Another item added · Bag updated');}
         if(action==='arc'){card.querySelector('.uxp-arc-dot').classList.remove('fly-arc');void card.querySelector('.uxp-arc-dot').offsetWidth;card.querySelector('.uxp-arc-dot').classList.add('fly-arc');say('Item added to your bag.');}
         if(action==='notice'){const badge=card.querySelector('.uxp-inbox em');badge.classList.toggle('read');say(badge.classList.contains('read')?'All caught up.':'1 unread notification');}
         if(action==='heart'){const liked=button.classList.toggle('liked');button.setAttribute('aria-pressed',String(liked));button.textContent=liked?'♥':'♡';say(liked?'Saved to your wishlist.':'Removed from wishlist.');}
