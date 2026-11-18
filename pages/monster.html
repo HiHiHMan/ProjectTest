@@ -301,22 +301,32 @@
             const alpha = pixels[pixel + 3] / 255;
             const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 
-            // Use both density probability and spacing: dark pixels stay solid,
-            // while gray and white pixels lose most of their sample points.
-            // Ignore light pixels; progressively thin mid-gray pixels.
-            // Only near-black pixels retain the full sampling density.
+            // Dark pixels use black dots; bright pixels use white dots.
+            // Mid-gray pixels are thinned so the original shading remains readable.
             const darkRange = 0.72;
-            if (luminance >= darkRange) continue;
-            const darkness = (darkRange - luminance) / darkRange;
-            const keepProbability = Math.pow(darkness, 3.0);
+            const lightRange = 0.72;
+            const isLight = luminance >= lightRange;
+            const tone = isLight
+              ? (luminance - lightRange) / (1 - lightRange)
+              : (darkRange - luminance) / darkRange;
+            const keepProbability = isLight
+              ? Math.pow(tone, 1.35)
+              : Math.pow(tone, 3.0);
             if (Math.random() > keepProbability) continue;
 
-            const spacing = minSpacing + Math.pow(luminance, 2.2) * (maxSpacing - minSpacing);
+            const spacing = minSpacing + Math.pow(
+              isLight ? 1 - tone : luminance,
+              2.2
+            ) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
             const index = positions.length / 2;
             positions.push((x / width) * 2 - 1, 1 - (y / height) * 2);
-            colors.push(0, 0, 0, 1.0);
+            if (isLight) {
+              colors.push(1, 1, 1, 1.0);
+            } else {
+              colors.push(0, 0, 0, 1.0);
+            }
             spacings.push(spacing);
 
             const gx = Math.floor(x / cellSize);
