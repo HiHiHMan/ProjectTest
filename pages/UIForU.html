@@ -500,10 +500,10 @@
 #principles-ux .uxp-slice-window{width:100%;min-width:0;overflow:hidden;padding:3px 0 7px;touch-action:none;cursor:grab}
 #principles-ux .uxp-slice-window:active{cursor:grabbing}
 #principles-ux .uxp-slice-track{display:flex;gap:9px;transition:transform .48s cubic-bezier(.2,.8,.2,1);will-change:transform}
-#principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
+#principles-ux .uxp-slice-card{--slice-main:#f97316;position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
 #principles-ux .uxp-slice-card.is-active{opacity:1;transform:scale(1);border-color:#fb923c}
-#principles-ux .uxp-slice-card[data-appeal-theme="midnight"]{background:#292524;color:#fafaf9;border-color:#57534e}
-#principles-ux .uxp-slice-card[data-appeal-theme="botanical"]{background:#edf2e8;color:#26352b;border-color:#d6e2d2}
+#principles-ux .uxp-slice-card[data-appeal-theme="midnight"]{--slice-main:#c2410c;background:#292524;color:#fafaf9;border-color:#57534e}
+#principles-ux .uxp-slice-card[data-appeal-theme="botanical"]{--slice-main:#456b50;background:#edf2e8;color:#26352b;border-color:#d6e2d2}
 #principles-ux .uxp-slice-art{width:100%;height:48px;display:grid;place-items:center;border-radius:7px;background:linear-gradient(135deg,#fdba74,#c2410c);color:#fff;font-size:25px}
 #principles-ux .uxp-slice-card[data-appeal-theme="midnight"] .uxp-slice-art{background:linear-gradient(135deg,#7c2d12,#1c1917);color:#ffedd5}
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"] .uxp-slice-art{background:linear-gradient(135deg,#91a98d,#1f4534);color:#e6f0df}
@@ -514,10 +514,10 @@
 #principles-ux .uxp-slice-card>span:last-child{font-size:8px;opacity:.7}
 #principles-ux .uxp-slice-card.is-pressing{transform:scale(.98);border:2px solid #f97316;filter:saturate(1.12);transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .16s,filter .16s}
 #principles-ux .uxp-slice-card.is-holding{opacity:0!important;pointer-events:none}
-#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;gap:5px!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0);transition:border-color .16s!important;will-change:transform;border:2px solid #f97316!important;box-sizing:border-box;transform-origin:center}
+#principles-ux .uxp-slice-ghost{--proximity:0;position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;gap:5px!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0);transition:border-color .16s!important;will-change:transform;border:2px solid #f97316!important;box-sizing:border-box;transform-origin:center;box-shadow:0 -2px 5px color-mix(in srgb,var(--slice-main) calc(var(--proximity)*35%),transparent),0 -8px 20px color-mix(in srgb,var(--slice-main) calc(var(--proximity)*75%),transparent)}
 #principles-ux .uxp-slice-ghost.is-grabbed{transform:translate3d(0,0,0);border-color:#ea580c!important}
 #principles-ux .uxp-slice-ghost.is-flying{transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .22s ease!important}
-#principles-ux .uxp-slice-confirm{--proximity:0;--top-highlight:calc(.16 + var(--proximity)*.42);box-shadow:inset 0 2px 0 rgb(255 255 255 / var(--top-highlight)),inset 0 1px 5px rgb(124 45 18 / .12); }
+#principles-ux .uxp-slice-confirm{--proximity:0;box-shadow:0 -2px 5px color-mix(in srgb,#f97316 calc((1 - var(--proximity))*35%),#15803d),0 -8px 20px color-mix(in srgb,#f97316 calc((1 - var(--proximity))*75%),#15803d);}
 #principles-ux .uxp-slice-controls button{width:27px;height:27px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#57534e;cursor:pointer}
 #principles-ux .uxp-slice-controls span{font-size:8px;color:#a8a29e;text-align:center}
 #principles-ux .uxp-slice-confirm{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:1px solid color-mix(in srgb,#f97316 calc((1 - var(--proximity))*100%),#15803d);border-radius:8px;background:color-mix(in srgb,#f97316 calc((1 - var(--proximity))*100%),#15803d);color:#fff;font-size:10px;font-weight:800;cursor:pointer;transition:border-color .12s,background .12s,box-shadow .12s}
@@ -1256,6 +1256,7 @@
           const proximity=Math.max(0,Math.min(1,1-distance/260));
           ghost.style.borderColor=proximity>.72?'#15803d':proximity>.35?'#f97316':'#ea580c';
           confirm.style.setProperty('--proximity',proximity.toFixed(3));
+          ghost.style.setProperty('--proximity',proximity.toFixed(3));
           confirm.classList.toggle('is-drop-ready',distance<=24);
         }else if(moved){clearTimeout(holdTimer);}
       });
