@@ -575,9 +575,9 @@
 @keyframes uxp-message-pop{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 
-/* Staging the Focus — isolate the primary checkout action */
-#principles-ux .uxp-focus-demo{display:grid;gap:11px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .35s,border-color .35s}
-#principles-ux .uxp-focus-header{display:flex;align-items:center;justify-content:space-between}
+/* Staging the Focus — create a clear visual spotlight on the primary action */
+#principles-ux .uxp-focus-demo{position:relative;display:grid;gap:11px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .35s,border-color .35s,box-shadow .35s}
+#principles-ux .uxp-focus-header{display:flex;align-items:center;justify-content:space-between;transition:opacity .3s,filter .3s}
 #principles-ux .uxp-focus-header>span{font-size:8px;font-weight:800;letter-spacing:.14em;color:#a8a29e}
 #principles-ux .uxp-focus-header>b{font-size:10px;color:#292524}
 #principles-ux .uxp-focus-detail{display:grid;gap:8px;transition:opacity .35s,filter .35s,transform .35s}
@@ -589,8 +589,13 @@
 #principles-ux .uxp-focus-detail em{margin-left:auto;color:#c2410c;font-size:7px;font-style:normal;font-weight:800}
 #principles-ux .uxp-focus-total{display:flex;justify-content:space-between;padding:3px 2px 0;color:#78716c;font-size:9px}
 #principles-ux .uxp-focus-total b{font-size:12px;color:#292524}
-#principles-ux .uxp-focus-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:38px;align-self:stretch;transition:transform .3s,box-shadow .3s,filter .3s}
+#principles-ux .uxp-focus-hint{display:none;justify-content:center;align-items:center;min-height:22px;padding:4px 8px;border-radius:6px;background:#292524;color:#fff;font-size:8px;font-weight:800;letter-spacing:.13em}
+#principles-ux .uxp-focus-cta{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:42px;align-self:stretch;transition:transform .3s,box-shadow .3s,filter .3s}
 #principles-ux .uxp-focus-cta span{font-size:15px}
-#principles-ux .uxp-focus-demo.focus-preview{border-color:#fdba74;background:linear-gradient(145deg,#fffaf5,#fff)}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-detail{opacity:.24;filter:grayscale(1);transform:scale(.985)}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-cta{transform:translateY(-2px) scale(1.015);box-shadow:0 0 0 4px #fed7aa,0 9px 22px #f9731640;filter:saturate(1.12)}
+#principles-ux .uxp-focus-demo.focus-preview{border:2px solid #f97316;background:linear-gradient(145deg,#fff7ed,#fff);box-shadow:0 0 0 5px #fed7aa88,0 14px 28px #9a34121c}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-header{opacity:.18;filter:blur(1px)}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-detail{opacity:.07;filter:grayscale(1) blur(1.5px);transform:scale(.96);pointer-events:none}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-hint{display:flex;animation:uxp-focus-hint-in .25s ease-out both}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-cta{transform:translateY(-2px) scale(1.035);box-shadow:0 0 0 5px #fed7aa,0 0 0 9px #fed7aa55,0 10px 25px #f9731666;filter:saturate(1.2);animation:uxp-focus-pulse 1.8s ease-in-out infinite}
+@keyframes uxp-focus-hint-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes uxp-focus-pulse{0%,100%{box-shadow:0 0 0 5px #fed7aa,0 0 0 9px #fed7aa55,0 10px 25px #f9731666}50%{box-shadow:0 0 0 7px #fed7aa,0 0 0 13px #fed7aa33,0 12px 29px #f9731677}}
