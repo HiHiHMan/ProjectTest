@@ -413,41 +413,81 @@
 
 
 
-    const codeStyleProperties=['display','position','width','height','min-width','min-height','max-width','max-height','box-sizing','flex','flex-direction','flex-wrap','flex-grow','flex-shrink','align-items','align-self','justify-content','grid-template-columns','grid-template-rows','gap','row-gap','column-gap','padding','padding-top','padding-right','padding-bottom','padding-left','margin','margin-top','margin-right','margin-bottom','margin-left','border','border-top','border-right','border-bottom','border-left','border-radius','background','background-color','color','font-family','font-size','font-weight','line-height','letter-spacing','text-align','text-decoration','white-space','overflow','overflow-x','overflow-y','box-shadow','opacity','transform','cursor','object-fit'];
-    function makeStandaloneMarkup(demo){
-      const clone=demo.cloneNode(true);
-      const originalNodes=[demo,...demo.querySelectorAll('*')];
-      const clonedNodes=[clone,...clone.querySelectorAll('*')];
-      originalNodes.forEach((node,index)=>{
-        const computed=getComputedStyle(node);
-        const inline=codeStyleProperties.map(property=>[property,computed.getPropertyValue(property)]).filter(([,value])=>value&&value!=='normal'&&value!=='none'&&value!=='0px');
-        clonedNodes[index].removeAttribute('id');
-        clonedNodes[index].removeAttribute('data-sample-action');
-        clonedNodes[index].removeAttribute('data-sample-message');
-        clonedNodes[index].setAttribute('style',inline.map(([property,value])=>property+':'+value).join(';'));
-      });
-      return clone.innerHTML;
+    const fullCss=document.querySelector('style')?.textContent||'';
+    const sourceScript=Array.from(document.scripts).find(script=>script.textContent.includes('const componentSearch'))?.textContent||'';
+    function makeComponentHtml(card){
+      const clone=card.cloneNode(true);
+      clone.querySelectorAll('.code-tools,.code-panel').forEach(node=>node.remove());
+      return clone.outerHTML;
     }
-    const genericInteraction='document.querySelectorAll(".component-demo button").forEach(button=>button.addEventListener("click",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=button.textContent.trim()+" selected";}));\ndocument.querySelectorAll(".component-demo input,.component-demo select,.component-demo textarea").forEach(field=>field.addEventListener("input",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=field.value;}));';
+    function makeComponentJs(card){
+      const demo=card.querySelector('.demo');
+      if(!demo)return '';
+      const tokens=new Set();
+      demo.querySelectorAll('*').forEach(node=>{
+        if(node.id)tokens.add("$('"+node.id+"')");
+        Array.from(node.attributes).forEach(attr=>{
+          if(attr.name.startsWith('data-')){
+            const camel=attr.name.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase());
+            tokens.add('data-'+attr.name.slice(5));
+            tokens.add('dataset.'+camel);
+            tokens.add("'["+attr.name+"]'");
+            tokens.add('"['+attr.name+']"');
+          }
+        });
+      });
+      const lines=sourceScript.split('\n');
+      const matched=lines.filter(line=>Array.from(tokens).some(token=>line.includes(token)));
+      if(!matched.length)return '';
+      return "const $ = (id) => document.getElementById(id);\n"+matched.join('\n');
+    }
     document.querySelectorAll('.card').forEach(card=>{
       const demo=card.querySelector('.demo');
       if(!demo)return;
       const tools=document.createElement('div');
       tools.className='code-tools';
-      tools.innerHTML='<button class="code-toggle" type="button" aria-expanded="false">View code</button><span class="code-note">Ready to copy</span>';
+      tools.innerHTML='<button class="code-toggle" type="button" aria-expanded="false">View code</button><span class="code-note">Complete component source</span>';
       const panel=document.createElement('div');
       panel.className='code-panel';
       panel.hidden=true;
-      panel.innerHTML='<div class="code-panel-head"><div class="code-tabs"><button class="code-tab active" type="button" data-code-tab="html">HTML</button><button class="code-tab" type="button" data-code-tab="css">CSS</button><button class="code-tab" type="button" data-code-tab="js">JavaScript</button></div><button class="code-copy" type="button">Copy</button></div><pre class="code-output"></pre><p class="code-note">Styles are embedded inline in the HTML example.</p>';
+      panel.innerHTML='<div class="code-panel-head"><div class="code-tabs"><button class="code-tab active" type="button" data-code-tab="html">HTML</button><button class="code-tab" type="button" data-code-tab="css">CSS</button><button class="code-tab" type="button" data-code-tab="js">JavaScript</button></div><button class="code-copy" type="button">Copy</button></div><pre class="code-output"></pre><p class="code-note"></p>';
       card.append(tools,panel);
       const output=panel.querySelector('.code-output');
       const toggle=tools.querySelector('.code-toggle');
       let active='html';
-      const snippets={html:()=>'<div class="component-demo">\n'+makeStandaloneMarkup(demo)+'<output aria-live="polite"></output>\n</div>',css:()=>'.component-demo { box-sizing: border-box; }',js:()=>genericInteraction};
-      const render=()=>{output.textContent=snippets[active]();panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.classList.toggle('active',tab.dataset.codeTab===active));panel.querySelector('.code-note').textContent=active==='css'?'No additional CSS is required because the HTML contains inline styles.':'Copy this example into your project and adjust its content as needed.';};
-      toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));toggle.textContent=panel.hidden?'View code':'Hide code';if(!panel.hidden)render();});
+      const snippets={
+        html:()=>makeComponentHtml(card),
+        css:()=>fullCss,
+        js:()=>makeComponentJs(card)
+      };
+      const render=()=>{
+        const code=snippets[active]();
+        output.textContent=code||'No JavaScript interaction is defined for this component demo.';
+        panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.classList.toggle('active',tab.dataset.codeTab===active));
+        const notes={
+          html:'Complete card markup, including its title, demo, and description.',
+          css:'Complete stylesheet used by this page. Copy the full stylesheet to preserve the component appearance.',
+          js:code?'JavaScript lines associated with this component. Check any external dependencies before using.':'This demo is static and does not require JavaScript.'
+        };
+        panel.querySelector('.code-note').textContent=notes[active];
+      };
+      toggle.addEventListener('click',()=>{
+        panel.hidden=!panel.hidden;
+        toggle.setAttribute('aria-expanded',String(!panel.hidden));
+        toggle.textContent=panel.hidden?'View code':'Hide code';
+        if(!panel.hidden)render();
+      });
       panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.addEventListener('click',()=>{active=tab.dataset.codeTab;render();}));
-      panel.querySelector('.code-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(snippets[active]());panel.querySelector('.code-copy').textContent='Copied';}catch{panel.querySelector('.code-copy').textContent='Copy unavailable';}});
+      panel.querySelector('.code-copy').addEventListener('click',async()=>{
+        try{
+          const code=snippets[active]();
+          if(!code)throw new Error('No component JavaScript');
+          await navigator.clipboard.writeText(code);
+          panel.querySelector('.code-copy').textContent='Copied';
+        }catch{
+          panel.querySelector('.code-copy').textContent='Copy unavailable';
+        }
+      });
     });
 
 
