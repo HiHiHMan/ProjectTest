@@ -102,7 +102,6 @@
     @media(max-width:760px){.page{width:min(100% - 32px,560px);padding-top:32px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px;min-height:220px}}
     @media(max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:200px}.page{width:calc(100% - 28px)}.topline{margin-bottom:40px}h1{font-size:48px;line-height:48px}.intro{font-size:14px;line-height:20px}.section-meta{margin-top:40px}}
 
-    /* Keep spacing responsibilities clear: padding is inside surfaces, gap/margin separates elements. */
     :is(.sample-control,.sample-panel,.sample-status,.sample-data,.sample-progress,.sample-field,.sample-tabs,.sample-list,.sample-chart,.sample-dialog){
       width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;display:grid;gap:8px;
     }
@@ -120,6 +119,16 @@
     .sample-control{justify-items:start}
     .sample-progress .progress{margin-top:2px}
     .sample-list>span{padding-top:6px;border-top:1px solid #f0eeeb}
+    .code-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:4px}
+    .code-toggle,.code-copy,.code-tab{border:1px solid var(--line);border-radius:8px;background:#fff;color:#555;padding:7px 10px;font:inherit;font-size:12px;line-height:16px;font-weight:600;cursor:pointer}
+    .code-toggle:hover,.code-copy:hover,.code-tab:hover{border-color:#fdba74;color:var(--accent-dark)}
+    .code-panel{display:grid;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#faf9f7}
+    .code-panel[hidden]{display:none}
+    .code-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .code-tabs{display:flex;flex-wrap:wrap;gap:6px}
+    .code-tab.active{background:var(--accent-soft);border-color:#fdba74;color:var(--accent-dark)}
+    .code-output{max-height:260px;overflow:auto;margin:0;padding:12px;border-radius:8px;background:#181818;color:#f5f5f5;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;tab-size:2}
+    .code-note{margin:0;color:var(--muted);font-size:11px;line-height:16px}
     .collection-tools{display:flex;align-items:center;gap:16px;margin:0 0 24px;min-width:0}
     .collection-search{display:flex;align-items:center;gap:10px;width:min(100%,420px);min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#a1a1aa;transition:border-color 300ms var(--curve),box-shadow 300ms var(--curve)}
     .collection-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px #f9731618}
@@ -364,6 +373,44 @@
     document.querySelectorAll('[data-panorama]').forEach(el=>{el.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight')el.style.backgroundPositionX=(parseInt(el.style.backgroundPositionX||'0')+(e.key==='ArrowLeft'?10:-10))+'px';});});
     document.querySelectorAll('[data-magnifier]').forEach(el=>el.addEventListener('click',()=>el.textContent='Magnified detail preview'));
 
+
+
+    const codeStyleProperties=['display','position','width','height','min-width','min-height','max-width','max-height','box-sizing','flex','flex-direction','flex-wrap','flex-grow','flex-shrink','align-items','align-self','justify-content','grid-template-columns','grid-template-rows','gap','row-gap','column-gap','padding','padding-top','padding-right','padding-bottom','padding-left','margin','margin-top','margin-right','margin-bottom','margin-left','border','border-top','border-right','border-bottom','border-left','border-radius','background','background-color','color','font-family','font-size','font-weight','line-height','letter-spacing','text-align','text-decoration','white-space','overflow','overflow-x','overflow-y','box-shadow','opacity','transform','cursor','object-fit'];
+    function makeStandaloneMarkup(demo){
+      const clone=demo.cloneNode(true);
+      const originalNodes=[demo,...demo.querySelectorAll('*')];
+      const clonedNodes=[clone,...clone.querySelectorAll('*')];
+      originalNodes.forEach((node,index)=>{
+        const computed=getComputedStyle(node);
+        const inline=codeStyleProperties.map(property=>[property,computed.getPropertyValue(property)]).filter(([,value])=>value&&value!=='normal'&&value!=='none'&&value!=='0px');
+        clonedNodes[index].removeAttribute('id');
+        clonedNodes[index].removeAttribute('data-sample-action');
+        clonedNodes[index].removeAttribute('data-sample-message');
+        clonedNodes[index].setAttribute('style',inline.map(([property,value])=>property+':'+value).join(';'));
+      });
+      return clone.innerHTML;
+    }
+    const genericInteraction='document.querySelectorAll(".component-demo button").forEach(button=>button.addEventListener("click",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=button.textContent.trim()+" selected";}));\\ndocument.querySelectorAll(".component-demo input,.component-demo select,.component-demo textarea").forEach(field=>field.addEventListener("input",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=field.value;}));';
+    document.querySelectorAll('.card').forEach(card=>{
+      const demo=card.querySelector('.demo');
+      if(!demo)return;
+      const tools=document.createElement('div');
+      tools.className='code-tools';
+      tools.innerHTML='<button class="code-toggle" type="button" aria-expanded="false">View code</button><span class="code-note">Ready to copy</span>';
+      const panel=document.createElement('div');
+      panel.className='code-panel';
+      panel.hidden=true;
+      panel.innerHTML='<div class="code-panel-head"><div class="code-tabs"><button class="code-tab active" type="button" data-code-tab="html">HTML</button><button class="code-tab" type="button" data-code-tab="css">CSS</button><button class="code-tab" type="button" data-code-tab="js">JavaScript</button></div><button class="code-copy" type="button">Copy</button></div><pre class="code-output"></pre><p class="code-note">Styles are embedded inline in the HTML example.</p>';
+      card.append(tools,panel);
+      const output=panel.querySelector('.code-output');
+      const toggle=tools.querySelector('.code-toggle');
+      let active='html';
+      const snippets={html:()=>'<div class="component-demo">\\n'+makeStandaloneMarkup(demo)+'\\n</div>',css:() => '',js:()=>genericInteraction};
+      const render=()=>{output.textContent=snippets[active]();panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.classList.toggle('active',tab.dataset.codeTab===active));panel.querySelector('.code-note').textContent=active==='css'?'No additional CSS is required because the HTML contains inline styles.':'Copy this example into your project and adjust its content as needed.';};
+      toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));toggle.textContent=panel.hidden?'View code':'Hide code';if(!panel.hidden)render();});
+      panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.addEventListener('click',()=>{active=tab.dataset.codeTab;render();}));
+      panel.querySelector('.code-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(snippets[active]());panel.querySelector('.code-copy').textContent='Copied';}catch{panel.querySelector('.code-copy').textContent='Copy unavailable';}});
+    });
 
     const componentSearch=$('componentSearch');
     if(componentSearch){componentSearch.addEventListener('input',()=>{const q=componentSearch.value.trim().toLowerCase();let visible=0;document.querySelectorAll('.card').forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)visible++;});document.querySelectorAll('.component-section').forEach(section=>{section.hidden=!section.querySelector('.card:not([hidden])');});$('collectionCount').textContent=visible+' of 185 components';});}
