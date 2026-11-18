@@ -440,20 +440,20 @@
       const matched=lines.filter(line=>Array.from(tokens).some(token=>line.includes(token)));
       const title=card.querySelector('h3')?.textContent.trim();
       const extras={
-        'Rich Text Toolbar': \`document.querySelectorAll('.rich-editor').forEach(editor=>{
+        'Rich Text Toolbar': `document.querySelectorAll('.rich-editor').forEach(editor=>{
   const content=editor.querySelector('.rich-content');
   editor.querySelectorAll('[data-rich-command]').forEach(button=>button.addEventListener('click',()=>{
     content.focus();
     document.execCommand(button.dataset.richCommand,false,null);
     editor.querySelector('[data-rich-status]').textContent='Applied '+button.getAttribute('aria-label')+' formatting.';
   }));
-});\`,
-        'Sticky Toolbar': \`document.querySelectorAll('.sticky-demo').forEach(demo=>{
+});`,
+        'Sticky Toolbar': `document.querySelectorAll('.sticky-demo').forEach(demo=>{
   demo.querySelectorAll('[data-sticky-action]').forEach(button=>button.addEventListener('click',()=>{
     demo.querySelector('[data-sticky-status]').textContent=button.dataset.stickyAction+' action selected.';
   }));
-});\`,
-        'Booking Calendar': \`document.querySelectorAll('.booking-calendar').forEach(calendar=>{
+});`,
+        'Booking Calendar': `document.querySelectorAll('.booking-calendar').forEach(calendar=>{
   let shown=new Date();shown.setDate(1);
   let selected='';
   const monthLabel=calendar.querySelector('[data-booking-month]');
@@ -481,7 +481,7 @@
   calendar.querySelector('[data-booking-prev]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()-1);render();});
   calendar.querySelector('[data-booking-next]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()+1);render();});
   render();
-});\`
+});`
       };
       const extra=extras[title]||'';
       if(!matched.length&&!extra)return '';
