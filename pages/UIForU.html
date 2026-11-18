@@ -1185,7 +1185,7 @@
         card.addEventListener('click',()=>{if(!dragging)choose(i);});
         card.addEventListener('pointerdown',event=>{
           if(event.pointerType==='mouse'&&event.button!==0)return;
-          pointerId=event.pointerId;window.__slicePointerX=event.clientX;window.__slicePointerY=event.clientY;
+          pointerId=event.pointerId;try{card.setPointerCapture(event.pointerId);}catch{}window.__slicePointerX=event.clientX;window.__slicePointerY=event.clientY;
           holdTimer=setTimeout(()=>{
             choose(i);dragging=true;dragCard=card;card.classList.add('is-holding');demo.classList.add('is-dragging');
           },320);
