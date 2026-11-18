@@ -514,3 +514,20 @@
 @media(max-width:850px){#principles-ux .uxp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){#principles-ux .uxp-grid{grid-template-columns:1fr}#principles-ux .uxp-card{min-height:0}}
 @media(prefers-reduced-motion:reduce){#principles-ux .uxp-card *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+/* Squash & Stretch — animate the object, not only the button */
+#principles-ux .squash-art{position:relative;isolation:isolate;overflow:visible;background:radial-gradient(ellipse at 50% 85%,#fb923c22,transparent 68%)}
+#principles-ux .squash-art::before{content:"";position:absolute;left:50%;top:50%;width:29px;height:47px;transform:translate(-50%,-50%);transform-origin:50% 88%;clip-path:polygon(31% 0,69% 0,69% 15%,84% 23%,84% 100%,16% 100%,16% 23%,31% 15%);border-radius:6px;background:linear-gradient(90deg,#c2410c 0%,#fb923c 28%,#fdba74 52%,#ea580c 100%);box-shadow:inset 2px 0 3px #fff8}
+#principles-ux .squash-art::after{content:"";position:absolute;left:calc(50% + 5px);top:calc(50% - 8px);width:4px;height:23px;border-radius:5px;background:#fff8;transform:translateX(-50%) rotate(2deg);transform-origin:center;pointer-events:none}
+#principles-ux .squash-art.squash-motion::before{animation:uxp-object-squash .78s cubic-bezier(.2,.75,.25,1)}
+#principles-ux .squash-art.squash-motion::after{animation:uxp-object-shine .78s ease}
+@keyframes uxp-object-squash{
+  0%{transform:translate(-50%,-50%) scale(1,1)}
+  18%{transform:translate(-50%,-35%) scale(1.2,.68)}
+  38%{transform:translate(-50%,-62%) scale(.82,1.22)}
+  58%{transform:translate(-50%,-48%) scale(1.08,.92)}
+  76%{transform:translate(-50%,-53%) scale(.97,1.05)}
+  100%{transform:translate(-50%,-50%) scale(1,1)}
+}
+@keyframes uxp-object-shine{0%,100%{opacity:.45}35%{opacity:1}65%{opacity:.7}}
