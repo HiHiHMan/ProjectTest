@@ -575,29 +575,30 @@
 @keyframes uxp-message-pop{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 
-/* Staging the Focus — select any element and isolate it visually */
-#principles-ux .uxp-focus-demo{position:relative;display:grid;gap:12px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .3s,border-color .3s,box-shadow .3s}
+/* Staging the Focus — communicate focus through depth, scale and light, never borders */
+#principles-ux .uxp-focus-demo{position:relative;display:grid;gap:12px;padding:12px;border:1px solid #eee9e4;border-radius:11px;background:#fff;transition:background .3s}
 #principles-ux .uxp-focus-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #principles-ux .uxp-focus-header>span{font-size:8px;font-weight:800;letter-spacing:.12em;color:#a8a29e}
 #principles-ux .uxp-focus-header>b{font-size:9px;color:#57534e}
 #principles-ux .uxp-focus-palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-#principles-ux .uxp-focus-swatch{display:grid;justify-items:center;gap:5px;min-width:0;padding:8px 4px;border:1px solid #eee9e4;border-radius:9px;background:#fff;cursor:pointer;transition:opacity .3s,filter .3s,transform .3s,box-shadow .3s,border-color .3s}
-#principles-ux .uxp-focus-swatch>span{display:block;width:100%;height:27px;border-radius:5px;transition:transform .3s,box-shadow .3s}
-#principles-ux .uxp-focus-swatch small{font-size:8px;color:#57534e}
+#principles-ux .uxp-focus-swatch{position:relative;display:grid;justify-items:center;gap:5px;min-width:0;padding:8px 4px;border:0;border-radius:9px;background:#f8f7f5;cursor:pointer;transition:opacity .35s,filter .35s,transform .35s,box-shadow .35s,background .35s}
+#principles-ux .uxp-focus-swatch>span{display:block;width:100%;height:27px;border-radius:5px;transition:transform .35s,box-shadow .35s,filter .35s}
+#principles-ux .uxp-focus-swatch small{font-size:8px;color:#57534e;transition:color .3s,font-weight .3s}
 #principles-ux .swatch-orange>span{background:linear-gradient(135deg,#fdba74,#ea580c)}
 #principles-ux .swatch-blue>span{background:linear-gradient(135deg,#93c5fd,#2563eb)}
 #principles-ux .swatch-green>span{background:linear-gradient(135deg,#86efac,#16a34a)}
 #principles-ux .swatch-purple>span{background:linear-gradient(135deg,#c4b5fd,#7c3aed)}
 #principles-ux .swatch-pink>span{background:linear-gradient(135deg,#f9a8d4,#db2777)}
 #principles-ux .swatch-dark>span{background:linear-gradient(135deg,#78716c,#292524)}
-#principles-ux .uxp-focus-swatch:hover{transform:translateY(-2px);border-color:#fdba74}
+#principles-ux .uxp-focus-swatch:hover{transform:translateY(-2px)}
 #principles-ux .uxp-focus-swatch:focus-visible{outline:2px solid #f97316;outline-offset:3px}
-#principles-ux .uxp-focus-demo.focus-preview{border-color:#f97316;background:#fffaf5;box-shadow:0 0 0 4px #fed7aa88,0 12px 24px #9a34121a}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-muted{opacity:.13;filter:grayscale(1);transform:scale(.94)}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused{z-index:1;transform:scale(1.08);border:2px solid #f97316;background:#fff;box-shadow:0 0 0 4px #fed7aa,0 9px 20px #f9731640}
-#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused>span{transform:scale(1.04);box-shadow:0 0 0 3px #fff,0 0 0 5px #f97316}
+#principles-ux .uxp-focus-demo.focus-preview{background:#fffaf5}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-muted{opacity:.16;filter:grayscale(.85);transform:scale(.94)}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused{z-index:1;transform:translateY(-4px) scale(1.09);background:#fff;box-shadow:0 10px 24px #29252424,0 3px 8px #29252412}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused small{color:#292524;font-weight:800}
+#principles-ux .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused>span{transform:scale(1.08);filter:saturate(1.2);box-shadow:0 7px 18px #29252438,0 0 22px currentColor}
 #principles-ux .uxp-focus-hint{display:none;justify-content:center;align-items:center;min-height:22px;padding:4px 8px;border-radius:6px;background:#292524;color:#fff;font-size:8px;font-weight:800;letter-spacing:.13em}
 #principles-ux .uxp-focus-demo.focus-preview .uxp-focus-hint{display:flex;animation:uxp-focus-hint-in .25s ease-out both}
-#principles-ux .uxp-focus-reset{justify-self:end;padding:5px 9px;border:1px solid #e7e5e4;border-radius:6px;background:#fff;color:#78716c;font-size:8px;cursor:pointer}
-#principles-ux .uxp-focus-reset:hover{border-color:#fdba74;color:#c2410c}
+#principles-ux .uxp-focus-reset{justify-self:end;padding:5px 9px;border:0;border-radius:6px;background:#f1efec;color:#78716c;font-size:8px;cursor:pointer;transition:background .2s,color .2s}
+#principles-ux .uxp-focus-reset:hover{background:#e7e5e4;color:#292524}
 @keyframes uxp-focus-hint-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
