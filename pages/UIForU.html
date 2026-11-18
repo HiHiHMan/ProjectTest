@@ -358,6 +358,8 @@
 @media(prefers-reduced-motion:reduce){#principles-ux .v2-principle-card,#principles-ux .v2-demo *{transition:none!important;animation-duration:.01ms!important}}
 
 /* Principle demos — follow-through and adaptive motion */
+#principles-ux .v2-follow-scene.replay i{animation-duration:.72s}
+
 #principles-ux .v2-follow-scene{position:relative;width:100%;height:76px;display:flex;align-items:center;justify-content:center;gap:8px}
 #principles-ux .v2-follow-main{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#fdba74,#f97316);color:#fff;box-shadow:0 7px 16px #f9731633}
 #principles-ux .v2-follow-scene i{width:13px;height:13px;border-radius:4px;background:#fed7aa;opacity:.8;transform:rotate(18deg);animation:v2-follow-tail 1.5s ease-in-out infinite}
@@ -889,7 +891,7 @@
       if(action==='windup'){control.classList.add('winding');const status=card.querySelector('.v2-windup-status');status.textContent='Preparing your order…';setTimeout(()=>{control.classList.remove('winding');status.textContent='Ready for confirmation ✓';control.textContent='Order prepared';},450);}
       if(action==='modal'){control.textContent='Details confirmed ✓';control.closest('.v2-modal-card').style.boxShadow='0 0 0 3px #fdba74,0 12px 25px #0003';}
       if(action==='slide-next'||action==='slide-prev'){const slides=[...card.querySelectorAll('.v2-slide')],active=slides.findIndex(x=>x.classList.contains('active')),next=(active+(action==='slide-next'?1:slides.length-1))%slides.length;slides.forEach((x,i)=>x.classList.toggle('active',i===next));card.querySelector('.v2-pose-controls span').textContent=String(next+1).padStart(2,'0')+' / 03';}
-      if(action==='follow'){const scene=card.querySelector('.v2-follow-scene');scene.classList.remove('replay');void scene.offsetWidth;scene.classList.add('replay');}
+      if(action==='follow'){const scene=card.querySelector('.v2-follow-scene');scene.classList.remove('replay');void scene.offsetWidth;scene.classList.add('replay');setTimeout(()=>scene.classList.remove('replay'),760);}
       if(action==='frequency-mode'){const root=control.closest('.v2-frequency'),quiet=control.textContent.includes('Daily use');root.classList.toggle('quiet',quiet);root.querySelectorAll('[data-ux-v2="frequency-mode"]').forEach(x=>x.classList.toggle('active',x===control));root.querySelector('output').textContent=quiet?'Daily use · minimal motion':'First visit · guided motion';}
       if(action==='drawer'){const drawer=control.closest('.v2-drawer');drawer.classList.toggle('open');control.textContent=drawer.classList.contains('open')?'Close control panel':'Open';}
       if(action==='arc-cart'){const root=control.closest('.v2-arc-cart'),product=root.querySelector('.v2-arc-product'),count=root.querySelector('.v2-arc-cart-icon span');product.classList.remove('fly');void product.offsetWidth;product.classList.add('fly');count.textContent=String(Number(count.textContent)+1);}
