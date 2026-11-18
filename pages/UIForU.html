@@ -655,7 +655,7 @@
       if(type==='hick'){const options=stage.querySelector('.ux-options');const reduced=options.children.length===6;options.innerHTML=reduced?'<button>Continue</button><button>Back</button>':'<button>One</button><button>Two</button><button>Three</button><button>Four</button><button>Five</button><button>Six</button>';stage.querySelector('.ux-status').textContent=reduced?'2 choices · faster decision':'6 choices · more decisions';}
       if(type==='miller')stage.classList.toggle('ungrouped');
       if(type==='doherty'){const bar=stage.querySelector('.ux-progress i'),status=stage.querySelector('.ux-status');bar.style.transition='none';bar.style.width='0';status.textContent='Working…';requestAnimationFrame(()=>{bar.style.transition='width .35s linear';bar.style.width='100%';});setTimeout(()=>status.textContent='Done · 350 ms',380);}
-      if(type==='postel'){const field=stage.querySelector('input');field.value=field.value.trim().replace(/\\s+/g,' ');button.textContent='Normalized';}
+      if(type==='postel'){const field=stage.querySelector('input');field.value=field.value.trim().replace(/\s+/g,' ');button.textContent='Normalized';}
       if(type==='jakob')stage.querySelector('.ux-browser').classList.toggle('alt');
       if(type==='frequency')stage.classList.toggle('highlight');
     }));
