@@ -88,6 +88,17 @@
     .password-wrap{display:flex;width:100%;gap:8px}.password-wrap .field{flex:1}
     .hint{width:100%;color:#888;font-size:12px;line-height:16px}
     footer{margin-top:48px;color:#999;font-size:12px;line-height:16px;text-align:center}
+
+    .sample-card{width:100%;display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px}.sample-card strong{font-size:16px;line-height:24px;font-weight:600}
+    .crumb-menu,.popover-wrap{position:relative}.segments{display:flex;width:100%;padding:4px;border-radius:10px;background:#f3f1ee;gap:4px}.segment{flex:1;border:0;border-radius:7px;padding:8px 6px;background:transparent;color:#777;font-size:12px;cursor:pointer}.segment.active{background:#fff;color:#c2410c;box-shadow:0 1px 3px #0001}
+    .popover-panel{position:absolute;z-index:8;top:calc(100% + 8px);left:0;width:210px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 12px 28px #00000012;display:grid;gap:8px}.popover-panel[hidden],.dropdown-menu[hidden],.context-menu[hidden]{display:none}
+    .context-target{padding:16px;border:1px dashed #fdba74;border-radius:10px;background:#fff7ed;color:#9a3412;font-size:12px;cursor:context-menu}.context-menu{position:absolute;z-index:10;padding:6px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 12px 28px #0002}.context-menu button{display:block;width:100%;padding:8px 12px;border:0;border-radius:6px;background:#fff;text-align:left;color:#555;font-size:12px;cursor:pointer}.context-menu button:hover{background:var(--accent-soft);color:#c2410c}
+    .notification{width:100%;display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #fed7aa;border-radius:10px;background:#fff7ed}.notification strong{display:block;color:#9a3412;font-size:12px;line-height:16px}.notification button{margin-left:auto;border:0;background:transparent;color:#9a3412;cursor:pointer}.notification-dot{width:8px;height:8px;margin-top:4px;border-radius:50%;background:var(--accent);flex:none}
+    .timeline{width:100%;display:grid;gap:12px;padding-left:14px;border-left:2px solid #fed7aa}.timeline>div{position:relative;display:grid;gap:2px}.timeline>div:before{content:"";position:absolute;left:-20px;top:4px;width:8px;height:8px;border:2px solid #fff;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px #fdba74}.timeline strong{font-size:12px;line-height:16px;font-weight:600}.stat-card{width:100%;display:grid;gap:4px}.stat-card strong{font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.04em}.stat-change{color:#c2410c;font-size:12px;line-height:16px;font-weight:600}
+    .bar-chart{height:104px;width:100%;display:flex;align-items:flex-end;justify-content:space-around;gap:10px;border-bottom:1px solid var(--line)}.bar-chart>div{position:relative;width:14%;min-height:8px;border-radius:6px 6px 0 0;background:var(--accent-soft);border:1px solid #fdba74;border-bottom:0}.bar-chart span{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);color:#888;font-size:10px;line-height:12px}
+    .tree-view{width:100%;font-size:12px;line-height:20px;color:#555}.tree-view details{padding-left:12px}.tree-view summary{cursor:pointer;color:#9a3412;font-weight:600}.tree-view span{display:block;padding-left:16px;color:#777}
+    .drawer-backdrop{position:fixed;inset:0;z-index:30;background:#18181870}.drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(340px,88vw);padding:28px;background:#fff;box-shadow:-12px 0 36px #0002;display:flex;flex-direction:column;gap:16px;transform:translateX(0)}.drawer-panel h3{margin:0;font-size:20px;line-height:28px}.drawer-panel p{margin:0;color:#777}.drawer-panel button{align-self:flex-start}
+    @media(prefers-reduced-motion:reduce){.drawer-panel{transform:none}}
     @media(max-width:760px){.page{width:min(100% - 32px,560px);padding-top:40px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:20px;min-height:220px}}
     @media(max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:200px}.page{width:calc(100% - 28px)}.topline{margin-bottom:40px}h1{font-size:48px;line-height:48px}.intro{font-size:14px;line-height:20px}.section-meta{margin-top:40px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important;transform:none!important}}
@@ -97,7 +108,7 @@
   <main class="page">
     <div class="topline"><p class="eyebrow">Interface collection / 01</p><a class="back" href="../index.html">← PROJECTS</a></div>
     <header><h1>UIForU<span style="color:#aaa">.</span></h1><p class="intro">A small collection of everyday interface components. Explore each element, try its interaction, and use it as a starting point for your next project.</p></header>
-    <div class="section-meta"><h2>Components</h2><span>30 ELEMENTS</span></div>
+    <div class="section-meta"><h2>Components</h2><span>45 ELEMENTS</span></div>
     <section class="grid" aria-label="UI component examples">
       <article class="card"><div class="card-head"><h3>Buttons</h3><span class="number">01</span></div><div class="demo"><button class="btn" id="actionBtn">Primary action</button><button class="btn secondary" id="secondaryBtn">Secondary</button><span class="hint" id="buttonMessage">Click to try the buttons.</span></div><p class="desc">Clear actions with primary and secondary emphasis.</p></article>
       <article class="card"><div class="card-head"><h3>Text Input</h3><span class="number">02</span></div><div class="demo"><input class="field" id="nameInput" type="text" placeholder="Type something..."><span class="hint" id="inputMessage">Your text appears here.</span></div><p class="desc">A simple field for entering a short text value.</p></article>
@@ -165,6 +176,25 @@
     updateStep();
     $('showToast').addEventListener('click',()=>{$('toastMessage').hidden=false;$('toastMessage').textContent='✓ Changes saved';});
     $('togglePassword').addEventListener('click',()=>{const field=$('passwordDemo');field.type=field.type==='password'?'text':'password';$('togglePassword').textContent=field.type==='password'?'Show':'Hide';});
+
+    $('crumbToggle').addEventListener('click',()=>{$('crumbMenu').hidden=!$('crumbMenu').hidden;});
+    $('crumbMenu').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('crumbMessage').textContent='Opened '+b.textContent;$('crumbMenu').hidden=true;});
+    const commandDialog=document.createElement('dialog');commandDialog.innerHTML='<h4>Command palette</h4><input class="field" id="commandSearch" placeholder="Search an action..."><div class="command-list"><button class="btn secondary" data-command="Create project">Create project</button><button class="btn secondary" data-command="Open settings">Open settings</button><button class="btn secondary" data-command="View activity">View activity</button></div><button class="mini-link" id="commandClose">Close</button>';document.body.appendChild(commandDialog);
+    $('commandOpen').addEventListener('click',()=>commandDialog.showModal());
+    commandDialog.addEventListener('click',e=>{if(e.target.id==='commandClose')commandDialog.close();const b=e.target.closest('[data-command]');if(b){$('commandOpen').textContent=b.dataset.command;commandDialog.close();}});
+    $('commandSearch')?.addEventListener('input',e=>commandDialog.querySelectorAll('[data-command]').forEach(b=>b.hidden=!b.dataset.command.toLowerCase().includes(e.target.value.toLowerCase())));
+    $('comboDemo').addEventListener('change',e=>$('comboMessage').textContent=e.target.value?'Selected: '+e.target.value:'Type or choose a suggestion.');
+    $('multiDemo').addEventListener('change',e=>{$('multiMessage').textContent='Selected: '+Array.from(e.target.selectedOptions).map(o=>o.value).join(', ')||'Choose one or more skills.';});
+    $('segmentDemo').addEventListener('click',e=>{const b=e.target.closest('[data-value]');if(!b)return;$('segmentDemo').querySelectorAll('.segment').forEach(x=>x.classList.toggle('active',x===b));$('segmentMessage').textContent='Showing '+b.dataset.value.toLowerCase()+' view.';});
+    const drawer=document.createElement('div');drawer.className='drawer-backdrop';drawer.hidden=true;drawer.innerHTML='<aside class="drawer-panel" role="dialog" aria-modal="true" aria-label="Example drawer"><h3>Workspace</h3><p>Quick links and supporting actions.</p><button class="btn secondary" id="drawerClose">Close drawer</button></aside>';document.body.appendChild(drawer);
+    $('drawerOpen').addEventListener('click',()=>drawer.hidden=false);drawer.addEventListener('click',e=>{if(e.target===drawer||e.target.id==='drawerClose')drawer.hidden=true;});
+    $('popoverToggle').addEventListener('click',()=>{const panel=$('popoverPanel');panel.hidden=!panel.hidden;$('popoverToggle').setAttribute('aria-expanded',String(!panel.hidden));});
+    $('contextTarget').addEventListener('contextmenu',e=>{e.preventDefault();const m=$('contextMenu');m.hidden=false;const rect=e.currentTarget.getBoundingClientRect();m.style.left=Math.min(e.clientX-rect.left,rect.width-130)+'px';m.style.top=Math.min(e.clientY-rect.top,rect.height-100)+'px';});
+    $('contextTarget').addEventListener('click',()=>{$('contextMenu').hidden=true;});
+    $('contextMenu').addEventListener('click',e=>{const b=e.target.closest('[data-context]');if(!b)return;$('contextMessage').textContent='Action: '+b.dataset.context;$('contextMenu').hidden=true;});
+    $('calendarDemo').addEventListener('change',e=>{const d=new Date(e.target.value+'-01T12:00:00');$('calendarMessage').textContent=d.toLocaleDateString('en-US',{month:'long',year:'numeric'});});
+    $('notificationDismiss').addEventListener('click',()=>document.querySelector('.notification').hidden=true);
+    $('notificationRestore').addEventListener('click',()=>document.querySelector('.notification').hidden=false);
     $('copyDemo').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('UIForU');$('copyMessage').textContent='Copied to clipboard.';}catch{$('copyMessage').textContent='Clipboard access is unavailable.';}});
 
   </script>
