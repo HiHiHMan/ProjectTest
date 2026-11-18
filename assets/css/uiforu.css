@@ -350,3 +350,25 @@
 @media(max-width:480px){#principles-ux .v2-principle-card{min-height:0}#principles-ux .v2-layers{min-height:165px}}
 @media(prefers-reduced-motion:reduce){#principles-ux .v2-principle-card,#principles-ux .v2-demo *{transition:none!important;animation-duration:.01ms!important}}
 
+
+
+/* Principle demos — follow-through and adaptive motion */
+#principles-ux .v2-follow-scene{position:relative;width:100%;height:76px;display:flex;align-items:center;justify-content:center;gap:8px}
+#principles-ux .v2-follow-main{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#fdba74,#f97316);color:#fff;box-shadow:0 7px 16px #f9731633}
+#principles-ux .v2-follow-scene i{width:13px;height:13px;border-radius:4px;background:#fed7aa;opacity:.8;transform:rotate(18deg);animation:v2-follow-tail 1.5s ease-in-out infinite}
+#principles-ux .v2-follow-scene i:nth-of-type(2){opacity:.55;animation-delay:.08s}
+#principles-ux .v2-follow-scene i:nth-of-type(3){opacity:.3;animation-delay:.16s}
+#principles-ux .v2-follow-scene small{position:absolute;bottom:0;font-size:7px;letter-spacing:.1em;color:#a8a29e}
+@keyframes v2-follow-tail{0%,42%,100%{transform:translateX(-5px) rotate(-18deg)}65%{transform:translateX(12px) rotate(35deg)}82%{transform:translateX(5px) rotate(12deg)}}
+#principles-ux .v2-frequency-states{display:grid!important;grid-template-columns:1fr 1fr;gap:6px}
+#principles-ux .v2-frequency-states button{display:grid;gap:5px;padding:8px 5px;text-align:left}
+#principles-ux .v2-frequency-states button strong{font-size:9px}
+#principles-ux .v2-frequency-states button.active{border-color:#fb923c;background:#fff7ed;color:#9a3412}
+#principles-ux .v2-frequency-preview{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #f0eeeb;border-radius:8px;background:#fff}
+#principles-ux .v2-frequency-preview span{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;background:#fff7ed;color:#ea580c;font-size:16px;animation:v2-frequency-pulse 1s ease-in-out infinite}
+#principles-ux .v2-frequency-preview b{font-size:10px;color:#57534e}
+#principles-ux .v2-frequency-preview i{width:6px;height:6px;margin-left:auto;border-radius:50%;background:#fb923c;animation:v2-frequency-pulse 1s ease-in-out infinite}
+#principles-ux .v2-frequency.quiet .v2-frequency-preview :is(span,i){animation:none}
+@keyframes v2-frequency-pulse{50%{transform:scale(1.18);opacity:.55}}
+@media(prefers-reduced-motion:reduce){#principles-ux .v2-follow-scene i,#principles-ux .v2-frequency-preview :is(span,i){animation:none!important}}
+
