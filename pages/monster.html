@@ -311,7 +311,7 @@
               : (darkRange - luminance) / darkRange;
             const keepProbability = isLight
               ? Math.pow(tone, 2.2) * 0.18
-              : Math.pow(tone, 3.0);
+              : Math.pow(tone, 1.6);
             if (Math.random() > keepProbability) continue;
 
             // Keep white dots sparse across the entire bright region.
