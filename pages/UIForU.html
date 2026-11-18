@@ -492,28 +492,25 @@
       if(!demo)return;
       const tools=document.createElement('div');
       tools.className='code-tools';
-      tools.innerHTML='<button class="code-toggle" type="button" aria-expanded="false">View code</button><span class="code-note">Complete component source</span>';
+      tools.innerHTML='<div style="display:flex;align-items:center;gap:8px"><button class="code-toggle" type="button" aria-expanded="false">View code</button><a class="code-download" href="../assets/css/uiforu.css" download="uiforu.css">Download CSS</a></div><span class="code-note">Complete component source</span>';
       const panel=document.createElement('div');
       panel.className='code-panel';
       panel.hidden=true;
-      panel.innerHTML='<div class="code-panel-head"><div class="code-tabs"><button class="code-tab active" type="button" data-code-tab="html">HTML</button><button class="code-tab" type="button" data-code-tab="css">CSS</button><button class="code-tab" type="button" data-code-tab="js">JavaScript</button></div><div style="display:flex;gap:6px;align-items:center"><a class="code-download" href="../assets/css/uiforu.css" download="uiforu.css" hidden>Download .css</a><button class="code-copy" type="button">Copy</button></div></div><pre class="code-output"></pre><p class="code-note"></p>';
+      panel.innerHTML='<div class="code-panel-head"><div class="code-tabs"><button class="code-tab active" type="button" data-code-tab="html">HTML</button><button class="code-tab" type="button" data-code-tab="js">JavaScript</button></div><button class="code-copy" type="button">Copy</button></div><pre class="code-output"></pre><p class="code-note"></p>';
       card.append(tools,panel);
       const output=panel.querySelector('.code-output');
       const toggle=tools.querySelector('.code-toggle');
       let active='html';
       const snippets={
         html:()=>makeComponentHtml(card),
-        css:()=>fullCss,
         js:()=>makeComponentJs(card)
       };
       const render=()=>{
         const code=snippets[active]();
         output.textContent=code||'No JavaScript interaction is defined for this component demo.';
         panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.classList.toggle('active',tab.dataset.codeTab===active));
-        panel.querySelector('.code-download').hidden=active!=='css';
         const notes={
           html:'Complete card markup, including its title, demo, and description.',
-          css:'Complete stylesheet used by this page. Copy the full stylesheet to preserve the component appearance.',
           js:code?'JavaScript lines associated with this component. Check any external dependencies before using.':'This demo is static and does not require JavaScript.'
         };
         panel.querySelector('.code-note').textContent=notes[active];
