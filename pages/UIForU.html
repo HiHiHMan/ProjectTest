@@ -129,6 +129,26 @@
     .code-tab.active{background:var(--accent-soft);border-color:#fdba74;color:var(--accent-dark)}
     .code-output{max-height:260px;overflow:auto;margin:0;padding:12px;border-radius:8px;background:#181818;color:#f5f5f5;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;tab-size:2}
     .code-note{margin:0;color:var(--muted);font-size:11px;line-height:16px}
+    .rich-editor,.sticky-demo,.booking-calendar{width:100%;min-width:0;display:grid;gap:10px}
+    .rich-tools,.sticky-actions{position:relative;display:flex;align-items:center;gap:6px;padding:7px;border:1px solid var(--line);border-radius:9px;background:#faf9f7}
+    .rich-tools button,.sticky-actions button,.booking-head button{min-width:30px;height:30px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#444;cursor:pointer}
+    .rich-tools button:hover,.sticky-actions button:hover,.booking-head button:hover{border-color:#fdba74;color:var(--accent-dark)}
+    .rich-content{min-height:92px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#333;outline:none}
+    .rich-content:focus{border-color:var(--accent);box-shadow:0 0 0 3px #f9731618}
+    .rich-content ul{padding-left:22px}
+    .sticky-scroll{height:190px;overflow:auto;border:1px solid var(--line);border-radius:9px;background:#fff}
+    .sticky-content{padding:12px;display:grid;gap:12px}
+    .sticky-actions{position:sticky;top:0;z-index:2;margin:-12px -12px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff}
+    .sticky-content p{margin:0;color:#666;font-size:12px;line-height:19px}
+    .booking-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .booking-head strong{font-size:13px}
+    .booking-week,.booking-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+    .booking-week span{color:#999;font-size:10px;font-weight:700;padding:4px 0}
+    .booking-days button,.booking-days span{display:grid;place-items:center;min-width:0;aspect-ratio:1;border:1px solid transparent;border-radius:7px;background:transparent;color:#444;font-size:11px}
+    .booking-days button{cursor:pointer}
+    .booking-days button:hover:not(:disabled){border-color:#fdba74;background:var(--accent-soft)}
+    .booking-days button:disabled{color:#d4d4d4;cursor:not-allowed}
+    .booking-days button.selected{background:var(--accent);color:#fff}
     .collection-tools{display:flex;align-items:center;gap:16px;margin:0 0 24px;min-width:0}
     .collection-search{display:flex;align-items:center;gap:10px;width:min(100%,420px);min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#a1a1aa;transition:border-color 300ms var(--curve),box-shadow 300ms var(--curve)}
     .collection-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px #f9731618}
@@ -258,7 +278,7 @@
 <article class="card"><div class="card-head"><h3>Date Range Picker</h3><span class="number">091</span></div><div class="demo"><div class="sample-field"><label>Date Range Picker</label><input class="field" placeholder="Enter a value"><span class="hint">Sample input state</span></div></div><p class="desc">Choose a start and end date.</p></article>
 <article class="card"><div class="card-head"><h3>Time Range Picker</h3><span class="number">092</span></div><div class="demo"><div class="sample-tabs"><div><button class="active">Overview</button><button>Details</button><button>Activity</button></div><span>Time Range Picker</span></div></div><p class="desc">Choose a start and end time.</p></article>
 <article class="card"><div class="card-head"><h3>File Dropzone</h3><span class="number">093</span></div><div class="demo"><div class="sample-list"><b>File Dropzone</b><span>✓ First item</span><span>○ Second item</span><span>○ Third item</span></div></div><p class="desc">Upload files by dropping them into a target.</p></article>
-<article class="card"><div class="card-head"><h3>Rich Text Toolbar</h3><span class="number">094</span></div><div class="demo"><div class="sample-chart"><div style="height:32%"></div><div style="height:41%"></div><div style="height:58%"></div><div style="height:90%"></div></div></div><p class="desc">Apply formatting to selected text.</p></article>
+<article class="card"><div class="card-head"><h3>Rich Text Toolbar</h3><span class="number">094</span></div><div class="demo"><div class="rich-editor"><div class="rich-tools" role="toolbar" aria-label="Text formatting"><button type="button" data-rich-command="bold" aria-label="Bold"><strong>B</strong></button><button type="button" data-rich-command="italic" aria-label="Italic"><em>I</em></button><button type="button" data-rich-command="underline" aria-label="Underline"><u>U</u></button><button type="button" data-rich-command="insertUnorderedList" aria-label="Bullet list">☷</button></div><div class="rich-content" contenteditable="true" role="textbox" aria-multiline="true">Select text and try formatting it.</div><span class="hint" data-rich-status>Click in the text, select a word, then choose a format.</span></div></div><p class="desc">Select text and apply bold, italic, underline or a list.</p></article>
 <article class="card"><div class="card-head"><h3>Form Builder</h3><span class="number">095</span></div><div class="demo"><div class="sample-dialog"><b>Form Builder</b><span class="hint">Contextual actions and information</span><button class="btn secondary" data-sample-action>Open preview</button></div></div><p class="desc">Compose a form from reusable fields.</p></article></div></section>
 <section class="component-section" id="navigation-layout" aria-labelledby="navigation-layout-title"><div class="section-meta"><h2 id="navigation-layout-title">Navigation & Layout</h2><span>10 ELEMENTS</span></div><div class="grid"><article class="card"><div class="card-head"><h3>Mega Menu</h3><span class="number">096</span></div><div class="demo"><div class="sample-control"><span class="sample-icon">◎</span><b>Mega Menu</b><span class="hint">Interactive preview</span></div></div><p class="desc">Expose grouped destinations in a wide navigation panel.</p></article>
 <article class="card"><div class="card-head"><h3>Navigation Rail</h3><span class="number">097</span></div><div class="demo"><div class="sample-panel"><b>Navigation Rail</b><div class="sample-line"></div><div class="sample-line short"></div><button class="btn secondary" data-sample-action>Try example</button><span class="hint" data-sample-message>Ready to interact.</span></div></div><p class="desc">Provide compact primary navigation with icons.</p></article>
@@ -268,7 +288,7 @@
 <article class="card"><div class="card-head"><h3>Workspace Switcher</h3><span class="number">101</span></div><div class="demo"><div class="sample-field"><label>Workspace Switcher</label><input class="field" placeholder="Enter a value"><span class="hint">Sample input state</span></div></div><p class="desc">Move between teams or workspaces.</p></article>
 <article class="card"><div class="card-head"><h3>Collapsible Sidebar</h3><span class="number">102</span></div><div class="demo"><div class="sample-tabs"><div><button class="active">Overview</button><button>Details</button><button>Activity</button></div><span>Collapsible Sidebar</span></div></div><p class="desc">Expand or collapse secondary navigation.</p></article>
 <article class="card"><div class="card-head"><h3>Panel Group</h3><span class="number">103</span></div><div class="demo"><div class="sample-list"><b>Panel Group</b><span>✓ First item</span><span>○ Second item</span><span>○ Third item</span></div></div><p class="desc">Arrange adjacent content panels.</p></article>
-<article class="card"><div class="card-head"><h3>Sticky Toolbar</h3><span class="number">104</span></div><div class="demo"><div class="sample-chart"><div style="height:32%"></div><div style="height:41%"></div><div style="height:58%"></div><div style="height:90%"></div></div></div><p class="desc">Keep contextual actions close to the content.</p></article>
+<article class="card"><div class="card-head"><h3>Sticky Toolbar</h3><span class="number">104</span></div><div class="demo"><div class="sticky-demo"><div class="sticky-scroll"><div class="sticky-content"><div class="sticky-actions"><button type="button" data-sticky-action="Save">Save</button><button type="button" data-sticky-action="Share">Share</button><button type="button" data-sticky-action="More">•••</button></div><strong>Project notes</strong><p>Scroll inside this panel. The toolbar stays at the top while the content moves.</p><p>Use sticky toolbars to keep frequent actions accessible during long editing or reading tasks.</p><p>They are useful in document editors, dashboards and data tables.</p><p>Keep the actions relevant to the visible content and avoid overcrowding the toolbar.</p></div></div><span class="hint" data-sticky-status>Scroll the panel to try it.</span></div></div><p class="desc">Scroll the panel to see the action bar stay pinned at the top.</p></article>
 <article class="card"><div class="card-head"><h3>Anchor Navigation</h3><span class="number">105</span></div><div class="demo"><div class="sample-dialog"><b>Anchor Navigation</b><span class="hint">Contextual actions and information</span><button class="btn secondary" data-sample-action>Open preview</button></div></div><p class="desc">Jump directly to named sections.</p></article></div></section>
 <section class="component-section" id="business-data" aria-labelledby="business-data-title"><div class="section-meta"><h2 id="business-data-title">Business & Data</h2><span>10 ELEMENTS</span></div><div class="grid"><article class="card"><div class="card-head"><h3>Approval Queue</h3><span class="number">106</span></div><div class="demo"><div class="sample-control"><span class="sample-icon">◎</span><b>Approval Queue</b><span class="hint">Interactive preview</span></div></div><p class="desc">Process items waiting for approval.</p></article>
 <article class="card"><div class="card-head"><h3>Audit Trail</h3><span class="number">107</span></div><div class="demo"><div class="sample-panel"><b>Audit Trail</b><div class="sample-line"></div><div class="sample-line short"></div><button class="btn secondary" data-sample-action>Try example</button><span class="hint" data-sample-message>Ready to interact.</span></div></div><p class="desc">Record who changed what and when.</p></article>
@@ -278,7 +298,7 @@
 <article class="card"><div class="card-head"><h3>Organization Chart</h3><span class="number">111</span></div><div class="demo"><div class="sample-field"><label>Organization Chart</label><input class="field" placeholder="Enter a value"><span class="hint">Sample input state</span></div></div><p class="desc">Show reporting relationships across a team.</p></article>
 <article class="card"><div class="card-head"><h3>Team Directory</h3><span class="number">112</span></div><div class="demo"><div class="sample-tabs"><div><button class="active">Overview</button><button>Details</button><button>Activity</button></div><span>Team Directory</span></div></div><p class="desc">Browse people and their availability.</p></article>
 <article class="card"><div class="card-head"><h3>Resource Scheduler</h3><span class="number">113</span></div><div class="demo"><div class="sample-list"><b>Resource Scheduler</b><span>✓ First item</span><span>○ Second item</span><span>○ Third item</span></div></div><p class="desc">Allocate shared resources across time slots.</p></article>
-<article class="card"><div class="card-head"><h3>Booking Calendar</h3><span class="number">114</span></div><div class="demo"><div class="sample-chart"><div style="height:32%"></div><div style="height:41%"></div><div style="height:58%"></div><div style="height:90%"></div></div></div><p class="desc">Choose an available booking date.</p></article>
+<article class="card"><div class="card-head"><h3>Booking Calendar</h3><span class="number">114</span></div><div class="demo"><div class="booking-calendar"><div class="booking-head"><button type="button" data-booking-prev aria-label="Previous month">‹</button><strong data-booking-month></strong><button type="button" data-booking-next aria-label="Next month">›</button></div><div class="booking-week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div class="booking-days" data-booking-days></div><span class="hint" data-booking-status>Select a date to preview your booking.</span></div></div><p class="desc">Navigate months and select a date to make a booking.</p></article>
 <article class="card"><div class="card-head"><h3>Gantt Chart</h3><span class="number">115</span></div><div class="demo"><div class="sample-dialog"><b>Gantt Chart</b><span class="hint">Contextual actions and information</span><button class="btn secondary" data-sample-action>Open preview</button></div></div><p class="desc">Visualize task duration on a timeline.</p></article></div></section>
 <section class="component-section" id="feedback-system" aria-labelledby="feedback-system-title"><div class="section-meta"><h2 id="feedback-system-title">Feedback & System</h2><span>10 ELEMENTS</span></div><div class="grid"><article class="card"><div class="card-head"><h3>Confirm Dialog</h3><span class="number">116</span></div><div class="demo"><div class="sample-control"><span class="sample-icon">◎</span><b>Confirm Dialog</b><span class="hint">Interactive preview</span></div></div><p class="desc">Request confirmation before a destructive action.</p></article>
 <article class="card"><div class="card-head"><h3>Bottom Sheet</h3><span class="number">117</span></div><div class="demo"><div class="sample-panel"><b>Bottom Sheet</b><div class="sample-line"></div><div class="sample-line short"></div><button class="btn secondary" data-sample-action>Try example</button><span class="hint" data-sample-message>Ready to interact.</span></div></div><p class="desc">Reveal contextual actions from the bottom edge.</p></article>
@@ -410,6 +430,46 @@
       toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));toggle.textContent=panel.hidden?'View code':'Hide code';if(!panel.hidden)render();});
       panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.addEventListener('click',()=>{active=tab.dataset.codeTab;render();}));
       panel.querySelector('.code-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(snippets[active]());panel.querySelector('.code-copy').textContent='Copied';}catch{panel.querySelector('.code-copy').textContent='Copy unavailable';}});
+    });
+
+
+    document.querySelectorAll('.rich-editor').forEach(editor=>{
+      const content=editor.querySelector('.rich-content');
+      editor.querySelectorAll('[data-rich-command]').forEach(button=>button.addEventListener('click',()=>{
+        content.focus();
+        document.execCommand(button.dataset.richCommand,false,null);
+        editor.querySelector('[data-rich-status]').textContent='Applied '+button.getAttribute('aria-label')+' formatting.';
+      }));
+    });
+    document.querySelectorAll('.sticky-demo').forEach(demo=>{
+      demo.querySelectorAll('[data-sticky-action]').forEach(button=>button.addEventListener('click',()=>{
+        demo.querySelector('[data-sticky-status]').textContent=button.dataset.stickyAction+' action selected.';
+      }));
+    });
+    document.querySelectorAll('.booking-calendar').forEach(calendar=>{
+      let shown=new Date();shown.setDate(1);
+      let selected='';
+      const monthLabel=calendar.querySelector('[data-booking-month]');
+      const days=calendar.querySelector('[data-booking-days]');
+      const status=calendar.querySelector('[data-booking-status]');
+      const render=()=>{
+        monthLabel.textContent=shown.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+        days.replaceChildren();
+        const offset=shown.getDay();
+        const total=new Date(shown.getFullYear(),shown.getMonth()+1,0).getDate();
+        for(let i=0;i<offset;i++)days.append(document.createElement('span'));
+        for(let day=1;day<=total;day++){
+          const button=document.createElement('button');
+          const value=shown.getFullYear()+'-'+String(shown.getMonth()+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+          button.type='button';button.textContent=day;button.dataset.date=value;
+          button.classList.toggle('selected',selected===value);
+          button.addEventListener('click',()=>{selected=value;status.textContent='Selected booking date: '+new Date(shown.getFullYear(),shown.getMonth(),day).toLocaleDateString('en-US',{dateStyle:'long'});render();});
+          days.append(button);
+        }
+      };
+      calendar.querySelector('[data-booking-prev]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()-1);render();});
+      calendar.querySelector('[data-booking-next]').addEventListener('click',()=>{shown.setMonth(shown.getMonth()+1);render();});
+      render();
     });
 
     const componentSearch=$('componentSearch');
