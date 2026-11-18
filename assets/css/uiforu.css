@@ -374,3 +374,166 @@
 @keyframes v2-frequency-pulse{50%{transform:scale(1.18);opacity:.55}}
 @media(prefers-reduced-motion:reduce){#principles-ux .v2-follow-scene i,#principles-ux .v2-frequency-preview :is(span,i){animation:none!important}}
 
+
+
+/* Real-world UI pattern gallery */
+#principles-ux{--real-orange:#f97316;--real-orange-dark:#c2410c;--real-soft:#fff7ed;--real-line:#eee7e1}
+#principles-ux .real-ux-intro{margin:0 0 22px;color:#78716c;font-size:13px}
+#principles-ux .real-ux-group{margin:28px 0 34px}
+#principles-ux .real-ux-group-head{margin-bottom:14px;padding:14px 18px;border:1px solid #fed7aa;border-radius:13px;background:linear-gradient(110deg,#fff7ed,#fff 78%)}
+#principles-ux .real-ux-group-head>span{font-size:9px;letter-spacing:.16em;color:#ea580c}
+#principles-ux .real-ux-group-head h3{margin:4px 0;color:#292524;font-size:16px}
+#principles-ux .real-ux-group-head p{margin:0;color:#78716c;font-size:11px}
+#principles-ux .real-ux-grid{align-items:stretch;gap:16px}
+#principles-ux .real-ux-card{min-width:0;display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #e7e5e4;border-radius:15px;background:#fff;box-shadow:0 6px 20px #29252408;transition:transform .3s,border-color .3s,box-shadow .3s}
+#principles-ux .real-ux-card:hover{transform:translateY(-3px);border-color:#fdba74;box-shadow:0 12px 28px #9a341212}
+#principles-ux .real-ux-card .card-head h3{font-size:13px;color:#292524}
+#principles-ux .real-ux-kicker{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c2410c}
+#principles-ux .real-ux-demo{min-width:0}
+#principles-ux .real-ui{min-height:210px;padding:13px;border:1px solid #e9e5e1;border-radius:11px;background:linear-gradient(145deg,#fff,#fffaf6);color:#292524;font-size:10px;overflow:hidden}
+#principles-ux .real-ui :is(button,input){font:inherit}
+#principles-ux .real-ui button{cursor:pointer}
+#principles-ux .real-ui-top{display:flex;align-items:center;gap:8px;min-height:26px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0eeeb}
+#principles-ux .real-ui-top>span:first-child{font-size:8px;letter-spacing:.12em;color:#a8a29e}
+#principles-ux .real-ui-top>b{font-size:11px;margin-right:auto}
+#principles-ux .real-ui-top em,.real-cart-count{font-style:normal;color:#c2410c;background:#ffedd5;border-radius:20px;padding:3px 6px}
+#principles-ux .real-ui small{display:block;color:#78716c;font-size:9px;line-height:1.5}
+#principles-ux .real-ui strong{font-size:12px}
+#principles-ux .real-ui button{border:0}
+#principles-ux .real-primary{border:1px solid #ea580c!important;border-radius:7px;padding:8px 11px;background:linear-gradient(120deg,#fb923c,#f97316);color:#fff;font-size:9px;font-weight:700;box-shadow:0 3px 9px #f9731622;transition:transform .2s,filter .2s}
+#principles-ux .real-primary:hover{filter:brightness(1.04);transform:translateY(-1px)}
+#principles-ux .real-primary:active{transform:scale(.97)}
+#principles-ux .real-wide{width:100%;margin-top:9px}
+#principles-ux .real-quiet{padding:7px 9px;border:1px solid #e7e5e4!important;border-radius:7px;background:#fff;color:#57534e}
+#principles-ux .real-danger{padding:7px 9px;border-radius:7px;background:#dc2626;color:white}
+#principles-ux .real-feedback{margin:9px 0 0;color:#a8a29e;font-size:9px;min-height:13px}
+#principles-ux .real-product-row,#principles-ux .real-line-item,#principles-ux .real-review-product{display:flex;align-items:center;gap:10px}
+#principles-ux .real-product-art{width:54px;height:58px;display:grid;place-items:center;flex:none;border:1px solid #fed7aa;border-radius:9px;background:linear-gradient(145deg,#ffedd5,#fff7ed);color:#ea580c;font-size:26px}
+#principles-ux .real-product-info,#principles-ux .real-line-item>div:nth-child(2),#principles-ux .real-review-product>div:nth-child(2){display:grid;gap:3px}
+#principles-ux .real-product-info>b,#principles-ux .real-line-item b,#principles-ux .real-review-product b{font-size:10px}
+#principles-ux .real-product-info>strong{color:#c2410c}
+#principles-ux .real-ui-bottom{display:flex;align-items:center;gap:7px;margin-top:12px;padding-top:10px;border-top:1px solid #f0eeeb}
+#principles-ux .real-ui-bottom>span{margin-right:auto;color:#78716c}
+#principles-ux .real-stepper{display:flex;align-items:center;gap:7px}
+#principles-ux .real-stepper button,#principles-ux .real-target-control button{width:29px;height:29px;border:1px solid #fed7aa!important;border-radius:7px;background:#fff7ed;color:#c2410c;font-weight:700}
+#principles-ux .real-stepper output,#principles-ux .real-target-control output{min-width:12px;text-align:center}
+#principles-ux .real-remove-screen .real-icon-btn{margin-left:auto;width:30px;height:30px;border-radius:7px;background:#fff7ed;color:#c2410c;font-size:17px}
+#principles-ux .real-confirm-panel{display:grid;gap:6px;margin-top:12px;padding:10px;border:1px solid #fed7aa;border-radius:8px;background:#fff7ed}
+#principles-ux .real-confirm-panel>div{display:flex;justify-content:flex-end;gap:6px;margin-top:4px}
+#principles-ux [hidden]{display:none!important}
+#principles-ux .real-summary-row,#principles-ux .real-total{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f0eeeb}
+#principles-ux .real-summary-row b{font-size:10px}
+#principles-ux .real-total{margin-top:4px;border:0}
+#principles-ux .real-total strong{font-size:16px;color:#c2410c}
+#principles-ux .real-green{color:#15803d}
+#principles-ux .real-progress{display:flex;align-items:center;justify-content:space-between;margin:18px 0}
+#principles-ux .real-step{display:grid;justify-items:center;gap:4px;color:#a8a29e}
+#principles-ux .real-step i{width:23px;height:23px;display:grid;place-items:center;border:1px solid #e7e5e4;border-radius:50%;font-style:normal}
+#principles-ux .real-step.active i,#principles-ux .real-step.done i{background:#f97316;border-color:#f97316;color:white}
+#principles-ux .real-step.active span{color:#c2410c}
+#principles-ux .real-progress-line{height:1px;flex:1;margin:0 5px;background:#e7e5e4}
+#principles-ux .real-form-line{display:grid;gap:4px;margin:8px 0}
+#principles-ux .real-form-line label{color:#78716c;font-size:9px}
+#principles-ux .real-form-line div{padding:7px;border:1px solid #e7e5e4;border-radius:6px;background:#fff}
+#principles-ux .real-item-check{margin-left:auto;color:#16a34a}
+#principles-ux .real-cart-footer{display:flex;justify-content:space-between;padding:9px 0;color:#78716c}
+#principles-ux .real-cart-footer b{color:#292524}
+#principles-ux .real-accordion-trigger{width:100%;display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0eeeb!important;background:transparent;color:#292524;text-align:left}
+#principles-ux .real-accordion-trigger b{color:#ea580c}
+#principles-ux .real-accordion-trigger.muted{color:#78716c}
+#principles-ux .real-accordion-content{padding:9px;border-radius:7px;background:#fff7ed;color:#57534e;font-size:9px;line-height:1.6}
+#principles-ux .real-nav-layout{display:flex;gap:10px;min-height:118px}
+#principles-ux .real-side-nav{width:90px;display:grid;align-content:start;gap:4px;flex:none}
+#principles-ux .real-side-nav button{padding:7px;text-align:left;border-radius:6px;background:transparent;color:#78716c;font-size:9px}
+#principles-ux .real-side-nav button.active{background:#fff7ed;color:#c2410c}
+#principles-ux .real-nav-content{display:grid;align-content:start;gap:7px}
+#principles-ux .real-nav-content>b{font-size:11px}
+#principles-ux .real-mini-stat{display:grid;gap:2px;padding:9px;border:1px solid #f0eeeb;border-radius:8px;background:white}
+#principles-ux .real-mini-stat strong{font-size:16px;color:#c2410c}
+#principles-ux .real-menu-trigger{display:none}
+#principles-ux .real-like{width:30px;height:30px;border:1px solid #fed7aa!important;border-radius:50%;background:#fff7ed;color:#c2410c;font-size:17px}
+#principles-ux .real-like.liked{background:#f97316;color:#fff}
+#principles-ux .real-review-actions{display:flex;align-items:center;gap:8px;margin-top:15px}
+#principles-ux .real-review-actions .real-quiet{margin-left:auto}
+#principles-ux .real-search-field{display:flex;align-items:center;gap:7px;padding:8px;border:1px solid #fdba74;border-radius:8px;background:#fff;font-size:14px;color:#c2410c}
+#principles-ux .real-search-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#292524;font-size:10px}
+#principles-ux .real-search-field kbd{white-space:nowrap;font-size:8px;color:#a8a29e}
+#principles-ux .real-search-results{display:grid;gap:3px;margin-top:8px}
+#principles-ux .real-search-results button{display:flex;align-items:center;gap:7px;padding:6px;border-radius:6px;background:transparent;text-align:left}
+#principles-ux .real-search-results button:hover{background:#fff7ed}
+#principles-ux .real-search-results button>span{color:#ea580c}
+#principles-ux .real-search-results button>b{font-size:9px}
+#principles-ux .real-search-results button>small{margin-left:auto}
+#principles-ux .real-success-screen{display:flex;flex-direction:column;align-items:center;text-align:center}
+#principles-ux .real-success-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#dcfce7;color:#15803d;font-size:22px;animation:real-success-pop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes real-success-pop{0%{transform:scale(.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+#principles-ux .real-success-copy{display:grid;gap:3px;margin:7px 0}
+#principles-ux .real-success-copy b{font-size:12px}
+#principles-ux .real-success-details{width:100%;display:flex;justify-content:space-between;margin:8px 0;padding:8px;border-radius:7px;background:#f8fafc}
+#principles-ux .real-3d-stage{height:120px;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:8px;background:radial-gradient(circle at 50% 40%,#ffedd5,#fff 70%);perspective:600px;touch-action:pan-y}
+#principles-ux .real-lamp{position:relative;width:85px;height:86px;transform-style:preserve-3d;transition:transform .2s}
+#principles-ux .real-lamp i{position:absolute;left:27px;top:8px;width:42px;height:27px;border-radius:50% 50% 6px 6px;background:linear-gradient(145deg,#fed7aa,#f97316);box-shadow:0 8px 18px #f9731644}
+#principles-ux .real-lamp b{position:absolute;left:46px;top:31px;width:7px;height:43px;border-radius:5px;background:linear-gradient(90deg,#a8a29e,#57534e)}
+#principles-ux .real-lamp span{position:absolute;left:25px;bottom:0;width:52px;height:9px;border-radius:50%;background:#57534e}
+#principles-ux .real-3d-stage>small{position:absolute;bottom:5px;font-size:7px;letter-spacing:.1em}
+#principles-ux .real-3d-meta{display:flex;justify-content:space-between;padding:8px 0}
+#principles-ux .real-3d-meta b{color:#c2410c}
+#principles-ux .real-listing-product{display:flex;gap:10px}
+#principles-ux .listing-art{height:100px;width:84px;font-size:38px}
+#principles-ux .real-listing-copy{display:grid;align-content:start;gap:3px}
+#principles-ux .real-tag{width:max-content;padding:3px 5px;border-radius:4px;background:#fff7ed;color:#c2410c;font-size:7px;letter-spacing:.08em}
+#principles-ux .real-listing-copy>b{font-size:10px}
+#principles-ux .real-listing-copy>strong{color:#c2410c}
+#principles-ux .real-listing-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+#principles-ux .real-target-screen{display:grid;align-content:start}
+#principles-ux .real-target-control{display:flex;justify-content:center;align-items:center;gap:12px;margin:12px 0}
+#principles-ux .real-target-control button{width:38px;height:38px;font-size:16px}
+#principles-ux .real-notice{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #fed7aa;border-radius:8px;background:#fff7ed}
+#principles-ux .real-notice-symbol{width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#ffedd5;color:#c2410c;font-weight:700}
+#principles-ux .real-notice>div{flex:1}
+#principles-ux .real-hit-close{width:38px;height:38px;margin:-8px;border-radius:8px;background:transparent;color:#78716c;font-size:17px}
+#principles-ux .real-storage{height:6px;margin:15px 0;background:#f0eeeb;border-radius:9px;overflow:hidden}
+#principles-ux .real-storage i{display:block;width:92%;height:100%;border-radius:9px;background:#f97316}
+#principles-ux .real-notice-actions{display:flex;justify-content:flex-end;gap:6px}
+#principles-ux .real-plan-options{display:grid;gap:6px}
+#principles-ux .real-plan-options button{display:flex;align-items:center;justify-content:space-between;padding:9px;border:1px solid #e7e5e4!important;border-radius:8px;background:#fff;text-align:left}
+#principles-ux .real-plan-options button.active{border-color:#fb923c!important;background:#fff7ed;box-shadow:0 0 0 1px #fb923c33}
+#principles-ux .real-plan-options button span{display:grid;gap:2px}
+#principles-ux .real-plan-options button strong{font-size:11px;color:#c2410c}
+#principles-ux .real-dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#principles-ux .real-dashboard-grid>div{display:grid;gap:5px;padding:9px;border:1px solid #f0eeeb;border-radius:8px;background:white}
+#principles-ux .real-dashboard-grid small{font-size:7px;letter-spacing:.08em}
+#principles-ux .real-dashboard-grid strong{font-size:15px}
+#principles-ux .real-dashboard-group{margin-top:10px;padding:9px;border:1px solid #f0eeeb;border-radius:8px;background:#fff}
+#principles-ux .real-dashboard-group>b{display:block;margin-bottom:6px}
+#principles-ux .real-dashboard-group>div{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #f5f5f4}
+#principles-ux .real-loading-state{display:flex;align-items:center;gap:10px;padding:10px 0}
+#principles-ux .real-spinner{width:22px;height:22px;border:2px solid #fed7aa;border-top-color:#f97316;border-radius:50%;animation:real-spin .7s linear infinite}
+@keyframes real-spin{to{transform:rotate(360deg)}}
+#principles-ux .real-loading-state>div:last-child{display:grid;gap:3px}
+#principles-ux .real-skeleton{display:grid;gap:6px;margin:7px 0}
+#principles-ux .real-skeleton i{height:7px;border-radius:8px;background:linear-gradient(90deg,#f5f5f4,#fff7ed,#f5f5f4);background-size:200% 100%;animation:real-shimmer 1.3s infinite}
+#principles-ux .real-skeleton i:nth-child(2){width:78%}
+#principles-ux .real-skeleton i:nth-child(3){width:56%}
+@keyframes real-shimmer{to{background-position:-200% 0}}
+#principles-ux .real-field-label{display:grid;gap:4px;margin:7px 0;color:#78716c;font-size:9px}
+#principles-ux .real-field-label input{width:100%;padding:8px;border:1px solid #e7e5e4;border-radius:6px;background:#fff;color:#292524}
+#principles-ux .real-store-header{display:flex;align-items:center;justify-content:space-between;gap:5px}
+#principles-ux .real-store-header>b{font-size:12px;letter-spacing:-.05em}
+#principles-ux .real-store-header>b span{color:#f97316}
+#principles-ux .real-store-header>div{display:flex;gap:2px}
+#principles-ux .real-store-header button{padding:5px 4px;background:transparent;color:#57534e;font-size:8px}
+#principles-ux .real-store-header button:last-child{color:#c2410c}
+#principles-ux .real-store-hero{min-height:135px;display:grid;align-content:center;justify-items:start;gap:8px;margin-top:8px;padding:12px;border-radius:8px;background:linear-gradient(120deg,#292524,#57534e);color:white}
+#principles-ux .real-store-hero small{color:#fed7aa;letter-spacing:.12em}
+#principles-ux .real-store-hero>b{font-family:Georgia,serif;font-size:21px;line-height:1.05}
+#principles-ux .real-shortcut-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#principles-ux .real-shortcut-grid button{display:grid;justify-items:start;gap:3px;padding:9px;border:1px solid #f0eeeb!important;border-radius:8px;background:#fff;text-align:left}
+#principles-ux .real-shortcut-grid button:hover{border-color:#fdba74!important;background:#fffaf5}
+#principles-ux .real-shortcut-grid i{width:23px;height:23px;display:grid;place-items:center;border-radius:6px;background:#fff7ed;color:#ea580c;font-style:normal}
+#principles-ux .real-shortcut-grid b{font-size:9px}
+#principles-ux .real-shortcut-grid small{font-size:8px}
+#principles-ux .real-ui :is(button,input):focus-visible{outline:2px solid #f97316;outline-offset:2px}
+#principles-ux .real-ux-card .desc{margin-top:auto;color:#78716c;font-size:10px;line-height:1.5}
+@media(max-width:600px){#principles-ux .real-ui{min-height:0}#principles-ux .real-nav-layout{min-height:105px}#principles-ux .real-ux-card{padding:11px}}
+@media(prefers-reduced-motion:reduce){#principles-ux .real-ui *{animation:none!important;transition:none!important}}
