@@ -1059,9 +1059,14 @@
         rows.forEach(row=>{row.hidden=!row.textContent.toLowerCase().includes(q);if(!row.hidden)count++;});
         const note=event.target.closest('.uxp-demo').querySelector('[data-uxp-note]');if(note)note.textContent=q?(count+' matching products'):'Instant product search';
       });
-      uxpRoot.querySelectorAll('[data-uxp-3d]').forEach(stage=>{
-        stage.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse')return;const r=stage.getBoundingClientRect(),x=(event.clientX-r.left)/r.width-.5,y=(event.clientY-r.top)/r.height-.5;stage.querySelector('.uxp-3d-object').style.transform='rotateY('+(x*34)+'deg) rotateX('+(-y*22)+'deg)';});
-        stage.addEventListener('pointerleave',()=>stage.querySelector('.uxp-3d-object').style.transform='');
+      uxpRoot.querySelectorAll('[data-uxp="credit-flip"]').forEach(button=>{
+        button.addEventListener('click',()=>{
+          const card=button.closest('.uxp-demo').querySelector('[data-credit-card]');
+          const flipped=card.classList.toggle('is-flipped');
+          card.classList.add('is-paused');
+          button.setAttribute('aria-pressed',String(flipped));
+          button.textContent=flipped?'Show front ↻':'Flip card ↻';
+        });
       });
     }
 </script>
