@@ -1183,9 +1183,7 @@
         cards.forEach((card,i)=>{card.classList.toggle('is-active',i===selected);card.setAttribute('aria-pressed',String(i===selected));});
         count.textContent=String(selected+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
         const active=cards[selected];
-        const viewport=windowEl.getBoundingClientRect();
-        const activeRect=active.getBoundingClientRect();
-        const centerOffset=(activeRect.left+activeRect.width/2)-(viewport.left+viewport.width/2);
+        const centerOffset=active.offsetLeft+active.offsetWidth/2-windowEl.clientWidth/2;
         track.style.transform='translateX('+(-centerOffset)+'px)';
       };
       const choose=i=>{selected=(i+cards.length)%cards.length;toast.textContent='';render();};
