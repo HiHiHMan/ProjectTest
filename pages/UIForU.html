@@ -485,9 +485,9 @@
 
 /* Apply the confirmed visual direction to the whole Overall Appeal card */
 #principles-ux article.uxp-card.is-appeal-confirmed{transition:background-color .55s ease,color .45s ease,border-color .45s ease}
-#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="warm"]{background:#fff1e5;border-color:#f2c6a3;color:#572b16}
-#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="midnight"]{background:#292524;border-color:#57534e;color:#fafaf9}
-#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="botanical"]{background:#e8f0e5;border-color:#b9cdb7;color:#263b2d}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="warm"]{background:linear-gradient(135deg,#fdba74,#c2410c);border-color:#c2410c;color:#fff}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="midnight"]{background:linear-gradient(135deg,#7c2d12,#1c1917);border-color:#57534e;color:#ffedd5}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="botanical"]{background:linear-gradient(135deg,#91a98d,#1f4534);border-color:#456b50;color:#e6f0df}
 #principles-ux article.uxp-card.is-appeal-confirmed .card-head .number{color:inherit;opacity:.62}
 #principles-ux article.uxp-card.is-appeal-confirmed .desc{color:inherit;opacity:.78}
 @media(prefers-reduced-motion:reduce){#principles-ux article.uxp-card.is-appeal-confirmed{transition:none}}
@@ -499,7 +499,7 @@
 #principles-ux .uxp-slice-top output{font-variant-numeric:tabular-nums}
 #principles-ux .uxp-slice-window{overflow:hidden;padding:3px 0 7px;touch-action:pan-y}
 #principles-ux .uxp-slice-track{display:flex;gap:9px;transition:transform .48s cubic-bezier(.2,.8,.2,1);will-change:transform}
-#principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+#principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
 #principles-ux .uxp-slice-card.is-active{opacity:1;transform:scale(1);border-color:#fb923c}
 #principles-ux .uxp-slice-card[data-appeal-theme="midnight"]{background:#292524;color:#fafaf9;border-color:#57534e}
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"]{background:#edf2e8;color:#26352b;border-color:#d6e2d2}
@@ -1170,7 +1170,7 @@
       const toast=demo.querySelector('[data-slice-toast]');
       const prev=demo.querySelector('[data-slice-prev]');
       const next=demo.querySelector('[data-slice-next]');
-      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null;
+      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0;
       const render=()=>{
         cards.forEach((card,i)=>{card.classList.toggle('is-active',i===selected);card.setAttribute('aria-pressed',String(i===selected));});
         count.textContent=String(selected+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
@@ -1195,7 +1195,9 @@
         card.addEventListener('click',()=>{if(!dragging)choose(i);});
         card.addEventListener('pointerdown',event=>{
           if(event.pointerType==='mouse'&&event.button!==0)return;
-          pointerId=event.pointerId;try{card.setPointerCapture(event.pointerId);}catch{}window.__slicePointerX=event.clientX;window.__slicePointerY=event.clientY;
+          pointerId=event.pointerId;startX=event.clientX;startY=event.clientY;
+          window.__slicePointerX=startX;window.__slicePointerY=startY;
+          try{card.setPointerCapture(event.pointerId);}catch{}
           holdTimer=setTimeout(()=>{
             choose(i);dragging=true;dragCard=card;card.classList.add('is-holding');demo.classList.add('is-dragging');
           },320);
@@ -1204,9 +1206,26 @@
           if(pointerId!==event.pointerId)return;
           window.__slicePointerX=event.clientX;window.__slicePointerY=event.clientY;
           if(dragging){const r=confirm.getBoundingClientRect();confirm.classList.toggle('is-drop-ready',event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom);}
-          else if(Math.hypot(event.movementX,event.movementY)>9){clearTimeout(holdTimer);}
+          else if(Math.hypot(event.clientX-startX,event.clientY-startY)>10){clearTimeout(holdTimer);}
         });
-        ['pointerup','pointercancel','lostpointercapture'].forEach(type=>card.addEventListener(type,()=>{clearTimeout(holdTimer);if(dragging)finish();else pointerId=null;}));
+        card.addEventListener('pointerup',event=>{
+          if(pointerId!==event.pointerId)return;
+          clearTimeout(holdTimer);
+          if(dragging)finish();
+          else choose(i);
+          pointerId=null;
+        });
+        card.addEventListener('pointercancel',event=>{
+          if(pointerId!==event.pointerId)return;
+          clearTimeout(holdTimer);
+          if(dragging)finish();
+          pointerId=null;
+        });
+        card.addEventListener('lostpointercapture',()=>{
+          clearTimeout(holdTimer);
+          if(dragging)finish();
+          pointerId=null;
+        });
       });
       prev.addEventListener('click',()=>choose(selected-1));
       next.addEventListener('click',()=>choose(selected+1));
