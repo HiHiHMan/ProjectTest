@@ -140,8 +140,8 @@
           vec2 p = gl_PointCoord - vec2(0.5);
           float d = length(p);
           if (d > 0.5) discard;
-          float alpha = 1.0 - smoothstep(0.46, 0.5, d);
-          gl_FragColor = vec4(vColor.rgb, vColor.a * alpha);
+          if (d > 0.46) discard;
+          gl_FragColor = vColor;
         }
       `;
 
@@ -189,7 +189,7 @@
             canvas.height = height;
           }
           gl.viewport(0, 0, width, height);
-          gl.uniform1f(uPointSize, 1.6 * dpr);
+          gl.uniform1f(uPointSize, 2.0 * dpr);
           render();
         }
 
