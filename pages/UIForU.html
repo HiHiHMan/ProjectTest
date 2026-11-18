@@ -1240,15 +1240,13 @@
         const dx=event.clientX-startX,dy=event.clientY-startY;
         if(Math.hypot(dx,dy)>10)moved=true;
         if(dragging&&ghost){
+          ghost.style.transform='translate3d(0,'+dy+'px,0)';
           const cardRect=ghost.getBoundingClientRect();
           const targetRect=confirm.getBoundingClientRect();
           const gapX=Math.max(targetRect.left-cardRect.right,cardRect.left-targetRect.right,0);
           const gapY=Math.max(targetRect.top-cardRect.bottom,cardRect.top-targetRect.bottom,0);
           const distance=Math.hypot(gapX,gapY);
           const proximity=Math.max(0,Math.min(1,1-distance/260));
-          const fixedLeft=parseFloat(ghost.style.left);
-          ghost.style.transform='translate3d(0,'+dy+'px,0)';
-          ghost.style.style;
           ghost.style.borderColor=proximity>.72?'#15803d':proximity>.35?'#f97316':'#ea580c';
           confirm.style.setProperty('--proximity',proximity.toFixed(3));
           confirm.classList.toggle('is-drop-ready',distance<=24);
