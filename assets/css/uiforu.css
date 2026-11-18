@@ -353,6 +353,8 @@
 
 
 /* Principle demos — follow-through and adaptive motion */
+#principles-ux .v2-follow-scene.replay i{animation-duration:.72s}
+
 #principles-ux .v2-follow-scene{position:relative;width:100%;height:76px;display:flex;align-items:center;justify-content:center;gap:8px}
 #principles-ux .v2-follow-main{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#fdba74,#f97316);color:#fff;box-shadow:0 7px 16px #f9731633}
 #principles-ux .v2-follow-scene i{width:13px;height:13px;border-radius:4px;background:#fed7aa;opacity:.8;transform:rotate(18deg);animation:v2-follow-tail 1.5s ease-in-out infinite}
