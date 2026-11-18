@@ -709,6 +709,7 @@
         <article class="card uxp-card"><div class="card-head"><h3>Exaggerated Feedback</h3><span class="number">11</span></div><div class="uxp-demo uxp-center"><button class="uxp-like" data-uxp="like" aria-label="Like this post" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.2-8.8 10.2-8.8 10.2S3.2 14 3.2 8.8A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"/></svg><span>Like</span><span class="uxp-like-count" data-like-count>128</span></button><small class="uxp-note" data-uxp-note>Tap Like to show your appreciation</small></div><p class="desc">A bold heart pop, playful burst and instant count change make every Like feel satisfying.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Solid Drawing in 3D 1</h3><span class="number">12.1</span></div><div class="uxp-demo"><div class="uxp-3d-stage" data-uxp-3d aria-label="Interactive three-dimensional cube preview"><div class="uxp-3d-rotor"><div class="uxp-3d-object"><i class="face front"><b>3D</b><small>FORM</small></i><i class="face back"></i><i class="face right"></i><i class="face left"></i><i class="face top"></i><i class="face bottom"></i></div></div><span class="uxp-3d-light"></span><small>MOVE POINTER TO ROTATE</small></div><p class="uxp-caption">Solid form · Light · Depth · Perspective</p></div><p class="desc">Depth, lighting and volume make flat product previews feel tangible.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Solid Drawing in 3D 2</h3><span class="number">12.2</span></div><div class="uxp-demo"><div class="uxp-3d-stage uxp-credit-stage" data-uxp-3d><div class="uxp-credit-card" data-credit-card aria-label="3D credit card preview"><div class="uxp-credit-face uxp-credit-front"><div class="uxp-credit-top"><b>ATELIER</b><span>WORLD ELITE</span></div><div class="uxp-credit-chip"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="uxp-credit-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 2048</div><div class="uxp-credit-bottom"><span><small>CARD HOLDER</small><b>YOUR NAME</b></span><span><small>EXPIRES</small><b>09/29</b></span><strong>VISA</strong></div></div><div class="uxp-credit-face uxp-credit-back"><div class="uxp-credit-stripe"></div><div class="uxp-credit-sign"><span>AUTHORIZED SIGNATURE</span><b>YOUR NAME</b><i>2048</i></div><small>Customer service · +1 800 000 2048</small><strong>VISA</strong></div></div></div><button class="btn secondary uxp-action uxp-credit-toggle" data-uxp="credit-flip" aria-pressed="false">Flip card ↻</button><p class="uxp-caption">Front · Back · Perspective · Rotation</p></div><p class="desc">A dimensional credit card rotates between its front and back surfaces.</p></article>
+        <article class="card uxp-card"><div class="card-head"><h3>Solid Drawing in 3D 3</h3><span class="number">12.3</span></div><div class="uxp-demo"><div class="uxp-tilt-stage" data-uxp-tilt-stage><div class="uxp-tilt-card" data-uxp-tilt-card><div class="uxp-tilt-glow"></div><div class="uxp-tilt-top"><b>ATELIER</b><span>MEMBER CARD</span></div><div class="uxp-tilt-emblem">✦</div><div class="uxp-tilt-bottom"><span><small>MEMBER</small><b>ART COLLECTIVE</b></span><strong>01 / 26</strong></div></div></div><p class="uxp-caption">MOVE POINTER · TILT IN 3D</p></div><p class="desc">The card tilts toward your pointer with a shifting light reflection, creating a tactile 3D response.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Overall Appeal</h3><span class="number">13</span></div><div class="uxp-demo"><div class="uxp-feature-card"><div class="uxp-feature-art">✦</div><div><small>NEW COLLECTION</small><b>Objects for slow living</b><span>Thoughtful design for every day.</span></div><button class="btn secondary uxp-action" data-uxp="collection">Explore collection ↗</button></div></div><p class="desc">Typography, spacing, color and motion work together as one system.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Fitts's Law</h3><span class="number">14</span></div><div class="uxp-demo"><div class="uxp-fitts"><div><b>Ready when you are</b><small>Continue your checkout.</small></div><button class="btn uxp-action" data-uxp="fitts">Continue →</button></div><small class="uxp-note" data-uxp-note>Large, nearby targets are easier to reach.</small></div><p class="desc">Important actions are larger and placed within easy reach.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Bigger Hit Areas</h3><span class="number">15</span></div><div class="uxp-demo"><div class="uxp-hit-row"><span>Daily digest</span><label class="uxp-switch-hit"><input type="checkbox" data-uxp-switch><i></i><small>Toggle</small></label></div><small class="uxp-note" data-uxp-note>Tap the full control area, not just the switch.</small></div><p class="desc">Generous invisible padding makes small controls easier to activate.</p></article>
@@ -1059,6 +1060,30 @@
         const q=event.target.value.toLowerCase(),rows=[...event.target.closest('.uxp-demo').querySelectorAll('[data-uxp-results] span')];let count=0;
         rows.forEach(row=>{row.hidden=!row.textContent.toLowerCase().includes(q);if(!row.hidden)count++;});
         const note=event.target.closest('.uxp-demo').querySelector('[data-uxp-note]');if(note)note.textContent=q?(count+' matching products'):'Instant product search';
+      });
+      uxpRoot.querySelectorAll('[data-uxp-tilt-stage]').forEach(stage=>{
+        const card=stage.querySelector('[data-uxp-tilt-card]');
+        if(!card)return;
+        const reset=()=>{
+          card.style.setProperty('--tilt-x','0deg');
+          card.style.setProperty('--tilt-y','0deg');
+          card.style.setProperty('--shine-x','50%');
+          card.style.setProperty('--shine-y','50%');
+          card.classList.remove('is-tilting');
+        };
+        stage.addEventListener('pointermove',event=>{
+          if(event.pointerType!=='mouse'&&event.pointerType!=='pen')return;
+          const rect=stage.getBoundingClientRect();
+          const px=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
+          const py=Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height));
+          card.style.setProperty('--tilt-y',((px-.5)*24).toFixed(2)+'deg');
+          card.style.setProperty('--tilt-x',((.5-py)*20).toFixed(2)+'deg');
+          card.style.setProperty('--shine-x',(px*100).toFixed(1)+'%');
+          card.style.setProperty('--shine-y',(py*100).toFixed(1)+'%');
+          card.classList.add('is-tilting');
+        });
+        stage.addEventListener('pointerleave',reset);
+        stage.addEventListener('pointercancel',reset);
       });
       uxpRoot.querySelectorAll('[data-uxp-3d]').forEach(stage=>{
         stage.addEventListener('pointermove',event=>{
