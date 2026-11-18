@@ -251,3 +251,17 @@
 .v2-jakob{display:grid;align-content:start;gap:9px}.v2-store-nav{display:flex;align-items:center;gap:5px;width:100%}.v2-store-nav>b{font-size:13px;color:#9a3412}.v2-store-nav>div{flex:1;display:flex;gap:4px;padding:7px;border:1px solid var(--line);border-radius:7px;color:#999;font-size:9px}.v2-store-nav button{width:30px;height:30px;border:1px solid var(--line);border-radius:7px;background:#fff}.v2-store-body{display:grid;gap:2px;padding:9px;border-radius:8px;background:#fff7ed}.v2-store-body span{font-size:8px;color:#9a3412}.v2-store-body b{font-size:12px}.v2-store-body small{font-size:9px;color:#777}
 .v2-frequency{display:grid;justify-items:stretch}.v2-frequency>b{font-size:11px}.v2-frequency>div{display:grid;grid-template-columns:1fr 1fr;gap:5px}.v2-frequency button{padding:8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:#666;font-size:10px}.v2-frequency button.often{border-color:#fdba74;background:#fff7ed;color:#9a3412;font-weight:700}.v2-frequency small{font-size:9px;color:#777}
 @media(max-width:480px){.v2-principle-card{min-height:0}.v2-fitts{grid-template-columns:1fr}.v2-large-cta{width:100%}}
+
+/* Mouse states for principle demos */
+.v2-demo :is(button,input,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.v2-demo button:hover{filter:brightness(.96);transform:translateY(-2px)}
+.v2-demo button:active{transform:scale(.96)}
+.v2-scroll-list>div{transition:background .18s,transform .18s;cursor:pointer}
+.v2-scroll-list>div:hover{background:#fff7ed;transform:translateX(4px)}
+.v2-settings>div{transition:background .18s,transform .18s;cursor:pointer}
+.v2-settings>div:hover{background:#fff7ed;transform:translateX(3px)}
+.v2-store-nav button:hover,.v2-store-nav button:focus-visible{background:#fff7ed;color:#c2410c;border-color:#fdba74}
+.v2-store-body:hover{box-shadow:0 0 0 2px #fdba7444}
+.v2-plan-options button:hover{border-color:#fdba74;transform:translateY(-2px)}
+.v2-principle-card:focus-within{border-color:#fdba74;box-shadow:0 8px 24px #9a34120c}
+.v2-demo :is(input,button):focus-visible{position:relative;z-index:2}
