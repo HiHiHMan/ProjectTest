@@ -310,16 +310,14 @@
               ? (luminance - lightRange) / (1 - lightRange)
               : (darkRange - luminance) / darkRange;
             const keepProbability = isLight
-              ? Math.pow(tone, 1.8) * 0.55
+              ? Math.pow(tone, 2.2) * 0.18
               : Math.pow(tone, 3.0);
             if (Math.random() > keepProbability) continue;
 
-            // White areas get wider spacing to prevent dense clusters.
-            const spacingTone = isLight ? tone : luminance;
-            const spacing = minSpacing + Math.pow(
-              spacingTone,
-              isLight ? 1.4 : 2.2
-            ) * (maxSpacing - minSpacing);
+            // Keep white dots sparse across the entire bright region.
+            const spacing = isLight
+              ? 2.0 + tone * 2.0
+              : minSpacing + Math.pow(luminance, 2.2) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
             const index = positions.length / 2;
