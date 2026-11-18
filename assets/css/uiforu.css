@@ -662,3 +662,19 @@
 #principles-ux .uxp-tilt-card.is-tilting{transition:transform .08s ease-out}
 #principles-ux .uxp-tilt-stage+.uxp-caption{margin-top:9px}
 @media(hover:none),(prefers-reduced-motion:reduce){#principles-ux .uxp-tilt-card{transition:none;transform:none}}
+
+/* Overall Appeal · cohesive visual directions */
+#principles-ux .uxp-feature-card{--appeal-bg:#fff;--appeal-ink:#292524;--appeal-muted:#78716c;--appeal-accent:#c2410c;--appeal-art-a:#292524;--appeal-art-b:#78716c;background:var(--appeal-bg);color:var(--appeal-ink);transition:background .45s ease,color .45s ease,border-color .45s ease}
+#principles-ux .uxp-feature-card .uxp-feature-art{background:linear-gradient(145deg,var(--appeal-art-a),var(--appeal-art-b));color:#fed7aa;transition:background .45s ease,color .45s ease,transform .55s cubic-bezier(.2,.8,.2,1)}
+#principles-ux .uxp-feature-card .uxp-feature-copy{transition:transform .4s ease}
+#principles-ux .uxp-feature-card[data-appeal-theme="midnight"]{--appeal-bg:#292524;--appeal-ink:#fafaf9;--appeal-muted:#d6d3d1;--appeal-accent:#fdba74;--appeal-art-a:#7c2d12;--appeal-art-b:#292524;border-color:#57534e}
+#principles-ux .uxp-feature-card[data-appeal-theme="midnight"] .uxp-feature-art{color:#ffedd5}
+#principles-ux .uxp-feature-card[data-appeal-theme="botanical"]{--appeal-bg:#edf2e8;--appeal-ink:#26352b;--appeal-muted:#647568;--appeal-accent:#456b50;--appeal-art-a:#1f4534;--appeal-art-b:#91a98d;border-color:#d6e2d2}
+#principles-ux .uxp-feature-card[data-appeal-theme="botanical"] .uxp-feature-art{color:#e6f0df}
+#principles-ux .uxp-feature-card[data-appeal-theme="midnight"] small,#principles-ux .uxp-feature-card[data-appeal-theme="botanical"] small{color:var(--appeal-accent)}
+#principles-ux .uxp-feature-card[data-appeal-theme="midnight"] span,#principles-ux .uxp-feature-card[data-appeal-theme="botanical"] span{color:var(--appeal-muted)}
+#principles-ux .uxp-feature-card .btn{transition:background .3s ease,color .3s ease,border-color .3s ease,transform .3s ease}
+#principles-ux .uxp-feature-card .btn:hover{transform:translateY(-2px)}
+#principles-ux .uxp-feature-card[data-appeal-theme="midnight"] .btn{background:#44403c;color:#fff;border-color:#78716c}
+#principles-ux .uxp-feature-card[data-appeal-theme="botanical"] .btn{background:#456b50;color:#fff;border-color:#456b50}
+@media(prefers-reduced-motion:reduce){#principles-ux .uxp-feature-card,#principles-ux .uxp-feature-card *{transition:none!important}}
