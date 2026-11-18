@@ -189,7 +189,7 @@
             canvas.height = height;
           }
           gl.viewport(0, 0, width, height);
-          gl.uniform1f(uPointSize, 2.0 * dpr);
+          gl.uniform1f(uPointSize, 0.5 * dpr);
           render();
         }
 
