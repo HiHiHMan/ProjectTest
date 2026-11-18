@@ -310,13 +310,15 @@
               ? (luminance - lightRange) / (1 - lightRange)
               : (darkRange - luminance) / darkRange;
             const keepProbability = isLight
-              ? Math.pow(tone, 1.35)
+              ? Math.pow(tone, 1.8) * 0.55
               : Math.pow(tone, 3.0);
             if (Math.random() > keepProbability) continue;
 
+            // White areas get wider spacing to prevent dense clusters.
+            const spacingTone = isLight ? tone : luminance;
             const spacing = minSpacing + Math.pow(
-              isLight ? 1 - tone : luminance,
-              2.2
+              spacingTone,
+              isLight ? 1.4 : 2.2
             ) * (maxSpacing - minSpacing);
             if (!farEnough(x, y, spacing)) continue;
 
