@@ -497,7 +497,8 @@
 #principles-ux .uxp-slice-top,#principles-ux .uxp-slice-controls{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #principles-ux .uxp-slice-top{font-size:8px;font-weight:800;letter-spacing:.12em;color:#a8a29e}
 #principles-ux .uxp-slice-top output{font-variant-numeric:tabular-nums}
-#principles-ux .uxp-slice-window{overflow:hidden;padding:3px 0 7px;touch-action:pan-y}
+#principles-ux .uxp-slice-window{overflow:hidden;padding:3px 0 7px;touch-action:none;cursor:grab}
+#principles-ux .uxp-slice-window:active{cursor:grabbing}
 #principles-ux .uxp-slice-track{display:flex;gap:9px;transition:transform .48s cubic-bezier(.2,.8,.2,1);will-change:transform}
 #principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
 #principles-ux .uxp-slice-card.is-active{opacity:1;transform:scale(1);border-color:#fb923c}
@@ -511,7 +512,7 @@
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"] small{color:#456b50}
 #principles-ux .uxp-slice-card b{font-size:12px}
 #principles-ux .uxp-slice-card>span:last-child{font-size:8px;opacity:.7}
-#principles-ux .uxp-slice-card.is-holding{z-index:3;opacity:1;transform:scale(1.04) rotate(-2deg);border-color:#f97316}
+#principles-ux .uxp-slice-card.is-holding{z-index:3;opacity:1;transform:translate3d(var(--slice-drag-x,0px),var(--slice-drag-y,0px),0) scale(1.04) rotate(-2deg);border-color:#f97316;pointer-events:none}
 #principles-ux .uxp-slice-controls button{width:27px;height:27px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#57534e;cursor:pointer}
 #principles-ux .uxp-slice-controls span{font-size:8px;color:#a8a29e;text-align:center}
 #principles-ux .uxp-slice-confirm{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:1px solid #ea580c;border-radius:8px;background:#f97316;color:#fff;font-size:10px;font-weight:800;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}
@@ -1161,72 +1162,82 @@
       });
     }
 
-    // Overall Appeal — mini card slice selection and hold-to-drag confirmation
+    // Overall Appeal — swipe anywhere in the slice window and hold-drag to confirm
     document.querySelectorAll('[data-slice-demo]').forEach(demo=>{
       const cards=[...demo.querySelectorAll('[data-slice-index]')];
       const track=demo.querySelector('[data-slice-track]');
+      const windowEl=demo.querySelector('.uxp-slice-window');
       const count=demo.querySelector('[data-slice-count]');
       const confirm=demo.querySelector('[data-slice-confirm]');
       const toast=demo.querySelector('[data-slice-toast]');
       const prev=demo.querySelector('[data-slice-prev]');
       const next=demo.querySelector('[data-slice-next]');
-      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0;
+      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0,moved=false;
       const render=()=>{
         cards.forEach((card,i)=>{card.classList.toggle('is-active',i===selected);card.setAttribute('aria-pressed',String(i===selected));});
         count.textContent=String(selected+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
         const active=cards[selected],width=active.getBoundingClientRect().width;
         const gap=parseFloat(getComputedStyle(track).gap)||9;
-        const viewport=demo.querySelector('.uxp-slice-window').clientWidth;
+        const viewport=windowEl.clientWidth;
         track.style.transform='translateX('+Math.max(0,Math.min(track.scrollWidth-viewport,selected*(width+gap)-(viewport-width)/2))*(-1)+'px)';
       };
       const choose=i=>{selected=(i+cards.length)%cards.length;toast.textContent='';render();};
+      const commit=()=>{const card=cards[selected],theme=card.dataset.appealTheme,host=demo.closest('.uxp-card');toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=theme;if(host){host.dataset.appealConfirmed=theme;host.classList.add('is-appeal-confirmed');}};
+      const clearDrag=()=>{
+        if(dragCard){dragCard.classList.remove('is-holding');dragCard.style.removeProperty('--slice-drag-x');dragCard.style.removeProperty('--slice-drag-y');}
+        dragCard=null;dragging=false;demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
+      };
       const finish=()=>{
         if(!dragging)return;
-        const rect=confirm.getBoundingClientRect();
-        const x=window.__slicePointerX,y=window.__slicePointerY;
+        const rect=confirm.getBoundingClientRect(),x=lastX,y=lastY;
         const dropped=x>=rect.left&&x<=rect.right&&y>=rect.top&&y<=rect.bottom;
-        if(dropped)commit();
-        else toast.textContent='Drag the card onto Confirm to finish.';
-        dragging=false;pointerId=null;dragCard?.classList.remove('is-holding');dragCard=null;
-        demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
+        if(dropped)commit();else toast.textContent='Drop the card on Confirm to finish.';
+        clearDrag();
       };
-      const commit=()=>{const card=cards[selected],theme=card.dataset.appealTheme,host=demo.closest('.uxp-card');toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=theme;if(host){host.dataset.appealConfirmed=theme;host.classList.add('is-appeal-confirmed');}};
-      cards.forEach((card,i)=>{
-        card.addEventListener('click',()=>{if(!dragging)choose(i);});
-        card.addEventListener('pointerdown',event=>{
-          if(event.pointerType==='mouse'&&event.button!==0)return;
-          pointerId=event.pointerId;startX=event.clientX;startY=event.clientY;
-          window.__slicePointerX=startX;window.__slicePointerY=startY;
-          try{card.setPointerCapture(event.pointerId);}catch{}
-          holdTimer=setTimeout(()=>{
-            choose(i);dragging=true;dragCard=card;card.classList.add('is-holding');demo.classList.add('is-dragging');
-          },320);
-        });
-        card.addEventListener('pointermove',event=>{
-          if(pointerId!==event.pointerId)return;
-          window.__slicePointerX=event.clientX;window.__slicePointerY=event.clientY;
-          if(dragging){const r=confirm.getBoundingClientRect();confirm.classList.toggle('is-drop-ready',event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom);}
-          else if(Math.hypot(event.clientX-startX,event.clientY-startY)>10){clearTimeout(holdTimer);}
-        });
-        card.addEventListener('pointerup',event=>{
-          if(pointerId!==event.pointerId)return;
-          clearTimeout(holdTimer);
-          if(dragging)finish();
-          else choose(i);
-          pointerId=null;
-        });
-        card.addEventListener('pointercancel',event=>{
-          if(pointerId!==event.pointerId)return;
-          clearTimeout(holdTimer);
-          if(dragging)finish();
-          pointerId=null;
-        });
-        card.addEventListener('lostpointercapture',()=>{
-          clearTimeout(holdTimer);
-          if(dragging)finish();
-          pointerId=null;
-        });
+      let lastX=0,lastY=0;
+      windowEl.addEventListener('pointerdown',event=>{
+        if(event.pointerType==='mouse'&&event.button!==0)return;
+        if(pointerId!==null)return;
+        const hit=event.target.closest('[data-slice-index]');
+        const index=hit?cards.indexOf(hit):selected;
+        pointerId=event.pointerId;startX=lastX=event.clientX;startY=lastY=event.clientY;moved=false;
+        try{windowEl.setPointerCapture(event.pointerId);}catch{}
+        holdTimer=setTimeout(()=>{
+          if(moved)return;
+          choose(index);dragging=true;dragCard=cards[selected];
+          dragCard.classList.add('is-holding');demo.classList.add('is-dragging');
+        },320);
       });
+      windowEl.addEventListener('pointermove',event=>{
+        if(pointerId!==event.pointerId)return;
+        lastX=event.clientX;lastY=event.clientY;
+        const dx=event.clientX-startX,dy=event.clientY-startY;
+        if(Math.hypot(dx,dy)>10)moved=true;
+        if(dragging){
+          dragCard.style.setProperty('--slice-drag-x',dx+'px');
+          dragCard.style.setProperty('--slice-drag-y',dy+'px');
+          const r=confirm.getBoundingClientRect();
+          confirm.classList.toggle('is-drop-ready',event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom);
+        }else if(moved){clearTimeout(holdTimer);}
+      });
+      const release=event=>{
+        if(pointerId!==event.pointerId)return;
+        clearTimeout(holdTimer);
+        if(dragging)finish();
+        else{
+          const dx=event.clientX-startX;
+          if(Math.abs(dx)>35)choose(selected+(dx<0?1:-1));
+          else{
+            const hit=event.target.closest?.('[data-slice-index]');
+            if(hit)choose(cards.indexOf(hit));
+            else if(!moved)choose(selected+1);
+          }
+        }
+        pointerId=null;
+      };
+      windowEl.addEventListener('pointerup',release);
+      windowEl.addEventListener('pointercancel',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging)finish();pointerId=null;});
+      windowEl.addEventListener('lostpointercapture',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging)finish();pointerId=null;});
       prev.addEventListener('click',()=>choose(selected-1));
       next.addEventListener('click',()=>choose(selected+1));
       confirm.addEventListener('click',commit);
