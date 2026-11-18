@@ -378,7 +378,25 @@
 #principles-ux .v2-frequency.quiet .v2-frequency-preview :is(span,i){animation:none}
 @keyframes v2-frequency-pulse{50%{transform:scale(1.18);opacity:.55}}
 @media(prefers-reduced-motion:reduce){#principles-ux .v2-follow-scene i,#principles-ux .v2-frequency-preview :is(span,i){animation:none!important}}
-</style>
+
+    /* Staging the Focus: elevate the selected element in its real position. */
+    .uxp-focus-demo{position:relative;isolation:isolate;overflow:visible;padding:14px;border:1px solid var(--line);border-radius:12px;background:#faf8f5;transition:background .35s ease}
+    .uxp-focus-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;color:#999;font-size:10px;letter-spacing:.08em}
+    .uxp-focus-header b{color:#555;font-size:11px;letter-spacing:0}
+    .uxp-focus-palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px 4px}
+    .uxp-focus-swatch{position:relative;z-index:1;display:grid;justify-items:center;gap:7px;min-width:0;padding:10px 4px;border:1px solid #e7e2dc;border-radius:10px;background:#fff;color:#666;cursor:pointer;transform:translateZ(0) scale(1);transform-origin:center;transition:transform .48s cubic-bezier(.2,.85,.25,1.25),filter .35s ease,opacity .35s ease,background .35s ease,border-color .35s ease}
+    .uxp-focus-swatch>span{display:block;width:28px;height:28px;border-radius:8px}
+    .uxp-focus-swatch small{font-size:10px;line-height:14px}
+    .swatch-orange>span{background:#f97316}.swatch-blue>span{background:#3b82f6}.swatch-green>span{background:#22c55e}.swatch-purple>span{background:#8b5cf6}.swatch-pink>span{background:#ec4899}.swatch-dark>span{background:#292524}
+    .uxp-focus-demo.focus-preview{background:#e9e7e3}
+    .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-muted{filter:grayscale(1) blur(2px);opacity:.14;pointer-events:none;transform:scale(.94)}
+    .uxp-focus-demo.focus-preview .uxp-focus-swatch.is-focused{z-index:10;transform:translateZ(0) scale(1.55);border-color:#fff;background:#fff;filter:none;opacity:1;cursor:default}
+    .uxp-focus-hint{margin:8px 0 12px;text-align:center;color:#aaa;font-size:9px;letter-spacing:.16em}
+    .uxp-focus-reset{display:block;margin:0 auto;padding:7px 12px;border:1px solid #d8d3cd;border-radius:999px;background:#fff;color:#666;font-size:10px;cursor:pointer}
+    .uxp-focus-reset:hover{border-color:var(--accent);color:var(--accent-dark)}
+    @media(prefers-reduced-motion:reduce){.uxp-focus-swatch{transition:none}}
+
+  </style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
 </head>
 <body>
@@ -900,7 +918,7 @@
         const say=message=>{if(note)note.textContent=message;};
         if(action==='squash'){const bottle=card.querySelector('.squash-art');bottle.classList.remove('squash-motion');void bottle.offsetWidth;bottle.classList.add('squash-motion');button.classList.remove('squash');void button.offsetWidth;button.classList.add('squash');say('Bottle compressed, stretched and bounced back · Added to cart ✓');}
         if(action==='windup'){const chat=card.querySelector('[data-uxp-chat]'),sent=card.querySelector('[data-uxp-sent]');if(button.disabled)return;button.disabled=true;chat.classList.remove('sending','sent');sent.hidden=true;void chat.offsetWidth;chat.classList.add('sending');say('Winding up…');setTimeout(()=>{chat.classList.remove('sending');chat.classList.add('sent');sent.textContent='Yes, see you there!';sent.hidden=false;say('Message sent ✓');button.disabled=false;},720);}
-        if(action==='focus-item'){const demo=card.querySelector('[data-uxp-focus-demo]'),palette=demo.querySelector('.uxp-focus-palette'),items=[...demo.querySelectorAll('[data-uxp="focus-item"]')],selected=button.classList.contains('is-focused'),alreadyFocused=demo.classList.contains('focus-preview');if(alreadyFocused&&!selected)return;if(selected){demo.classList.remove('focus-preview');items.forEach(item=>{item.classList.remove('is-focused','is-muted');item.style.removeProperty('--focus-x');item.style.removeProperty('--focus-y');item.setAttribute('aria-pressed','false');});demo.querySelector('[data-uxp-focus-label]').textContent='Nothing selected';say('Focus cleared. All elements are visible.');}else{const p=palette.getBoundingClientRect(),b=button.getBoundingClientRect(),dx=b.left+b.width/2-(p.left+p.width/2),dy=b.top+b.height/2-(p.top+p.height/2);items.forEach(item=>{const active=item===button;item.classList.toggle('is-focused',active);item.classList.toggle('is-muted',!active);item.setAttribute('aria-pressed',String(active));});button.style.setProperty('--focus-x',dx+'px');button.style.setProperty('--focus-y',dy+'px');demo.classList.add('focus-preview');void button.offsetWidth;requestAnimationFrame(()=>{button.style.setProperty('--focus-x','0px');button.style.setProperty('--focus-y','0px');});demo.querySelector('[data-uxp-focus-label]').textContent=button.dataset.name;say('Focused: '+button.dataset.name+'. Other elements are blurred.');}}
+        if(action==='focus-item'){const demo=card.querySelector('[data-uxp-focus-demo]'),items=[...demo.querySelectorAll('[data-uxp="focus-item"]')],selected=button.classList.contains('is-focused'),alreadyFocused=demo.classList.contains('focus-preview');if(alreadyFocused&&!selected)return;if(selected){demo.classList.remove('focus-preview');items.forEach(item=>{item.classList.remove('is-focused','is-muted');item.setAttribute('aria-pressed','false');});demo.querySelector('[data-uxp-focus-label]').textContent='Nothing selected';say('Focus cleared. All elements are visible.');}else{items.forEach(item=>{const active=item===button;item.classList.toggle('is-focused',active);item.classList.toggle('is-muted',!active);item.setAttribute('aria-pressed',String(active));});demo.classList.add('focus-preview');demo.querySelector('[data-uxp-focus-label]').textContent=button.dataset.name;say('Focused: '+button.dataset.name+'. Other elements are dimmed.');}}
         if(action==='focus-reset'){const demo=card.querySelector('[data-uxp-focus-demo]');demo.classList.remove('focus-preview');demo.querySelectorAll('[data-uxp="focus-item"]').forEach(item=>{item.classList.remove('is-focused','is-muted');item.setAttribute('aria-pressed','false');});demo.querySelector('[data-uxp-focus-label]').textContent='Nothing selected';say('Focus cleared. All elements are visible.');}
         if(action==='step'){const steps=[...card.querySelectorAll('.uxp-step')],active=steps.findIndex(x=>x.classList.contains('active')),next=Math.min(active+1,steps.length-1);steps.forEach((x,i)=>{x.classList.toggle('active',i===next);x.classList.toggle('done',i<next);});card.querySelector('[data-uxp-step-title]').textContent=['Cart confirmed','Delivery details','Payment ready'][next];card.querySelector('[data-uxp-step-copy]').textContent=['Your items are ready.','Your delivery details are next.','Choose a payment method to finish.'][next];button.textContent=next===2?'Complete ✓':'Next step →';}
         if(action==='follow'){const icon=card.querySelector('.uxp-cart-icon');icon.classList.remove('trail');void icon.offsetWidth;icon.classList.add('trail');say('Another item added · Bag updated');}
