@@ -445,22 +445,35 @@
 #principles-ux .uxp-heart:hover{transform:scale(1.07)}
 #principles-ux .uxp-heart.liked{background:#f97316;color:#fff;animation:uxp-heart .38s cubic-bezier(.2,1.6,.4,1)}
 @keyframes uxp-heart{50%{transform:scale(1.28)}}
-#principles-ux .uxp-3d-stage{height:184px;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid #e7e5e4;border-radius:12px;background:radial-gradient(ellipse at 50% 42%,#fff 0,#f5f5f4 58%,#e7e5e4 100%);perspective:850px;perspective-origin:50% 42%;touch-action:pan-y}
-#principles-ux .uxp-3d-rotor{width:100px;height:100px;display:grid;place-items:center;transform-style:preserve-3d;animation:uxp-3d-idle 14s linear infinite}
-#principles-ux .uxp-3d-object{position:relative;width:76px;height:76px;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(-32deg);transition:transform .16s ease-out;will-change:transform}
-#principles-ux .uxp-3d-object .face{position:absolute;display:grid;place-items:center;width:76px;height:76px;border:1px solid rgb(255 255 255 / 55%);font-style:normal;backface-visibility:visible;box-sizing:border-box}
-#principles-ux .uxp-3d-object .front{transform:translateZ(38px);background:linear-gradient(145deg,#fb923c 0%,#ea580c 58%,#9a3412 100%);color:#fff;box-shadow:inset 9px 8px 16px #fff5,inset -12px -10px 18px #7c2d1266}
-#principles-ux .uxp-3d-object .front b{font-size:23px;letter-spacing:-.08em;text-shadow:0 2px 3px #7c2d1266}
-#principles-ux .uxp-3d-object .front small{position:absolute;bottom:10px;font-size:7px;letter-spacing:.22em;color:#ffedd5}
-#principles-ux .uxp-3d-object .back{transform:rotateY(180deg) translateZ(38px);background:linear-gradient(135deg,#9a3412,#c2410c)}
-#principles-ux .uxp-3d-object .right{transform:rotateY(90deg) translateZ(38px);background:linear-gradient(90deg,#9a3412,#c2410c 55%,#7c2d12)}
-#principles-ux .uxp-3d-object .left{transform:rotateY(-90deg) translateZ(38px);background:linear-gradient(90deg,#fed7aa,#fb923c)}
-#principles-ux .uxp-3d-object .top{transform:rotateX(90deg) translateZ(38px);background:linear-gradient(135deg,#ffedd5,#fdba74 65%,#ea580c)}
-#principles-ux .uxp-3d-object .bottom{transform:rotateX(-90deg) translateZ(38px);background:linear-gradient(135deg,#7c2d12,#9a3412)}
-#principles-ux .uxp-3d-light{position:absolute;width:110px;height:20px;bottom:28px;border-radius:50%;background:#2925242b;filter:blur(10px);transform:rotateX(65deg);pointer-events:none}
-#principles-ux .uxp-3d-stage>small{position:absolute;bottom:9px;font-size:8px;font-weight:700;letter-spacing:.14em;color:#78716c}
-@keyframes uxp-3d-idle{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
-@media(prefers-reduced-motion:reduce){#principles-ux .uxp-3d-rotor{animation:none}#principles-ux .uxp-3d-object{transition:none}}
+#principles-ux .uxp-3d-stage{height:184px;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid #e7e5e4;border-radius:12px;background:radial-gradient(ellipse at 50% 45%,#fff 0,#f5f5f4 62%,#e7e5e4 100%);perspective:1000px;touch-action:pan-y}
+#principles-ux .uxp-credit-card{position:relative;width:min(270px,86%);aspect-ratio:1.586;transform-style:preserve-3d;animation:uxp-credit-turn 8s cubic-bezier(.55,.08,.45,.92) infinite;will-change:transform}
+#principles-ux .uxp-credit-face{position:absolute;inset:0;overflow:hidden;border:1px solid #ffffff55;border-radius:15px;backface-visibility:hidden;box-shadow:0 12px 24px #29252435;color:#fff;box-sizing:border-box}
+#principles-ux .uxp-credit-front{display:flex;flex-direction:column;justify-content:space-between;padding:15px 17px;background:radial-gradient(ellipse at 80% 15%,#fb923c88,transparent 42%),linear-gradient(135deg,#292524 0%,#57534e 52%,#1c1917 100%)}
+#principles-ux .uxp-credit-front:after{content:"";position:absolute;width:170px;height:170px;right:-65px;bottom:-115px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 16px #ffffff0c,0 0 0 34px #ffffff0a}
+#principles-ux .uxp-credit-top{display:flex;justify-content:space-between;align-items:center}
+#principles-ux .uxp-credit-top b{font-size:13px;letter-spacing:.17em}
+#principles-ux .uxp-credit-top span{font-size:6px;letter-spacing:.16em;color:#fed7aa}
+#principles-ux .uxp-credit-chip{width:31px;height:23px;display:grid;grid-template-columns:1fr 1fr;gap:1px;overflow:hidden;border:1px solid #d6b879;border-radius:5px;background:linear-gradient(135deg,#f5d99b,#b58b45)}
+#principles-ux .uxp-credit-chip i{border:1px solid #7c623b66;border-radius:2px}
+#principles-ux .uxp-credit-number{font-size:13px;letter-spacing:.12em;text-shadow:0 1px 2px #0008}
+#principles-ux .uxp-credit-bottom{position:relative;z-index:1;display:flex;align-items:end;gap:15px}
+#principles-ux .uxp-credit-bottom span{display:grid;gap:3px}
+#principles-ux .uxp-credit-bottom small{font-size:5px;letter-spacing:.15em;color:#d6d3d1}
+#principles-ux .uxp-credit-bottom b{font-size:8px;letter-spacing:.1em}
+#principles-ux .uxp-credit-bottom strong{margin-left:auto;font-size:21px;font-style:italic;letter-spacing:-.1em}
+#principles-ux .uxp-credit-back{transform:rotateY(180deg);padding:19px 0 12px;background:linear-gradient(135deg,#44403c,#1c1917)}
+#principles-ux .uxp-credit-stripe{height:31px;margin:4px 0 14px;background:linear-gradient(#171717,#090909)}
+#principles-ux .uxp-credit-sign{height:29px;display:flex;align-items:center;gap:8px;margin:0 17px;padding:0 8px;background:repeating-linear-gradient(180deg,#f5f5f4 0 3px,#d6d3d1 3px 4px);color:#57534e}
+#principles-ux .uxp-credit-sign span{font-size:5px;letter-spacing:.08em}
+#principles-ux .uxp-credit-sign b{font-family:Georgia,serif;font-size:9px;font-style:italic}
+#principles-ux .uxp-credit-sign i{margin-left:auto;font-size:8px;font-style:normal}
+#principles-ux .uxp-credit-back>small{display:block;margin:9px 17px;font-size:6px;color:#d6d3d1}
+#principles-ux .uxp-credit-back>strong{position:absolute;right:17px;bottom:10px;font-size:18px;font-style:italic}
+#principles-ux .uxp-credit-card.is-paused{animation-play-state:paused}
+#principles-ux .uxp-credit-card.is-flipped{transform:rotateY(180deg);transition:transform .8s cubic-bezier(.2,.75,.25,1)}
+#principles-ux .uxp-credit-toggle{display:block;margin:10px auto 0}
+@keyframes uxp-credit-turn{0%,18%{transform:rotateY(0)}42%,58%{transform:rotateY(180deg)}82%,100%{transform:rotateY(360deg)}}
+@media(prefers-reduced-motion:reduce){#principles-ux .uxp-credit-card{animation:none;transform:none}#principles-ux .uxp-credit-card.is-flipped{transform:rotateY(180deg);transition:none}}
 #principles-ux .uxp-caption{margin:-5px 0 0;text-align:center;color:#78716c;font-size:9px}
 #principles-ux .uxp-feature-card{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:10px;border:1px solid #eee9e4;border-radius:9px;background:#fff}
 #principles-ux .uxp-feature-art{grid-row:span 2;display:grid;place-items:center;border-radius:7px;background:linear-gradient(145deg,#292524,#78716c);color:#fed7aa;font-size:27px}
