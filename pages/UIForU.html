@@ -482,6 +482,16 @@
     @keyframes uxp-like-burst{to{transform:scale(1.9);opacity:0}}
     @media(prefers-reduced-motion:reduce){.uxp-download,.uxp-like,.uxp-like svg{transition:none}.uxp-download.loading .uxp-download-progress circle{animation:none;stroke-dashoffset:0}.uxp-like.liked svg,.uxp-like-burst{animation:none}}
 
+
+/* Apply the confirmed visual direction to the whole Overall Appeal card */
+#principles-ux article.uxp-card.is-appeal-confirmed{transition:background-color .55s ease,color .45s ease,border-color .45s ease}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="warm"]{background:#fff1e5;border-color:#f2c6a3;color:#572b16}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="midnight"]{background:#292524;border-color:#57534e;color:#fafaf9}
+#principles-ux article.uxp-card.is-appeal-confirmed[data-appeal-confirmed="botanical"]{background:#e8f0e5;border-color:#b9cdb7;color:#263b2d}
+#principles-ux article.uxp-card.is-appeal-confirmed .card-head .number{color:inherit;opacity:.62}
+#principles-ux article.uxp-card.is-appeal-confirmed .desc{color:inherit;opacity:.78}
+@media(prefers-reduced-motion:reduce){#principles-ux article.uxp-card.is-appeal-confirmed{transition:none}}
+
 /* Overall Appeal — mini card slice with hold-and-drag confirmation */
 #principles-ux .uxp-slice-demo{width:100%;display:grid;gap:9px;padding:10px;border:1px solid #eee9e4;border-radius:12px;background:#faf9f7;overflow:hidden}
 #principles-ux .uxp-slice-top,#principles-ux .uxp-slice-controls{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -1180,7 +1190,7 @@
         dragging=false;pointerId=null;dragCard?.classList.remove('is-holding');dragCard=null;
         demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
       };
-      const commit=()=>{const card=cards[selected];toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=card.dataset.appealTheme;};
+      const commit=()=>{const card=cards[selected],theme=card.dataset.appealTheme,host=demo.closest('.uxp-card');toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=theme;if(host){host.dataset.appealConfirmed=theme;host.classList.add('is-appeal-confirmed');}};
       cards.forEach((card,i)=>{
         card.addEventListener('click',()=>{if(!dragging)choose(i);});
         card.addEventListener('pointerdown',event=>{
