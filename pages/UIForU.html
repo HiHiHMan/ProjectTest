@@ -928,6 +928,83 @@
         scene.style.setProperty('--scene-glow-y','50%');
       });
     });
+
+    // Real-world interface gallery interactions
+    const realRoot=document.querySelector('#principles-ux');
+    if(realRoot){
+      realRoot.addEventListener('click',event=>{
+        const button=event.target.closest('[data-real]');
+        if(!button)return;
+        const action=button.dataset.real,card=button.closest('.real-ui'),out=card?.querySelector('.real-feedback');
+        const say=message=>{if(out)out.textContent=message;};
+        if(action==='qty-up'||action==='qty-down'){
+          const scope=button.closest('.real-ui'),value=scope.querySelector('.real-stepper output,.real-target-control output');
+          const qty=Math.max(1,Number(value.textContent)+(action==='qty-up'?1:-1));value.textContent=qty;
+          const total=scope.querySelector('.real-qty-total');if(total)total.textContent='฿'+(qty*790).toLocaleString('en-US');
+          const itemTotal=scope.querySelector('.real-product-info strong');if(itemTotal&&scope.querySelector('.real-stepper'))itemTotal.textContent='฿'+(qty*490).toLocaleString('en-US');
+        }
+        if(action==='add-cart'||action==='listing-add'){button.textContent='✓ Added';say('Added to your shopping bag.');}
+        if(action==='remove-open'){card.querySelector('.real-confirm-panel').hidden=false;say('Confirm to remove this item.');}
+        if(action==='remove-cancel'){card.querySelector('.real-confirm-panel').hidden=true;say('Item kept in your cart.');}
+        if(action==='remove-confirm'){card.querySelector('.real-line-item').style.opacity='.35';card.querySelector('.real-confirm-panel').hidden=true;say('Item removed from your cart.');}
+        if(action==='checkout'){button.innerHTML='Continue to payment ✓';say('Your order is ready for payment.');}
+        if(action==='step-next'){
+          const steps=[...card.querySelectorAll('.real-step')],active=steps.findIndex(x=>x.classList.contains('active')),next=Math.min(active+1,steps.length-1);
+          steps.forEach((x,i)=>{x.classList.toggle('active',i===next);x.classList.toggle('done',i<next);});
+          button.textContent=next===2?'Review order →':'Continue to '+(next===1?'payment':'review')+' →';say('Step '+(next+1)+' of 3');
+        }
+        if(action==='cart-add'){
+          const count=card.querySelector('.real-cart-count');count.textContent=String(Number(count.textContent)+1);
+          card.querySelector('.real-cart-total').textContent='฿'+(Number(count.textContent)*320).toFixed(2);
+          say('Cart updated · '+count.textContent+' items');
+        }
+        if(action==='accordion'){
+          const content=button.nextElementSibling,open=content.hidden;content.hidden=!open;button.setAttribute('aria-expanded',String(open));button.querySelector('b').textContent=open?'−':'＋';
+        }
+        if(action==='nav-toggle'){const nav=card.querySelector('.real-side-nav');nav.classList.toggle('expanded');button.setAttribute('aria-expanded',String(nav.classList.contains('expanded')));}
+        if(action==='like'){const liked=button.classList.toggle('liked');button.setAttribute('aria-pressed',String(liked));button.textContent=liked?'♥':'♡';say(liked?'Added to your liked products.':'Removed from liked products.');}
+        if(action==='review')say('Review form opened · Sign in to continue.');
+        if(action==='receipt')say('Receipt preview · Order #OD-20481');
+        if(action==='rotate'){const stage=card.querySelector('.real-3d-stage');stage.classList.toggle('rotated');}
+        if(action==='sort')say('Sorted by: Recommended');
+        if(action==='wishlist'){const saved=button.textContent.includes('Save');button.textContent=saved?'✓ Saved':'♡ Save';say(saved?'Added to your wishlist.':'Removed from your wishlist.');}
+        if(action==='notice-close'){card.querySelector('.real-notice').hidden=true;say('Notification dismissed.');}
+        if(action==='notice-later'){card.querySelector('.real-notice').style.opacity='.45';say('Reminder postponed.');}
+        if(action==='upgrade')say('Upgrade plans are ready to compare.');
+        if(action==='plan'){
+          card.querySelectorAll('[data-real="plan"]').forEach(x=>x.classList.toggle('active',x===button));
+          say(button.querySelector('b').textContent+' plan selected');
+        }
+        if(action==='load'){
+          const label=card.querySelector('[data-real-loading-label]'),copy=card.querySelector('[data-real-loading-copy]');
+          button.disabled=true;label.textContent='Refreshing report';copy.textContent='Syncing latest activity…';say('Updating data…');
+          setTimeout(()=>{label.textContent='Report is ready';copy.textContent='All data is up to date.';say('Updated just now ✓');button.disabled=false;},900);
+        }
+        if(action==='normalize'){
+          const email=card.querySelector('[data-real-email]'),phone=card.querySelector('[data-real-phone]');
+          email.value=email.value.trim().toLowerCase();phone.value=phone.value.replace(/\D/g,'').replace(/^(\d{3})(\d{3})(\d+)$/,'$1 $2 $3');
+          say('Contact details saved · '+email.value);
+        }
+        if(['home','shop','account','bag','shop-now'].includes(action))say('Opened '+(action==='shop-now'?'collection':action)+' view.');
+        if(action==='shortcut'){const label=button.querySelector('b')?.textContent||'Action';say(label+' opened.');}
+      });
+      realRoot.addEventListener('click',event=>{
+        const item=event.target.closest('.real-side-nav button');if(!item)return;
+        item.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===item));
+        const out=item.closest('.real-ui').querySelector('.real-feedback');if(out)out.textContent=item.textContent.trim()+' selected.';
+      });
+      realRoot.addEventListener('input',event=>{
+        if(event.target.matches('[data-real-search]')){
+          const query=event.target.value.toLowerCase(),rows=[...event.target.closest('.real-ui').querySelectorAll('.real-search-results button')];let count=0;
+          rows.forEach(row=>{row.hidden=!row.textContent.toLowerCase().includes(query);if(!row.hidden)count++;});
+          event.target.closest('.real-ui').querySelector('.real-feedback').textContent=count+' matching products';
+        }
+      });
+      realRoot.querySelectorAll('[data-real-3d]').forEach(stage=>{
+        stage.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse')return;const rect=stage.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;stage.querySelector('.real-lamp').style.transform='rotateY('+(x*45)+'deg) rotateX('+(-y*20)+'deg)';});
+        stage.addEventListener('pointerleave',()=>stage.querySelector('.real-lamp').style.transform='');
+      });
+    }
 </script>
 </body>
 </html>
