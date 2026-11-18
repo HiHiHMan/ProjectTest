@@ -390,7 +390,7 @@
       });
       return clone.innerHTML;
     }
-    const genericInteraction='document.querySelectorAll(".component-demo button").forEach(button=>button.addEventListener("click",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=button.textContent.trim()+" selected";}));\\ndocument.querySelectorAll(".component-demo input,.component-demo select,.component-demo textarea").forEach(field=>field.addEventListener("input",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=field.value;}));';
+    const genericInteraction='document.querySelectorAll(".component-demo button").forEach(button=>button.addEventListener("click",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=button.textContent.trim()+" selected";}));\ndocument.querySelectorAll(".component-demo input,.component-demo select,.component-demo textarea").forEach(field=>field.addEventListener("input",()=>{const output=document.querySelector(".component-demo output");if(output)output.textContent=field.value;}));';
     document.querySelectorAll('.card').forEach(card=>{
       const demo=card.querySelector('.demo');
       if(!demo)return;
@@ -405,7 +405,7 @@
       const output=panel.querySelector('.code-output');
       const toggle=tools.querySelector('.code-toggle');
       let active='html';
-      const snippets={html:()=>'<div class="component-demo">\\n'+makeStandaloneMarkup(demo)+'\\n</div>',css:() => '',js:()=>genericInteraction};
+      const snippets={html:()=>'<div class="component-demo">\n'+makeStandaloneMarkup(demo)+'<output aria-live="polite"></output>\n</div>',css:()=>'.component-demo { box-sizing: border-box; }',js:()=>genericInteraction};
       const render=()=>{output.textContent=snippets[active]();panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.classList.toggle('active',tab.dataset.codeTab===active));panel.querySelector('.code-note').textContent=active==='css'?'No additional CSS is required because the HTML contains inline styles.':'Copy this example into your project and adjust its content as needed.';};
       toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));toggle.textContent=panel.hidden?'View code':'Hide code';if(!panel.hidden)render();});
       panel.querySelectorAll('[data-code-tab]').forEach(tab=>tab.addEventListener('click',()=>{active=tab.dataset.codeTab;render();}));
