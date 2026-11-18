@@ -493,11 +493,11 @@
 @media(prefers-reduced-motion:reduce){#principles-ux article.uxp-card.is-appeal-confirmed{transition:none}}
 
 /* Overall Appeal — mini card slice with hold-and-drag confirmation */
-#principles-ux .uxp-slice-demo{width:100%;display:grid;gap:9px;padding:10px;border:1px solid #eee9e4;border-radius:12px;background:#faf9f7;overflow:hidden}
+#principles-ux .uxp-slice-demo{width:100%;display:grid;gap:9px;padding:10px;border:1px solid #eee9e4;border-radius:12px;background:#faf9f7;overflow:visible}
 #principles-ux .uxp-slice-top,#principles-ux .uxp-slice-controls{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #principles-ux .uxp-slice-top{font-size:8px;font-weight:800;letter-spacing:.12em;color:#a8a29e}
 #principles-ux .uxp-slice-top output{font-variant-numeric:tabular-nums}
-#principles-ux .uxp-slice-window{overflow:hidden;padding:3px 0 7px;touch-action:none;cursor:grab}
+#principles-ux .uxp-slice-window{overflow:visible;padding:3px 0 7px;touch-action:none;cursor:grab}
 #principles-ux .uxp-slice-window:active{cursor:grabbing}
 #principles-ux .uxp-slice-track{display:flex;gap:9px;transition:transform .48s cubic-bezier(.2,.8,.2,1);will-change:transform}
 #principles-ux .uxp-slice-card{position:relative;flex:0 0 72%;min-height:142px;display:grid;align-content:start;justify-items:start;gap:5px;padding:10px;border:1px solid #e7e5e4;border-radius:10px;background:#fff;color:#292524;text-align:left;cursor:pointer;opacity:.48;transform:scale(.91);transition:opacity .35s,transform .45s,border-color .3s,background .35s;user-select:none;-webkit-user-select:none;touch-action:none}
@@ -512,7 +512,9 @@
 #principles-ux .uxp-slice-card[data-appeal-theme="botanical"] small{color:#456b50}
 #principles-ux .uxp-slice-card b{font-size:12px}
 #principles-ux .uxp-slice-card>span:last-child{font-size:8px;opacity:.7}
-#principles-ux .uxp-slice-card.is-holding{z-index:3;opacity:1;transform:translate3d(var(--slice-drag-x,0px),var(--slice-drag-y,0px),0) scale(1.04) rotate(-2deg);border-color:#f97316;pointer-events:none}
+#principles-ux .uxp-slice-card.is-holding{opacity:0!important;pointer-events:none}
+#principles-ux .uxp-slice-ghost{position:fixed!important;z-index:99999!important;display:grid!important;flex:none!important;margin:0!important;opacity:1!important;pointer-events:none!important;transform:translate3d(0,0,0) scale(1.04) rotate(-2deg)!important;transition:transform .065s linear!important;will-change:transform;filter:drop-shadow(0 18px 22px #29252438);}
+#principles-ux .uxp-slice-ghost.is-flying{transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .22s ease!important;}
 #principles-ux .uxp-slice-controls button{width:27px;height:27px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#57534e;cursor:pointer}
 #principles-ux .uxp-slice-controls span{font-size:8px;color:#a8a29e;text-align:center}
 #principles-ux .uxp-slice-confirm{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:1px solid #ea580c;border-radius:8px;background:#f97316;color:#fff;font-size:10px;font-weight:800;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}
@@ -522,7 +524,7 @@
 #principles-ux .uxp-slice-toast:empty{display:none}
 #principles-ux .uxp-slice-demo.is-dragging .uxp-slice-card:not(.is-holding){pointer-events:none;filter:grayscale(1);opacity:.18}
 #principles-ux .uxp-slice-demo.is-dragging .uxp-slice-window{overflow:visible}
-@media(prefers-reduced-motion:reduce){#principles-ux .uxp-slice-track,#principles-ux .uxp-slice-card,#principles-ux .uxp-slice-confirm{transition:none!important}}
+@media(prefers-reduced-motion:reduce){#principles-ux .uxp-slice-track,#principles-ux .uxp-slice-card,#principles-ux .uxp-slice-confirm,#principles-ux .uxp-slice-ghost{transition:none!important}}
 </style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
 </head>
@@ -1172,7 +1174,7 @@
       const toast=demo.querySelector('[data-slice-toast]');
       const prev=demo.querySelector('[data-slice-prev]');
       const next=demo.querySelector('[data-slice-next]');
-      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,startX=0,startY=0,moved=false,pressedIndex=0;
+      let selected=0,holdTimer=null,dragging=false,pointerId=null,dragCard=null,ghost=null,startX=0,startY=0,moved=false,pressedIndex=0,lastX=0,lastY=0;
       const render=()=>{
         cards.forEach((card,i)=>{card.classList.toggle('is-active',i===selected);card.setAttribute('aria-pressed',String(i===selected));});
         count.textContent=String(selected+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
@@ -1184,17 +1186,30 @@
       const choose=i=>{selected=(i+cards.length)%cards.length;toast.textContent='';render();};
       const commit=()=>{const card=cards[selected],theme=card.dataset.appealTheme,host=demo.closest('.uxp-card');toast.textContent='✓ Confirmed: '+card.querySelector('b').textContent;demo.dataset.confirmed=theme;if(host){host.dataset.appealConfirmed=theme;host.classList.add('is-appeal-confirmed');}};
       const clearDrag=()=>{
-        if(dragCard){dragCard.classList.remove('is-holding');dragCard.style.removeProperty('--slice-drag-x');dragCard.style.removeProperty('--slice-drag-y');}
+        if(dragCard)dragCard.classList.remove('is-holding');
+        if(ghost){ghost.remove();ghost=null;}
         dragCard=null;dragging=false;demo.classList.remove('is-dragging');confirm.classList.remove('is-drop-ready');
       };
       const finish=()=>{
         if(!dragging)return;
-        const rect=confirm.getBoundingClientRect(),x=lastX,y=lastY;
-        const dropped=x>=rect.left&&x<=rect.right&&y>=rect.top&&y<=rect.bottom;
-        if(dropped)commit();else toast.textContent='Drop the card on Confirm to finish.';
-        clearDrag();
+        const rect=confirm.getBoundingClientRect();
+        const pad=64;
+        const dropped=lastX>=rect.left-pad&&lastX<=rect.right+pad&&lastY>=rect.top-pad&&lastY<=rect.bottom+pad;
+        if(dropped&&ghost){
+          const cardRect=ghost.getBoundingClientRect();
+          const dx=rect.left+rect.width/2-(cardRect.left+cardRect.width/2);
+          const dy=rect.top+rect.height/2-(cardRect.top+cardRect.height/2);
+          ghost.classList.add('is-flying');
+          ghost.style.transform='translate3d('+dx+'px,'+dy+'px,0) scale(.28) rotate(8deg)';
+          confirm.classList.add('is-drop-ready');
+          const flying=ghost;
+          setTimeout(()=>{commit();clearDrag();},260);
+        }else{
+          toast.textContent='Throw the card toward Confirm to finish.';
+          if(ghost){ghost.classList.add('is-flying');ghost.style.opacity='0';}
+          setTimeout(clearDrag,150);
+        }
       };
-      let lastX=0,lastY=0;
       windowEl.addEventListener('pointerdown',event=>{
         if(event.pointerType==='mouse'&&event.button!==0)return;
         if(pointerId!==null)return;
@@ -1205,6 +1220,10 @@
         holdTimer=setTimeout(()=>{
           if(moved)return;
           choose(index);dragging=true;dragCard=cards[selected];
+          const rect=dragCard.getBoundingClientRect();
+          ghost=dragCard.cloneNode(true);ghost.classList.remove('is-holding');ghost.classList.add('uxp-slice-ghost');
+          ghost.setAttribute('aria-hidden','true');ghost.style.left=rect.left+'px';ghost.style.top=rect.top+'px';ghost.style.width=rect.width+'px';ghost.style.height=rect.height+'px';
+          document.body.appendChild(ghost);
           dragCard.classList.add('is-holding');demo.classList.add('is-dragging');
         },320);
       });
@@ -1213,11 +1232,10 @@
         lastX=event.clientX;lastY=event.clientY;
         const dx=event.clientX-startX,dy=event.clientY-startY;
         if(Math.hypot(dx,dy)>10)moved=true;
-        if(dragging){
-          dragCard.style.setProperty('--slice-drag-x',dx+'px');
-          dragCard.style.setProperty('--slice-drag-y',dy+'px');
-          const r=confirm.getBoundingClientRect();
-          confirm.classList.toggle('is-drop-ready',event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom);
+        if(dragging&&ghost){
+          ghost.style.transform='translate3d('+dx+'px,'+dy+'px,0) scale(1.04) rotate(-2deg)';
+          const r=confirm.getBoundingClientRect(),pad=48;
+          confirm.classList.toggle('is-drop-ready',event.clientX>=r.left-pad&&event.clientX<=r.right+pad&&event.clientY>=r.top-pad&&event.clientY<=r.bottom+pad);
         }else if(moved){clearTimeout(holdTimer);}
       });
       const release=event=>{
@@ -1235,8 +1253,8 @@
         pointerId=null;
       };
       windowEl.addEventListener('pointerup',release);
-      windowEl.addEventListener('pointercancel',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging)finish();pointerId=null;});
-      windowEl.addEventListener('lostpointercapture',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging)finish();pointerId=null;});
+      windowEl.addEventListener('pointercancel',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging){toast.textContent='';clearDrag();}pointerId=null;});
+      windowEl.addEventListener('lostpointercapture',event=>{if(pointerId!==event.pointerId)return;clearTimeout(holdTimer);if(dragging){toast.textContent='';clearDrag();}pointerId=null;});
       prev.addEventListener('click',()=>choose(selected-1));
       next.addEventListener('click',()=>choose(selected+1));
       confirm.addEventListener('click',commit);
