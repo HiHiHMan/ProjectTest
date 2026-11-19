@@ -543,13 +543,22 @@
 #principles-ux .uxp-browser-content{min-height:74px;display:grid;align-content:center;gap:6px;padding:12px;background:linear-gradient(120deg,#292524,#57534e);color:#fff}
 #principles-ux .uxp-browser-content small{color:#fed7aa;font-size:7px;letter-spacing:.12em}
 #principles-ux .uxp-browser-content b{font-size:12px}
-#principles-ux .uxp-frequency{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid #eee9e4;border-radius:8px;background:#fff}
+#principles-ux .uxp-frequency{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 2px 7px;border-bottom:1px solid #f1efec;background:transparent}
 #principles-ux .uxp-frequency>div{display:grid;gap:4px}
-#principles-ux .uxp-motion-toggle{display:flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid #e7e5e4;border-radius:20px;background:#fff;color:#57534e;font-size:9px}
-#principles-ux .uxp-motion-toggle i{width:7px;height:7px;border-radius:50%;background:#f97316}
-#principles-ux .uxp-motion-toggle.on{background:#fff7ed;border-color:#fdba74;color:#c2410c}
+#principles-ux .uxp-frequency>div>b{color:#292524;font-size:11px}
+#principles-ux .uxp-frequency>div>small{color:#a8a29e;font-size:8px}
+#principles-ux .uxp-frequency-label{padding:4px 7px;border-radius:5px;background:#fff0e2;color:#c2410c;font-size:7px;font-weight:800;letter-spacing:.1em;white-space:nowrap}
 #principles-ux .uxp-frequent-actions{display:flex;gap:6px}
-#principles-ux .uxp-frequent-actions button{flex:1;padding:9px 5px;border:1px solid #eee9e4;border-radius:7px;background:#fff;color:#57534e;font-size:9px}
+#principles-ux .uxp-frequent-actions button{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;padding:10px 5px;border:1px solid #eee9e4;border-radius:7px;background:#fff;color:#78716c;font-size:9px;font-weight:700;transition:background .2s,border-color .2s,transform .2s}
+#principles-ux .uxp-frequent-actions button span{font-size:12px;line-height:1}
+#principles-ux .uxp-frequent-actions button.is-primary{border-color:#ea580c;background:#ea580c;color:#fff;box-shadow:0 3px 8px #ea580c24}
+#principles-ux .uxp-frequent-actions button.is-secondary{border-color:#fed7aa;background:#fff7ed;color:#c2410c}
+#principles-ux .uxp-frequent-actions button.is-quiet{border-color:#f1efec;background:#fafaf9;color:#a8a29e}
+#principles-ux .uxp-frequent-actions button:hover{transform:translateY(-1px)}
+#principles-ux .uxp-frequent-actions button.is-primary:hover{background:#c2410c;border-color:#c2410c}
+#principles-ux .uxp-frequent-actions button.is-secondary:hover{background:#ffedd5}
+#principles-ux .uxp-frequency+.uxp-frequent-actions+.uxp-note{color:#a8a29e;font-size:8px}
+#principles-ux .uxp-frequency+.uxp-frequent-actions+.uxp-note strong{color:#c2410c;font-weight:800}
 #principles-ux .uxp-card.quiet-motion *{animation:none!important;transition:none!important}
 #principles-ux .uxp-demo :is(button,input):focus-visible{outline:2px solid #f97316;outline-offset:3px}
 @media(max-width:850px){#principles-ux .uxp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
