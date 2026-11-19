@@ -683,3 +683,17 @@
 #principles-ux .uxp-switch-hit::before{border:1px dashed #f97316;border-radius:9px}
 /* Bigger Hit Areas — prevent a focus ring from appearing around the toggle on click */
 #principles-ux .uxp-switch-hit input:focus-visible{outline:0;outline-offset:0}
+
+
+/* Miller's Law — compare ungrouped details with clear information groups */
+#principles-ux .uxp-miller-example{display:grid;gap:6px;width:100%}
+#principles-ux .uxp-miller-before{padding:8px 10px;border-radius:8px;background:#f5f5f4}
+#principles-ux .uxp-miller-before>small,#principles-ux .uxp-miller-after>small{display:block;margin-bottom:5px;color:#a8a29e;font-size:8px}
+#principles-ux .uxp-miller-before p{margin:0;color:#78716c;font-size:9px;line-height:1.5}
+#principles-ux .uxp-miller-arrow{text-align:center;color:#f97316;font-size:15px;line-height:15px}
+#principles-ux .uxp-miller-after{display:grid;gap:5px;padding:9px;border:1px solid #fed7aa;border-radius:9px;background:#fff}
+#principles-ux .uxp-miller-after>div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 7px;border-radius:6px;background:#fff7ed}
+#principles-ux .uxp-miller-after>div span{color:#9a3412;font-size:9px}
+#principles-ux .uxp-miller-after>div b{font-size:9px;text-align:right}
+#principles-ux .uxp-miller-after .uxp-miller-total{margin-top:2px;padding-top:8px;border-top:1px solid #eee9e4;background:#fff}
+#principles-ux .uxp-miller-after .uxp-miller-total strong{color:#c2410c;font-size:14px}
