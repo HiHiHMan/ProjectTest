@@ -178,16 +178,17 @@
     .booking-days button:disabled{color:#d4d4d4;cursor:not-allowed}
     .booking-days button.selected{background:var(--accent);color:#fff}
 
-    .announcement-demo,.coupon-demo,.byline-demo,.compass-demo,.treemap-demo,.workload-demo,.allowlist-demo{width:100%;min-width:0;display:grid;gap:10px}
-    .announcement-bar{position:relative;display:flex;align-items:center;gap:10px;min-height:76px;padding:12px 10px 12px 13px;overflow:hidden;border:0;border-left:3px solid #f97316;border-radius:7px;background:#292524;color:#fff}
-    .announcement-bar[hidden]{display:none}
-    .announcement-icon{width:25px;height:25px;flex:none;display:grid;place-items:center;border:1px solid #fb923c66;border-radius:7px;background:#f9731624;color:#fdba74;font-size:12px;font-weight:800}
-    .announcement-bar>span:nth-child(2){flex:1;min-width:0;display:grid;gap:4px}
-    .announcement-bar b{color:#fafaf9;font-size:11px;line-height:15px;font-weight:700}
-    .announcement-bar small{color:#c7c1bb;font-size:9px;line-height:14px}
-    .announcement-bar>button,.allowlist-list button{width:24px;height:24px;flex:none;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#a8a29e;font-size:17px;line-height:1;cursor:pointer;transition:background .2s,color .2s}
-    .announcement-bar>button:hover{background:#ffffff14;color:#fff}
-    .announcement-bar>button:focus-visible{outline:2px solid #fb923c;outline-offset:2px}
+    .announcement-demo{width:100%;min-width:0;display:grid;gap:12px}
+    .announcement-card{display:grid;grid-template-columns:34px minmax(0,1fr) 28px;align-items:start;gap:11px;padding:14px;background:#fff;border:1px solid #e7e5e4;border-radius:9px;color:#292524}
+    .announcement-card[hidden]{display:none}
+    .announcement-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:#fff1e8;color:#ea580c;font-size:15px;font-weight:800}
+    .announcement-content{min-width:0;display:grid;gap:7px}
+    .announcement-eyebrow{font-size:9px;line-height:12px;font-weight:700;letter-spacing:.09em;color:#ea580c}
+    .announcement-content b{font-size:12px;line-height:17px;font-weight:700;color:#292524}
+    .announcement-content small{font-size:10px;line-height:15px;color:#78716c}
+    .announcement-dismiss{width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#a8a29e;font-size:17px;line-height:1;cursor:pointer}
+    .announcement-dismiss:hover{background:#f5f5f4;color:#44403c}
+    .announcement-dismiss:focus-visible{outline:2px solid #f97316;outline-offset:2px}
     .announcement-controls,.coupon-entry,.compass-controls,.allowlist-entry{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .coupon-demo label,.allowlist-demo label{font-size:12px;font-weight:700;color:#555}.coupon-entry .field,.allowlist-entry .field{flex:1;min-width:90px}
     .coupon-result,.byline-status,.treemap-status,.allowlist-status{font-size:11px;line-height:16px;color:#777}.coupon-result.success{color:#15803d}.coupon-result.error{color:#b91c1c}
@@ -685,7 +686,21 @@
 <article class="card"><div class="card-head"><h3>Offline Banner</h3><span class="number">121</span></div><div class="demo"><div class="sample-field"><label>Offline Banner</label><input class="field" placeholder="Enter a value"><span class="hint">Sample input state</span></div></div><p class="desc">Communicate loss of network connectivity.</p></article>
 <article class="card"><div class="card-head"><h3>Connection Indicator</h3><span class="number">122</span></div><div class="demo"><div class="sample-tabs"><div><button class="active">Overview</button><button>Details</button><button>Activity</button></div><span>Connection Indicator</span></div></div><p class="desc">Show the current connection state.</p></article>
 <article class="card"><div class="card-head"><h3>Sync Progress</h3><span class="number">123</span></div><div class="demo"><div class="sample-list"><b>Sync Progress</b><span>✓ First item</span><span>○ Second item</span><span>○ Third item</span></div></div><p class="desc">Report progress while data synchronizes.</p></article>
-<article class="card"><div class="card-head"><h3>Announcement Banner</h3><span class="number">124</span></div><div class="demo"><div class="announcement-demo"><div class="announcement-bar" data-announcement><span class="announcement-icon">!</span><span><b>New workspace features</b><small>Explore the latest updates to your dashboard.</small></span><button type="button" aria-label="Dismiss announcement" data-announcement-dismiss>×</button></div><div class="announcement-controls"><button class="btn secondary" type="button" data-announcement-toggle>Show announcement</button><button class="mini-link" type="button" data-announcement-variant>Change message</button></div></div></div><p class="desc">Display, dismiss, and cycle through important product announcements.</p></article>
+<article class="card"><div class="card-head"><h3>Announcement Banner</h3><span class="number">124</span></div><div class="demo"><div class="announcement-demo">
+  <div class="announcement-card" data-announcement>
+    <span class="announcement-icon" aria-hidden="true">↗</span>
+    <div class="announcement-content">
+      <span class="announcement-eyebrow" data-announcement-label>PRODUCT UPDATE</span>
+      <b data-announcement-title>Meet your new workspace</b>
+      <small data-announcement-detail>Organize projects faster with the latest workspace improvements.</small>
+    </div>
+    <button class="announcement-dismiss" type="button" aria-label="Dismiss announcement" data-announcement-dismiss>×</button>
+  </div>
+  <div class="announcement-controls">
+    <button class="btn secondary" type="button" data-announcement-toggle>Hide announcement</button>
+    <button class="mini-link" type="button" data-announcement-variant>Next announcement</button>
+  </div>
+</div></div><p class="desc">Display, dismiss, and cycle through important product announcements.</p></article>
 <article class="card"><div class="card-head"><h3>Feedback Widget</h3><span class="number">125</span></div><div class="demo"><div class="sample-dialog"><b>Feedback Widget</b><span class="hint">Contextual actions and information</span><button class="btn secondary" data-sample-action>Open preview</button></div></div><p class="desc">Collect lightweight feedback at the point of use.</p></article></div></section>
 <section class="component-section" id="commerce-ui" aria-labelledby="commerce-ui-title"><div class="section-meta"><h2 id="commerce-ui-title">Commerce & Orders</h2><span>10 ELEMENTS</span></div><div class="grid"><article class="card"><div class="card-head"><h3>Product Card</h3><span class="number">126</span></div><div class="demo"><div class="sample-control"><span class="sample-icon">◎</span><b>Product Card</b><span class="hint">Interactive preview</span></div></div><p class="desc">Present a product with price and a clear action.</p></article>
 <article class="card"><div class="card-head"><h3>Product Gallery</h3><span class="number">127</span></div><div class="demo"><div class="sample-panel"><b>Product Gallery</b><div class="sample-line"></div><div class="sample-line short"></div><button class="btn secondary" data-sample-action>Try example</button><span class="hint" data-sample-message>Ready to interact.</span></div></div><p class="desc">Browse multiple product images.</p></article>
@@ -972,9 +987,32 @@
     });
 
 
-    document.querySelectorAll('[data-announcement-dismiss]').forEach(button=>button.addEventListener('click',()=>{const demo=button.closest('.announcement-demo'),banner=demo.querySelector('[data-announcement]');banner.hidden=true;demo.querySelector('[data-announcement-toggle]').textContent='Show announcement';}));
-    document.querySelectorAll('[data-announcement-toggle]').forEach(button=>button.addEventListener('click',()=>{const demo=button.closest('.announcement-demo'),banner=demo.querySelector('[data-announcement]');banner.hidden=!banner.hidden;button.textContent=banner.hidden?'Show announcement':'Hide announcement';}));
-    document.querySelectorAll('[data-announcement-variant]').forEach(button=>button.addEventListener('click',()=>{const banner=button.closest('.announcement-demo').querySelector('[data-announcement]'),title=banner.querySelector('b'),detail=banner.querySelector('small'),alt=title.textContent==='New workspace features';title.textContent=alt?'Scheduled maintenance':'New workspace features';detail.textContent=alt?'Service update: Sunday, 02:00–02:30 UTC.':'Explore the latest updates to your dashboard.';}));
+    document.querySelectorAll('.announcement-demo').forEach(demo=>{
+      const banner=demo.querySelector('[data-announcement]');
+      const toggle=demo.querySelector('[data-announcement-toggle]');
+      const title=demo.querySelector('[data-announcement-title]');
+      const detail=demo.querySelector('[data-announcement-detail]');
+      const label=demo.querySelector('[data-announcement-label]');
+      const messages=[
+        {label:'PRODUCT UPDATE',title:'Meet your new workspace',detail:'Organize projects faster with the latest workspace improvements.'},
+        {label:'SERVICE NOTICE',title:'Scheduled maintenance',detail:'A short service update is planned for Sunday, 02:00–02:30 UTC.'}
+      ];
+      let activeMessage=0;
+      const setVisible=visible=>{
+        banner.hidden=!visible;
+        toggle.textContent=visible?'Hide announcement':'Show announcement';
+      };
+      demo.querySelector('[data-announcement-dismiss]').addEventListener('click',()=>setVisible(false));
+      toggle.addEventListener('click',()=>setVisible(banner.hidden));
+      demo.querySelector('[data-announcement-variant]').addEventListener('click',()=>{
+        activeMessage=(activeMessage+1)%messages.length;
+        const message=messages[activeMessage];
+        label.textContent=message.label;
+        title.textContent=message.title;
+        detail.textContent=message.detail;
+        setVisible(true);
+      });
+    });
     document.querySelectorAll('[data-coupon-apply]').forEach(button=>button.addEventListener('click',()=>{const demo=button.closest('.coupon-demo'),field=demo.querySelector('#couponCode'),result=demo.querySelector('[data-coupon-result]'),valid=field.value.trim().toUpperCase()==='SAVE10';result.className='coupon-result '+(valid?'success':'error');result.textContent=valid?'✓ Code applied. You saved 10% on this sample order.':'That code is not valid. Try SAVE10.';}));
     document.querySelectorAll('[data-author-follow]').forEach(button=>button.addEventListener('click',()=>{const following=button.dataset.following!=='true';button.dataset.following=String(following);button.textContent=following?'Following':'Follow';button.closest('.demo').querySelector('[data-author-status]').textContent=following?'You are now following Alex Morgan.':'You unfollowed Alex Morgan.';}));
     document.querySelectorAll('.compass-demo').forEach(demo=>{let angle=0;const needle=demo.querySelector('[data-compass-needle]'),value=demo.querySelector('[data-compass-value]'),render=()=>{needle.style.transform='rotate('+angle+'deg)';const directions=['N','NE','E','SE','S','SW','W','NW'];value.textContent=angle+'° · '+directions[Math.round(angle/45)%8];};demo.querySelectorAll('[data-compass-turn]').forEach(button=>button.addEventListener('click',()=>{angle=(angle+Number(button.dataset.compassTurn)+360)%360;render();}));demo.querySelector('[data-compass-reset]').addEventListener('click',()=>{angle=0;render();});});
