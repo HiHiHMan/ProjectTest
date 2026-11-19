@@ -1086,7 +1086,6 @@
     timeTrigger.addEventListener('click',()=>{setPickerOpen(timeTrigger,timePanel);renderTime();});
     document.addEventListener('click',event=>{if(!event.target.closest('.picker'))closePickers(null);});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'){closePickers(null);document.querySelectorAll('.picker-trigger').forEach(trigger=>trigger.setAttribute('aria-expanded','false'));}});
-    $('selectDemo').addEventListener('change', e => $('selectMessage').textContent = e.target.value ? 'Selected: ' + e.target.value : 'Select one option from the list.');
     $('checkDemo').addEventListener('change', e => $('checkMessage').textContent = e.target.checked ? 'Selected' : 'Not selected');
     document.querySelectorAll('input[name="radioDemo"]').forEach(el => el.addEventListener('change', e => $('radioMessage').textContent = 'Selected: ' + e.target.value));
     $('toggleDemo').addEventListener('change', e => $('toggleMessage').textContent = e.target.checked ? 'On' : 'Off');
