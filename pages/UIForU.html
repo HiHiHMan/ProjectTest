@@ -1157,7 +1157,7 @@
         if(button.hasAttribute('data-uxp-plan')){card.querySelectorAll('[data-uxp-plan]').forEach(x=>x.classList.toggle('selected',x===button));say(button.dataset.uxpPlan+' plan selected.');}
         if(button.hasAttribute('data-uxp-tab')){
           const tab=button.dataset.uxpTab,store=button.closest('.uxp-jakob-store');
-          store.querySelectorAll('.uxp-jakob-nav [data-uxp-tab]').forEach(x=>x.classList.toggle('active',x===button));
+          store.querySelectorAll('.uxp-jakob-nav [data-uxp-tab]').forEach(x=>x.classList.toggle('active',x.dataset.uxpTab===tab));
           const views={
             Home:['THE EVERYDAY EDIT','Thoughtful things.\\nBeautifully made.','Considered essentials for a slower, simpler way of living.'],
             Shop:['THE COLLECTION','Find your everyday favourite.','Explore considered pieces for home and life.'],
