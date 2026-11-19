@@ -525,6 +525,15 @@
 #principles-ux .uxp-slice-toast:empty{display:none}
 #principles-ux .uxp-slice-demo.is-dragging .uxp-slice-card:not(.is-holding){pointer-events:none;filter:grayscale(1);opacity:.18}
 @media(prefers-reduced-motion:reduce){#principles-ux .uxp-slice-track,#principles-ux .uxp-slice-card,#principles-ux .uxp-slice-confirm,#principles-ux .uxp-slice-ghost{transition:none!important}}
+
+/* Bigger Hit Areas — visualize the full interactive boundary */
+#principles-ux .uxp-hit-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#principles-ux .uxp-switch-hit{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:88px;min-height:48px;padding:10px 12px;border:1.5px dashed #f97316;border-radius:10px;cursor:pointer;box-sizing:border-box}
+#principles-ux .uxp-switch-hit input{width:16px;height:16px;margin:0;accent-color:#f97316;cursor:pointer}
+#principles-ux .uxp-switch-hit i{display:none}
+#principles-ux .uxp-switch-hit small{font-size:10px;color:#9a3412;pointer-events:none}
+#principles-ux .uxp-switch-hit:focus-within{outline:2px solid #f97316;outline-offset:3px}
+
 </style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
 </head>
