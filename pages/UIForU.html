@@ -764,7 +764,15 @@
         <article class="card uxp-card"><div class="card-head"><h3>Fitts's Law</h3><span class="number">14</span></div><div class="uxp-demo"><div class="uxp-fitts"><div><b>Ready when you are</b><small>Continue your checkout.</small></div><button class="btn uxp-action" data-uxp="fitts">Continue →</button></div><small class="uxp-note" data-uxp-note>Large, nearby targets are easier to reach.</small></div><p class="desc">Important actions are larger and placed within easy reach.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Bigger Hit Areas</h3><span class="number">15</span></div><div class="uxp-demo"><div class="uxp-hit-row"><span>Daily digest</span><label class="uxp-switch-hit"><input type="checkbox" data-uxp-switch><i></i><small>Toggle</small></label></div><small class="uxp-note" data-uxp-note>Tap the full control area, not just the switch.</small></div><p class="desc">Generous invisible padding makes small controls easier to activate.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Hick's Law</h3><span class="number">16</span></div><div class="uxp-demo"><b class="uxp-prompt">Choose your plan</b><div class="uxp-plans"><button data-uxp-plan="Starter"><b>Starter</b><small>For personal use</small><strong>Free</strong></button><button data-uxp-plan="Plus" class="selected"><b>Plus</b><small>For growing teams</small><strong>฿199/mo</strong></button><button data-uxp-plan="Pro"><b>Pro</b><small>For power users</small><strong>฿399/mo</strong></button></div><small class="uxp-note" data-uxp-note>Three clear choices, no overload.</small></div><p class="desc">A focused set of options reduces decision time and cognitive load.</p></article>
-        <article class="card uxp-card"><div class="card-head"><h3>Miller\'s Law</h3><span class="number">17</span></div><div class="uxp-demo"><div class="uxp-miller-example"><div class="uxp-miller-group"><b>แฟชั่น</b><div><span>เสื้อ</span><span>กางเกง</span><span>รองเท้า</span></div></div><div class="uxp-miller-group"><b>เครื่องประดับ</b><div><span>นาฬิกา</span><span>แหวน</span><span>สร้อย</span></div></div><div class="uxp-miller-group"><b>ของใช้</b><div><span>กระเป๋า</span><span>หมวก</span><span>แว่นตา</span></div></div></div><small class="uxp-note">แบ่งตัวเลือกที่เกี่ยวข้องออกเป็นหมวดหมู่ ช่วยให้ค้นหาได้ง่ายขึ้น</small></div><p class="desc">Group related information so users can scan it without having to remember each detail.</p></article>
+        <article class="card uxp-card"><div class="card-head"><h3>Miller\'s Law</h3><span class="number">17</span></div><div class="uxp-demo"><form class="uxp-miller-form" data-miller-form novalidate>
+          <div class="uxp-miller-progress"><div class="uxp-miller-progress-top"><b data-miller-title>Personal details</b><small data-miller-count>STEP 1 OF 3</small></div><div class="uxp-miller-progress-track"><i data-miller-progress></i></div><div class="uxp-miller-steps"><span class="active" data-miller-step="1">1 Personal</span><span data-miller-step="2">2 Account</span><span data-miller-step="3">3 Review</span></div></div>
+          <section class="uxp-miller-panel" data-miller-panel="1"><label>Full name<input name="fullName" autocomplete="name" placeholder="Alex Morgan" required></label><label>Email address<input name="email" type="email" autocomplete="email" placeholder="alex@example.com" required></label></section>
+          <section class="uxp-miller-panel" data-miller-panel="2" hidden><label>Username<input name="username" autocomplete="username" placeholder="alexmorgan" required></label><label>Password<input name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required></label></section>
+          <section class="uxp-miller-panel" data-miller-panel="3" hidden><div class="uxp-miller-review"><b>Review your details</b><p><span>Name</span><strong data-miller-review="fullName">—</strong></p><p><span>Email</span><strong data-miller-review="email">—</strong></p><p><span>Username</span><strong data-miller-review="username">—</strong></p></div><label class="uxp-miller-terms"><input type="checkbox" name="terms" required><span>I agree to the terms and conditions.</span></label></section>
+          <small class="uxp-miller-error" data-miller-error aria-live="polite"></small>
+          <div class="uxp-miller-actions"><button type="button" class="back" data-miller-back hidden>Back</button><button type="button" data-miller-next>Continue</button></div>
+          <small class="uxp-note" data-miller-note>Three focused steps keep each part easy to complete.</small>
+        </form></div><p class="desc">Group related information so users can scan it without having to remember each detail.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Doherty Threshold</h3><span class="number">18</span></div><div class="uxp-demo"><div class="uxp-report"><div><b>Sales overview</b><small data-uxp-report-status>Updated 2 minutes ago</small></div><div class="uxp-skeleton" data-uxp-skeleton hidden><i></i><i></i><i></i></div><strong>฿84,250</strong><small>Monthly revenue</small></div><button class="btn secondary uxp-action" data-uxp="refresh">Refresh report</button><small class="uxp-note" data-uxp-note>Loading feedback appears immediately.</small></div><p class="desc">Immediate system feedback keeps users engaged during short waits.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Postel's Law</h3><span class="number">19</span></div><div class="uxp-demo"><label class="uxp-field">Email address<input data-uxp-email value="  USER@EXAMPLE.COM  " aria-label="Email address"></label><button class="btn secondary uxp-action" data-uxp="normalize">Save contact</button><small class="uxp-note" data-uxp-note>Accept varied input, return a clean result.</small></div><p class="desc">Be flexible with input formats and consistent with normalized output.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Jakob's Law</h3><span class="number">20</span></div><div class="uxp-demo"><div class="uxp-browser"><div class="uxp-browser-top"><span></span><span></span><span></span><small>atelier.store</small></div><nav><b>atelier<span>.</span></b><button class="active" data-uxp-tab="Home">Home</button><button data-uxp-tab="Shop">Shop</button><button data-uxp-tab="Account">Account</button><button data-uxp-tab="Bag">Bag</button></nav><div class="uxp-browser-content"><small>CURATED FOR YOU</small><b data-uxp-tab-content>Discover everyday essentials.</b></div></div></div><p class="desc">Familiar navigation patterns help users feel at home immediately.</p></article>
@@ -1286,6 +1294,38 @@
       next.addEventListener('click',()=>choose(selected+1));
       confirm.addEventListener('click',commit);
       render();
+    });
+
+    // Miller's Law: split registration into three focused steps.
+    document.querySelectorAll('[data-miller-form]').forEach(form=>{
+      let step=1;
+      const titles={1:'Personal details',2:'Account setup',3:'Review & submit'};
+      const panels=[...form.querySelectorAll('[data-miller-panel]')];
+      const next=form.querySelector('[data-miller-next]');
+      const back=form.querySelector('[data-miller-back]');
+      const error=form.querySelector('[data-miller-error]');
+      const fields=name=>form.elements.namedItem(name);
+      const showStep=()=>{
+        panels.forEach(panel=>panel.hidden=Number(panel.dataset.millerPanel)!==step);
+        form.querySelector('[data-miller-title]').textContent=titles[step];
+        form.querySelector('[data-miller-count]').textContent='STEP '+step+' OF 3';
+        form.querySelector('[data-miller-progress]').style.width=(step/3*100)+'%';
+        form.querySelectorAll('[data-miller-step]').forEach(item=>{const n=Number(item.dataset.millerStep);item.classList.toggle('active',n===step);item.classList.toggle('complete',n<step)});
+        back.hidden=step===1;
+        next.textContent=step===3?'Create account':'Continue';
+        error.textContent='';error.classList.remove('success');
+        if(step===3)['fullName','email','username'].forEach(name=>form.querySelector('[data-miller-review="'+name+'"]').textContent=fields(name).value.trim());
+      };
+      const valid=()=>{
+        const panel=form.querySelector('[data-miller-panel="'+step+'"]');
+        for(const input of panel.querySelectorAll('input:not([type=checkbox])'))if(!input.checkValidity()){error.textContent=input.validationMessage||'Please check this field.';input.focus();return false;}
+        if(step===3&&!fields('terms').checked){error.textContent='Please accept the terms to continue.';fields('terms').focus();return false;}
+        return true;
+      };
+      next.addEventListener('click',()=>{if(!valid())return;if(step<3){step++;showStep();}else{next.textContent='Account created';next.disabled=true;error.textContent='Registration complete.';error.classList.add('success');}});
+      back.addEventListener('click',()=>{if(step>1){step--;showStep();}});
+      form.addEventListener('submit',event=>event.preventDefault());
+      showStep();
     });
 </script>
 </body>
