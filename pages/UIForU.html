@@ -628,6 +628,50 @@
 @media(max-width:760px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:12px;gap:10px}.card h3{font-size:13px;line-height:18px}.uxdemo{padding:8px;font-size:9px}}
 @media(max-width:480px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.card{padding:7px;min-height:0;gap:7px}.card h3{font-size:10px;line-height:13px}.card .number{font-size:8px}.card .desc{font-size:8px;line-height:1.35}.uxdemo{min-height:118px;padding:6px;gap:5px;font-size:8px}.otp-cells{gap:2px}.otp-cells input{width:17px;height:26px}.pin-pad{gap:2px}.pin-pad button{padding:3px}.product-card-demo{grid-template-columns:1fr}.product-art{min-height:55px}.product-info{gap:3px}.mega-columns{gap:3px}.mega-top span{font-size:6px}.donut-demo{gap:5px}.donut-ring{width:56px;height:56px;flex-basis:56px}.donut-ring>div{width:38px;height:38px}.donut-legend span{font-size:6px}.heatmap-labels,.heatmap-body>div{grid-template-columns:25px repeat(7,1fr);gap:2px}.heatmap-body i{height:7px}}
 
+    /* Refined picker and dropdown surfaces */
+    .picker-trigger{min-height:48px;padding:11px 14px;border:1px solid #e7e5e4;border-radius:12px;background:linear-gradient(180deg,#fff 0%,#faf9f7 100%);color:#292524;font-size:13px;font-weight:600;box-shadow:0 1px 2px #29252408}
+    .picker-trigger:hover,.picker-trigger[aria-expanded="true"]{border-color:#fb923c;background:#fff;box-shadow:0 0 0 4px #f9731614}
+    .picker-trigger>span{color:#44403c}
+    .picker-trigger svg{width:18px;height:18px;color:#c2410c;stroke:currentColor}
+    .picker-popover{top:calc(100% + 10px);padding:14px;border:1px solid #e7e5e4;border-radius:16px;background:#fff;box-shadow:0 20px 48px #29252420}
+    .calendar{width:min(296px,calc(100vw - 64px))}
+    .calendar-head{margin:0 0 12px}.calendar-head strong{font-size:14px;font-weight:800;color:#292524}
+    .calendar-head button{width:34px;height:34px;border-radius:10px;background:#f5f5f4;color:#57534e;font-size:22px}
+    .calendar-head button:hover{background:#ffedd5;color:#c2410c}
+    .calendar-grid{gap:4px}.calendar-grid span{height:30px;color:#a8a29e;font-size:10px}
+    .calendar-grid button{height:34px;border-radius:10px;font-size:12px;font-weight:600}
+    .calendar-grid button:hover{background:#fff1e5;color:#c2410c}
+    .calendar-grid button.is-today{outline:1px solid #fdba74;outline-offset:-1px;color:#c2410c}
+    .calendar-grid button.is-selected{background:#ea580c;color:#fff;box-shadow:0 3px 8px #ea580c30}
+    .calendar-today{margin-top:12px;padding:8px 12px;border-radius:9px;background:#fff7ed;color:#c2410c;font-weight:700}
+    .time-panel{width:252px;gap:10px;padding:14px}
+    .time-column label{padding:0 0 9px;color:#a8a29e;font-size:9px;letter-spacing:.12em}
+    .time-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;max-height:190px;padding:2px;scrollbar-width:thin}
+    .time-options button{min-height:34px;border:1px solid #f0eeeb;border-radius:9px;background:#fafaf9;color:#57534e;font-size:12px;font-weight:600}
+    .time-options button:hover{border-color:#fdba74;background:#fff7ed;color:#c2410c}
+    .time-options button.active{border-color:#ea580c;background:#ea580c;color:#fff;box-shadow:0 3px 8px #ea580c25}
+    .time-separator{padding-top:18px;color:#d6d3d1}
+    .dropdown{width:max-content;max-width:100%}
+    .dropdown>#dropdownToggle{min-height:44px;padding:10px 14px;border:1px solid #e7e5e4;border-radius:11px;background:#fff;color:#44403c;font-size:13px;font-weight:700;box-shadow:0 1px 2px #29252408}
+    .dropdown>#dropdownToggle:hover,.dropdown>#dropdownToggle[aria-expanded="true"]{border-color:#fdba74;background:#fffaf5;color:#9a3412}
+    .dropdown .menu-chevron{transition:transform .2s ease}
+    .dropdown>#dropdownToggle[aria-expanded="true"] .menu-chevron{transform:rotate(180deg)}
+    .dropdown-menu{top:calc(100% + 7px);min-width:190px;padding:6px;border:1px solid #e7e5e4;border-radius:13px;background:#fff;box-shadow:0 16px 36px #29252420}
+    .dropdown-menu button{min-height:40px;padding:9px 11px;border-radius:9px;color:#44403c;font-size:13px;font-weight:600}
+    .dropdown-menu button:hover,.dropdown-menu button:focus-visible{background:#fff3e8;color:#9a3412}
+    .pin-demo{width:100%;max-width:220px;margin:auto;gap:12px}
+    .pin-demo>label{font-size:11px;font-weight:700;color:#57534e}
+    .pin-dots{gap:14px;padding:4px 0}
+    .pin-dots i{width:10px;height:10px;border:1px solid #d6d3d1;background:#fff;transition:background .15s,border-color .15s,transform .15s}
+    .pin-dots i.filled{border-color:#ea580c;background:#ea580c;transform:scale(1.08)}
+    .pin-pad{gap:6px}
+    .pin-pad button{min-height:34px;border:1px solid #eee7df;border-radius:9px;background:#fafaf9;color:#292524;font-size:13px;font-weight:700;transition:background .15s,border-color .15s,transform .15s}
+    .pin-pad button:hover{border-color:#fdba74;background:#fff7ed;color:#9a3412}
+    .pin-pad button:active{transform:scale(.96)}
+    .pin-pad button[data-pin="enter"]{background:#ea580c;border-color:#ea580c;color:#fff}
+    .pin-pad button[data-pin="clear"]{color:#78716c}
+    .pin-status{min-height:14px;text-align:center;color:#a8a29e;font-size:9px}
+    .pin-status.success{color:#15803d}.pin-status.error{color:#dc2626}
 </style>
   <link rel="stylesheet" href="../assets/css/uiforu.css?v=uxp6">
 </head>
@@ -740,7 +784,7 @@
       <article class="card"><div class="card-head"><h3>Reaction Picker</h3><span class="number">84</span></div><div class="demo"><div class="reaction-demo"><button data-reaction="👍">👍 <span>12</span></button><button data-reaction="❤️">❤️ <span>4</span></button><button data-reaction="🎉">🎉 <span>2</span></button></div></div><p class="desc">React to content and show aggregate reaction counts.</p></article>
       <article class="card"><div class="card-head"><h3>Gesture Controller</h3><span class="number">85</span></div><div class="demo"><div class="gesture-demo" data-gesture tabindex="0">Swipe or use ← → keys</div><span class="hint" id="gestureMessage">Try moving across this area.</span></div><p class="desc">Support swipe and keyboard gestures for navigation.</p></article></div></section>
 <section class="component-section" id="forms-input" aria-labelledby="forms-input-title"><div class="section-meta"><h2 id="forms-input-title">Forms & Input</h2><span>10 ELEMENTS</span></div><div class="grid"><article class="card"><div class="card-head"><h3>OTP Input</h3><span class="number">086</span></div><div class="demo"><div class="uxdemo otp-demo"><label>Verification code</label><div class="otp-cells"><input maxlength="1" inputmode="numeric" value="4"><input maxlength="1" inputmode="numeric" value="8"><input maxlength="1" inputmode="numeric" placeholder="·"><input maxlength="1" inputmode="numeric" placeholder="·"><input maxlength="1" inputmode="numeric" placeholder="·"><input maxlength="1" inputmode="numeric" placeholder="·"></div><small>Enter the 6-digit code sent to your email.</small></div></div><p class="desc">Enter a short verification code.</p></article>
-<article class="card"><div class="card-head"><h3>PIN Entry</h3><span class="number">087</span></div><div class="demo"><div class="uxdemo pin-demo"><label>Enter your PIN</label><div class="pin-dots"><i></i><i></i><i></i><i></i></div><div class="pin-pad"><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>⌫</button><button>0</button><button>↵</button></div></div></div><p class="desc">Enter a numeric security PIN.</p></article>
+<article class="card"><div class="card-head"><h3>PIN Entry</h3><span class="number">087</span></div><div class="demo"><div class="uxdemo pin-demo" id="pinDemo" tabindex="0" role="group" aria-label="PIN entry demo"><label>Enter your PIN</label><div class="pin-dots" aria-live="polite"><i></i><i></i><i></i><i></i></div><div class="pin-pad"><button type="button" data-pin="1">1</button><button type="button" data-pin="2">2</button><button type="button" data-pin="3">3</button><button type="button" data-pin="4">4</button><button type="button" data-pin="5">5</button><button type="button" data-pin="6">6</button><button type="button" data-pin="7">7</button><button type="button" data-pin="8">8</button><button type="button" data-pin="9">9</button><button type="button" data-pin="clear" aria-label="Clear PIN">C</button><button type="button" data-pin="0">0</button><button type="button" data-pin="enter" aria-label="Submit PIN">↵</button></div><small class="pin-status" id="pinStatus" aria-live="polite">Enter 4 digits · Demo PIN: 2580</small></div></div><p class="desc">Enter a numeric security PIN.</p></article>
 <article class="card"><div class="card-head"><h3>Currency Input</h3><span class="number">088</span></div><div class="demo"><div class="uxdemo currency-demo"><label for="currencyAmount">Invoice amount</label><div class="currency-input"><span>฿</span><input id="currencyAmount" type="number" value="12500" min="0"></div><small>THB · Thai Baht</small><strong data-currency-preview>฿12,500.00</strong></div></div><p class="desc">Enter a monetary amount with currency formatting.</p></article>
 <article class="card"><div class="card-head"><h3>Phone Number Field</h3><span class="number">089</span></div><div class="demo"><div class="uxdemo phone-demo"><label>Mobile number</label><div class="phone-input"><select aria-label="Country code"><option>🇹🇭 +66</option><option>🇺🇸 +1</option><option>🇯🇵 +81</option></select><input type="tel" value="812 345 678" aria-label="Phone number"></div><small class="valid-note">✓ Number format looks valid</small></div></div><p class="desc">Capture a phone number with country context.</p></article>
 <article class="card"><div class="card-head"><h3>Input Mask</h3><span class="number">090</span></div><div class="demo"><div class="uxdemo mask-demo"><label for="maskedDate">Date of birth</label><input id="maskedDate" placeholder="DD / MM / YYYY" value="19 / 11 / 2000" maxlength="14"><small>Format: DD / MM / YYYY</small><span class="mask-preview">19 November 2000</span></div></div><p class="desc">Format input while a user types.</p></article>
@@ -1147,6 +1191,11 @@
     const selectTrigger=$('selectTrigger'),selectOptions=$('selectOptions');
     selectTrigger.addEventListener('click',()=>setPickerOpen(selectTrigger,selectOptions));
     selectOptions.addEventListener('click',event=>{const option=event.target.closest('[data-value]');if(!option)return;$('selectValue').textContent=option.dataset.value;$('selectMessage').textContent='Selected: '+option.dataset.value;selectOptions.querySelectorAll('[role="option"]').forEach(item=>item.setAttribute('aria-selected',String(item===option)));selectOptions.hidden=true;selectTrigger.setAttribute('aria-expanded','false');});
+    const pinDemo=$('pinDemo');let pinValue='';
+    const renderPin=()=>{pinDemo.querySelectorAll('.pin-dots i').forEach((dot,index)=>dot.classList.toggle('filled',index<pinValue.length));};
+    const submitPin=()=>{const status=$('pinStatus');status.className='pin-status';if(pinValue.length!==4){status.textContent='Please enter all 4 digits.';status.classList.add('error');return;}if(pinValue==='2580'){status.textContent='✓ PIN accepted';status.classList.add('success');}else{status.textContent='Incorrect PIN. Try again.';status.classList.add('error');}pinValue='';renderPin();};
+    pinDemo.addEventListener('click',event=>{const key=event.target.closest('[data-pin]')?.dataset.pin;if(!key)return;const status=$('pinStatus');status.className='pin-status';if(key==='clear'){pinValue='';status.textContent='PIN cleared.';}else if(key==='enter'){submitPin();return;}else if(pinValue.length<4){pinValue+=key;status.textContent='';if(pinValue.length===4)status.textContent='Press ↵ to verify.';}renderPin();});
+    pinDemo.addEventListener('keydown',event=>{if(/^\\d$/.test(event.key)&&pinValue.length<4){pinValue+=event.key;renderPin();}else if(event.key==='Backspace'){pinValue=pinValue.slice(0,-1);renderPin();}else if(event.key==='Enter'){submitPin();}else if(event.key==='Escape'){pinValue='';renderPin();}else return;event.preventDefault();});
     const dateTrigger=$('dateTrigger'),datePanel=$('datePanel');let calendarMonth=new Date(),selectedDate=null;
     const renderCalendar=()=>{const year=calendarMonth.getFullYear(),month=calendarMonth.getMonth(),first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),today=new Date();$('calendarTitle').textContent=calendarMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});$('calendarDays').innerHTML='';for(let i=0;i<first;i++)$('calendarDays').appendChild(document.createElement('span'));for(let day=1;day<=days;day++){const date=new Date(year,month,day),key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-'),btn=document.createElement('button');btn.type='button';btn.textContent=String(day);btn.dataset.date=key;if(date.toDateString()===today.toDateString())btn.classList.add('is-today');if(selectedDate===key)btn.classList.add('is-selected');$('calendarDays').appendChild(btn);}};
     const openCalendar=()=>{setPickerOpen(dateTrigger,datePanel);renderCalendar();};
