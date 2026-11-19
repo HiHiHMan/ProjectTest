@@ -522,14 +522,12 @@
 #principles-ux .uxp-report{display:grid;grid-template-columns:1fr auto;gap:4px;padding:12px;border:1px solid #eee9e4;border-radius:9px;background:#fff}
 #principles-ux .uxp-report>div{display:grid;gap:4px}
 #principles-ux .uxp-report>strong{grid-column:1/-1;margin-top:5px;font-size:22px;color:#c2410c}
-#principles-ux .uxp-skeleton{grid-column:1/-1;display:grid;gap:8px;padding:5px 0 2px}
+#principles-ux .uxp-skeleton{grid-column:1/-1;display:grid;justify-items:start;align-content:start;gap:7px;margin-top:5px;padding:0}
 #principles-ux .uxp-skeleton[hidden]{display:none!important}
 #principles-ux .uxp-report.is-loading>[data-uxp-report-value],#principles-ux .uxp-report.is-loading>[data-uxp-report-label]{display:none}
-#principles-ux .uxp-skeleton i{display:block;height:10px;border-radius:5px;background:linear-gradient(90deg,#eeeae5 0%,#ffedd5 45%,#eeeae5 90%);background-size:200% 100%;animation:uxp-shimmer .9s linear infinite}
-#principles-ux .uxp-skeleton i:first-child{width:42%;height:17px}
-#principles-ux .uxp-skeleton i:nth-child(2){width:92%}
-#principles-ux .uxp-skeleton i:nth-child(3){width:72%}
-#principles-ux .uxp-skeleton i:nth-child(4){width:48%;height:7px}
+#principles-ux .uxp-skeleton i{display:block;border-radius:4px;background:linear-gradient(90deg,#eeeae5 0%,#ffedd5 45%,#eeeae5 90%);background-size:200% 100%;animation:uxp-shimmer .9s linear infinite}
+#principles-ux .uxp-skeleton i:first-child{width:38%;height:25px}
+#principles-ux .uxp-skeleton i:nth-child(2){width:29%;height:9px}
 @keyframes uxp-shimmer{to{background-position:-200% 0}}
 #principles-ux .uxp-field{display:grid;gap:6px;color:#78716c;font-size:9px}
 #principles-ux .uxp-field input{width:100%;padding:10px;border:1px solid #e7e5e4;border-radius:7px;background:#fff;color:#292524;font-size:11px}
