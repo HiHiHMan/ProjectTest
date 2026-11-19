@@ -739,3 +739,22 @@
 #principles-ux .uxp-miller-actions button:focus-visible{outline:2px solid #fb923c;outline-offset:2px}
 #principles-ux .uxp-miller-actions button:active{transform:translateY(1px)}
 #principles-ux .uxp-miller-actions button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+
+/* Miller's Law — quiet underline fields */
+#principles-ux .uxp-miller-panel>label{gap:6px;color:#57534e;font-size:9px;font-weight:600}
+#principles-ux .uxp-miller-panel input:not([type=checkbox]){
+  box-sizing:border-box;width:100%;min-width:0;height:31px;padding:5px 1px;
+  border:0;border-bottom:1px solid #d6d3d1;border-radius:0;
+  outline:0;background:transparent;color:#292524;
+  font-size:10px;font-weight:400;box-shadow:none;
+  transition:border-color .18s ease;
+}
+#principles-ux .uxp-miller-panel input:not([type=checkbox]):hover{border-bottom-color:#a8a29e}
+#principles-ux .uxp-miller-panel input:not([type=checkbox]):focus{
+  border:0;border-bottom:2px solid #ea580c;border-radius:0;
+  outline:0;background:transparent;box-shadow:none;
+}
+#principles-ux .uxp-miller-panel input:not([type=checkbox])::placeholder{color:#b0aaa4;opacity:1}
+#principles-ux .uxp-miller-panel input:not([type=checkbox]):user-invalid{border-bottom-color:#dc2626}
+#principles-ux .uxp-miller-terms input{width:12px;height:12px;box-shadow:none}
