@@ -1143,7 +1143,22 @@
         if(action==='normalize'){const input=card.querySelector('[data-uxp-phone]');let digits=input.value.replace(/\D/g,'');if(digits.startsWith('66'))digits='0'+digits.slice(2);if(/^\d{9}$/.test(digits)&&!digits.startsWith('0'))digits='0'+digits;if(!/^0[689]\d{8}$/.test(digits)){say('Enter a valid 10-digit Thai mobile number.');input.focus();return;}const formatted=digits.replace(/^(\d{3})(\d{3})(\d{4})$/,'$1-$2-$3');input.value=formatted;say('Saved as '+formatted+' ✓');}
         if(action==='motion'){const active=button.classList.toggle('on');button.setAttribute('aria-pressed',String(active));button.querySelector('span').textContent=active?'Motion off':'Reduced';card.classList.toggle('quiet-motion',active);say(active?'Decorative motion reduced.':'Standard motion enabled.');}
         if(button.hasAttribute('data-uxp-plan')){card.querySelectorAll('[data-uxp-plan]').forEach(x=>x.classList.toggle('selected',x===button));say(button.dataset.uxpPlan+' plan selected.');}
-        if(button.hasAttribute('data-uxp-tab')){card.querySelectorAll('[data-uxp-tab]').forEach(x=>x.classList.toggle('active',x===button));card.querySelector('[data-uxp-tab-content]').textContent=({Home:'Discover everyday essentials.',Shop:'Browse the latest collection.',Account:'Manage your profile and orders.',Bag:'Review items in your shopping bag.'})[button.dataset.uxpTab];}
+        if(button.hasAttribute('data-uxp-tab')){
+          const tab=button.dataset.uxpTab;
+          card.querySelectorAll('[data-uxp-tab]').forEach(x=>x.classList.toggle('active',x===button));
+          const views={
+            Home:['CURATED FOR YOU','Discover everyday essentials.','Thoughtful pieces for everyday living.'],
+            Shop:['THE COLLECTION','Browse the latest collection.','Explore clothing, home and accessories.'],
+            New:['JUST ARRIVED','Meet the new arrivals.','Fresh picks, added this week.'],
+            Account:['YOUR ACCOUNT','Welcome back.','View your profile and recent orders.'],
+            Bag:['YOUR BAG','You have 2 items in your bag.','Review your items before checkout.']
+          };
+          const view=views[tab];
+          card.querySelector('[data-uxp-tab-kicker]').textContent=view[0];
+          card.querySelector('[data-uxp-tab-content]').textContent=view[1];
+          card.querySelector('[data-uxp-tab-detail]').textContent=view[2];
+          if(note)say(tab==='Bag'?'Shopping bag opened · 2 items.':tab+' section selected.');
+        }
       });
       uxpRoot.addEventListener('input',event=>{
         if(!event.target.matches('[data-uxp-search]'))return;
