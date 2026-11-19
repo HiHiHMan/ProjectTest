@@ -681,3 +681,5 @@
 
 /* Bigger Hit Areas — dashed guide shows the existing hit area without changing layout */
 #principles-ux .uxp-switch-hit::before{border:1px dashed #f97316;border-radius:9px}
+/* Bigger Hit Areas — prevent a focus ring from appearing around the toggle on click */
+#principles-ux .uxp-switch-hit input:focus-visible{outline:0;outline-offset:0}
