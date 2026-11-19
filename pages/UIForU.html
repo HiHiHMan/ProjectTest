@@ -92,6 +92,12 @@
     .accordion summary{cursor:pointer;color:#333;font-weight:600}.accordion summary::marker{color:var(--accent)}.accordion p{margin:12px 0 0;color:#888;line-height:20px}
     .dropdown{position:relative}.dropdown-menu{position:absolute;z-index:5;top:calc(100% + 8px);left:0;min-width:144px;padding:8px;border:1px solid #e7e5e4;border-radius:12px;background:white;box-shadow:0 12px 28px #00000012}
     .dropdown-menu button{display:block;width:100%;padding:8px 12px;border:0;border-radius:8px;background:white;text-align:left;color:#555;font-size:14px;line-height:20px;cursor:pointer}.dropdown-menu button:hover{background:var(--accent-soft);color:#c2410c}
+    .dropdown{position:relative;z-index:12}
+    .dropdown-menu{display:grid;gap:4px;min-width:176px;padding:7px;border:1px solid #eee7df;border-radius:12px;background:#fff;box-shadow:0 16px 38px #2925241c;animation:dropdown-in .16s ease-out}
+    .dropdown-menu[hidden]{display:none!important}
+    .dropdown-menu button{display:flex;align-items:center;min-height:38px;padding:8px 11px;border:0;border-radius:8px;background:#fff;color:#44403c;text-align:left;font:inherit;font-size:13px;cursor:pointer;transition:background .16s,color .16s}
+    .dropdown-menu button:hover,.dropdown-menu button:focus-visible{background:#fff3e8;color:#c2410c;outline:0}
+    @keyframes dropdown-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
     .tooltip-wrap{position:relative}.tooltip-wrap:hover:after,.tooltip-wrap:focus-within:after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:8px 12px;border-radius:8px;background:#272727;color:white;font-size:12px;line-height:16px}
     .mini-table{width:100%;border-collapse:collapse;font-size:12px;line-height:16px}.mini-table th,.mini-table td{padding:8px 4px;border-bottom:1px solid #f0eeeb;text-align:left}.mini-table th{color:#999;font-weight:600}.mini-table td{color:#555}.mini-table tbody tr:last-child td{border-bottom:0}
     .stepper{display:flex;align-items:center;gap:8px;width:100%}.stepper button{width:32px;height:32px;border:1px solid #dedbd7;border-radius:8px;background:#fff;color:#c2410c;cursor:pointer}.stepper button:disabled{opacity:.35;cursor:not-allowed}.stepper output{min-width:24px;text-align:center;font-size:14px;line-height:20px;font-weight:700}
@@ -1096,8 +1102,12 @@
     document.body.appendChild(modal);
     $('openModal').addEventListener('click', () => modal.showModal());
     modal.addEventListener('click', e => {if(e.target.id==='closeModal'||e.target===modal)modal.close();});
-    $('dropdownToggle').addEventListener('click', () => {const menu=$('dropdownMenu');menu.hidden=!menu.hidden;$('dropdownToggle').setAttribute('aria-expanded',String(!menu.hidden));});
-    $('dropdownMenu').addEventListener('click', e => {const item=e.target.closest('[data-action]');if(!item)return;$('dropdownMessage').textContent='Action: '+item.dataset.action;$('dropdownMenu').hidden=true;$('dropdownToggle').setAttribute('aria-expanded','false');});
+    const dropdownToggle=$('dropdownToggle'),dropdownMenu=$('dropdownMenu');
+    dropdownToggle.addEventListener('click',event=>{event.stopPropagation();const open=dropdownMenu.hidden;dropdownMenu.hidden=!open;dropdownToggle.setAttribute('aria-expanded',String(open));});
+    dropdownMenu.addEventListener('click',event=>{const item=event.target.closest('[data-action]');if(!item)return;$('dropdownMessage').textContent='Action: '+item.dataset.action;dropdownMenu.hidden=true;dropdownToggle.setAttribute('aria-expanded','false');});
+    document.addEventListener('click',event=>{if(!event.target.closest('.dropdown')){dropdownMenu.hidden=true;dropdownToggle.setAttribute('aria-expanded','false');}});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!dropdownMenu.hidden){dropdownMenu.hidden=true;dropdownToggle.setAttribute('aria-expanded','false');dropdownToggle.focus();}});
+
     $('dismissAlert').addEventListener('click', () => $('alertDemo').hidden=true);
     $('restoreAlert').addEventListener('click', () => $('alertDemo').hidden=false);
     let step=1;
