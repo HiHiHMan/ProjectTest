@@ -792,3 +792,45 @@
 #principles-ux .uxp-jakob-store .uxp-browser-content>b{font-size:11px}
 #principles-ux .uxp-jakob-store .uxp-browser-content>[data-uxp-tab-detail]{font-size:8px;color:#e7e5e4}
 @media(max-width:380px){#principles-ux .uxp-jakob-header{gap:5px;padding-inline:6px}#principles-ux .uxp-jakob-logo{font-size:12px!important}#principles-ux .uxp-jakob-store nav{gap:0;padding-inline:5px}#principles-ux .uxp-jakob-store nav button{padding-inline:5px;font-size:7px}}
+
+
+/* Jakob's Law — polished, familiar storefront */
+#principles-ux .uxp-jakob-store{overflow:hidden;width:100%;border:1px solid #e8e3da;border-radius:11px;background:#fff;color:#292a26}
+#principles-ux .uxp-jakob-announcement{padding:5px 8px;background:#30372f;color:#f5f1e8;text-align:center;font-size:6px;font-weight:700;letter-spacing:.13em}
+#principles-ux .uxp-jakob-header{display:grid;grid-template-columns:auto minmax(70px,1fr) auto;align-items:center;gap:9px;padding:10px 11px 8px}
+#principles-ux .uxp-jakob-logo{padding:0!important;border:0!important;background:transparent!important;color:#30372f!important;font-family:Georgia,serif!important;font-size:19px!important;font-weight:700!important;letter-spacing:-.09em;box-shadow:none!important}
+#principles-ux .uxp-jakob-logo span{color:#a66d4c}
+#principles-ux .uxp-jakob-search{height:27px;min-width:0;display:flex;align-items:center;gap:6px;padding:0 8px;border:1px solid #e9e6df;border-radius:4px;background:#faf9f6;color:#8b8b80}
+#principles-ux .uxp-jakob-search>span{font-size:16px;line-height:1}
+#principles-ux .uxp-jakob-search input{width:100%;min-width:0;padding:0;border:0!important;outline:0;background:transparent!important;color:#30372f;font-size:8px}
+#principles-ux .uxp-jakob-search input:focus{box-shadow:none!important}
+#principles-ux .uxp-jakob-search input::placeholder{color:#a4a096}
+#principles-ux .uxp-jakob-actions{display:flex;align-items:center;gap:8px}
+#principles-ux .uxp-jakob-actions button{display:grid;justify-items:center;gap:1px;padding:0!important;border:0!important;background:transparent!important;color:#4b5048!important;box-shadow:none!important}
+#principles-ux .uxp-jakob-actions button>span{font-size:15px;line-height:15px}
+#principles-ux .uxp-jakob-actions button small{font-size:6px;font-weight:500;color:#77796f}
+#principles-ux .uxp-jakob-actions button i{font-style:normal;color:#a66d4c}
+#principles-ux .uxp-jakob-nav{display:flex;align-items:center;justify-content:center;gap:18px;padding:0 8px 8px;border-bottom:1px solid #eeeae3}
+#principles-ux .uxp-jakob-nav button{position:relative;padding:4px 0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#77796f!important;font-size:7px!important;font-weight:600;box-shadow:none!important;white-space:nowrap}
+#principles-ux .uxp-jakob-nav button.active{color:#30372f!important}
+#principles-ux .uxp-jakob-nav button.active:after{content:"";position:absolute;right:0;bottom:-8px;left:0;height:2px;background:#a66d4c}
+#principles-ux .uxp-jakob-hero{position:relative;min-height:147px;display:grid;grid-template-columns:1.08fr .92fr;overflow:hidden;background:#f1eee6}
+#principles-ux .uxp-jakob-copy{z-index:1;align-self:center;padding:16px 0 16px 14px}
+#principles-ux .uxp-jakob-copy>small{color:#9a7259;font-size:6px;font-weight:800;letter-spacing:.16em}
+#principles-ux .uxp-jakob-copy h4{margin:7px 0 5px;color:#30372f;font-family:Georgia,serif;font-size:17px;font-weight:500;line-height:1.08;letter-spacing:-.045em}
+#principles-ux .uxp-jakob-copy p{max-width:145px;margin:0 0 10px;color:#77796f;font-size:7px;line-height:1.5}
+#principles-ux .uxp-jakob-cta{display:inline-flex;align-items:center;gap:12px;padding:7px 9px!important;border:0!important;border-radius:2px!important;background:#30372f!important;color:#fff!important;font-size:7px!important;font-weight:600!important;box-shadow:none!important}
+#principles-ux .uxp-jakob-cta span{color:#d7b49a;font-size:10px}
+#principles-ux .uxp-jakob-art{position:relative;min-height:147px;overflow:hidden;background:linear-gradient(145deg,#ded5c5,#c4b6a0)}
+#principles-ux .uxp-jakob-sun{position:absolute;width:90px;height:90px;top:17px;right:20px;border-radius:50%;background:#eee5d4}
+#principles-ux .uxp-jakob-vase{position:absolute;z-index:2;left:50%;bottom:10px;width:49px;height:83px;transform:translateX(-50%);border-radius:35% 35% 28% 28% / 18% 18% 12% 12%;background:linear-gradient(90deg,#8a7964,#b3a18a 42%,#786b5c);box-shadow:inset 5px 0 9px #e4d6c155,8px 9px 16px #4c403329}
+#principles-ux .uxp-jakob-vase:before{content:"";position:absolute;left:14px;top:-5px;width:21px;height:12px;border-radius:4px 4px 2px 2px;background:#8a7964}
+#principles-ux .uxp-jakob-vase i{position:absolute;left:22px;top:-28px;width:2px;height:30px;background:#65735b;transform:rotate(9deg)}
+#principles-ux .uxp-jakob-vase i:before,#principles-ux .uxp-jakob-vase i:after{content:"";position:absolute;width:16px;height:8px;border-radius:100% 0 100% 0;background:#71816a}
+#principles-ux .uxp-jakob-vase i:before{top:3px;left:-13px;transform:rotate(20deg)}
+#principles-ux .uxp-jakob-vase i:after{top:-8px;left:2px;transform:rotate(-35deg)}
+#principles-ux .uxp-jakob-orbit{position:absolute;width:112px;height:112px;right:-29px;bottom:-57px;border:1px solid #fff9;border-radius:50%}
+#principles-ux .uxp-jakob-art>small{position:absolute;right:8px;bottom:8px;color:#fff;font-family:Georgia,serif;font-size:6px;line-height:1.4;letter-spacing:.13em;text-align:right}
+#principles-ux .uxp-jakob-foot{display:flex;justify-content:space-between;padding:7px 10px;color:#96958a;font-size:6px;font-weight:700;letter-spacing:.12em}
+@media(max-width:390px){#principles-ux .uxp-jakob-header{gap:6px;padding-inline:8px}#principles-ux .uxp-jakob-logo{font-size:16px!important}#principles-ux .uxp-jakob-actions{gap:5px}#principles-ux .uxp-jakob-nav{gap:12px}#principles-ux .uxp-jakob-nav button{font-size:6px!important}#principles-ux .uxp-jakob-copy{padding-left:10px}#principles-ux .uxp-jakob-copy h4{font-size:15px}}
+@media(prefers-reduced-motion:reduce){#principles-ux .uxp-jakob-store *{scroll-behavior:auto!important;transition:none!important}}
