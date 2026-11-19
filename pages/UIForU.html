@@ -179,10 +179,15 @@
     .booking-days button.selected{background:var(--accent);color:#fff}
 
     .announcement-demo,.coupon-demo,.byline-demo,.compass-demo,.treemap-demo,.workload-demo,.allowlist-demo{width:100%;min-width:0;display:grid;gap:10px}
-    .announcement-bar{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #fed7aa;border-radius:10px;background:#fff7ed;color:#9a3412}
-    .announcement-bar[hidden]{display:none}.announcement-icon{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:50%;background:#ffedd5;font-weight:700}
-    .announcement-bar>span:nth-child(2){flex:1;min-width:0;display:grid;gap:2px}.announcement-bar b{font-size:12px;line-height:16px}.announcement-bar small{font-size:10px;line-height:14px;color:#a16207}
-    .announcement-bar>button,.allowlist-list button{border:0;background:transparent;color:#9a3412;font-size:18px;cursor:pointer}
+    .announcement-bar{position:relative;display:flex;align-items:center;gap:10px;min-height:76px;padding:12px 10px 12px 13px;overflow:hidden;border:0;border-left:3px solid #f97316;border-radius:7px;background:#292524;color:#fff}
+    .announcement-bar[hidden]{display:none}
+    .announcement-icon{width:25px;height:25px;flex:none;display:grid;place-items:center;border:1px solid #fb923c66;border-radius:7px;background:#f9731624;color:#fdba74;font-size:12px;font-weight:800}
+    .announcement-bar>span:nth-child(2){flex:1;min-width:0;display:grid;gap:4px}
+    .announcement-bar b{color:#fafaf9;font-size:11px;line-height:15px;font-weight:700}
+    .announcement-bar small{color:#c7c1bb;font-size:9px;line-height:14px}
+    .announcement-bar>button,.allowlist-list button{width:24px;height:24px;flex:none;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#a8a29e;font-size:17px;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+    .announcement-bar>button:hover{background:#ffffff14;color:#fff}
+    .announcement-bar>button:focus-visible{outline:2px solid #fb923c;outline-offset:2px}
     .announcement-controls,.coupon-entry,.compass-controls,.allowlist-entry{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .coupon-demo label,.allowlist-demo label{font-size:12px;font-weight:700;color:#555}.coupon-entry .field,.allowlist-entry .field{flex:1;min-width:90px}
     .coupon-result,.byline-status,.treemap-status,.allowlist-status{font-size:11px;line-height:16px;color:#777}.coupon-result.success{color:#15803d}.coupon-result.error{color:#b91c1c}
