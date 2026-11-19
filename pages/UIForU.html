@@ -775,24 +775,36 @@
         </form></div><p class="desc">Group related information so users can scan it without having to remember each detail.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Doherty Threshold</h3><span class="number">18</span></div><div class="uxp-demo"><div class="uxp-report"><div><b>Sales overview</b><small data-uxp-report-status>Updated 2 minutes ago</small></div><div class="uxp-skeleton" data-uxp-skeleton hidden aria-label="Loading sales report"><i></i><i></i></div><strong data-uxp-report-value>฿84,250</strong><small data-uxp-report-label>Monthly revenue</small></div><button class="btn secondary uxp-action" data-uxp="refresh">Refresh report</button><small class="uxp-note" data-uxp-note>Loading feedback appears immediately.</small></div><p class="desc">Immediate system feedback keeps users engaged during short waits.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Postel's Law</h3><span class="number">19</span></div><div class="uxp-demo"><label class="uxp-field">Phone number<input data-uxp-phone type="tel" inputmode="tel" autocomplete="tel" value="  +66 81-234-5678  " placeholder="081-234-5678" aria-label="Phone number"></label><button class="btn secondary uxp-action" data-uxp="normalize">Normalize number</button><small class="uxp-note" data-uxp-note>Accept spaces, hyphens or +66; save in one format.</small></div><p class="desc">Accept flexible phone-number formats, then normalize them into one consistent format.</p></article>
-        <article class="card uxp-card"><div class="card-head"><h3>Jakob's Law</h3><span class="number">20</span></div><div class="uxp-demo"><div class="uxp-browser uxp-jakob-store">
-          <div class="uxp-browser-top"><span></span><span></span><span></span><small>atelier.store</small></div>
-          <div class="uxp-jakob-header">
+        <article class="card uxp-card"><div class="card-head"><h3>Jakob's Law</h3><span class="number">20</span></div><div class="uxp-demo"><div class="uxp-jakob-store">
+          <div class="uxp-jakob-announcement">COMPLIMENTARY SHIPPING ON ORDERS OVER ฿1,500</div>
+          <header class="uxp-jakob-header">
             <button class="uxp-jakob-logo" data-uxp-tab="Home" aria-label="Atelier home">atelier<span>.</span></button>
-            <label class="uxp-jakob-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search products" aria-label="Search products"></label>
-            <button class="uxp-jakob-cart" data-uxp-tab="Bag" aria-label="Shopping bag, 2 items">Bag <i>2</i></button>
-          </div>
-          <nav aria-label="Store navigation">
+            <label class="uxp-jakob-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search the collection" aria-label="Search the collection"></label>
+            <div class="uxp-jakob-actions">
+              <button data-uxp-tab="Account" aria-label="Account"><span aria-hidden="true">♙</span><small>Account</small></button>
+              <button data-uxp-tab="Bag" aria-label="Shopping bag"><span aria-hidden="true">♧</span><small>Bag <i>2</i></small></button>
+            </div>
+          </header>
+          <nav class="uxp-jakob-nav" aria-label="Store navigation">
             <button class="active" data-uxp-tab="Home">Home</button>
-            <button data-uxp-tab="Shop">Shop</button>
+            <button data-uxp-tab="Shop">Shop all</button>
             <button data-uxp-tab="New">New arrivals</button>
-            <button data-uxp-tab="Account">Account</button>
+            <button data-uxp-tab="Living">Living</button>
+            <button data-uxp-tab="About">Our story</button>
           </nav>
-          <div class="uxp-browser-content">
-            <small data-uxp-tab-kicker>CURATED FOR YOU</small>
-            <b data-uxp-tab-content>Discover everyday essentials.</b>
-            <span data-uxp-tab-detail>Thoughtful pieces for everyday living.</span>
-          </div>
+          <section class="uxp-jakob-hero">
+            <div class="uxp-jakob-copy">
+              <small data-uxp-tab-kicker>THE EVERYDAY EDIT</small>
+              <h4 data-uxp-tab-content>Thoughtful things.<br>Beautifully made.</h4>
+              <p data-uxp-tab-detail>Considered essentials for a slower, simpler way of living.</p>
+              <button class="uxp-jakob-cta" data-uxp-tab="Shop">Explore the collection <span>↗</span></button>
+            </div>
+            <div class="uxp-jakob-art" aria-hidden="true">
+              <div class="uxp-jakob-sun"></div><div class="uxp-jakob-vase"><i></i></div>
+              <div class="uxp-jakob-orbit"></div><small>FORM<br>NO. 04</small>
+            </div>
+          </section>
+          <div class="uxp-jakob-foot"><span>DESIGNED FOR DAILY LIVING</span><span>01 — 04</span></div>
         </div></div><p class="desc">Familiar navigation patterns help users feel at home immediately.</p></article>
         <article class="card uxp-card"><div class="card-head"><h3>Frequency of Use</h3><span class="number">21</span></div><div class="uxp-demo"><div class="uxp-frequency"><div><b>Motion preference</b><small>Choose how often UI feedback animates.</small></div><button class="uxp-motion-toggle" data-uxp="motion" aria-pressed="false"><i></i><span>Reduced</span></button></div><div class="uxp-frequent-actions"><button>＋ New order</button><button>⌕ Search</button><button>▤ Reports</button></div><small class="uxp-note" data-uxp-note>Frequent actions stay quick and quiet.</small></div><p class="desc">Repeated workflows prioritize speed and reduce unnecessary motion.</p></article>
       </div>
@@ -1144,20 +1156,22 @@
         if(action==='motion'){const active=button.classList.toggle('on');button.setAttribute('aria-pressed',String(active));button.querySelector('span').textContent=active?'Motion off':'Reduced';card.classList.toggle('quiet-motion',active);say(active?'Decorative motion reduced.':'Standard motion enabled.');}
         if(button.hasAttribute('data-uxp-plan')){card.querySelectorAll('[data-uxp-plan]').forEach(x=>x.classList.toggle('selected',x===button));say(button.dataset.uxpPlan+' plan selected.');}
         if(button.hasAttribute('data-uxp-tab')){
-          const tab=button.dataset.uxpTab;
-          card.querySelectorAll('[data-uxp-tab]').forEach(x=>x.classList.toggle('active',x===button));
+          const tab=button.dataset.uxpTab,store=button.closest('.uxp-jakob-store');
+          store.querySelectorAll('.uxp-jakob-nav [data-uxp-tab]').forEach(x=>x.classList.toggle('active',x===button));
           const views={
-            Home:['CURATED FOR YOU','Discover everyday essentials.','Thoughtful pieces for everyday living.'],
-            Shop:['THE COLLECTION','Browse the latest collection.','Explore clothing, home and accessories.'],
-            New:['JUST ARRIVED','Meet the new arrivals.','Fresh picks, added this week.'],
-            Account:['YOUR ACCOUNT','Welcome back.','View your profile and recent orders.'],
-            Bag:['YOUR BAG','You have 2 items in your bag.','Review your items before checkout.']
+            Home:['THE EVERYDAY EDIT','Thoughtful things.\\nBeautifully made.','Considered essentials for a slower, simpler way of living.'],
+            Shop:['THE COLLECTION','Find your everyday favourite.','Explore considered pieces for home and life.'],
+            New:['JUST ARRIVED','A fresh perspective.','Discover the latest additions to our collection.'],
+            Living:['AT HOME','Make room for calm.','Objects and details that make a space feel yours.'],
+            About:['OUR PHILOSOPHY','Less, but better.','Made with care. Chosen to be kept.'],
+            Account:['YOUR ACCOUNT','Welcome back.','Your profile, saved pieces and recent orders.'],
+            Bag:['YOUR BAG','Two good choices.','Review your selected pieces before checkout.']
           };
           const view=views[tab];
-          card.querySelector('[data-uxp-tab-kicker]').textContent=view[0];
-          card.querySelector('[data-uxp-tab-content]').textContent=view[1];
-          card.querySelector('[data-uxp-tab-detail]').textContent=view[2];
-          if(note)say(tab==='Bag'?'Shopping bag opened · 2 items.':tab+' section selected.');
+          store.querySelector('[data-uxp-tab-kicker]').textContent=view[0];
+          store.querySelector('[data-uxp-tab-content]').innerHTML=view[1].replace('\\n','<br>');
+          store.querySelector('[data-uxp-tab-detail]').textContent=view[2];
+          if(note)say(tab==='Bag'?'Shopping bag opened · 2 items.':tab==='Account'?'Your account selected.':tab+' section selected.');
         }
       });
       uxpRoot.addEventListener('input',event=>{
