@@ -773,3 +773,22 @@
 }
 #principles-ux .uxp-miller-terms input[type="checkbox"]:focus-visible{outline:2px solid #fdba74;outline-offset:2px}
 #principles-ux .uxp-miller-terms input[type="checkbox"]:active{transform:scale(.92)}
+
+
+/* Jakob's Law — familiar online-store navigation */
+#principles-ux .uxp-jakob-store{display:grid;gap:0}
+#principles-ux .uxp-jakob-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 9px 7px}
+#principles-ux .uxp-jakob-logo{padding:0!important;border:0!important;background:transparent!important;color:#292524!important;font-size:14px!important;font-weight:800!important;letter-spacing:-.06em;box-shadow:none!important}
+#principles-ux .uxp-jakob-logo span{color:#f97316}
+#principles-ux .uxp-jakob-search{min-width:0;height:27px;display:flex;align-items:center;gap:5px;padding:0 7px;border:1px solid #e7e5e4;border-radius:6px;background:#fafaf9;color:#a8a29e}
+#principles-ux .uxp-jakob-search>span{font-size:16px;line-height:1}
+#principles-ux .uxp-jakob-search input{width:100%;min-width:0;padding:0;border:0!important;outline:0;background:transparent!important;font-size:8px;color:#44403c}
+#principles-ux .uxp-jakob-search input:focus{box-shadow:none!important}
+#principles-ux .uxp-jakob-cart{display:flex;align-items:center;gap:4px;padding:4px 6px!important;border:1px solid #e7e5e4!important;border-radius:6px!important;background:#fff!important;color:#57534e!important;font-size:8px!important;box-shadow:none!important}
+#principles-ux .uxp-jakob-cart i{width:14px;height:14px;display:grid;place-items:center;border-radius:50%;background:#292524;color:#fff;font-size:8px;font-style:normal}
+#principles-ux .uxp-jakob-store nav{justify-content:flex-start;gap:3px;padding:0 8px 7px;border-bottom:1px solid #f0eeeb}
+#principles-ux .uxp-jakob-store nav button{padding:5px 7px;font-size:8px;white-space:nowrap}
+#principles-ux .uxp-jakob-store .uxp-browser-content{min-height:72px;gap:5px;padding:11px;background:linear-gradient(110deg,#292524,#57534e)}
+#principles-ux .uxp-jakob-store .uxp-browser-content>b{font-size:11px}
+#principles-ux .uxp-jakob-store .uxp-browser-content>[data-uxp-tab-detail]{font-size:8px;color:#e7e5e4}
+@media(max-width:380px){#principles-ux .uxp-jakob-header{gap:5px;padding-inline:6px}#principles-ux .uxp-jakob-logo{font-size:12px!important}#principles-ux .uxp-jakob-store nav{gap:0;padding-inline:5px}#principles-ux .uxp-jakob-store nav button{padding-inline:5px;font-size:7px}}
