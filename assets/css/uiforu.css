@@ -725,3 +725,17 @@
 #principles-ux .uxp-miller-error.success{color:#15803d}
 #principles-ux .uxp-miller-form .uxp-note{font-size:8px;line-height:1.4}
 @media(max-width:380px){#principles-ux .uxp-miller-panel{grid-template-columns:1fr}#principles-ux .uxp-miller-steps span{font-size:6px}}
+
+
+/* Miller's Law — restrained, consistent action buttons */
+#principles-ux .uxp-miller-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:1px}
+#principles-ux .uxp-miller-actions button{min-height:32px;padding:6px 12px;border-radius:7px;font-size:9px;line-height:1;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
+#principles-ux .uxp-miller-actions .uxp-miller-next{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-left:auto;border:1px solid #ea580c;background:#ea580c;color:#fff;box-shadow:none}
+#principles-ux .uxp-miller-actions .uxp-miller-next:hover{border-color:#c2410c;background:#c2410c}
+#principles-ux .uxp-miller-actions .uxp-miller-next span{font-size:12px;line-height:8px;transition:transform .18s ease}
+#principles-ux .uxp-miller-actions .uxp-miller-next:hover span{transform:translateX(2px)}
+#principles-ux .uxp-miller-actions .uxp-miller-back{margin-right:auto;border:0;background:transparent;color:#78716c;box-shadow:none}
+#principles-ux .uxp-miller-actions .uxp-miller-back:hover{background:#f5f5f4;color:#292524}
+#principles-ux .uxp-miller-actions button:focus-visible{outline:2px solid #fb923c;outline-offset:2px}
+#principles-ux .uxp-miller-actions button:active{transform:translateY(1px)}
+#principles-ux .uxp-miller-actions button:disabled{opacity:.5;cursor:not-allowed;transform:none}
