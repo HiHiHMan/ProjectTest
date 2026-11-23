@@ -168,4 +168,110 @@
 <article class="art-card"><div class="art neon-thread thread-08"></div><div class="info"><small>20 / Neon cord</small><h3>Ice Circuit</h3><p>Tall cyan and sapphire loops overlap like flexible neon tubing.</p></div></article>
 <article class="art-card"><div class="art neon-thread thread-09"></div><div class="info"><small>21 / Neon cord</small><h3>Ultraviolet Drift</h3><p>A broad purple-pink cord curves around a fine icy highlight.</p></div></article>
 <article class="art-card"><div class="art neon-thread thread-10"></div><div class="info"><small>22 / Neon cord</small><h3>Candy Helix</h3><p>Peach, gold and rose neon loops twist into a soft helix.</p></div></article>
-</section></main></body></html>
+</section></main>
+<style>
+/* One shared WebGL surface: only the visible artwork cards are rendered. */
+#fluid-webgl{position:fixed;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+.art{position:relative}
+</style>
+<script>
+(() => {
+  const cards = [...document.querySelectorAll('.art')];
+  if (!cards.length) return;
+  const canvas = document.createElement('canvas');
+  canvas.id = 'fluid-webgl';
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
+  const gl = canvas.getContext('webgl', {alpha:true, antialias:false, depth:false, stencil:false, powerPreference:'low-power'});
+  if (!gl) { canvas.remove(); return; }
+
+  const vertex = 'attribute vec2 p; varying vec2 uv; void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+  const fragment = `
+    precision mediump float;
+    varying vec2 uv;
+    uniform float t;
+    uniform float kind;
+    uniform vec2 resolution;
+    float blob(vec2 p, vec2 c, float r){return exp(-dot(p-c,p-c)/r);}
+    void main(){
+      vec2 p=uv;
+      p.x*=resolution.x/max(1.0,resolution.y);
+      float tm=t*.22;
+      float a=0.0; vec3 col=vec3(0.0);
+      float k=mod(kind,6.0);
+      if(k<.5){
+        float w=sin(p.x*4.0+tm)+cos(p.y*5.0-tm*.8);
+        a=blob(p,vec2(.48+.13*sin(tm),.5+.18*cos(tm*.7)),.11)*.72;
+        col=mix(vec3(.32,.04,.72),vec3(1.0,.08,.52),.5+.5*sin(w));
+      }else if(k<1.5){
+        float d=abs(p.y-(.5+.22*sin(p.x*5.0+tm)));
+        a=exp(-d*d*95.0)*.42;
+        col=mix(vec3(0.0,.9,.8),vec3(.2,.35,1.0),p.x);
+      }else if(k<2.5){
+        float d=abs(p.x-(.5+.2*sin(p.y*5.0-tm)));
+        a=exp(-d*d*90.0)*.4;
+        col=mix(vec3(.05,.8,1.0),vec3(.8,.2,1.0),p.y);
+      }else if(k<3.5){
+        float r=length(p-vec2(.5+.12*sin(tm),.5));
+        a=exp(-pow((r-.27),2.0)*180.0)*.5;
+        col=mix(vec3(.0,.85,.75),vec3(.5,.25,1.0),p.y);
+      }else if(k<4.5){
+        float wave=sin(p.x*7.0+tm)*.07+sin(p.x*3.0-tm)*.08;
+        float d=abs(p.y-(.5+wave));
+        a=exp(-d*d*130.0)*.45;
+        col=mix(vec3(.0,.55,1.0),vec3(1.0,.15,.65),p.x);
+      }else{
+        float n=sin(p.x*9.0+tm)*cos(p.y*7.0-tm);
+        a=blob(p,vec2(.5+.18*sin(tm),.5+.16*cos(tm*.8)),.18)*.48;
+        col=mix(vec3(.0,.8,1.0),vec3(1.0,.12,.55),.5+.5*n);
+      }
+      float edge=smoothstep(0.0,.12,uv.x)*smoothstep(0.0,.12,1.0-uv.x)*smoothstep(0.0,.12,uv.y)*smoothstep(0.0,.12,1.0-uv.y);
+      gl_FragColor=vec4(col,a*edge);
+    }`;
+  function shader(type, source){
+    const s=gl.createShader(type); gl.shaderSource(s,source); gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){gl.deleteShader(s);return null;} return s;
+  }
+  const vs=shader(gl.VERTEX_SHADER,vertex), fs=shader(gl.FRAGMENT_SHADER,fragment);
+  if(!vs||!fs){canvas.remove();return;}
+  const program=gl.createProgram(); gl.attachShader(program,vs); gl.attachShader(program,fs); gl.linkProgram(program);
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS)){canvas.remove();return;}
+  gl.useProgram(program);
+  const buffer=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(program,'p'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  const timeLoc=gl.getUniformLocation(program,'t'), kindLoc=gl.getUniformLocation(program,'kind'), resLoc=gl.getUniformLocation(program,'resolution');
+  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  const visible=new Set();
+  const observer=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target)),{rootMargin:'100px'});
+  cards.forEach((card,i)=>{card.dataset.webglKind=String(i%6);observer.observe(card);});
+  let raf=0, start=performance.now(), last=0;
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,1.5), w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
+  }
+  function draw(now){
+    raf=requestAnimationFrame(draw);
+    if(document.hidden||now-last<40)return;
+    last=now; resize();
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    const dpr=canvas.width/Math.max(1,innerWidth), height=canvas.height;
+    gl.uniform1f(timeLoc,(now-start)/1000);
+    visible.forEach(card=>{
+      const r=card.getBoundingClientRect();
+      if(r.bottom<=0||r.top>=innerHeight)return;
+      const x=Math.round(r.left*dpr), y=Math.round(height-r.bottom*dpr), w=Math.round(r.width*dpr), h=Math.round(r.height*dpr);
+      gl.enable(gl.SCISSOR_TEST);gl.scissor(x,y,w,h);gl.viewport(x,y,w,h);
+      gl.uniform1f(kindLoc,Number(card.dataset.webglKind));
+      gl.uniform2f(resLoc,w,h);
+      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    });
+    gl.disable(gl.SCISSOR_TEST);
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!raf)raf=requestAnimationFrame(draw);});
+  window.addEventListener('resize',resize,{passive:true});
+  raf=requestAnimationFrame(draw);
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);observer.disconnect();},{once:true});
+})();
+</script>
+</body></html>
