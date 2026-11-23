@@ -1,125 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#090a10">
-<title>Gradients — ProjectTest</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#070711">
+<title>Digital Art Lab — ProjectTest</title>
 <style>
-*{box-sizing:border-box} :root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#090a10;color:#f4f6fb}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,#29304a 0,transparent 48%),#090a10}
-.page{width:min(1680px,calc(100% - 48px));margin:auto;padding:52px 0 64px}
-.topline{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:42px}
-.back{color:#aebbd1;text-decoration:none;font-size:13px}.back:hover{color:#fff}
-.eyebrow{margin:0 0 10px;color:#a2a9d2;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
-h1{margin:0;font-size:clamp(36px,6vw,64px);letter-spacing:-.055em}
-.intro{max-width:580px;margin:12px 0 0;color:#929bad;font-size:14px;line-height:1.7}
-.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:42px 0 16px}
-.section-head h2{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase}.section-head span{color:#778198;font-size:11px}
-.gradient-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-.gradient-card{min-width:0;overflow:hidden;border:1px solid #ffffff13;border-radius:15px;background:linear-gradient(145deg,#ffffff0b,#ffffff03);transition:transform .25s ease,border-color .25s ease}
-.gradient-card:hover{transform:translateY(-4px);border-color:#ffffff35}
-.swatch{height:190px;position:relative;overflow:hidden;isolation:isolate}
-.swatch::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff0b,transparent 38%,#00000012)}
-.card-info{padding:13px 14px 15px}.card-info h3{margin:0;font-size:13px;font-weight:600}.card-info p{margin:6px 0 0;color:#8791a5;font-size:11px;line-height:1.5}
-.g-linear{background:linear-gradient(125deg,#ff7b7b 0%,#ffb86b 35%,#f6e58d 68%,#8ce4c4 100%)}
-.g-radial{background:radial-gradient(circle at 50% 48%,#fff0b3 0,#ff9d8c 20%,#a66be0 52%,#273a80 100%)}
-.g-conic{background:conic-gradient(from 35deg at 50% 50%,#ff6b6b,#ffd166,#06d6a0,#4cc9f0,#845ec2,#ff6b6b)}
-.g-mesh{background:radial-gradient(at 18% 20%,#ff8e9e 0,transparent 42%),radial-gradient(at 80% 18%,#ffc777 0,transparent 40%),radial-gradient(at 78% 82%,#7bdff2 0,transparent 44%),radial-gradient(at 20% 82%,#b8a1ff 0,transparent 46%),#35345f}
-.g-aurora{background:radial-gradient(ellipse at 15% 90%,#43e7b5 0,transparent 48%),radial-gradient(ellipse at 80% 5%,#7c65ff 0,transparent 50%),linear-gradient(135deg,#101d3c,#142c4a 52%,#1a1638)}
-.g-sunset{background:linear-gradient(180deg,#392b72 0%,#a34b86 38%,#f18c72 68%,#ffd18a 100%)}
-.g-ocean{background:linear-gradient(145deg,#051937 0%,#004d7a 38%,#008793 70%,#00bf9f 100%)}
-.g-pastel{background:linear-gradient(120deg,#fbc2eb 0%,#a6c1ee 48%,#c2e9fb 100%)}
-.g-neon{background:linear-gradient(130deg,#12002f,#4b0082 38%,#0077ff 68%,#00f5d4)}
-.g-earth{background:linear-gradient(135deg,#283618,#606c38 35%,#bc6c25 70%,#dda15e)}
-.g-glass{background:linear-gradient(135deg,#8ec5fc 0%,#e0c3fc 100%)}.g-glass::before{content:"";position:absolute;inset:22% 18%;border:1px solid #ffffffa8;border-radius:22px;background:linear-gradient(135deg,#ffffff65,#ffffff12);box-shadow:0 12px 35px #293a5b55,inset 0 1px #ffffffaa;backdrop-filter:blur(8px)}
-.g-stripe{background:repeating-linear-gradient(135deg,#f6bd60 0 18px,#f28482 18px 36px,#84a59d 36px 54px,#f7ede2 54px 72px)}
-.g-dusk{background:radial-gradient(ellipse at 50% 115%,#f9c784 0,transparent 45%),linear-gradient(160deg,#171738,#3e2f5b 50%,#c06c84)}
-.g-spot{background:radial-gradient(ellipse at 50% 50%,#ffffff 0,#b6e3ff 12%,#65a8ff 30%,#4451a6 58%,#11162f 100%)}
-.g-layered{background:radial-gradient(ellipse at 20% 30%,#ffb3c6 0 12%,transparent 48%),radial-gradient(ellipse at 78% 70%,#a0c4ff 0 15%,transparent 48%),linear-gradient(135deg,#332b5e,#171a3b)}
-@media(max-width:1100px){.gradient-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:700px){.gradient-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{width:calc(100% - 30px);padding-top:30px}.swatch{height:165px}}
-@media(max-width:420px){.gradient-grid{grid-template-columns:1fr}.swatch{height:190px}}
-@media(prefers-reduced-motion:reduce){.gradient-card{transition:none}}
-
-.swatch{background:var(--gradient)}
-.technique-2 .swatch::before,.technique-30 .swatch::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#fff8 .55px,transparent .8px);background-size:4px 4px;opacity:.22;mix-blend-mode:soft-light}
-.technique-25 .swatch::before,.technique-43 .swatch::before{content:"";position:absolute;inset:12%;border:1px solid #ffffff80;border-radius:18px;background:linear-gradient(135deg,#ffffff55,#ffffff08);box-shadow:inset 0 1px #ffffff99,0 12px 30px #0003;backdrop-filter:blur(5px)}
-.technique-49 .swatch{background-size:220% 220%;animation:gradient-shift 9s ease-in-out infinite alternate}
-.technique-50 .swatch{background-size:180% 180%;animation:gradient-mesh 12s ease-in-out infinite alternate}
-.technique-51 .swatch{border:7px solid transparent;background:linear-gradient(#111827,#111827) padding-box,var(--gradient) border-box}
-.technique-52 .swatch::before{content:"Aa";position:absolute;inset:0;display:grid;place-items:center;font-size:76px;font-weight:850;letter-spacing:-.08em;color:transparent;background:var(--gradient);background-clip:text;-webkit-background-clip:text}
-@keyframes gradient-shift{from{background-position:0% 30%}to{background-position:100% 70%}}
-@keyframes gradient-mesh{from{background-position:0% 0%}to{background-position:100% 100%}}
-@media(prefers-reduced-motion:reduce){.technique-49 .swatch,.technique-50 .swatch{animation:none}}
-
-</style></head>
+*{box-sizing:border-box}
+:root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#070711;color:#f5f4ff}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#28205a 0,transparent 50%),#070711}
+.page{width:min(1600px,calc(100% - 48px));margin:auto;padding:38px 0 80px}
+.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:64px}
+.back{color:#aaa8c5;text-decoration:none;font-size:13px}.back:hover{color:#fff}
+.eyebrow{margin:0 0 12px;color:#a69cff;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
+h1{margin:0;font-size:clamp(42px,7vw,82px);letter-spacing:-.07em;line-height:.95}
+.intro{max-width:620px;margin:18px 0 0;color:#aaa8bf;font-size:14px;line-height:1.8}
+.hero{position:relative;padding:0 0 48px;border-bottom:1px solid #ffffff16}
+.hero:after{content:"";position:absolute;width:260px;height:260px;right:8%;top:-45px;border-radius:50%;background:conic-gradient(from 30deg,#ff3cac,#784ba8,#2b86c5,#00f5d4,#ff3cac);filter:blur(70px);opacity:.28;pointer-events:none}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:42px 0 18px}
+.section-head h2{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase}.section-head span{color:#77758f;font-size:10px;letter-spacing:.12em}
+.art-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.art-card{min-width:0;border:1px solid #ffffff18;border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#ffffff0c,#ffffff03);transition:transform .35s,border-color .35s,box-shadow .35s}
+.art-card:hover{transform:translateY(-7px);border-color:#b5a9ff70;box-shadow:0 20px 60px #0008}
+.art{height:270px;position:relative;overflow:hidden;isolation:isolate;background:#101024}
+.art:after{content:"";position:absolute;inset:0;z-index:8;pointer-events:none;background:linear-gradient(145deg,#ffffff14,transparent 35%,#0005)}
+.info{padding:17px 19px 20px}.info small{color:#918ba9;font-size:9px;letter-spacing:.18em;text-transform:uppercase}.info h3{margin:7px 0 6px;font-size:16px}.info p{margin:0;color:#9290a8;font-size:11px;line-height:1.6}
+.orb{position:absolute;border-radius:50%;transform-style:preserve-3d}
+.a-nebula{background:radial-gradient(ellipse at 50% 50%,#241047,#080817 72%)}
+.a-nebula:before{content:"";position:absolute;width:230px;height:190px;left:22%;top:16%;border-radius:50%;background:conic-gradient(from 30deg,#ff2e93,#793bff,#22d3ee,#ff8a00,#ff2e93);filter:blur(26px);opacity:.9;transform:rotate(-24deg) scaleY(.55)}
+.a-nebula:after{content:"";position:absolute;inset:0;background-image:radial-gradient(#fff 1px,transparent 1.5px);background-size:31px 27px;opacity:.45}
+.a-liquid{background:linear-gradient(145deg,#090c27,#17103b)}
+.a-liquid .orb{width:220px;height:220px;left:25%;top:9%;background:radial-gradient(circle at 32% 25%,#fff 0 2%,#ffb0e8 5%,#9c35ff 25%,#32106c 62%,#08091b 75%);box-shadow:inset -22px -25px 45px #050515, inset 12px 12px 28px #ffffff9c,0 0 60px #a02cff99;filter:saturate(1.3)}
+.a-liquid .orb:after{content:"";position:absolute;inset:18%;border:1px solid #ffffff70;border-radius:44% 56% 60% 40%;transform:rotate(35deg)}
+.a-portal{background:radial-gradient(circle at 50% 50%,#fa2bff22,#080816 65%)}
+.a-portal:before{content:"";position:absolute;width:190px;height:190px;left:calc(50% - 95px);top:40px;border-radius:50%;border:18px solid transparent;background:linear-gradient(#090916,#090916) padding-box,conic-gradient(#00f0ff,#7a5cff,#ff2ca8,#ffcf4a,#00f0ff) border-box;box-shadow:0 0 35px #8a2cff, inset 0 0 35px #00d9ff;transform:rotateX(62deg) rotateZ(-24deg)}
+.a-portal:after{content:"";position:absolute;width:110px;height:110px;left:calc(50% - 55px);top:80px;border-radius:50%;background:radial-gradient(circle,#fff 0,#6b3cff 15%,#080816 70%);filter:blur(2px);box-shadow:0 0 50px #a42dff}
+.a-crystal{background:radial-gradient(ellipse at 50% 100%,#163b60,#070b1b 65%)}
+.a-crystal:before{content:"";position:absolute;left:34%;top:9%;width:32%;height:82%;clip-path:polygon(50% 0,100% 28%,78% 100%,20% 100%,0 30%);background:linear-gradient(115deg,#e8ffff,#6deaff 18%,#2345a8 42%,#b5a1ff 62%,#07152f 85%);filter:drop-shadow(0 0 28px #45dfff);box-shadow:inset 0 0 30px #fff}
+.a-crystal:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 43%,#b8ffff55 44%,transparent 46%)}
+.a-sun{background:linear-gradient(180deg,#160d35 0%,#59245e 55%,#f15a45 100%)}
+.a-sun:before{content:"";position:absolute;width:150px;height:150px;left:calc(50% - 75px);top:36px;border-radius:50%;background:linear-gradient(180deg,#fff2b0,#ff9a4d 65%,#f34d7a);box-shadow:0 0 65px #ff6c5d99}
+.a-sun:after{content:"";position:absolute;left:0;right:0;bottom:0;height:48%;background:repeating-linear-gradient(180deg,transparent 0 13px,#180d32 14px 20px);mask-image:linear-gradient(180deg,#000,transparent)}
+.a-wave{background:linear-gradient(150deg,#061a31,#10103a)}
+.a-wave:before,.a-wave:after{content:"";position:absolute;width:150%;height:150%;left:-25%;top:15%;border-radius:42%;background:linear-gradient(90deg,#00e5ff,#345bff 35%,#c52cff 70%,#ff4e9b);filter:blur(2px);transform:rotate(-18deg);box-shadow:0 0 35px #2b9dff}
+.a-wave:after{top:40%;left:-10%;opacity:.55;transform:rotate(18deg) scale(.9);filter:blur(12px)}
+.a-grid{background:radial-gradient(circle at 50% 45%,#1a2360,#080914 70%)}
+.a-grid:before{content:"";position:absolute;inset:-40% -10% -70%;background:linear-gradient(#36f4ff55 1px,transparent 1px),linear-gradient(90deg,#36f4ff55 1px,transparent 1px);background-size:28px 28px;transform:perspective(180px) rotateX(58deg);transform-origin:center top;mask-image:linear-gradient(180deg,#000,transparent 85%)}
+.a-grid:after{content:"";position:absolute;width:140px;height:140px;left:calc(50% - 70px);top:45px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#00e5ff 12%,#5a37ff 45%,#140a37 72%);box-shadow:0 0 55px #00d9ff}
+.a-eye{background:radial-gradient(ellipse at 50% 50%,#38215e,#090817 68%)}
+.a-eye:before{content:"";position:absolute;width:250px;height:125px;left:calc(50% - 125px);top:72px;border-radius:100% 0 100% 0;transform:rotate(45deg);background:linear-gradient(135deg,#ffcf70,#ff4da6 38%,#643bff 70%,#0ce8ff);box-shadow:0 0 45px #b43dff}
+.a-eye:after{content:"";position:absolute;width:78px;height:78px;left:calc(50% - 39px);top:95px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 4%,#00f5ff 8%,#17235f 45%,#050510 72%);box-shadow:0 0 30px #00eaff}
+.a-heat{background:radial-gradient(ellipse at 50% 100%,#ff3d00,#5d092d 45%,#090817 78%)}
+.a-heat:before{content:"";position:absolute;width:240px;height:170px;left:20%;top:24%;border-radius:50%;background:conic-gradient(from 190deg,#ffdf65,#ff5d00,#ff008c,#732cff,#ffdf65);filter:blur(25px);transform:rotate(-18deg) scaleY(.55)}
+.a-heat:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(110deg,transparent 0 28px,#ffb45b18 29px 30px)}
+.a-prism{background:linear-gradient(135deg,#080b1e,#1b1238)}
+.a-prism:before{content:"";position:absolute;inset:12% 20%;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:conic-gradient(from 45deg,#fff,#00eaff,#6a4cff,#ff38a8,#fff0a5,#fff);filter:drop-shadow(0 0 30px #a34aff);transform:rotate(18deg)}
+.a-prism:after{content:"";position:absolute;inset:24% 32%;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:linear-gradient(135deg,#ffffffaa,#ffffff05 45%,#10102b);border:1px solid #fff}
+.a-vortex{background:radial-gradient(circle,#1c0d45,#05050e 70%)}
+.a-vortex:before{content:"";position:absolute;inset:12%;border:24px solid transparent;border-radius:50%;background:linear-gradient(#090817,#090817) padding-box,conic-gradient(from 0deg,#ff31b8,#5b45ff,#00e5ff,#ffb52e,#ff31b8) border-box;filter:blur(1px);transform:rotateX(62deg) rotate(-25deg);box-shadow:0 0 45px #8c39ff}
+.a-vortex:after{content:"";position:absolute;inset:28%;border-radius:50%;background:radial-gradient(circle,#fff 0,#8e2eff 8%,#090817 68%);box-shadow:0 0 45px #d92cff}
+.a-glass{background:linear-gradient(135deg,#0b1830,#24113c)}
+.a-glass:before{content:"";position:absolute;width:190px;height:190px;left:calc(50% - 95px);top:38px;border-radius:34px;transform:rotate(35deg) skew(-8deg);background:linear-gradient(135deg,#ffffff9c,#7aeaff22 35%,#c65dff66 70%,#ffffff18);border:1px solid #ffffffaa;box-shadow:inset 10px 10px 25px #fff6,inset -15px -15px 30px #08091c99,0 25px 50px #0009;backdrop-filter:blur(8px)}
+.a-glass:after{content:"";position:absolute;width:230px;height:38px;left:calc(50% - 115px);top:210px;border-radius:50%;background:#00d9ff66;filter:blur(24px)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-13px) rotate(4deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{filter:brightness(.9) saturate(1)}50%{filter:brightness(1.35) saturate(1.4)}}
+.a-liquid .orb{animation:float 7s ease-in-out infinite}
+.a-portal:before,.a-vortex:before{animation:spin 24s linear infinite}
+.a-nebula:before,.a-heat:before{animation:pulse 7s ease-in-out infinite}
+@media(max-width:1000px){.art-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.page{width:calc(100% - 28px);padding-top:25px}.topline{margin-bottom:42px}.art-grid{grid-template-columns:1fr}.art{height:240px}.section-head{align-items:start;flex-direction:column;gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
 <body><main class="page">
-<nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Color lab</span></nav>
-<header><p class="eyebrow">Color studies</p><h1>Gradients</h1><p class="intro">A collection of color transitions, layered blends and atmospheric gradient styles.</p></header>
-<div class="section-head"><h2>Gradient library</h2><span>67 STYLES · 5-COLUMN GRID</span></div><section class="gradient-grid" aria-label="Gradient examples">
-<article class="gradient-card"><div class="swatch g-linear"></div><div class="card-info"><h3>Linear Gradient</h3><p>Smooth color transition along an angle.</p></div></article>
-<article class="gradient-card"><div class="swatch g-radial"></div><div class="card-info"><h3>Radial Gradient</h3><p>Color radiates outward from a focal point.</p></div></article>
-<article class="gradient-card"><div class="swatch g-conic"></div><div class="card-info"><h3>Conic Gradient</h3><p>Colors rotate around a center point.</p></div></article>
-<article class="gradient-card"><div class="swatch g-mesh"></div><div class="card-info"><h3>Mesh Gradient</h3><p>Multiple soft color fields blend together.</p></div></article>
-<article class="gradient-card"><div class="swatch g-aurora"></div><div class="card-info"><h3>Aurora Gradient</h3><p>Atmospheric bands with luminous color haze.</p></div></article>
-<article class="gradient-card"><div class="swatch g-sunset"></div><div class="card-info"><h3>Sunset Gradient</h3><p>Warm layered tones inspired by dusk.</p></div></article>
-<article class="gradient-card"><div class="swatch g-ocean"></div><div class="card-info"><h3>Ocean Gradient</h3><p>Deep blue flowing into tropical teal.</p></div></article>
-<article class="gradient-card"><div class="swatch g-pastel"></div><div class="card-info"><h3>Pastel Gradient</h3><p>Light, airy colors with a gentle blend.</p></div></article>
-<article class="gradient-card"><div class="swatch g-neon"></div><div class="card-info"><h3>Neon Gradient</h3><p>High contrast electric color transition.</p></div></article>
-<article class="gradient-card"><div class="swatch g-earth"></div><div class="card-info"><h3>Earth Tone Gradient</h3><p>Natural greens, clay and warm sand.</p></div></article>
-<article class="gradient-card"><div class="swatch g-glass"></div><div class="card-info"><h3>Glass Gradient</h3><p>Soft gradient with a translucent glass layer.</p></div></article>
-<article class="gradient-card"><div class="swatch g-stripe"></div><div class="card-info"><h3>Striped Gradient</h3><p>Repeated color bands with crisp edges.</p></div></article>
-<article class="gradient-card"><div class="swatch g-dusk"></div><div class="card-info"><h3>Dusk Gradient</h3><p>Muted violet tones with a warm horizon.</p></div></article>
-<article class="gradient-card"><div class="swatch g-spot"></div><div class="card-info"><h3>Soft Spotlight</h3><p>A bright center fading into deep color.</p></div></article>
-<article class="gradient-card"><div class="swatch g-layered"></div><div class="card-info"><h3>Layered Gradient</h3><p>Overlapping radial and linear color layers.</p></div></article>
-<article class="gradient-card technique-1"><div class="swatch" style="--gradient:radial-gradient(ellipse at 20% 30%,#ff8b9e 0 8%,transparent 45%),radial-gradient(ellipse at 80% 25%,#8b7cff 0 12%,transparent 48%),radial-gradient(ellipse at 60% 90%,#4de1c1 0 10%,transparent 48%),#172d50"></div><div class="card-info"><h3>Liquid Gradient</h3><p>Fluid organic color pools</p></div></article>
-<article class="gradient-card technique-2"><div class="swatch" style="--gradient:linear-gradient(130deg,#f7a8c8,#8b8fe8 52%,#63c7d8)"></div><div class="card-info"><h3>Grain Gradient</h3><p>Color blend with a fine grain texture</p></div></article>
-<article class="gradient-card technique-3"><div class="swatch" style="--gradient:linear-gradient(135deg,#ff4d6d 0%,#ff4d6d 20%,#5a189a 80%,#5a189a)"></div><div class="card-info"><h3>Duotone Gradient</h3><p>Two dominant hues blended together</p></div></article>
-<article class="gradient-card technique-4"><div class="swatch" style="--gradient:linear-gradient(115deg,#ffb7d5,#c8b6ff 25%,#a0e7e5 48%,#fff1a8 68%,#ffb7d5)"></div><div class="card-info"><h3>Holographic Gradient</h3><p>Iridescent rainbow pastel sheen</p></div></article>
-<article class="gradient-card technique-5"><div class="swatch" style="--gradient:linear-gradient(115deg,#4b5563,#f8fafc 18%,#94a3b8 31%,#fff 43%,#64748b 58%,#e2e8f0 72%,#334155)"></div><div class="card-info"><h3>Metallic Gradient</h3><p>Reflective silver and chrome highlights</p></div></article>
-<article class="gradient-card technique-6"><div class="swatch" style="--gradient:radial-gradient(ellipse at 25% 25%,#ff7a90 0 15%,transparent 48%),radial-gradient(ellipse at 75% 30%,#ffcf70 0 15%,transparent 48%),radial-gradient(ellipse at 55% 85%,#6bdac8 0 20%,transparent 52%),#36366c"></div><div class="card-info"><h3>Blob Gradient</h3><p>Soft overlapping organic blobs</p></div></article>
-<article class="gradient-card technique-7"><div class="swatch" style="--gradient:repeating-radial-gradient(circle,#ffe29a 0 12px,#e58bb8 13px 25px,#6856a8 26px 38px,#273d72 39px 51px)"></div><div class="card-info"><h3>Concentric Gradient</h3><p>Nested rings radiating from center</p></div></article>
-<article class="gradient-card technique-8"><div class="swatch" style="--gradient:linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)"></div><div class="card-info"><h3>Geometric Gradient</h3><p>Angular color planes</p></div></article>
-<article class="gradient-card technique-9"><div class="swatch" style="--gradient:radial-gradient(ellipse at 20% 20%,#ffd6e7,transparent 60%),radial-gradient(ellipse at 80% 80%,#c8dcff,transparent 60%),#b7a5df"></div><div class="card-info"><h3>Dreamy Gradient</h3><p>Soft pastel dreamlike haze</p></div></article>
-<article class="gradient-card technique-10"><div class="swatch" style="--gradient:linear-gradient(155deg,transparent 0 20%,#ff9f9f 21% 34%,#ffcf8a 35% 48%,#8ce0d0 49% 62%,#8aa9ff 63% 78%,transparent 79%),#202344"></div><div class="card-info"><h3>Flow Gradient</h3><p>Diagonal flowing color streams</p></div></article>
-<article class="gradient-card technique-11"><div class="swatch" style="--gradient:linear-gradient(90deg,#ff6b6b,#ff6b6b00),#26334f"></div><div class="card-info"><h3>Transparent Fade</h3><p>Color fading into transparency</p></div></article>
-<article class="gradient-card technique-12"><div class="swatch" style="--gradient:repeating-linear-gradient(135deg,#ff8a5b 0 14px,#f9d56e 14px 28px,#5bc0be 28px 42px,#6c63ff 42px 56px)"></div><div class="card-info"><h3>Repeating Linear</h3><p>Repeated linear color bands</p></div></article>
-<article class="gradient-card technique-13"><div class="swatch" style="--gradient:repeating-radial-gradient(circle,#f7b267 0 9px,#e07a5f 10px 18px,#3d405b 19px 28px)"></div><div class="card-info"><h3>Repeating Radial</h3><p>Repeated circular color rings</p></div></article>
-<article class="gradient-card technique-14"><div class="swatch" style="--gradient:repeating-conic-gradient(from 45deg,#f4a261 0 25%,#6d597a 0 50%)"></div><div class="card-info"><h3>Diamond Gradient</h3><p>Diamond-style color geometry</p></div></article>
-<article class="gradient-card technique-15"><div class="swatch" style="--gradient:linear-gradient(90deg,#182848,#4b6cb7 34%,#f7d794 50%,#4b6cb7 66%,#182848)"></div><div class="card-info"><h3>Reflected Gradient</h3><p>Mirrored blend with bright center</p></div></article>
-<article class="gradient-card technique-16"><div class="swatch" style="--gradient:radial-gradient(ellipse at 50% 105%,#fff1a8 0,#ffb36b 24%,#ec7890 48%,#493b78 82%)"></div><div class="card-info"><h3>Sunrise Gradient</h3><p>Warm sunrise glow at horizon</p></div></article>
-<article class="gradient-card technique-17"><div class="swatch" style="--gradient:linear-gradient(160deg,#080d2b,#252b68 45%,#855b9e 78%,#e49b9b)"></div><div class="card-info"><h3>Twilight Gradient</h3><p>Deep blue and violet evening tones</p></div></article>
-<article class="gradient-card technique-18"><div class="swatch" style="--gradient:radial-gradient(ellipse at 15% 20%,#a7c957,transparent 48%),radial-gradient(ellipse at 85% 75%,#386641,transparent 55%),linear-gradient(135deg,#132a13,#31572c)"></div><div class="card-info"><h3>Forest Gradient</h3><p>Natural layered greens</p></div></article>
-<article class="gradient-card technique-19"><div class="swatch" style="--gradient:linear-gradient(160deg,#6b3e26,#bc6c25 38%,#dda15e 70%,#f4d6a0)"></div><div class="card-info"><h3>Desert Gradient</h3><p>Sand, terracotta and warm orange</p></div></article>
-<article class="gradient-card technique-20"><div class="swatch" style="--gradient:linear-gradient(120deg,#ff70a6,#ff9770 30%,#ffd670 55%,#e9ff70 75%,#70d6ff)"></div><div class="card-info"><h3>Candy Gradient</h3><p>Bright playful candy palette</p></div></article>
-<article class="gradient-card technique-21"><div class="swatch" style="--gradient:linear-gradient(130deg,#090018,#5b087b 35%,#00a6fb 72%,#00f5d4)"></div><div class="card-info"><h3>Cyberpunk Gradient</h3><p>Electric magenta and cyan</p></div></article>
-<article class="gradient-card technique-22"><div class="swatch" style="--gradient:linear-gradient(135deg,#c9ada7,#9a8c98 35%,#c6ac8f 70%,#6b705c)"></div><div class="card-info"><h3>Vintage Gradient</h3><p>Muted retro faded tones</p></div></article>
-<article class="gradient-card technique-23"><div class="swatch" style="--gradient:linear-gradient(115deg,#ff595e,#ffca3a,#8ac926,#1982c4,#6a4c93,#ff595e)"></div><div class="card-info"><h3>Prismatic Gradient</h3><p>Refracted rainbow spectrum</p></div></article>
-<article class="gradient-card technique-24"><div class="swatch" style="--gradient:linear-gradient(125deg,#fff1e6,#d8e2ff 28%,#f7d6e0 52%,#d5f5ee 76%,#fff1e6)"></div><div class="card-info"><h3>Pearlescent Gradient</h3><p>Pearl pink, blue and ivory sheen</p></div></article>
-<article class="gradient-card technique-25"><div class="swatch" style="--gradient:linear-gradient(180deg,#111827,#f8fafc 16%,#64748b 28%,#fff 42%,#475569 56%,#e2e8f0 72%,#0f172a)"></div><div class="card-info"><h3>Chrome Gradient</h3><p>High contrast reflective chrome</p></div></article>
-<article class="gradient-card technique-26"><div class="swatch" style="--gradient:radial-gradient(ellipse at 50% 100%,#ffe66d 0,#ff922b 28%,#e63946 55%,#421b36 100%)"></div><div class="card-info"><h3>Ember Gradient</h3><p>Molten red and orange glow</p></div></article>
-<article class="gradient-card technique-27"><div class="swatch" style="--gradient:linear-gradient(135deg,#effaff,#a5e6f5 38%,#4aa3c7 68%,#173b67)"></div><div class="card-info"><h3>Ice Gradient</h3><p>Cool crystalline cyan and blue</p></div></article>
-<article class="gradient-card technique-28"><div class="swatch" style="--gradient:radial-gradient(ellipse at 30% 70%,#ffdd00,transparent 32%),radial-gradient(ellipse at 75% 30%,#ff4d00,transparent 42%),linear-gradient(135deg,#250b18,#a4133c)"></div><div class="card-info"><h3>Lava Gradient</h3><p>Molten pools of orange and red</p></div></article>
-<article class="gradient-card technique-29"><div class="swatch" style="--gradient:radial-gradient(ellipse at 25% 25%,#e0aaff,transparent 35%),radial-gradient(ellipse at 75% 75%,#4361ee,transparent 40%),linear-gradient(135deg,#10002b,#240046 55%,#3c096c)"></div><div class="card-info"><h3>Galaxy Gradient</h3><p>Cosmic violet nebula</p></div></article>
-<article class="gradient-card technique-30"><div class="swatch" style="--gradient:repeating-radial-gradient(ellipse at 45% 55%,#e9c46a 0 8px,#2a9d8f 9px 16px,#264653 17px 24px)"></div><div class="card-info"><h3>Topographic Gradient</h3><p>Contour-like repeated color bands</p></div></article>
-<article class="gradient-card technique-31"><div class="swatch" style="--gradient:radial-gradient(circle,#fff 1.2px,transparent 1.8px),linear-gradient(135deg,#ff6392,#7357d8)"></div><div class="card-info"><h3>Halftone Gradient</h3><p>Dot texture over a color blend</p></div></article>
-<article class="gradient-card technique-32"><div class="swatch" style="--gradient:conic-gradient(#ffadad 25%,#caffbf 0 50%,#9bf6ff 0 75%,#bdb2ff 0)"></div><div class="card-info"><h3>Checker Gradient</h3><p>Alternating geometric color blocks</p></div></article>
-<article class="gradient-card technique-33"><div class="swatch" style="--gradient:linear-gradient(135deg,#ff7b00 0%,#ff7b00 22%,#ff7b0000 75%),#1d3557"></div><div class="card-info"><h3>Diagonal Fade</h3><p>Diagonal fade into dark base</p></div></article>
-<article class="gradient-card technique-34"><div class="swatch" style="--gradient:radial-gradient(at 0% 0%,#ffafcc,transparent 48%),radial-gradient(at 100% 0%,#bde0fe,transparent 48%),radial-gradient(at 100% 100%,#cdb4db,transparent 48%),#20223a"></div><div class="card-info"><h3>Corner Glow</h3><p>Color blooms from multiple corners</p></div></article>
-<article class="gradient-card technique-35"><div class="swatch" style="--gradient:radial-gradient(ellipse,#fff 0,#9bf6ff 12%,#4361ee 42%,#161b3d 82%)"></div><div class="card-info"><h3>Center Glow</h3><p>Bright center fading to dark edges</p></div></article>
-<article class="gradient-card technique-36"><div class="swatch" style="--gradient:radial-gradient(ellipse at center,#10172c 30%,#283e8c 65%,#8f5bd7 100%)"></div><div class="card-info"><h3>Edge Glow</h3><p>Color gathers around outer edges</p></div></article>
-<article class="gradient-card technique-37"><div class="swatch" style="--gradient:linear-gradient(180deg,#264653 0 20%,#2a9d8f 20% 40%,#e9c46a 40% 60%,#f4a261 60% 80%,#e76f51 80%)"></div><div class="card-info"><h3>Layered Bands</h3><p>Stacked horizontal color layers</p></div></article>
-<article class="gradient-card technique-38"><div class="swatch" style="--gradient:repeating-linear-gradient(110deg,#f6bd60 0 24px,#f28482 30px 54px,#84a59d 60px 84px,#f7ede2 90px 114px)"></div><div class="card-info"><h3>Soft Stripes</h3><p>Repeated bands with softened transitions</p></div></article>
-<article class="gradient-card technique-39"><div class="swatch" style="--gradient:radial-gradient(ellipse 75% 45%,#f1c0e8,#cfbaf0 35%,#8e9aaf 70%,#253047)"></div><div class="card-info"><h3>Radial Ellipse</h3><p>Oval-shaped radial color bloom</p></div></article>
-<article class="gradient-card technique-40"><div class="swatch" style="--gradient:radial-gradient(circle at 18% 28%,#ffe29a 0,#ff9770 24%,#9b5de5 58%,#182848)"></div><div class="card-info"><h3>Off-center Radial</h3><p>Radial gradient anchored off-center</p></div></article>
-<article class="gradient-card technique-41"><div class="swatch" style="--gradient:conic-gradient(#ff595e 0 15%,#ffca3a 15% 30%,#8ac926 30% 45%,#1982c4 45% 60%,#6a4c93 60% 75%,#ff595e 75%)"></div><div class="card-info"><h3>Conic Slice</h3><p>Segmented angular color wheel</p></div></article>
-<article class="gradient-card technique-42"><div class="swatch" style="--gradient:conic-gradient(#ffbe0b,#fb5607,#ff006e,#8338ec,#3a86ff,#ffbe0b)"></div><div class="card-info"><h3>Conic Spiral</h3><p>Rotating spectrum sweep</p></div></article>
-<article class="gradient-card technique-43"><div class="swatch" style="--gradient:linear-gradient(160deg,transparent 20%,#00f5d455 35%,#00bbf955 48%,#9b5de555 62%,transparent 78%),#11152f"></div><div class="card-info"><h3>Aurora Bands</h3><p>Layered ribbons inspired by northern lights</p></div></article>
-<article class="gradient-card technique-44"><div class="swatch" style="--gradient:linear-gradient(130deg,#293241,#e0fbfc 18%,#98c1d9 32%,#ee6c4d 48%,#e0fbfc 65%,#293241)"></div><div class="card-info"><h3>Liquid Chrome</h3><p>Fluid silver with iridescent reflections</p></div></article>
-<article class="gradient-card technique-45"><div class="swatch" style="--gradient:linear-gradient(135deg,#dbeafe,#a5f3fc 45%,#c4b5fd)"></div><div class="card-info"><h3>Glassy Frost</h3><p>Cool translucent icy blend</p></div></article>
-<article class="gradient-card technique-46"><div class="swatch" style="--gradient:repeating-linear-gradient(180deg,#f4a261 0 12px,#e76f51 12px 22px,#6d597a 22px 34px,#355070 34px 48px)"></div><div class="card-info"><h3>Retro Sunset Stripes</h3><p>Retro horizon with horizontal stripes</p></div></article>
-<article class="gradient-card technique-47"><div class="swatch" style="--gradient:linear-gradient(90deg,#ff595e00,#ff595e,#ffca3a,#8ac926,#1982c4,#6a4c93,#6a4c9300),#101426"></div><div class="card-info"><h3>Spectrum Fade</h3><p>Rainbow spectrum fading at both ends</p></div></article>
-<article class="gradient-card technique-48"><div class="swatch" style="--gradient:radial-gradient(at 15% 80%,#ffc8dd,transparent 50%),radial-gradient(at 80% 15%,#cdb4db,transparent 48%),radial-gradient(at 80% 90%,#bde0fe,transparent 45%),#f1e9ff"></div><div class="card-info"><h3>Pastel Haze</h3><p>Several pastel fields softly blended</p></div></article>
-<article class="gradient-card technique-49"><div class="swatch" style="--gradient:linear-gradient(120deg,#ff4d6d,#f9c74f,#43aa8b,#577590,#9b5de5,#ff4d6d)"></div><div class="card-info"><h3>Animated Hue</h3><p>Spectrum blend designed for slow motion</p></div></article>
-<article class="gradient-card technique-50"><div class="swatch" style="--gradient:radial-gradient(at 15% 20%,#ff8e9e,transparent 45%),radial-gradient(at 85% 20%,#ffc777,transparent 45%),radial-gradient(at 50% 90%,#7bdff2,transparent 50%),#35345f"></div><div class="card-info"><h3>Animated Mesh</h3><p>Multi-point color field for motion</p></div></article>
-<article class="gradient-card technique-51"><div class="swatch" style="--gradient:linear-gradient(135deg,#ff7eb3,#7afcff,#a78bfa)"></div><div class="card-info"><h3>Border Gradient</h3><p>Gradient border treatment</p></div></article>
-<article class="gradient-card technique-52"><div class="swatch" style="--gradient:linear-gradient(90deg,#ff8fab,#ffd166,#06d6a0,#4cc9f0)"></div><div class="card-info"><h3>Text Gradient</h3><p>Gradient fill clipped inside typography</p></div></article></section></main></body></html>
+<nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
+<header class="hero"><p class="eyebrow">Beyond color · 01 / Digital art</p><h1>Digital Art<br>Gradients.</h1><p class="intro">A collection of dimensional color experiments — luminous materials, impossible objects, energy fields and surreal light. Each artwork uses a different visual construction, not just a different palette.</p></header>
+<div class="section-head"><h2>Dimensional experiments</h2><span>12 ARTWORKS · CSS VISUAL STUDIES</span></div>
+<section class="art-grid" aria-label="Digital art gradient experiments">
+<article class="art-card"><div class="art a-nebula"></div><div class="info"><small>01 / Cosmic atmosphere</small><h3>Nebula Bloom</h3><p>Volumetric color clouds, star field and luminous gas.</p></div></article>
+<article class="art-card"><div class="art a-liquid"><span class="orb"></span></div><div class="info"><small>02 / Material study</small><h3>Liquid Amethyst</h3><p>A polished organic sphere with reflective highlights and deep volume.</p></div></article>
+<article class="art-card"><div class="art a-portal"></div><div class="info"><small>03 / Energy architecture</small><h3>Quantum Portal</h3><p>A tilted luminous ring surrounding a deep energy core.</p></div></article>
+<article class="art-card"><div class="art a-crystal"></div><div class="info"><small>04 / Refraction</small><h3>Prismatic Crystal</h3><p>Faceted glass, sharp reflections and icy internal light.</p></div></article>
+<article class="art-card"><div class="art a-sun"></div><div class="info"><small>05 / Retro futurism</small><h3>Chromatic Horizon</h3><p>A glowing sun cut by dimensional scanline shadows.</p></div></article>
+<article class="art-card"><div class="art a-wave"></div><div class="info"><small>06 / Fluid motion</small><h3>Plasma Ribbons</h3><p>Overlapping neon energy waves with depth and soft bloom.</p></div></article>
+<article class="art-card"><div class="art a-grid"></div><div class="info"><small>07 / Sci-fi interface</small><h3>Holographic Core</h3><p>A radiant sphere floating above a perspective wireframe grid.</p></div></article>
+<article class="art-card"><div class="art a-eye"></div><div class="info"><small>08 / Surreal object</small><h3>Cybernetic Iris</h3><p>An iridescent eye form with a glowing optical center.</p></div></article>
+<article class="art-card"><div class="art a-heat"></div><div class="info"><small>09 / Thermal energy</small><h3>Solar Flare</h3><p>Molten color turbulence and heat distortion-inspired layers.</p></div></article>
+<article class="art-card"><div class="art a-prism"></div><div class="info"><small>10 / Optical material</small><h3>Fractured Spectrum</h3><p>A faceted prism with spectral light splitting across its surfaces.</p></div></article>
+<article class="art-card"><div class="art a-vortex"></div><div class="info"><small>11 / Spatial distortion</small><h3>Event Horizon</h3><p>A rotating chromatic ring collapsing into a dark center.</p></div></article>
+<article class="art-card"><div class="art a-glass"></div><div class="info"><small>12 / Translucent object</small><h3>Liquid Glass</h3><p>A floating glass sculpture with layered reflections and refraction.</p></div></article>
+</section></main></body></html>
