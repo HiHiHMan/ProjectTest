@@ -1,45 +1,81 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080713"><title>Fluid Dimensions — ProjectTest</title>
 <style>*{box-sizing:border-box}:root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#080713;color:#f7f4ff}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#302052,transparent 52%),#080713}.page{width:min(1500px,calc(100% - 48px));margin:auto;padding:38px 0 80px}.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:58px}.back{color:#aaa5c4;text-decoration:none;font-size:13px}.back:hover{color:white}.eyebrow{margin:0 0 12px;color:#b9a2ff;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}h1{margin:0;font-size:clamp(42px,7vw,80px);letter-spacing:-.075em;line-height:.94}.intro{max-width:650px;margin:18px 0 0;color:#aaa5bd;font-size:14px;line-height:1.8}.hero{position:relative;padding-bottom:44px;border-bottom:1px solid #ffffff18}.hero:after{content:"";position:absolute;width:280px;height:230px;right:7%;top:-35px;background:radial-gradient(ellipse,#b53cff55,transparent 68%);filter:blur(35px);opacity:.5}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:38px 0 17px}.section-head h2{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase}.section-head span{color:#817b9a;font-size:10px;letter-spacing:.13em}.art-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.art-card{min-width:0;overflow:hidden;border:1px solid #ffffff19;border-radius:19px;background:linear-gradient(145deg,#ffffff0c,#ffffff03);transition:.35s}.art-card:hover{transform:translateY(-4px);border-color:#c1a7ff80;box-shadow:0 18px 45px #0008}.art{height:260px;position:relative;overflow:hidden;isolation:isolate;background:#100d25}.art:after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(145deg,#ffffff12,transparent 40%,#0004)}.info{padding:16px 18px 19px}.info small{color:#9c91b9;font-size:9px;letter-spacing:.18em;text-transform:uppercase}.info h3{margin:7px 0 6px;font-size:16px}.info p{margin:0;color:#9993aa;font-size:11px;line-height:1.6}
-/* Soft-focus 2D gradient art inspired by luminous poster design. No 3D objects, depth geometry or perspective. */
-.art{background-color:#050713}
-.art:after{background:linear-gradient(135deg,#ffffff08,transparent 42%,#0003);mix-blend-mode:screen}
-.liquid-orb{background:radial-gradient(ellipse at 15% 20%,#a20b5c 0,transparent 48%),radial-gradient(ellipse at 88% 82%,#341080 0,transparent 55%),#050611}
-.liquid-orb:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 20% 38%,#ff287e 0 8%,transparent 35%),radial-gradient(ellipse at 68% 62%,#7925b9 0 10%,transparent 43%),radial-gradient(ellipse at 35% 90%,#32118b 0 8%,transparent 42%);filter:blur(35px);animation:softDrift 13s ease-in-out infinite alternate}
-.liquid-orb:after{inset:-20%;background:radial-gradient(ellipse at 5% 50%,#ff3c8b99,transparent 42%),radial-gradient(ellipse at 82% 22%,#7a29c977,transparent 48%);filter:blur(28px);mix-blend-mode:screen}
-.liquid-drop{background:radial-gradient(ellipse at 50% 50%,#042c30,#030812 70%)}
-.liquid-drop:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 50%,transparent 0 24%,#00d6a0 27%,#00a878aa 33%,transparent 47%);filter:blur(17px);animation:ringBreath 9s ease-in-out infinite}
-.liquid-drop:after{inset:-12%;background:radial-gradient(ellipse at 50% 48%,transparent 0 34%,#19f4c255 39%,transparent 55%);filter:blur(22px)}
-.liquid-ribbon{background:#020819}
-.liquid-ribbon:before{content:"";position:absolute;inset:-30%;background:radial-gradient(ellipse at 12% 48%,#00d9ff 0 7%,transparent 30%),radial-gradient(ellipse at 44% 53%,#086bff 0 13%,transparent 39%),radial-gradient(ellipse at 80% 52%,#00bfff 0 10%,transparent 36%);filter:blur(25px);animation:blueDrift 12s ease-in-out infinite alternate}
-.liquid-ribbon:after{inset:-20%;background:linear-gradient(90deg,transparent 8%,#00d9ff88 38%,#286affaa 55%,transparent 85%);filter:blur(32px);transform:rotate(-25deg);mix-blend-mode:screen}
-.liquid-pool{background:#030713}
-.liquid-pool:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 30% 28%,#f03caa 0 8%,transparent 33%),radial-gradient(ellipse at 68% 40%,#159ce8 0 12%,transparent 38%),radial-gradient(ellipse at 52% 78%,#7137f2 0 10%,transparent 38%);filter:blur(27px);animation:softDrift 14s ease-in-out infinite alternate-reverse}
-.liquid-pool:after{inset:-10%;background:radial-gradient(ellipse at 50% 50%,transparent 28%,#05071388 82%);filter:blur(10px)}
+/* Twelve deliberately different 2D gradient compositions. Each artwork has its own layout and light behavior. */
+.art{background-color:#030713}
+.art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,#ffffff08,transparent 42%,#0005);mix-blend-mode:screen}
+
+/* 01 — diagonal, broad magenta-violet color current */
+.liquid-orb{background:#080414}
+.liquid-orb:before{content:"";position:absolute;inset:-35%;background:linear-gradient(132deg,transparent 12%,#5b155f 25%,#d51d78 38%,#8c26bb 51%,#35158d 65%,#100d43 78%,transparent 90%);filter:blur(31px);transform:rotate(-12deg);animation:diagonalFlow 13s ease-in-out infinite alternate}
+.liquid-orb:after{inset:-20%;background:radial-gradient(ellipse at 22% 30%,#ff559b77,transparent 38%),radial-gradient(ellipse at 75% 70%,#753dff88,transparent 44%);filter:blur(29px)}
+
+/* 02 — single emerald halo, clean negative space */
+.liquid-drop{background:radial-gradient(ellipse at center,#031a1b 0 27%,#020b12 68%)}
+.liquid-drop:before{content:"";position:absolute;width:78%;aspect-ratio:1;left:11%;top:-2%;border-radius:50%;border:20px solid #00b98d;filter:blur(19px);opacity:.85;animation:haloPulse 8s ease-in-out infinite}
+.liquid-drop:after{inset:4%;background:radial-gradient(ellipse at 50% 50%,transparent 30%,#00f0b355 43%,transparent 57%);filter:blur(24px)}
+
+/* 03 — one horizontal electric-blue river bending across the canvas */
+.liquid-ribbon{background:#020817}
+.liquid-ribbon:before{content:"";position:absolute;inset:5% -25%;background:linear-gradient(180deg,transparent 30%,#0054c9 39%,#00a9f5 46%,#8beeff 49%,#087bdf 54%,#102c91 63%,transparent 74%);clip-path:polygon(0 24%,18% 25%,30% 34%,43% 51%,59% 54%,73% 43%,86% 35%,100% 37%,100% 72%,83% 70%,68% 78%,51% 82%,35% 69%,20% 53%,0 51%);filter:blur(22px);animation:riverMove 10s ease-in-out infinite alternate}
+.liquid-ribbon:after{inset:0;background:radial-gradient(ellipse at 44% 51%,#29caff66,transparent 45%);filter:blur(25px)}
+
+/* 04 — scattered soft color islands, no central focal point */
+.liquid-pool{background:#050817}
+.liquid-pool:before{content:"";position:absolute;inset:-15%;background:radial-gradient(ellipse at 18% 18%,#ef39a8 0 7%,transparent 26%),radial-gradient(ellipse at 77% 22%,#146de7 0 9%,transparent 31%),radial-gradient(ellipse at 42% 53%,#17c8d4 0 8%,transparent 28%),radial-gradient(ellipse at 78% 83%,#8a36e9 0 10%,transparent 31%),radial-gradient(ellipse at 12% 86%,#007caa 0 7%,transparent 25%);filter:blur(22px);animation:islandDrift 15s ease-in-out infinite alternate}
+.liquid-pool:after{inset:0;background:radial-gradient(ellipse,transparent 40%,#02061299 100%);filter:blur(9px)}
+
+/* 05 — sharp diagonal luminous bands softened into a chromatic poster */
 .liquid-chrome{background:#030817}
-.liquid-chrome:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 18% 22%,#00dfff 0 8%,transparent 32%),radial-gradient(ellipse at 62% 38%,#194aff 0 14%,transparent 43%),radial-gradient(ellipse at 82% 82%,#b23cff 0 8%,transparent 36%);filter:blur(31px);animation:blueDrift 10s ease-in-out infinite alternate-reverse}
-.liquid-chrome:after{inset:-20%;background:linear-gradient(115deg,transparent 28%,#b7eaff55 48%,transparent 68%);filter:blur(22px);mix-blend-mode:screen}
-.liquid-pearl{background:#040716}
-.liquid-pearl:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 22% 28%,#f04cae 0 8%,transparent 35%),radial-gradient(ellipse at 70% 32%,#16d9e7 0 10%,transparent 38%),radial-gradient(ellipse at 45% 78%,#5e35df 0 13%,transparent 40%);filter:blur(32px);animation:softDrift 16s ease-in-out infinite alternate}
-.liquid-pearl:after{inset:0;background:radial-gradient(ellipse,transparent 20%,#030612aa 100%);filter:blur(12px)}
-.plasma-flow{background:#020b18}
-.plasma-flow:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 15% 54%,#00d9b8 0 8%,transparent 32%),radial-gradient(ellipse at 58% 50%,#006bff 0 12%,transparent 42%),radial-gradient(ellipse at 88% 35%,#00e7cb 0 8%,transparent 30%);filter:blur(23px);animation:blueDrift 11s ease-in-out infinite alternate}
-.plasma-flow:after{inset:-25%;background:linear-gradient(155deg,transparent 25%,#00e8d355 48%,#236bff66 61%,transparent 78%);filter:blur(24px);mix-blend-mode:screen}
-.plasma-helix{background:#030817}
-.plasma-helix:before{content:"";position:absolute;inset:-18%;background:radial-gradient(ellipse at 50% 50%,transparent 0 28%,#00d9b5 32%,#00b99b88 37%,transparent 52%);filter:blur(20px);animation:ringBreath 8s ease-in-out infinite alternate}
-.plasma-helix:after{inset:-10%;background:radial-gradient(ellipse at 50% 50%,transparent 0 43%,#16e8d955 48%,transparent 61%);filter:blur(24px)}
-.plasma-veil{background:#050718}
-.plasma-veil:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 15% 22%,#0cb4f4 0 10%,transparent 38%),radial-gradient(ellipse at 72% 28%,#a52bfa 0 12%,transparent 42%),radial-gradient(ellipse at 48% 82%,#08d8b9 0 9%,transparent 38%);filter:blur(34px);animation:softDrift 12s ease-in-out infinite alternate}
-.plasma-veil:after{inset:-10%;background:linear-gradient(120deg,transparent 25%,#2edaff33 50%,transparent 70%);filter:blur(26px)}
+.liquid-chrome:before{content:"";position:absolute;inset:-45%;background:repeating-linear-gradient(128deg,transparent 0 72px,#082b72 80px,#087fca 91px,#b4f4ff 97px,#2644a0 107px,#10102d 122px,transparent 136px);filter:blur(18px);animation:bandSlide 14s linear infinite}
+.liquid-chrome:after{inset:-30%;background:linear-gradient(128deg,transparent 38%,#b6eaff66 48%,transparent 57%);filter:blur(20px)}
+
+/* 06 — cloudy, low-contrast opal mist with a violet center */
+.liquid-pearl{background:#050716}
+.liquid-pearl:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 48% 48%,#7339c9 0 8%,transparent 36%),radial-gradient(ellipse at 20% 28%,#e64eae 0 6%,transparent 30%),radial-gradient(ellipse at 78% 28%,#12b9d7 0 8%,transparent 34%),radial-gradient(ellipse at 64% 82%,#224eb5 0 8%,transparent 35%);filter:blur(38px);animation:mistDrift 18s ease-in-out infinite alternate}
+.liquid-pearl:after{inset:0;background:linear-gradient(115deg,#04071655,transparent 45%,#04071688)}
+
+/* 07 — turquoise plasma S-curve, distinct from the straight blue river */
+.plasma-flow{background:#03101b}
+.plasma-flow:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 12% 22%,#00cfa8 0 8%,transparent 30%),radial-gradient(ellipse at 46% 49%,#00d9b0 0 9%,transparent 33%),radial-gradient(ellipse at 83% 78%,#00b9a5 0 8%,transparent 31%);filter:blur(20px)}
+.plasma-flow:after{inset:-15%;background:linear-gradient(155deg,transparent 20%,#00e9b9 39%,#00b9d6 48%,#0872c8 56%,transparent 72%);clip-path:polygon(0 0,100% 15%,100% 49%,73% 47%,51% 69%,25% 77%,0 58%);filter:blur(24px);animation:curveFlow 12s ease-in-out infinite alternate}
+
+/* 08 — off-center partial ring, emerald/cyan */
+.plasma-helix{background:#020b16}
+.plasma-helix:before{content:"";position:absolute;width:94%;height:118%;left:35%;top:-27%;border:24px solid #00bda5;border-radius:50%;filter:blur(20px);opacity:.9;animation:haloPulse 11s ease-in-out infinite alternate}
+.plasma-helix:after{inset:0;background:radial-gradient(ellipse at 78% 20%,#00d7c755,transparent 42%),linear-gradient(90deg,#020b16 0 22%,transparent 72%);filter:blur(13px)}
+
+/* 09 — vertical aurora curtains */
+.plasma-veil{background:#030b1a}
+.plasma-veil:before{content:"";position:absolute;inset:-25%;background:repeating-linear-gradient(100deg,transparent 0 36px,#0067c9 45px,#08d6e5 54px,#a044df 63px,#142d7a 74px,transparent 91px);filter:blur(27px);transform:rotate(-8deg);mask-image:linear-gradient(90deg,transparent,#000 20% 82%,transparent);animation:curtainWave 12s ease-in-out infinite alternate}
+.plasma-veil:after{inset:-20%;background:radial-gradient(ellipse at 50% 0%,#19d9ef55,transparent 55%);filter:blur(26px)}
+
+/* 10 — sparse sweeping neon arcs, mostly dark */
 .plasma-arcs{background:#020713}
-.plasma-arcs:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 15% 50%,#00e3e0 0 9%,transparent 34%),radial-gradient(ellipse at 52% 48%,#0877ff 0 13%,transparent 43%),radial-gradient(ellipse at 90% 50%,#00d7be 0 9%,transparent 34%);filter:blur(20px);animation:blueDrift 9s ease-in-out infinite alternate}
-.plasma-arcs:after{inset:-15%;background:linear-gradient(90deg,transparent,#00e5d755 50%,transparent);filter:blur(30px);transform:rotate(-28deg)}
-.plasma-tunnel{background:#030716}
-.plasma-tunnel:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 50%,transparent 0 22%,#1475ee55 30%,#0876d9 38%,#063a87 46%,transparent 62%);filter:blur(24px);animation:ringBreath 10s ease-in-out infinite}
-.plasma-tunnel:after{inset:-15%;background:radial-gradient(ellipse at 50% 50%,transparent 0 40%,#00c9e955 48%,transparent 65%);filter:blur(28px)}
-.plasma-storm{background:#040716}
-.plasma-storm:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 18% 30%,#f02b9a 0 9%,transparent 36%),radial-gradient(ellipse at 72% 28%,#00cde8 0 11%,transparent 40%),radial-gradient(ellipse at 46% 78%,#6235ed 0 13%,transparent 43%);filter:blur(30px);animation:softDrift 8s ease-in-out infinite alternate}
-.plasma-storm:after{inset:-20%;background:radial-gradient(ellipse at 50% 50%,transparent 18%,#04071655 78%);filter:blur(15px)}
+.plasma-arcs:before{content:"";position:absolute;width:145%;height:110%;left:-28%;top:4%;border:3px solid #00d9e9;border-radius:50%;transform:rotate(-25deg);box-shadow:0 0 16px #00bde9,0 0 42px #0862db,0 0 80px #8c32ef;filter:blur(5px);animation:arcSweep 14s ease-in-out infinite alternate}
+.plasma-arcs:after{inset:25% -30%;border-top:2px solid #ef52d9;border-radius:50%;transform:rotate(19deg);filter:blur(9px);box-shadow:0 -8px 35px #9b32ff}
+
+/* 11 — nested soft elliptical contours, blue/cyan optical field */
+.plasma-tunnel{background:#020a18}
+.plasma-tunnel:before{content:"";position:absolute;inset:-12%;background:repeating-radial-gradient(ellipse at 72% 48%,transparent 0 13px,#0874d8 17px,#00cce9 20px,transparent 25px 38px);transform:rotate(-22deg) scaleX(1.2);filter:blur(5px);opacity:.9;animation:contourShift 15s ease-in-out infinite alternate}
+.plasma-tunnel:after{inset:0;background:linear-gradient(90deg,#020a18 0 13%,transparent 62%,#020a1888);}
+
+/* 12 — diagonal magenta/cyan atmospheric burst from opposite corners */
+.plasma-storm{background:#050716}
+.plasma-storm:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 15% 20%,#f52a9b 0 7%,transparent 32%),radial-gradient(ellipse at 86% 78%,#00d6e8 0 9%,transparent 35%),radial-gradient(ellipse at 48% 50%,#6135d9 0 8%,transparent 38%);filter:blur(27px);animation:stormDrift 9s ease-in-out infinite alternate}
+.plasma-storm:after{inset:-20%;background:linear-gradient(135deg,transparent 32%,#f23b9a44 45%,#16d9eb55 58%,transparent 72%);filter:blur(30px)}
+
+@keyframes diagonalFlow{from{transform:translate(-3%,2%) rotate(-12deg)}to{transform:translate(4%,-2%) rotate(-5deg)}}
+@keyframes haloPulse{0%,100%{transform:scale(.94);opacity:.65}50%{transform:scale(1.05);opacity:1}}
+@keyframes riverMove{from{transform:translateX(-3%) translateY(-2%)}to{transform:translateX(4%) translateY(3%)}}
+@keyframes islandDrift{from{transform:translate(-2%,-2%) scale(.96)}to{transform:translate(3%,2%) scale(1.06)}}
+@keyframes bandSlide{to{background-position:220px 0}}
+@keyframes mistDrift{from{transform:translate(-2%,1%) scale(.96)}to{transform:translate(3%,-2%) scale(1.08)}}
+@keyframes curveFlow{from{transform:translate(-3%,2%) skewY(-3deg)}to{transform:translate(4%,-2%) skewY(4deg)}}
+@keyframes curtainWave{from{transform:translateX(-3%) rotate(-8deg)}to{transform:translateX(3%) rotate(-3deg)}}
+@keyframes arcSweep{from{transform:rotate(-31deg) translateX(-2%)}to{transform:rotate(-18deg) translateX(3%)}}
+@keyframes contourShift{from{transform:rotate(-26deg) scaleX(1.12)}to{transform:rotate(-17deg) scaleX(1.25)}}
+@keyframes stormDrift{from{transform:translate(-2%,2%) rotate(-3deg)}to{transform:translate(3%,-2%) rotate(4deg)}}
 @keyframes softDrift{0%{transform:translate(-3%,-2%) scale(.96)}100%{transform:translate(4%,3%) scale(1.08)}}
 @keyframes blueDrift{0%{transform:translate(-4%,2%) rotate(-8deg) scale(.96)}100%{transform:translate(4%,-2%) rotate(7deg) scale(1.08)}}
 @keyframes ringBreath{0%,100%{transform:scale(.92);opacity:.72}50%{transform:scale(1.08);opacity:1}}
