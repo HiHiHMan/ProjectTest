@@ -13,7 +13,7 @@
       <p class="eyebrow">Creative playground</p>
       <h1>ProjectTest</h1>
       <p class="intro">A collection of visual experiments and interactive web pages. Select a preview to explore the project.</p>
-      <div class="run-command"><span>RUN LOCAL WEB</span><code>python -m http.server 8000</code></div>
+      <div class="run-command"><span>RUN LOCAL WEB</span><code id="run-command-text">python -m http.server 8000</code><button class="copy-command" type="button" aria-label="Copy command">Copy</button></div>
     </header>
 
     <section aria-labelledby="projects-title">
@@ -99,5 +99,18 @@
 
     <footer>ProjectTest · Visual experiments</footer>
   </main>
+  <script>
+    const copyButton = document.querySelector(".copy-command");
+    const commandText = document.querySelector("#run-command-text");
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(commandText.textContent);
+        copyButton.textContent = "Copied!";
+      } catch {
+        copyButton.textContent = "Copy failed";
+      }
+      window.setTimeout(() => { copyButton.textContent = "Copy"; }, 1600);
+    });
+  </script>
 </body>
 </html>
