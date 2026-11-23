@@ -179,6 +179,30 @@
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:80px 80px;
 }
+
+/* Remove dark overlays, backdrops and vignette shading from artwork previews. */
+.art{background:transparent!important}
+.art:after{background:none!important}
+.liquid-orb,.liquid-drop,.liquid-ribbon,.liquid-pool,.liquid-chrome,.liquid-pearl,
+.plasma-flow,.plasma-helix,.plasma-veil,.plasma-arcs,.plasma-tunnel,.plasma-storm,
+.solar-flare,.abyss-bloom,.cyber-opal,.toxic-garden,.rose-nebula,.arctic-fracture,
+.ember-veil,.holo-foil,.deep-biolume,.ultraviolet-ink,.candy-melt,.monsoon-glass{
+  background-color:transparent!important;
+}
+.liquid-pool:after,.liquid-pearl:after,.plasma-tunnel:after,
+.abyss-bloom:after,.cyber-opal:after,.toxic-garden:after,.rose-nebula:after,
+.arctic-fracture:after,.holo-foil:after,.deep-biolume:after,
+.ultraviolet-ink:after,.candy-melt:after,.monsoon-glass:after{
+  background:none!important;
+}
+.plasma-helix:after{
+  background:radial-gradient(ellipse at 78% 20%,#00d7c755,transparent 42%)!important;
+}
+.plasma-flow:before,.plasma-flow:after{
+  background:linear-gradient(transparent,transparent) padding-box,
+    linear-gradient(105deg,#00ffe0 0%,#00bfff 22%,#6b52ff 43%,#f044d6 61%,#ff8cda 72%,#00ffe0 100%) border-box!important;
+}
+
 </style></head><body><main class="page">
 <nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
 <header class="hero"><p class="eyebrow">Liquid matter × Plasma energy</p><h1>Fluid<br>Studies.</h1><p class="intro">A study of impossible materials and living light. Abstract 2D compositions built from flowing gradients, luminous lines, layered color and expressive shapes. No simulated 3D objects — just graphic motion and atmosphere.</p></header>
