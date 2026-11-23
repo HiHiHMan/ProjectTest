@@ -200,51 +200,115 @@
     uniform float t;
     uniform float kind;
     uniform vec2 resolution;
-    float field(vec2 p,float s){return sin(p.x*s+t*.22)*cos(p.y*s*.83-t*.17);}
-    float glow(float d,float width){return exp(-d*d/width);}
+    float glow(float d,float w){return exp(-(d*d)/w);}
+    float wave(vec2 p,float a,float b,float tm){return sin(p.x*a+tm)*cos(p.y*b-tm*.7);}
     void main(){
       vec2 p=uv;
-      float tm=t*.18;
-      float id=kind;
-      float family=mod(id,6.0);
-      float palette=floor(id/6.0);
-      vec3 c0=palette<.5?vec3(.38,.04,.72):(palette<1.5?vec3(.0,.78,.95):(palette<2.5?vec3(.95,.12,.58):vec3(.98,.42,.16)));
-      vec3 c1=palette<.5?vec3(1.0,.12,.52):(palette<1.5?vec3(.32,.22,1.0):(palette<2.5?vec3(.0,.95,.62):vec3(1.0,.78,.22)));
-      vec3 base=vec3(.008,.012,.035);
-      float v=field(p+vec2(tm*.07,-tm*.04),5.0);
-      vec3 col=base;
+      vec2 q=p-.5;
+      float tm=t*.16;
+      float id=floor(kind+.5);
+      float v=0.0;
+      float mixv=0.5;
+      vec3 cA=vec3(.22,.05,.78), cB=vec3(.0,.88,.92);
+      vec3 base=vec3(.008,.009,.025);
       float light=0.0;
-      if(family<.5){
-        vec2 q=p-vec2(.5+.16*sin(tm),.5+.13*cos(tm*.8));
-        float d=length(q+vec2(.12*sin(q.y*7.0+tm),.08*cos(q.x*8.0-tm)));
-        light=glow(d,.055)+.45*glow(d,.2);
-      }else if(family<1.5){
-        float curve=.5+.22*sin(p.x*6.0+tm)+.07*sin(p.x*13.0-tm);
-        float d=p.y-curve;
-        light=glow(d,.0018)+.42*glow(d,.018)+.12*glow(d,.08);
-      }else if(family<2.5){
-        float curve=.5+.23*sin(p.y*6.0-tm)+.05*cos(p.y*13.0+tm);
-        float d=p.x-curve;
-        light=glow(d,.0018)+.42*glow(d,.018)+.12*glow(d,.08);
-      }else if(family<3.5){
-        float r=length((p-vec2(.52+.1*sin(tm),.5))*vec2(1.0,.8));
-        float d=r-(.23+.035*sin(atan(p.y-.5,p.x-.5)*4.0+tm));
-        light=glow(d,.0025)+.5*glow(d,.025)+.12*glow(d,.09);
-      }else if(family<4.5){
-        float d=p.y-(.5+.11*sin(p.x*9.0+tm)+.08*sin(p.x*4.0-tm));
-        float d2=p.y-(.5-.12*sin(p.x*7.0-tm*.8));
-        light=glow(d,.003)+.5*glow(d,.025)+.55*glow(d2,.004);
-      }else{
-        float n=field(p,9.0)+.5*field(p*1.8,17.0);
-        vec2 center=vec2(.5+.15*sin(tm),.5+.12*cos(tm*.7));
-        float d=length(p-center)-(.2+.07*n);
-        light=glow(d,.012)+.4*glow(d,.09)+.16*abs(n);
+      float d=0.0;
+      if(id<.5){ // Liquid Amethyst — diagonal liquid fold
+        d=q.y-q.x*.72-.12*sin(q.x*8.0+tm);
+        light=glow(d,.003)+.55*glow(d,.035)+.25*glow(d,.16);
+        cA=vec3(.35,.025,.75);cB=vec3(1.0,.08,.48);
+      }else if(id<1.5){ // Violet Nectar — broad luminous halo
+        d=length(q*vec2(1.0,.82))-(.25+.045*sin(atan(q.y,q.x)*3.0-tm));
+        light=glow(d,.006)+.5*glow(d,.07)+.22*glow(d,.2);
+        cA=vec3(.0,.35,.2);cB=vec3(.12,1.0,.67);
+      }else if(id<2.5){ // Molten Silk — horizontal current
+        d=q.y-.12*sin(q.x*5.0+tm)-.035*sin(q.x*13.0-tm);
+        light=glow(d,.002)+.6*glow(d,.025)+.2*glow(d,.12);
+        cA=vec3(.0,.2,.95);cB=vec3(.2,.9,1.0);
+      }else if(id<3.5){ // Prismatic Pool — scattered soft islands
+        light=glow(length(p-vec2(.2,.25)),.025)+glow(length(p-vec2(.72,.28)),.04)+glow(length(p-vec2(.48,.72)),.035)+glow(length(p-vec2(.85,.82)),.02);
+        cA=vec3(.0,.65,.9);cB=vec3(.9,.12,.55);
+      }else if(id<4.5){ // Liquid Chrome — diagonal parallel bands
+        d=sin((p.x+p.y*.72)*17.0+tm*.5);
+        light=pow(max(0.0,d),8.0)*.55+.22*pow(max(0.0,-d),12.0);
+        cA=vec3(.12,.25,.72);cB=vec3(.72,.92,1.0);
+      }else if(id<5.5){ // Opal Core — cloudy layered fog
+        v=wave(p,8.0,7.0,tm)+.5*wave(p*1.7,15.0,12.0,-tm);
+        light=.35*glow(v,.18)+.25*glow(v-.45,.08)+.2*glow(v+.5,.1);
+        cA=vec3(.28,.16,.85);cB=vec3(.1,.85,.9);
+      }else if(id<6.5){ // Plasma Ribbons — two braided sine cords
+        float a=q.y-.22*sin(q.x*5.5+tm), b=q.y+.19*sin(q.x*5.0-tm*1.2);
+        light=glow(a,.0018)+glow(b,.002)+.4*glow(a,.025)+.4*glow(b,.025);
+        cA=vec3(0.0,.95,.95);cB=vec3(1.0,.12,.72);
+      }else if(id<7.5){ // Ion Helix — offset nested loops
+        d=length(q-vec2(.16*sin(tm),0.0))-(.16+.055*sin(atan(q.y,q.x)*5.0+tm));
+        light=glow(d,.003)+.45*glow(d,.035)+.2*glow(d,.1);
+        cA=vec3(.0,.8,.5);cB=vec3(.1,.65,1.0);
+      }else if(id<8.5){ // Aurora Veil — vertical curtains
+        d=q.x-.055*sin(q.y*8.0+tm)-.025*sin(q.y*19.0-tm);
+        light=glow(d,.002)+.35*glow(d,.035)+.15*glow(d,.12);
+        cA=vec3(.0,.75,.8);cB=vec3(.55,.12,.95);
+      }else if(id<9.5){ // Neon Arcs — sparse sweeping arcs
+        d=length(q-vec2(-.1,.12))-.48;
+        float d2=length(q-vec2(.25,-.22))-.32;
+        light=glow(d,.002)+.6*glow(d2,.002)+.2*glow(d,.04);
+        cA=vec3(.0,.75,1.0);cB=vec3(.95,.1,.8);
+      }else if(id<10.5){ // Chromatic Tunnel — elliptical contours
+        d=length(q*vec2(1.0,.62));
+        light=pow(max(0.0,sin(d*42.0-tm)),10.0)*.6;
+        cA=vec3(.0,.5,1.0);cB=vec3(.25,.9,1.0);
+      }else if(id<11.5){ // Plasma Storm — turbulent radial burst
+        v=wave(p,13.0,11.0,tm)+.5*wave(p*2.0,21.0,18.0,-tm);
+        d=length(q)-(.25+.09*v);
+        light=glow(d,.008)+.35*abs(v)*glow(d,.12);
+        cA=vec3(.95,.04,.42);cB=vec3(.0,.8,1.0);
+      }else if(id<12.5){ // Prism Tangle — crossing diagonals
+        float a=q.y-q.x*.72-.12*sin(q.x*7.0+tm),b=q.y+q.x*.72-.1*cos(q.x*8.0-tm);
+        light=glow(a,.0015)+glow(b,.0015)+.35*glow(a,.025)+.35*glow(b,.025);
+        cA=vec3(.0,.85,1.0);cB=vec3(.9,.1,.75);
+      }else if(id<13.5){ // Solar Twist — warm spiral
+        d=atan(q.y,q.x)+length(q)*8.0-tm;
+        light=pow(max(0.0,cos(d*2.0)),16.0)*.65;
+        cA=vec3(1.0,.22,.04);cB=vec3(1.0,.82,.12);
+      }else if(id<14.5){ // Aqua Parallel — parallel flowing lanes
+        d=sin(q.y*18.0+sin(q.x*5.0+tm)*2.0);
+        light=pow(max(0.0,d),12.0)*.7;
+        cA=vec3(0.0,.7,.55);cB=vec3(0.0,.85,1.0);
+      }else if(id<15.5){ // Velvet Loop — nested soft elliptical loops
+        d=length(q*vec2(.8,1.25))-(.23+.025*sin(tm));
+        light=glow(d,.002)+.45*glow(d,.045)+.2*glow(d,.13);
+        cA=vec3(.45,.04,.55);cB=vec3(1.0,.18,.65);
+      }else if(id<16.5){ // Crosscurrent — woven interference
+        v=sin((p.x+p.y)*18.0+tm)*sin((p.x-p.y)*15.0-tm);
+        light=pow(abs(v),5.0)*.65;
+        cA=vec3(.15,.18,.95);cB=vec3(.0,.9,1.0);
+      }else if(id<17.5){ // Emerald Orbit — displaced orbit
+        d=length(q-vec2(.16*cos(tm),.12*sin(tm)))-.22;
+        light=glow(d,.002)+.4*glow(d,.04)+.2*glow(d,.13);
+        cA=vec3(.15,.65,.08);cB=vec3(.0,1.0,.62);
+      }else if(id<18.5){ // Inferno Weave — hot layered waves
+        d=q.y-.18*sin(q.x*7.0+tm)-.07*sin(q.x*15.0-tm);
+        light=glow(d,.002)+.45*glow(d,.035)+.2*glow(d,.11);
+        cA=vec3(1.0,.12,.025);cB=vec3(1.0,.72,.08);
+      }else if(id<19.5){ // Ice Circuit — fine repeated wave grid
+        v=sin(p.x*24.0+tm)*sin(p.y*18.0-tm);
+        light=pow(max(0.0,v),8.0)*.8;
+        cA=vec3(.0,.45,.9);cB=vec3(.55,.95,1.0);
+      }else if(id<20.5){ // Ultraviolet Drift — broad diagonal vapor
+        d=q.y-q.x*.35-.1*sin(q.x*4.0-tm);
+        light=.55*glow(d,.025)+.3*glow(d,.12)+.15*glow(d-.18,.04);
+        cA=vec3(.35,.02,.9);cB=vec3(.95,.05,.55);
+      }else{ // Candy Helix — double twisting orbital bands
+        float a=length(q-vec2(.13*sin(tm),0.0))-.24;
+        float b=length(q+vec2(.13*sin(tm),0.0))-.24;
+        light=glow(a,.003)+glow(b,.003)+.3*glow(a,.04)+.3*glow(b,.04);
+        cA=vec3(1.0,.3,.35);cB=vec3(1.0,.82,.32);
       }
-      float blend=clamp(.5+.5*(p.x*.7+p.y*.3+v*.18),0.0,1.0);
-      col=mix(c0,c1,blend);
-      float haze=glow(length(p-vec2(.5+.12*sin(tm*.6),.5)),.22);
-      col=base+col*clamp(light*.92+haze*.22,0.0,1.35);
-      gl_FragColor=vec4(col,1.0);
+      float gradient=clamp(.5+.35*(p.x-p.y)+.18*wave(p,3.0,4.0,tm),0.0,1.0);
+      vec3 color=mix(cA,cB,gradient);
+      float atmosphere=glow(length(q+vec2(.08*sin(tm*.5),.05*cos(tm*.4))),.32);
+      color=base+color*clamp(light+atmosphere*.12,0.0,1.4);
+      gl_FragColor=vec4(color,1.0);
     }`;
   function shader(type, source){
     const s=gl.createShader(type); gl.shaderSource(s,source); gl.compileShader(s);
