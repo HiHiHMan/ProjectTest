@@ -229,3 +229,11 @@
 .run-command .copy-command { padding:6px 10px; border:1px solid rgb(255 255 255 / 16%); border-radius:7px; background:rgb(255 255 255 / 8%); color:#e7eaff; font:inherit; font-size:11px; cursor:pointer; }
 .run-command .copy-command:hover { background:rgb(151 173 255 / 16%); border-color:rgb(151 173 255 / 40%); }
 .run-command .copy-command:focus-visible { outline:2px solid #9aafff; outline-offset:3px; }
+
+.preview-art--lights { background:radial-gradient(ellipse at 50% 100%,#253b58,#090e19 72%); }
+.lights-preview-beams { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:13px; }
+.lights-preview-beams i { width:15px; height:115px; border-radius:50%; background:linear-gradient(180deg,#a9dcff00,#8bd5ffbb 55%,#e8f8ff); filter:blur(5px); transform:perspective(80px) rotateX(8deg); box-shadow:0 0 22px #7bcaff99; }
+.lights-preview-beams i:nth-child(2) { height:80px; background:linear-gradient(180deg,#f9d5ff00,#e1a3ffcc,#fff); }
+.lights-preview-beams i:nth-child(3) { height:135px; background:linear-gradient(180deg,#fff2c000,#ffdb8dcc,#fff); }
+.lights-preview-beams i:nth-child(4) { height:95px; background:linear-gradient(180deg,#c8ffe000,#82f0c8cc,#fff); }
+.lights-preview-beams i:nth-child(5) { height:120px; background:linear-gradient(180deg,#ffd1d100,#ff9caccb,#fff); }
