@@ -220,3 +220,8 @@
 .deer-preview-silhouette { position:absolute; width:180px; height:125px; bottom:19px; filter:drop-shadow(0 0 12px #d8cba366); }
 .preview-art--monster { background:radial-gradient(ellipse at 50% 55%,#e4e8df,#a9b5aa 70%,#77877d); }
 .monster-preview-image { position:absolute; width:120px; height:130px; object-fit:contain; }
+
+.run-command { display:inline-flex; align-items:center; gap:12px; margin-top:18px; padding:9px 12px; border:1px solid rgb(255 255 255 / 12%); border-radius:10px; background:rgb(255 255 255 / 4%); }
+.run-command span { color:#8c9bc5; font-size:10px; font-weight:700; letter-spacing:.12em; }
+.run-command code { color:#dce7f5; font-family:Consolas,monospace; font-size:12px; }
+@media (max-width:520px) { .run-command { align-items:flex-start; flex-direction:column; gap:5px; } }
