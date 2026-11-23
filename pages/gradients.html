@@ -174,6 +174,14 @@
 #fluid-webgl{position:fixed;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
 .art{position:relative}
 </style>
+
+<style>
+/* WebGL is the sole artwork renderer. CSS supplies layout only. */
+.art{background:#080b19!important;animation:none!important}
+.art:before,.art:after{content:none!important;display:none!important}
+#fluid-webgl{z-index:2}
+.art-card{position:relative}
+</style>
 <script>
 (() => {
   const cards = [...document.querySelectorAll('.art')];
@@ -192,41 +200,51 @@
     uniform float t;
     uniform float kind;
     uniform vec2 resolution;
-    float blob(vec2 p, vec2 c, float r){return exp(-dot(p-c,p-c)/r);}
+    float field(vec2 p,float s){return sin(p.x*s+t*.22)*cos(p.y*s*.83-t*.17);}
+    float glow(float d,float width){return exp(-d*d/width);}
     void main(){
       vec2 p=uv;
-      p.x*=resolution.x/max(1.0,resolution.y);
-      float tm=t*.22;
-      float a=0.0; vec3 col=vec3(0.0);
-      float k=mod(kind,6.0);
-      if(k<.5){
-        float w=sin(p.x*4.0+tm)+cos(p.y*5.0-tm*.8);
-        a=blob(p,vec2(.48+.13*sin(tm),.5+.18*cos(tm*.7)),.11)*.72;
-        col=mix(vec3(.32,.04,.72),vec3(1.0,.08,.52),.5+.5*sin(w));
-      }else if(k<1.5){
-        float d=abs(p.y-(.5+.22*sin(p.x*5.0+tm)));
-        a=exp(-d*d*95.0)*.42;
-        col=mix(vec3(0.0,.9,.8),vec3(.2,.35,1.0),p.x);
-      }else if(k<2.5){
-        float d=abs(p.x-(.5+.2*sin(p.y*5.0-tm)));
-        a=exp(-d*d*90.0)*.4;
-        col=mix(vec3(.05,.8,1.0),vec3(.8,.2,1.0),p.y);
-      }else if(k<3.5){
-        float r=length(p-vec2(.5+.12*sin(tm),.5));
-        a=exp(-pow((r-.27),2.0)*180.0)*.5;
-        col=mix(vec3(.0,.85,.75),vec3(.5,.25,1.0),p.y);
-      }else if(k<4.5){
-        float wave=sin(p.x*7.0+tm)*.07+sin(p.x*3.0-tm)*.08;
-        float d=abs(p.y-(.5+wave));
-        a=exp(-d*d*130.0)*.45;
-        col=mix(vec3(.0,.55,1.0),vec3(1.0,.15,.65),p.x);
+      float tm=t*.18;
+      float id=kind;
+      float family=mod(id,6.0);
+      float palette=floor(id/6.0);
+      vec3 c0=palette<.5?vec3(.38,.04,.72):(palette<1.5?vec3(.0,.78,.95):(palette<2.5?vec3(.95,.12,.58):vec3(.98,.42,.16)));
+      vec3 c1=palette<.5?vec3(1.0,.12,.52):(palette<1.5?vec3(.32,.22,1.0):(palette<2.5?vec3(.0,.95,.62):vec3(1.0,.78,.22)));
+      vec3 base=vec3(.008,.012,.035);
+      float v=field(p+vec2(tm*.07,-tm*.04),5.0);
+      vec3 col=base;
+      float light=0.0;
+      if(family<.5){
+        vec2 q=p-vec2(.5+.16*sin(tm),.5+.13*cos(tm*.8));
+        float d=length(q+vec2(.12*sin(q.y*7.0+tm),.08*cos(q.x*8.0-tm)));
+        light=glow(d,.055)+.45*glow(d,.2);
+      }else if(family<1.5){
+        float curve=.5+.22*sin(p.x*6.0+tm)+.07*sin(p.x*13.0-tm);
+        float d=p.y-curve;
+        light=glow(d,.0018)+.42*glow(d,.018)+.12*glow(d,.08);
+      }else if(family<2.5){
+        float curve=.5+.23*sin(p.y*6.0-tm)+.05*cos(p.y*13.0+tm);
+        float d=p.x-curve;
+        light=glow(d,.0018)+.42*glow(d,.018)+.12*glow(d,.08);
+      }else if(family<3.5){
+        float r=length((p-vec2(.52+.1*sin(tm),.5))*vec2(1.0,.8));
+        float d=r-(.23+.035*sin(atan(p.y-.5,p.x-.5)*4.0+tm));
+        light=glow(d,.0025)+.5*glow(d,.025)+.12*glow(d,.09);
+      }else if(family<4.5){
+        float d=p.y-(.5+.11*sin(p.x*9.0+tm)+.08*sin(p.x*4.0-tm));
+        float d2=p.y-(.5-.12*sin(p.x*7.0-tm*.8));
+        light=glow(d,.003)+.5*glow(d,.025)+.55*glow(d2,.004);
       }else{
-        float n=sin(p.x*9.0+tm)*cos(p.y*7.0-tm);
-        a=blob(p,vec2(.5+.18*sin(tm),.5+.16*cos(tm*.8)),.18)*.48;
-        col=mix(vec3(.0,.8,1.0),vec3(1.0,.12,.55),.5+.5*n);
+        float n=field(p,9.0)+.5*field(p*1.8,17.0);
+        vec2 center=vec2(.5+.15*sin(tm),.5+.12*cos(tm*.7));
+        float d=length(p-center)-(.2+.07*n);
+        light=glow(d,.012)+.4*glow(d,.09)+.16*abs(n);
       }
-      float edge=smoothstep(0.0,.12,uv.x)*smoothstep(0.0,.12,1.0-uv.x)*smoothstep(0.0,.12,uv.y)*smoothstep(0.0,.12,1.0-uv.y);
-      gl_FragColor=vec4(col,a*edge);
+      float blend=clamp(.5+.5*(p.x*.7+p.y*.3+v*.18),0.0,1.0);
+      col=mix(c0,c1,blend);
+      float haze=glow(length(p-vec2(.5+.12*sin(tm*.6),.5)),.22);
+      col=base+col*clamp(light*.92+haze*.22,0.0,1.35);
+      gl_FragColor=vec4(col,1.0);
     }`;
   function shader(type, source){
     const s=gl.createShader(type); gl.shaderSource(s,source); gl.compileShader(s);
@@ -244,7 +262,7 @@
   gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   const visible=new Set();
   const observer=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target)),{rootMargin:'100px'});
-  cards.forEach((card,i)=>{card.dataset.webglKind=String(i%6);observer.observe(card);});
+  cards.forEach((card,i)=>{card.dataset.webglKind=String(i);observer.observe(card);});
   let raf=0, start=performance.now(), last=0;
   function resize(){
     const dpr=Math.min(window.devicePixelRatio||1,1.5), w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);
