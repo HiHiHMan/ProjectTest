@@ -178,33 +178,18 @@
     }
 
 
-/* Content-specific static previews: no project scripts, canvases or iframes are loaded here. */
-.preview-art { display:grid; place-items:center; isolation:isolate; }
-.preview-label { z-index:5; }
 
-/* Glass: the real page is a 5 × 5 liquid-glass experiment. */
+/* Lightweight previews: only the main visual elements, no embedded project runtime. */
+.preview-art { display:grid; place-items:center; isolation:isolate; }
 .preview-art--glass { background:radial-gradient(ellipse at 50% 35%,#526274,#202c38 58%,#101820); }
 .glass-preview-grid { width:132px; aspect-ratio:1; display:grid; grid-template-columns:repeat(5,1fr); gap:3px; transform:perspective(420px) rotateX(12deg) rotateZ(-7deg); }
 .glass-preview-grid i { border:1px solid #dcecff80; border-radius:5px; background:linear-gradient(135deg,#ffffff65,#a9c9e52b 48%,#ffffff0b); box-shadow:inset 1px 1px 5px #fff5,0 2px 7px #08131c70; }
-
-/* UIForU: actual component-library motifs rather than an abstract panel. */
-.preview-art--uiforu { background:radial-gradient(ellipse at 50% 0%,#314a68,#121b2a 75%); }
-.ui-preview-window { width:76%; overflow:hidden; border:1px solid #8fa8c65c; border-radius:9px; background:#101827; box-shadow:0 12px 30px #0008; color:#dce7f5; }
-.ui-preview-top { height:21px; display:flex; align-items:center; gap:4px; padding:0 7px; border-bottom:1px solid #ffffff16; }
-.ui-preview-top b { width:5px; height:5px; border-radius:50%; background:#8296b2; }
-.ui-preview-top span { margin-left:5px; color:#91a7c2; font-size:7px; }
-.ui-preview-body { display:grid; grid-template-columns:27px 1fr; min-height:91px; }
-.ui-preview-body aside { display:flex; flex-direction:column; gap:8px; padding:10px 7px; border-right:1px solid #ffffff14; }
-.ui-preview-body aside i { height:4px; border-radius:4px; background:#607b9e; }
-.ui-preview-body section { display:flex; flex-direction:column; gap:5px; padding:8px; }
-.ui-preview-body strong { color:#c7d7ea; font-size:7px; font-weight:600; }
-.ui-preview-buttons,.ui-preview-options { display:flex; gap:5px; }
-.ui-preview-buttons i { padding:4px 7px; border-radius:4px; background:#789ac6; color:#101a28; font-size:6px; font-style:normal; }
-.ui-preview-buttons i+ i { border:1px solid #8298b7; background:transparent; color:#b8c8dc; }
-.ui-preview-input { height:13px; border:1px solid #526783; border-radius:4px; background:#ffffff08; }
-.ui-preview-options i { width:8px; height:8px; border:1px solid #8ca7c9; border-radius:50%; }
-
-/* Dream Star: moon, clouds and hanging stars from the original scene. */
+.preview-art--uiforu { background:radial-gradient(ellipse,#263b55,#101827 75%); }
+.simple-ui-shapes { display:flex; gap:10px; align-items:center; }
+.simple-ui-shapes i { width:28px; height:28px; border-radius:9px; background:#83b7f5; box-shadow:0 5px 18px #0005; }
+.simple-ui-shapes i:nth-child(2) { background:#e8a4c4; transform:translateY(-13px); }
+.simple-ui-shapes i:nth-child(3) { background:#f1d17c; }
+.simple-ui-shapes i:nth-child(4) { background:#8bd2b0; transform:translateY(12px); }
 .preview-art--dream { background:radial-gradient(ellipse at 50% 10%,#49346f,#21183d 62%,#100d22); }
 .dream-preview-moon { position:absolute; top:30px; right:26%; width:29px; height:29px; border-radius:50%; background:#fff2c6; box-shadow:0 0 25px #f7d98a99; }
 .dream-preview-cloud { position:absolute; width:105px; height:25px; border-radius:50%; background:#b7a3d9; filter:drop-shadow(0 5px 9px #09071670); }
@@ -213,31 +198,17 @@
 .dream-preview-cloud--one { left:12%; bottom:45px; }.dream-preview-cloud--two { right:9%; bottom:25px; transform:scale(.72); background:#806ba9; }
 .dream-preview-star { position:absolute; top:55px; left:23%; color:#fff2c6; font-size:24px; text-shadow:0 0 12px #fff2c6; }
 .dream-preview-star--two { top:25px; left:60%; color:#dce8ff; font-size:18px; }.dream-preview-star--three { top:105px; left:74%; color:#f8ddff; font-size:14px; }
-.dream-preview-hanging { position:absolute; top:0; left:49%; height:60px; border-left:1px solid #fff2c688; }
-.dream-preview-hanging::after { position:absolute; bottom:-9px; left:-6px; color:#fff2c6; content:"✦"; font-size:13px; }
-
-/* Mountain: layered ridges and a visible point-field texture. */
 .preview-art--mountain { background:linear-gradient(#071521,#29414a 62%,#0b2025); }
-.mountain-preview-sun { position:absolute; top:28px; right:22%; width:29px; height:29px; border-radius:50%; background:#c7ddce; opacity:.8; box-shadow:0 0 24px #9bd4bd77; }
+.mountain-preview-sun { position:absolute; top:28px; right:22%; width:29px; height:29px; border-radius:50%; background:#c7ddce; opacity:.8; }
 .mountain-preview-ridge { position:absolute; right:-8%; bottom:0; left:-8%; height:74%; clip-path:polygon(0 100%,0 78%,18% 31%,29% 62%,48% 12%,66% 65%,81% 29%,100% 78%,100% 100%); }
 .mountain-preview-ridge--back { background:linear-gradient(160deg,#78948e,#28494a 65%); opacity:.78; transform:scale(.92) translateY(-10px); }
 .mountain-preview-ridge--front { height:58%; background:linear-gradient(160deg,#315b57,#0b2429 75%); }
-.mountain-preview-points { position:absolute; inset:30% 0 0; opacity:.65; background-image:radial-gradient(#c1e0d4 1px,transparent 1.5px); background-size:7px 7px; mask-image:linear-gradient(transparent,#000 35%); }
-
-/* Fireworks: several distinct bursts in the dark sky. */
 .preview-art--fireworks { background:radial-gradient(ellipse at 50% 100%,#202947,#090e1d 72%); }
 .firework-preview-burst { position:absolute; width:76px; aspect-ratio:1; border-radius:50%; background:repeating-conic-gradient(from 4deg,#f6d28c 0 2deg,transparent 2deg 15deg); mask:radial-gradient(circle,transparent 0 8%,#000 10% 47%,transparent 50%); filter:drop-shadow(0 0 7px #f6d28c); }
 .firework-preview-burst--one { top:20px; left:19%; }.firework-preview-burst--two { top:57px; right:17%; width:57px; background:repeating-conic-gradient(#8dcaff 0 2deg,transparent 2deg 17deg); filter:drop-shadow(0 0 7px #8dcaff); }
 .firework-preview-burst--three { top:5px; left:57%; width:34px; background:repeating-conic-gradient(#ff8fb0 0 2deg,transparent 2deg 20deg); }
-.firework-preview-glow { position:absolute; right:0; bottom:0; left:0; height:35px; background:linear-gradient(transparent,#34304a); }
-
-/* GirlStar: use the project's own character artwork. */
 .preview-art--girlstar { background:radial-gradient(ellipse at 50% 55%,#60435d,#211b32 72%,#100e1a); }
-.girlstar-preview-image { position:absolute; bottom:-18px; left:50%; width:auto; height:175px; max-width:75%; object-fit:contain; object-position:bottom; transform:translateX(-50%); filter:drop-shadow(0 0 16px #ffdf9b55); }
-.girlstar-preview-sparkle { position:absolute; color:#ffe6a3; text-shadow:0 0 10px #ffd36e; font-size:24px; }
-.girlstar-preview-sparkle--one { top:45px; right:25%; }.girlstar-preview-sparkle--two { top:95px; left:22%; color:#fff; }
-
-/* Balloon Bouquet: balloon shapes with strings and a greeting. */
+.girlstar-preview-image { position:absolute; bottom:-18px; left:50%; width:auto; height:175px; max-width:75%; object-fit:contain; object-position:bottom; transform:translateX(-50%); }
 .preview-art--balloon { background:linear-gradient(160deg,#dff3ff,#8db9d2 65%,#5b819c); }
 .balloon-preview-bouquet { position:absolute; top:26px; display:flex; align-items:flex-end; gap:5px; height:105px; }
 .balloon-preview-bouquet i { position:relative; width:24px; height:40px; border-radius:50% 50% 45% 45%; background:linear-gradient(110deg,#ffb8c8,#ff6f91 60%,#c84670); box-shadow:inset -5px -3px 8px #713b6555,0 5px 12px #42677b40; }
@@ -245,14 +216,7 @@
 .balloon-preview-bouquet i::after { position:absolute; top:43px; left:12px; height:49px; border-left:1px solid #55758a99; content:""; transform:rotate(8deg); transform-origin:top; }
 .balloon-preview-bouquet i:nth-child(2n) { height:53px; background:linear-gradient(110deg,#fff0a6,#ffd43b 65%,#d89b22); }
 .balloon-preview-bouquet i:nth-child(3n) { height:62px; background:linear-gradient(110deg,#9ee5ff,#35b5ff 65%,#0875df); }
-.balloon-preview-caption { position:absolute; bottom:15px; color:#344b63; font-size:8px; font-weight:700; letter-spacing:.18em; }
-
-/* Deer: recognizable antlers and body, labeled as the point-cloud experiment. */
 .preview-art--deer { background:radial-gradient(ellipse at 50% 55%,#667467,#1c2928 75%); color:#d9d1b7; }
 .deer-preview-silhouette { position:absolute; width:180px; height:125px; bottom:19px; filter:drop-shadow(0 0 12px #d8cba366); }
-.deer-preview-points { position:absolute; inset:25% 18% 12%; opacity:.36; background-image:radial-gradient(#e4dfc9 1px,transparent 1.5px); background-size:6px 6px; mask-image:radial-gradient(ellipse,#000 40%,transparent 75%); }
-
-/* Monster: use the original monster asset instead of an invented face. */
 .preview-art--monster { background:radial-gradient(ellipse at 50% 55%,#e4e8df,#a9b5aa 70%,#77877d); }
-.monster-preview-image { position:absolute; width:120px; height:130px; object-fit:contain; filter:drop-shadow(0 8px 14px #17251b55); }
-.monster-preview-points { position:absolute; inset:15%; opacity:.18; background-image:radial-gradient(#263b30 1px,transparent 1.5px); background-size:7px 7px; mask-image:radial-gradient(ellipse,#000 35%,transparent 72%); }
+.monster-preview-image { position:absolute; width:120px; height:130px; object-fit:contain; }
