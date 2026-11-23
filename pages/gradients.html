@@ -112,6 +112,57 @@
 .plasma-storm:before{filter:blur(44px);border-radius:50%}
 .plasma-storm:after{filter:blur(42px);border-radius:50%}
 
+
+/* 13–24 — new 2D gradient studies: distinct palettes, silhouettes and visual rhythms */
+.solar-flare{background:#170a12}
+.solar-flare:before{content:"";position:absolute;inset:-35%;background:radial-gradient(ellipse at 68% 45%,#fff3a6 0 3%,#ffb52e 8%,#ff5a22 19%,#c51b4b 34%,transparent 59%),radial-gradient(ellipse at 28% 72%,#7c164e 0 8%,transparent 42%);filter:blur(22px);animation:solarBloom 11s ease-in-out infinite alternate}
+.solar-flare:after{inset:-20%;background:conic-gradient(from 210deg at 67% 48%,transparent 0 18%,#ff8b2d55 25%,transparent 34% 58%,#ffdf7755 67%,transparent 77%);filter:blur(24px)}
+.abyss-bloom{background:#03151b}
+.abyss-bloom:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 50%,#a5fff0 0 3%,#28d6c2 7%,transparent 22%),radial-gradient(ellipse at 50% 8%,#0ba99f 0 8%,transparent 30%),radial-gradient(ellipse at 91% 50%,#087b9a 0 8%,transparent 30%),radial-gradient(ellipse at 50% 92%,#0c9a91 0 8%,transparent 30%),radial-gradient(ellipse at 8% 50%,#166c9d 0 8%,transparent 30%);filter:blur(23px);animation:bloomPulse 12s ease-in-out infinite alternate}
+.abyss-bloom:after{inset:0;background:radial-gradient(ellipse at center,transparent 12%,#03151b99 78%)}
+.cyber-opal{background:#09071d}
+.cyber-opal:before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 40deg at 52% 48%,#ff6cc9,#8e5cff,#4de5ff,#72ffd4,#ffed9b,#ff6cc9);filter:blur(34px);opacity:.9;animation:opalTurn 24s linear infinite}
+.cyber-opal:after{inset:10%;background:radial-gradient(ellipse at 50% 50%,#09071d 0 18%,transparent 62%);filter:blur(19px)}
+.toxic-garden{background:#090d12}
+.toxic-garden:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 20% 28%,#d5ff28 0 5%,transparent 28%),radial-gradient(ellipse at 75% 25%,#9cff00 0 7%,transparent 33%),radial-gradient(ellipse at 56% 75%,#d82cff 0 8%,transparent 35%),radial-gradient(ellipse at 12% 85%,#00c98d 0 7%,transparent 30%);filter:blur(29px);animation:toxicDrift 13s ease-in-out infinite alternate}
+.toxic-garden:after{inset:0;background:linear-gradient(125deg,#080d12aa,transparent 48%,#080d1266)}
+.rose-nebula{background:#140a19}
+.rose-nebula:before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse at 30% 55%,#ff8da9 0 5%,transparent 31%),radial-gradient(ellipse at 62% 35%,#b84b9f 0 9%,transparent 37%),radial-gradient(ellipse at 75% 78%,#673fbd 0 8%,transparent 35%),radial-gradient(ellipse at 15% 12%,#ffb2b766 0 5%,transparent 28%);filter:blur(34px);animation:roseCloud 15s ease-in-out infinite alternate}
+.rose-nebula:after{inset:0;background:radial-gradient(ellipse at center,transparent 30%,#140a19aa 100%)}
+.arctic-fracture{background:#061321}
+.arctic-fracture:before{content:"";position:absolute;inset:-25%;background:linear-gradient(118deg,transparent 20%,#1d6a9c 32%,#b6faff 38%,#277fc0 44%,transparent 57%),linear-gradient(28deg,transparent 30%,#1b4c91 42%,#70d9f1 48%,transparent 60%);filter:blur(25px);animation:arcticShift 12s ease-in-out infinite alternate}
+.arctic-fracture:after{inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 22%,#06132199 90%)}
+.ember-veil{background:#170b08}
+.ember-veil:before{content:"";position:absolute;inset:-30%;background:radial-gradient(ellipse at 24% 80%,#ffcb4b 0 5%,transparent 29%),radial-gradient(ellipse at 52% 45%,#ff6128 0 9%,transparent 38%),radial-gradient(ellipse at 80% 18%,#a91e39 0 8%,transparent 36%);filter:blur(34px);animation:emberRise 10s ease-in-out infinite alternate}
+.ember-veil:after{inset:-10%;background:linear-gradient(0deg,#ff7a2533,transparent 68%);filter:blur(28px)}
+.holo-foil{background:#090b1b}
+.holo-foil:before{content:"";position:absolute;inset:-30%;background:repeating-conic-gradient(from 20deg at 50% 50%,#ff72c8 0 8deg,#8b70ff 13deg,#4ce6ee 20deg,#b8ffdc 28deg,#ffe78c 36deg,#ff72c8 44deg);filter:blur(29px);opacity:.82;animation:foilShift 22s ease-in-out infinite alternate}
+.holo-foil:after{inset:0;background:linear-gradient(115deg,#090b1b99,transparent 45%,#090b1b66)}
+.deep-biolume{background:#020d18}
+.deep-biolume:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 24% 32%,#00e6c5 0 3%,transparent 22%),radial-gradient(ellipse at 72% 25%,#48b9ff 0 4%,transparent 25%),radial-gradient(ellipse at 56% 78%,#a4ff68 0 4%,transparent 24%),radial-gradient(ellipse at 88% 76%,#00b7a5 0 3%,transparent 20%);filter:blur(18px);animation:biolume 8s ease-in-out infinite alternate}
+.deep-biolume:after{inset:0;background:radial-gradient(ellipse at center,transparent 20%,#020d18 100%)}
+.ultraviolet-ink{background:#0b0619}
+.ultraviolet-ink:before{content:"";position:absolute;inset:-30%;background:radial-gradient(ellipse at 18% 45%,#6426d5 0 10%,transparent 37%),radial-gradient(ellipse at 62% 35%,#d52cbb 0 8%,transparent 36%),radial-gradient(ellipse at 78% 82%,#3439d9 0 9%,transparent 36%);filter:blur(36px);animation:inkFlow 14s ease-in-out infinite alternate}
+.ultraviolet-ink:after{inset:0;background:linear-gradient(145deg,#0b061955,transparent 45%,#0b0619aa)}
+.candy-melt{background:#17091a}
+.candy-melt:before{content:"";position:absolute;inset:-22%;background:radial-gradient(ellipse at 20% 20%,#ff6fae 0 8%,transparent 33%),radial-gradient(ellipse at 75% 22%,#ffb1dc 0 8%,transparent 34%),radial-gradient(ellipse at 48% 70%,#9d62ff 0 12%,transparent 40%),radial-gradient(ellipse at 88% 85%,#ff7c62 0 6%,transparent 29%);filter:blur(31px);animation:candyFlow 12s ease-in-out infinite alternate}
+.candy-melt:after{inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 25%,#17091a99 100%)}
+.monsoon-glass{background:#07131a}
+.monsoon-glass:before{content:"";position:absolute;inset:-25%;background:linear-gradient(145deg,transparent 15%,#0c6b77 30%,#39d6c9 38%,#b2fff0 42%,#287f9d 49%,transparent 66%),radial-gradient(ellipse at 70% 25%,#1c72aa 0 9%,transparent 35%),radial-gradient(ellipse at 20% 80%,#0b9b9b 0 10%,transparent 34%);filter:blur(31px);animation:monsoonDrift 13s ease-in-out infinite alternate}
+.monsoon-glass:after{inset:0;background:linear-gradient(120deg,#07131a88,transparent 50%,#07131a66)}
+@keyframes solarBloom{from{transform:translate(-3%,2%) scale(.94)}to{transform:translate(4%,-2%) scale(1.08)}}
+@keyframes bloomPulse{from{transform:rotate(-8deg) scale(.94)}to{transform:rotate(8deg) scale(1.08)}}
+@keyframes opalTurn{to{transform:rotate(360deg)}}
+@keyframes toxicDrift{from{transform:translate(-3%,2%) rotate(-5deg)}to{transform:translate(3%,-2%) rotate(5deg)}}
+@keyframes roseCloud{from{transform:translate(-2%,3%) scale(.94)}to{transform:translate(3%,-2%) scale(1.08)}}
+@keyframes arcticShift{from{transform:translate(-3%,2%) rotate(-4deg)}to{transform:translate(3%,-2%) rotate(4deg)}}
+@keyframes emberRise{from{transform:translateY(3%) scale(.96)}to{transform:translateY(-4%) scale(1.06)}}
+@keyframes foilShift{from{transform:rotate(-12deg) scale(.96)}to{transform:rotate(14deg) scale(1.06)}}
+@keyframes biolume{from{transform:translate(-2%,2%) scale(.92)}to{transform:translate(3%,-2%) scale(1.1)}}
+@keyframes inkFlow{from{transform:translate(-3%,1%) rotate(-4deg)}to{transform:translate(4%,-2%) rotate(5deg)}}
+@keyframes candyFlow{from{transform:translate(-2%,-2%) scale(.96)}to{transform:translate(3%,3%) scale(1.08)}}
+@keyframes monsoonDrift{from{transform:translate(-2%,2%) rotate(-3deg)}to{transform:translate(3%,-2%) rotate(4deg)}}
+
 @media(max-width:1000px){.art-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.page{width:calc(100% - 28px);padding-top:25px}.topline{margin-bottom:42px}.art-grid{grid-template-columns:1fr}.art{height:240px}.section-head{align-items:start;flex-direction:column;gap:8px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 /* LY-3 noise overlay — repeated inside every artwork box */
 .ly-3-noise{
@@ -145,5 +196,20 @@
 <article class="art-card"><div class="art plasma-arcs"><div class="ly-3-noise"></div></div><div class="info"><small>10 / Electric orbit</small><h3>Neon Arcs</h3><p>Angular neon bands intersect with soft bloom and crisp graphic edges.</p></div></article>
 <article class="art-card"><div class="art plasma-tunnel"><div class="ly-3-noise"></div></div><div class="info"><small>11 / Spatial flow</small><h3>Chromatic Tunnel</h3><p>Nested plasma ripples create a bold optical pattern.</p></div></article>
 <article class="art-card"><div class="art plasma-storm"><div class="ly-3-noise"></div></div><div class="info"><small>12 / Charged atmosphere</small><h3>Plasma Storm</h3><p>A turbulent halo of energetic filaments surrounding a radiant core.</p></div></article></section>
+
+<div class="section-head"><h2>Chromatic worlds</h2><span>13—24 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
+<article class="art-card"><div class="art solar-flare"><div class="ly-3-noise"></div></div><div class="info"><small>13 / Solar phenomenon</small><h3>Solar Flare</h3><p>Molten gold and hot coral radiate from a burning off-center glow.</p></div></article>
+<article class="art-card"><div class="art abyss-bloom"><div class="ly-3-noise"></div></div><div class="info"><small>14 / Organic light</small><h3>Abyss Bloom</h3><p>Bioluminescent teal petals emerge from a deep ocean shadow.</p></div></article>
+<article class="art-card"><div class="art cyber-opal"><div class="ly-3-noise"></div></div><div class="info"><small>15 / Iridescent field</small><h3>Cyber Opal</h3><p>Prismatic cyan, mint, lilac and rose shift through a glowing opal spectrum.</p></div></article>
+<article class="art-card"><div class="art toxic-garden"><div class="ly-3-noise"></div></div><div class="info"><small>16 / Acid color</small><h3>Toxic Garden</h3><p>Acid lime and electric fuchsia collide in an unruly color garden.</p></div></article>
+<article class="art-card"><div class="art rose-nebula"><div class="ly-3-noise"></div></div><div class="info"><small>17 / Cosmic haze</small><h3>Rose Nebula</h3><p>Dusty rose, berry and violet clouds drift through a velvet atmosphere.</p></div></article>
+<article class="art-card"><div class="art arctic-fracture"><div class="ly-3-noise"></div></div><div class="info"><small>18 / Frozen light</small><h3>Arctic Fracture</h3><p>Glacial cyan and sapphire light break into soft crystalline diagonals.</p></div></article>
+<article class="art-card"><div class="art ember-veil"><div class="ly-3-noise"></div></div><div class="info"><small>19 / Heat haze</small><h3>Ember Veil</h3><p>Amber fire and vermilion drift upward through a dark warm haze.</p></div></article>
+<article class="art-card"><div class="art holo-foil"><div class="ly-3-noise"></div></div><div class="info"><small>20 / Holographic color</small><h3>Holo Foil</h3><p>Shifting spectral bands flash between pink, violet, aqua and pale gold.</p></div></article>
+<article class="art-card"><div class="art deep-biolume"><div class="ly-3-noise"></div></div><div class="info"><small>21 / Deep ocean</small><h3>Deep Biolume</h3><p>Small pools of luminous cyan and green glow in a midnight sea.</p></div></article>
+<article class="art-card"><div class="art ultraviolet-ink"><div class="ly-3-noise"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
+<article class="art-card"><div class="art candy-melt"><div class="ly-3-noise"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
+<article class="art-card"><div class="art monsoon-glass"><div class="ly-3-noise"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
+</section>
 </main>
 </body></html>
