@@ -237,3 +237,12 @@
 .lights-preview-beams i:nth-child(3) { height:135px; background:linear-gradient(180deg,#fff2c000,#ffdb8dcc,#fff); }
 .lights-preview-beams i:nth-child(4) { height:95px; background:linear-gradient(180deg,#c8ffe000,#82f0c8cc,#fff); }
 .lights-preview-beams i:nth-child(5) { height:120px; background:linear-gradient(180deg,#ffd1d100,#ff9caccb,#fff); }
+
+
+/* Gradients project preview */
+.preview-art--gradients { background:linear-gradient(135deg,#171a35,#283c60); }
+.gradient-preview { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:8px; transform:rotate(-12deg) scale(1.08); }
+.gradient-preview i { width:34px; height:116px; border-radius:22px; background:linear-gradient(180deg,#ffb6c1,#9b7bff 55%,#6ed6e5); box-shadow:0 8px 24px #080b1c66; }
+.gradient-preview i:nth-child(2) { height:145px; background:linear-gradient(180deg,#ffe29a,#ff8c8c 55%,#b36be8); }
+.gradient-preview i:nth-child(3) { height:96px; background:linear-gradient(180deg,#8df5d2,#4ba6ff 55%,#6b62d8); }
+.gradient-preview i:nth-child(4) { height:128px; background:linear-gradient(180deg,#f7b6ff,#8b8cff 55%,#4ce0c1); }
