@@ -178,39 +178,81 @@
     }
 
 
-/* Static preview artwork — avoids loading each project's HTML and scripts. */
-.preview-art { display: grid; place-items: center; isolation: isolate; }
-.preview-art--glass { background: radial-gradient(ellipse, #29374b, #101722 62%, #080d14); }
-.art-glass-grid {
-  width: 132px; aspect-ratio: 1; display: block; border: 1px solid rgb(220 235 255 / 55%);
-  background: linear-gradient(90deg, transparent 19%, rgb(210 230 255 / 25%) 20%, transparent 21%, transparent 39%, rgb(210 230 255 / 25%) 40%, transparent 41%, transparent 59%, rgb(210 230 255 / 25%) 60%, transparent 61%, transparent 79%, rgb(210 230 255 / 25%) 80%, transparent 81%), linear-gradient(transparent 19%, rgb(210 230 255 / 25%) 20%, transparent 21%, transparent 39%, rgb(210 230 255 / 25%) 40%, transparent 41%, transparent 59%, rgb(210 230 255 / 25%) 60%, transparent 61%, transparent 79%, rgb(210 230 255 / 25%) 80%, transparent 81%), rgb(180 210 245 / 8%);
-  transform: perspective(420px) rotateX(12deg) rotateZ(-8deg);
-}
-.preview-art--uiforu { background: radial-gradient(ellipse at 50% 20%, #293b55, #101722 68%); }
-.art-ui-panel { width: 62%; height: 112px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 12px 1fr; gap: 9px; padding: 13px; border: 1px solid rgb(210 225 255 / 24%); border-radius: 12px; background: rgb(13 21 34 / 82%); }
-.art-ui-panel i { border-radius: 4px; background: rgb(150 184 235 / 25%); }
-.art-ui-panel b { grid-column: 1 / -1; border-radius: 6px; background: linear-gradient(110deg, #718eb8, #c1d4ef); }
-.preview-art--dream { background: radial-gradient(ellipse, #4a396c, #17152d 58%, #090b18); }
-.art-star { color: #f7e6b0; font-size: 76px; line-height: 1; text-shadow: 0 0 24px rgb(255 220 150 / 55%); }
-.art-star--small { position: absolute; top: 42px; right: 27%; color: #c6d8ff; font-size: 27px; }
-.preview-art--mountain { background: linear-gradient(#17283b, #52677a 72%, #17212b); }
-.art-mountain { position: absolute; inset: 32% 0 0; background: linear-gradient(145deg, transparent 0 22%, #9caeb6 22.3% 23%, #314b5b 23.3% 54%, transparent 54.3%), linear-gradient(35deg, transparent 0 31%, #d2d8d5 31.3% 32%, #526c79 32.3% 65%, transparent 65.3%), linear-gradient(155deg, transparent 0 44%, #263f50 44.3% 70%, #142a39 70.3%); }
-.preview-art--fireworks { background: radial-gradient(ellipse at 50% 100%, #29213b, #0b1020 66%); }
-.art-firework { position: absolute; width: 82px; aspect-ratio: 1; border-radius: 50%; background: repeating-conic-gradient(#f6c77b 0deg 2deg, transparent 2deg 18deg); -webkit-mask: radial-gradient(circle, transparent 0 8%, #000 10% 48%, transparent 51%); mask: radial-gradient(circle, transparent 0 8%, #000 10% 48%, transparent 51%); }
-.art-firework--one { top: 25px; left: 27%; }
-.art-firework--two { top: 64px; right: 22%; width: 56px; background: repeating-conic-gradient(#8bc9ff 0deg 2deg, transparent 2deg 20deg); }
-.preview-art--girlstar { background: radial-gradient(ellipse, #49364c, #171522 68%, #090a11); }
-.art-orbit { position: relative; width: 116px; height: 116px; border: 1px solid rgb(246 218 179 / 65%); border-radius: 50%; transform: rotate(-28deg) scaleY(.42); }
-.art-orbit::after { position: absolute; top: 50%; left: 50%; width: 13px; height: 13px; border-radius: 50%; background: #ffe1a6; box-shadow: 0 0 18px #ffe1a6; content: ""; }
-.preview-art--balloon { background: linear-gradient(160deg, #20233e, #111522 70%); }
-.art-balloons { display: flex; align-items: flex-end; gap: 7px; height: 112px; }
-.art-balloons i { width: 28px; height: 38px; display: block; border-radius: 50% 50% 46% 46%; background: #c77d9b; }
-.art-balloons i:nth-child(2) { height: 55px; background: #e6b66c; }
-.art-balloons i:nth-child(3) { height: 68px; background: #7fa9c8; }
-.art-balloons i:nth-child(4) { height: 51px; background: #a38acb; }
-.art-balloons i:nth-child(5) { height: 42px; background: #d68a79; }
-.preview-art--deer { background: radial-gradient(ellipse, #4a4438, #171a19 72%); }
-.art-deer { color: #d7c4a1; font-family: Georgia, serif; font-size: 96px; line-height: 1; opacity: .88; transform: scaleX(-1); }
-.preview-art--monster { background: radial-gradient(ellipse, #3d514b, #101b1b 70%); }
-.art-monster { width: 82px; height: 82px; display: flex; align-items: center; justify-content: center; gap: 12px; border: 2px solid rgb(183 221 177 / 55%); border-radius: 48% 48% 42% 42%; background: #66816b; }
-.art-monster i { width: 14px; height: 20px; border-radius: 50%; background: #e8edcf; box-shadow: inset 0 -5px 0 #273a31; }
+/* Content-specific static previews: no project scripts, canvases or iframes are loaded here. */
+.preview-art { display:grid; place-items:center; isolation:isolate; }
+.preview-label { z-index:5; }
+
+/* Glass: the real page is a 5 × 5 liquid-glass experiment. */
+.preview-art--glass { background:radial-gradient(ellipse at 50% 35%,#526274,#202c38 58%,#101820); }
+.glass-preview-grid { width:132px; aspect-ratio:1; display:grid; grid-template-columns:repeat(5,1fr); gap:3px; transform:perspective(420px) rotateX(12deg) rotateZ(-7deg); }
+.glass-preview-grid i { border:1px solid #dcecff80; border-radius:5px; background:linear-gradient(135deg,#ffffff65,#a9c9e52b 48%,#ffffff0b); box-shadow:inset 1px 1px 5px #fff5,0 2px 7px #08131c70; }
+
+/* UIForU: actual component-library motifs rather than an abstract panel. */
+.preview-art--uiforu { background:radial-gradient(ellipse at 50% 0%,#314a68,#121b2a 75%); }
+.ui-preview-window { width:76%; overflow:hidden; border:1px solid #8fa8c65c; border-radius:9px; background:#101827; box-shadow:0 12px 30px #0008; color:#dce7f5; }
+.ui-preview-top { height:21px; display:flex; align-items:center; gap:4px; padding:0 7px; border-bottom:1px solid #ffffff16; }
+.ui-preview-top b { width:5px; height:5px; border-radius:50%; background:#8296b2; }
+.ui-preview-top span { margin-left:5px; color:#91a7c2; font-size:7px; }
+.ui-preview-body { display:grid; grid-template-columns:27px 1fr; min-height:91px; }
+.ui-preview-body aside { display:flex; flex-direction:column; gap:8px; padding:10px 7px; border-right:1px solid #ffffff14; }
+.ui-preview-body aside i { height:4px; border-radius:4px; background:#607b9e; }
+.ui-preview-body section { display:flex; flex-direction:column; gap:5px; padding:8px; }
+.ui-preview-body strong { color:#c7d7ea; font-size:7px; font-weight:600; }
+.ui-preview-buttons,.ui-preview-options { display:flex; gap:5px; }
+.ui-preview-buttons i { padding:4px 7px; border-radius:4px; background:#789ac6; color:#101a28; font-size:6px; font-style:normal; }
+.ui-preview-buttons i+ i { border:1px solid #8298b7; background:transparent; color:#b8c8dc; }
+.ui-preview-input { height:13px; border:1px solid #526783; border-radius:4px; background:#ffffff08; }
+.ui-preview-options i { width:8px; height:8px; border:1px solid #8ca7c9; border-radius:50%; }
+
+/* Dream Star: moon, clouds and hanging stars from the original scene. */
+.preview-art--dream { background:radial-gradient(ellipse at 50% 10%,#49346f,#21183d 62%,#100d22); }
+.dream-preview-moon { position:absolute; top:30px; right:26%; width:29px; height:29px; border-radius:50%; background:#fff2c6; box-shadow:0 0 25px #f7d98a99; }
+.dream-preview-cloud { position:absolute; width:105px; height:25px; border-radius:50%; background:#b7a3d9; filter:drop-shadow(0 5px 9px #09071670); }
+.dream-preview-cloud::before,.dream-preview-cloud::after { position:absolute; bottom:7px; width:38px; height:30px; border-radius:50%; background:inherit; content:""; }
+.dream-preview-cloud::before { left:17px; }.dream-preview-cloud::after { right:15px; width:31px; height:25px; }
+.dream-preview-cloud--one { left:12%; bottom:45px; }.dream-preview-cloud--two { right:9%; bottom:25px; transform:scale(.72); background:#806ba9; }
+.dream-preview-star { position:absolute; top:55px; left:23%; color:#fff2c6; font-size:24px; text-shadow:0 0 12px #fff2c6; }
+.dream-preview-star--two { top:25px; left:60%; color:#dce8ff; font-size:18px; }.dream-preview-star--three { top:105px; left:74%; color:#f8ddff; font-size:14px; }
+.dream-preview-hanging { position:absolute; top:0; left:49%; height:60px; border-left:1px solid #fff2c688; }
+.dream-preview-hanging::after { position:absolute; bottom:-9px; left:-6px; color:#fff2c6; content:"✦"; font-size:13px; }
+
+/* Mountain: layered ridges and a visible point-field texture. */
+.preview-art--mountain { background:linear-gradient(#071521,#29414a 62%,#0b2025); }
+.mountain-preview-sun { position:absolute; top:28px; right:22%; width:29px; height:29px; border-radius:50%; background:#c7ddce; opacity:.8; box-shadow:0 0 24px #9bd4bd77; }
+.mountain-preview-ridge { position:absolute; right:-8%; bottom:0; left:-8%; height:74%; clip-path:polygon(0 100%,0 78%,18% 31%,29% 62%,48% 12%,66% 65%,81% 29%,100% 78%,100% 100%); }
+.mountain-preview-ridge--back { background:linear-gradient(160deg,#78948e,#28494a 65%); opacity:.78; transform:scale(.92) translateY(-10px); }
+.mountain-preview-ridge--front { height:58%; background:linear-gradient(160deg,#315b57,#0b2429 75%); }
+.mountain-preview-points { position:absolute; inset:30% 0 0; opacity:.65; background-image:radial-gradient(#c1e0d4 1px,transparent 1.5px); background-size:7px 7px; mask-image:linear-gradient(transparent,#000 35%); }
+
+/* Fireworks: several distinct bursts in the dark sky. */
+.preview-art--fireworks { background:radial-gradient(ellipse at 50% 100%,#202947,#090e1d 72%); }
+.firework-preview-burst { position:absolute; width:76px; aspect-ratio:1; border-radius:50%; background:repeating-conic-gradient(from 4deg,#f6d28c 0 2deg,transparent 2deg 15deg); mask:radial-gradient(circle,transparent 0 8%,#000 10% 47%,transparent 50%); filter:drop-shadow(0 0 7px #f6d28c); }
+.firework-preview-burst--one { top:20px; left:19%; }.firework-preview-burst--two { top:57px; right:17%; width:57px; background:repeating-conic-gradient(#8dcaff 0 2deg,transparent 2deg 17deg); filter:drop-shadow(0 0 7px #8dcaff); }
+.firework-preview-burst--three { top:5px; left:57%; width:34px; background:repeating-conic-gradient(#ff8fb0 0 2deg,transparent 2deg 20deg); }
+.firework-preview-glow { position:absolute; right:0; bottom:0; left:0; height:35px; background:linear-gradient(transparent,#34304a); }
+
+/* GirlStar: use the project's own character artwork. */
+.preview-art--girlstar { background:radial-gradient(ellipse at 50% 55%,#60435d,#211b32 72%,#100e1a); }
+.girlstar-preview-image { position:absolute; bottom:-18px; left:50%; width:auto; height:175px; max-width:75%; object-fit:contain; object-position:bottom; transform:translateX(-50%); filter:drop-shadow(0 0 16px #ffdf9b55); }
+.girlstar-preview-sparkle { position:absolute; color:#ffe6a3; text-shadow:0 0 10px #ffd36e; font-size:24px; }
+.girlstar-preview-sparkle--one { top:45px; right:25%; }.girlstar-preview-sparkle--two { top:95px; left:22%; color:#fff; }
+
+/* Balloon Bouquet: balloon shapes with strings and a greeting. */
+.preview-art--balloon { background:linear-gradient(160deg,#dff3ff,#8db9d2 65%,#5b819c); }
+.balloon-preview-bouquet { position:absolute; top:26px; display:flex; align-items:flex-end; gap:5px; height:105px; }
+.balloon-preview-bouquet i { position:relative; width:24px; height:40px; border-radius:50% 50% 45% 45%; background:linear-gradient(110deg,#ffb8c8,#ff6f91 60%,#c84670); box-shadow:inset -5px -3px 8px #713b6555,0 5px 12px #42677b40; }
+.balloon-preview-bouquet i::before { position:absolute; bottom:-4px; left:10px; border-right:3px solid transparent; border-left:3px solid transparent; border-top:5px solid #e86d91; content:""; }
+.balloon-preview-bouquet i::after { position:absolute; top:43px; left:12px; height:49px; border-left:1px solid #55758a99; content:""; transform:rotate(8deg); transform-origin:top; }
+.balloon-preview-bouquet i:nth-child(2n) { height:53px; background:linear-gradient(110deg,#fff0a6,#ffd43b 65%,#d89b22); }
+.balloon-preview-bouquet i:nth-child(3n) { height:62px; background:linear-gradient(110deg,#9ee5ff,#35b5ff 65%,#0875df); }
+.balloon-preview-caption { position:absolute; bottom:15px; color:#344b63; font-size:8px; font-weight:700; letter-spacing:.18em; }
+
+/* Deer: recognizable antlers and body, labeled as the point-cloud experiment. */
+.preview-art--deer { background:radial-gradient(ellipse at 50% 55%,#667467,#1c2928 75%); color:#d9d1b7; }
+.deer-preview-silhouette { position:absolute; width:180px; height:125px; bottom:19px; filter:drop-shadow(0 0 12px #d8cba366); }
+.deer-preview-points { position:absolute; inset:25% 18% 12%; opacity:.36; background-image:radial-gradient(#e4dfc9 1px,transparent 1.5px); background-size:6px 6px; mask-image:radial-gradient(ellipse,#000 40%,transparent 75%); }
+
+/* Monster: use the original monster asset instead of an invented face. */
+.preview-art--monster { background:radial-gradient(ellipse at 50% 55%,#e4e8df,#a9b5aa 70%,#77877d); }
+.monster-preview-image { position:absolute; width:120px; height:130px; object-fit:contain; filter:drop-shadow(0 8px 14px #17251b55); }
+.monster-preview-points { position:absolute; inset:15%; opacity:.18; background-image:radial-gradient(#263b30 1px,transparent 1.5px); background-size:7px 7px; mask-image:radial-gradient(ellipse,#000 35%,transparent 72%); }
