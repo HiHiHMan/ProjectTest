@@ -80,6 +80,35 @@
 @keyframes blueDrift{0%{transform:translate(-4%,2%) rotate(-8deg) scale(.96)}100%{transform:translate(4%,-2%) rotate(7deg) scale(1.08)}}
 @keyframes ringBreath{0%,100%{transform:scale(.92);opacity:.72}50%{transform:scale(1.08);opacity:1}}
 @keyframes liquidShift{0%{translate:-2% -2%;scale:.98}100%{translate:3% 2%;scale:1.04}}@keyframes ribbonMove{to{background-position:0 180px}}@keyframes spin{to{rotate:360deg}}@keyframes veil{from{translate:-3% 0}to{translate:4% 0}}@keyframes poolPulse{0%,100%{scale:.96;filter:brightness(.85)}50%{scale:1.04;filter:brightness(1.25)}}
+
+/* Final softness pass: avoid polygon cuts and hard graphic edges; keep all light forms rounded and heavily diffused. */
+.art-card{border-radius:26px}
+.art{border-radius:22px}
+.art:before,.art:after{border-radius:50%}
+.liquid-orb:before{filter:blur(48px);border-radius:50%}
+.liquid-orb:after{filter:blur(46px);border-radius:50%}
+.liquid-drop:before{border-width:24px;filter:blur(34px)}
+.liquid-drop:after{filter:blur(42px)}
+.liquid-ribbon:before{clip-path:none;background:radial-gradient(ellipse at 18% 50%,#0054c9 0 12%,transparent 34%),radial-gradient(ellipse at 48% 56%,#00a9f5 0 15%,transparent 39%),radial-gradient(ellipse at 78% 42%,#087bdf 0 13%,transparent 35%),radial-gradient(ellipse at 48% 50%,#8beeff66 0 5%,transparent 27%);filter:blur(38px);border-radius:50%}
+.liquid-ribbon:after{filter:blur(42px);border-radius:50%}
+.liquid-pool:before{filter:blur(42px);border-radius:50%}
+.liquid-pool:after{filter:blur(24px);border-radius:50%}
+.liquid-chrome:before{filter:blur(34px);border-radius:50%}
+.liquid-chrome:after{filter:blur(36px);border-radius:50%}
+.liquid-pearl:before{filter:blur(48px);border-radius:50%}
+.liquid-pearl:after{filter:blur(28px);border-radius:50%}
+.plasma-flow:before{filter:blur(38px);border-radius:50%}
+.plasma-flow:after{filter:blur(42px);border-radius:50%}
+.plasma-helix:before{border-width:30px;filter:blur(34px)}
+.plasma-helix:after{filter:blur(38px);border-radius:50%}
+.plasma-veil:before{filter:blur(43px);border-radius:50%}
+.plasma-veil:after{filter:blur(38px);border-radius:50%}
+.plasma-arcs:before{border-width:8px;filter:blur(13px);box-shadow:0 0 28px #00bde9,0 0 68px #0862db,0 0 110px #8c32ef}
+.plasma-arcs:after{filter:blur(18px);border-radius:50%}
+.plasma-tunnel:before{filter:blur(13px);border-radius:50%}
+.plasma-tunnel:after{filter:blur(34px);border-radius:50%}
+.plasma-storm:before{filter:blur(44px);border-radius:50%}
+.plasma-storm:after{filter:blur(42px);border-radius:50%}
 @media(max-width:1000px){.art-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.page{width:calc(100% - 28px);padding-top:25px}.topline{margin-bottom:42px}.art-grid{grid-template-columns:1fr}.art{height:240px}.section-head{align-items:start;flex-direction:column;gap:8px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}</style></head><body><main class="page">
 <nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
 <header class="hero"><p class="eyebrow">Liquid matter × Plasma energy</p><h1>Fluid<br>Studies.</h1><p class="intro">A study of impossible materials and living light. Abstract 2D compositions built from flowing gradients, luminous lines, layered color and expressive shapes. No simulated 3D objects — just graphic motion and atmosphere.</p></header>
