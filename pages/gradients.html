@@ -168,12 +168,13 @@
 .ly-3-noise{
   position:absolute;
   inset:0;
-  z-index:3;
+  z-index:10;
   pointer-events:none;
-  opacity:.14;
-  mix-blend-mode:soft-light;
+  opacity:.24;
+  mix-blend-mode:overlay;
+  filter:contrast(1.25);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:120px 120px;
+  background-size:96px 96px;
 }
 
 /* Remove dark overlays, backdrops and vignette shading from artwork previews. */
