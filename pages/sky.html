@@ -191,6 +191,23 @@ float cloudField(vec2 p,float m,float t){
   float towerNoise=fbm(organicP*vec2(2.0,5.2)+vec2(3.5,-t*.002));
   float crownShape=smoothstep(.28,.70,crownNoise*.72+towerNoise*.28);
   float naturalMass=organicBase*.43+organicBillow*.27+crownShape*.19+towerNoise*.07+organicWisps*.04;
+  if(m>9.5 && m<10.5){
+   // Amber Highlands: massive sunlit towers with a broad, connected lower body.
+   float amberTowers=max(1.0-smoothstep(.20,.58,abs(organicP.x-.34)),1.0-smoothstep(.22,.62,abs(organicP.x+.48)));
+   float towerBody=fbm(organicP*vec2(2.0,4.2)+vec2(3.0,-t*.002));
+   naturalMass=organicBase*.28+organicBillow*.22+clusterShapePlaceholder*.0;
+   naturalMass=organicBase*.30+organicBillow*.25+amberTowers*.20+towerBody*.18+crownShape*.07;
+  }else if(m>10.5 && m<11.5){
+   // Rosewater Haven: two broad banks curve around a wide, softly open center.
+   float sideBanks=smoothstep(.08,.38,abs(organicP.x));
+   float roseBillow=fbm(organicP*vec2(2.8,3.8)+vec2(5.0,t*.002));
+   naturalMass=organicBase*.30+organicBillow*.24+sideBanks*.18+roseBillow*.18+crownShape*.10;
+  }else if(m>11.5 && m<12.5){
+   // Azure Reverie: tall blue-white cumulus towers with overlapping crowns and a central valley.
+   float azureSides=smoothstep(.10,.42,abs(organicP.x));
+   float verticalTower=fbm(organicP*vec2(2.0,5.8)+vec2(-2.0,-t*.002));
+   naturalMass=organicBase*.26+organicBillow*.22+azureSides*.16+verticalTower*.24+crownShape*.12;
+  }
   if(m>12.5){
    // Card 14: tightly connected fleece clusters; a broad cloud body bridges the rounded wool lobes.
    float clusterBody=fbm(organicP*vec2(1.05,1.65)+vec2(2.5+variant*1.2,t*.0015));
