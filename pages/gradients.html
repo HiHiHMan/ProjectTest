@@ -205,33 +205,44 @@
 }
 
 
-/* 26 — softly lit half-dome with a gradual light-to-shadow transition */
+/* 26 — broad half-dome, softly lit on one side and fading into noir shadow */
 .dome-light{
   background:transparent!important;
 }
 .dome-light:before{
   content:"";
   position:absolute;
-  width:76%;
-  height:92%;
-  left:12%;
-  top:4%;
-  border-radius:50%;
+  width:82%;
+  height:82%;
+  left:9%;
+  bottom:7%;
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
   background:
-    radial-gradient(ellipse at 31% 34%,
-      #f5e9d2 0%,
-      #dfcfbd 17%,
-      #b4a0a2 35%,
-      #71677f 55%,
-      #38354f 76%,
-      #24243b 100%);
-  filter:blur(13px);
-  box-shadow:0 0 38px #c7a9a044,0 0 75px #76658a22;
-  animation:domeBreath 12s ease-in-out infinite alternate;
+    linear-gradient(108deg,
+      #b8ad9e 0%,
+      #928b87 19%,
+      #696773 39%,
+      #454657 61%,
+      #292d3d 82%,
+      #171d2b 100%),
+    radial-gradient(ellipse at 18% 30%,#d5c8b2 0%,transparent 58%);
+  filter:blur(17px);
+  transform-origin:50% 100%;
+  animation:domeBreath 16s ease-in-out infinite alternate;
+}
+.dome-light:after{
+  content:"";
+  position:absolute;
+  inset:8% 2% 4%;
+  z-index:0;
+  border-radius:50%;
+  background:radial-gradient(ellipse at 20% 52%,#a99a8550 0%,#77708020 30%,transparent 66%);
+  filter:blur(28px);
+  pointer-events:none;
 }
 @keyframes domeBreath{
-  from{transform:translate(-1%,1%) scale(.97);filter:blur(14px) brightness(.94)}
-  to{transform:translate(1%,-1%) scale(1.02);filter:blur(12px) brightness(1.04)}
+  from{filter:blur(18px) brightness(.94)}
+  to{filter:blur(16px) brightness(1.02)}
 }
 
 </style></head><body><main class="page">
@@ -265,7 +276,7 @@
 <article class="art-card"><div class="art ultraviolet-ink"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
 <article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
 <article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
-<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A softly illuminated dome fades from warm light into muted shadow.</p></div></article>
+<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A broad half-dome shifts from muted side-light into a deep, seamless noir shadow.</p></div></article>
 </section>
 </main>
 </body></html>
