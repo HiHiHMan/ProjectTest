@@ -301,16 +301,25 @@ void main(){
   density=max(density*.68,sea*smoothstep(-.48,.18,p.y)*.82);
  }
 
- // Soft directional volume shading without expensive multi-sample ray marching.
+ // Layered cloud lighting: directional highlights, deep cavities and soft rim scattering.
+ // The same lighting model is shared by every atmospheric card; the illustrated card stays separate.
  float inner=fbm(cloudP*vec2(7.0,9.0)+vec2(t*.006,-t*.004));
- float diffuse=clamp(.66+.14*sin(p.x*3.0+p.y*2.0)+(inner-.5)*.12,0.0,1.0);
- float underside=1.0-smoothstep(-.55,0.0,p.y);
- float lightMix=clamp(.24+diffuse*.72-underside*.20,0.0,1.0);
+ float broadRelief=fbm(cloudP*vec2(3.2,4.8)+vec2(2.4,-t*.003));
+ float fineRelief=fbm(cloudP*vec2(12.0,15.0)+vec2(-5.0,t*.004));
+ float lightFacing=clamp(.58+p.y*.34-p.x*.13,0.0,1.0);
+ float billowLight=smoothstep(.30,.76,broadRelief*.62+inner*.38);
+ float cavityShadow=1.0-smoothstep(.20,.48,inner*.72+fineRelief*.28);
+ float underside=1.0-smoothstep(-.62,-.02,p.y+(broadRelief-.5)*.24);
+ float lightMix=clamp(.12+lightFacing*.42+billowLight*.34+fineRelief*.10-underside*.28-cavityShadow*.13,0.0,1.0);
  vec3 shaded=mix(cloudShade,cloudLit,lightMix);
- float edgeGlow=(1.0-smoothstep(.02,.18,density))*density;
- shaded+=accent*edgeGlow*.20;
- // Fine internal billows soften the cloud surface.
- shaded*=.97+inner*.06;
+ vec3 coolShadow=mix(cloudShade,accent,.10);
+ shaded=mix(shaded,coolShadow,cavityShadow*.30+underside*.12);
+ float edgeGlow=(1.0-smoothstep(.018,.20,density))*density;
+ float silverRim=smoothstep(.04,.34,billowLight)*(1.0-smoothstep(.12,.42,density));
+ shaded+=mix(accent,cloudLit,.58)*edgeGlow*.24;
+ shaded+=cloudLit* silverRim*.075;
+ // Small tonal variations keep the cloud surface rounded rather than grainy.
+ shaded*=.94+billowLight*.09+fineRelief*.035;
  float cloudAlpha=smoothstep(.025,.34,density);
 
  // Three additional depth planes create visible overlap instead of one flat cloud sheet.
@@ -332,10 +341,11 @@ void main(){
  float farAlpha=smoothstep(.035,.39,farDensity);
  float nearAlpha=smoothstep(.025,.30,nearDensity);
 
- vec3 farShade=mix(cloudShade*.78,cloudLit*.76,.48+diffuse*.30);
- vec3 nearShade=mix(cloudShade*1.08,cloudLit*1.04,.30+diffuse*.62);
- farShade=mix(farShade,accent,.10);
- nearShade+=accent*(1.0-smoothstep(.02,.22,nearDensity))*nearDensity*.12;
+ vec3 farShade=mix(cloudShade*.78,cloudLit*.76,.38+lightFacing*.24+billowLight*.12);
+ vec3 nearShade=mix(cloudShade*1.12,cloudLit*1.06,.22+lightFacing*.28+billowLight*.22);
+ farShade=mix(farShade,accent,.13);
+ nearShade=mix(nearShade,cloudShade*.72,cavityShadow*.16);
+ nearShade+=mix(accent,cloudLit,.55)*(1.0-smoothstep(.02,.22,nearDensity))*nearDensity*.15;
 
  // Composite back to front: distant veil -> main billows -> foreground cloud clusters.
  vec3 color=mix(sky,farShade,farAlpha*.76);
