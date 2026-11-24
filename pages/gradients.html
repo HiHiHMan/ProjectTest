@@ -190,44 +190,51 @@
 }
 
 
-/* Fine grain texture applied consistently to every artwork surface. */
-.art{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E")!important;
-  background-size:110px 110px!important;
-  background-blend-mode:soft-light;
+
+
+/* Fine-grain noise overlay rendered above each artwork. */
+.art-noise{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  pointer-events:none;
+  opacity:.3;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  background-size:110px 110px;
+  mix-blend-mode:soft-light;
 }
 
 </style></head><body><main class="page">
 <nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
 <header class="hero"><p class="eyebrow">Liquid matter × Plasma energy</p><h1>Fluid<br>Studies.</h1><p class="intro">A study of impossible materials and living light. Abstract 2D compositions built from flowing gradients, luminous lines, layered color and expressive shapes. No simulated 3D objects — just graphic motion and atmosphere.</p></header>
 <div class="section-head"><h2>Liquid forms</h2><span>01—06 · REFLECTIVE / ORGANIC / CHROMATIC</span></div><section class="art-grid" aria-label="Liquid digital art">
-<article class="art-card"><div class="art liquid-orb"></div><div class="info"><small>01 / Liquid gemstone</small><h3>Liquid Amethyst</h3><p>Violet and magenta color fields fold into a soft, shifting abstract composition.</p></div></article>
-<article class="art-card"><div class="art liquid-drop"></div><div class="info"><small>02 / Fluid sculpture</small><h3>Violet Nectar</h3><p>A flowing color current with bright highlights and blurred edges.</p></div></article>
-<article class="art-card"><div class="art liquid-ribbon"></div><div class="info"><small>03 / Molten surface</small><h3>Molten Silk</h3><p>Layered bands of pink, violet and cyan sweep across the frame.</p></div></article>
-<article class="art-card"><div class="art liquid-pool"></div><div class="info"><small>04 / Chromatic fluid</small><h3>Prismatic Pool</h3><p>Concentric color waves ripple outward in a prismatic palette.</p></div></article>
-<article class="art-card"><div class="art liquid-chrome"></div><div class="info"><small>05 / Reflective material</small><h3>Liquid Chrome</h3><p>Silver, violet and electric blue gradients cut across one another.</p></div></article>
-<article class="art-card"><div class="art liquid-pearl"></div><div class="info"><small>06 / Opalescent material</small><h3>Opal Core</h3><p>Opalescent color bands overlap in a soft luminous field.</p></div></article></section>
+<article class="art-card"><div class="art liquid-orb"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>01 / Liquid gemstone</small><h3>Liquid Amethyst</h3><p>Violet and magenta color fields fold into a soft, shifting abstract composition.</p></div></article>
+<article class="art-card"><div class="art liquid-drop"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>02 / Fluid sculpture</small><h3>Violet Nectar</h3><p>A flowing color current with bright highlights and blurred edges.</p></div></article>
+<article class="art-card"><div class="art liquid-ribbon"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>03 / Molten surface</small><h3>Molten Silk</h3><p>Layered bands of pink, violet and cyan sweep across the frame.</p></div></article>
+<article class="art-card"><div class="art liquid-pool"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>04 / Chromatic fluid</small><h3>Prismatic Pool</h3><p>Concentric color waves ripple outward in a prismatic palette.</p></div></article>
+<article class="art-card"><div class="art liquid-chrome"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>05 / Reflective material</small><h3>Liquid Chrome</h3><p>Silver, violet and electric blue gradients cut across one another.</p></div></article>
+<article class="art-card"><div class="art liquid-pearl"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>06 / Opalescent material</small><h3>Opal Core</h3><p>Opalescent color bands overlap in a soft luminous field.</p></div></article></section>
 <div class="section-head"><h2>Plasma motion</h2><span>07—12 · ENERGY / RIBBONS / FLOW</span></div><section class="art-grid" aria-label="Plasma digital art">
-<article class="art-card"><div class="art plasma-flow"></div><div class="info"><small>07 / Energy stream</small><h3>Plasma Ribbons</h3><p>Overlapping neon currents flowing through a dark atmospheric field.</p></div></article>
-<article class="art-card"><div class="art plasma-helix"></div><div class="info"><small>08 / Magnetic field</small><h3>Ion Helix</h3><p>Repeating electric line patterns rotate into a vivid graphic rhythm.</p></div></article>
-<article class="art-card"><div class="art plasma-veil"></div><div class="info"><small>09 / Light fabric</small><h3>Aurora Veil</h3><p>Translucent waves of cyan, violet and magenta drifting like luminous silk.</p></div></article>
-<article class="art-card"><div class="art plasma-arcs"></div><div class="info"><small>10 / Electric orbit</small><h3>Neon Arcs</h3><p>Angular neon bands intersect with soft bloom and crisp graphic edges.</p></div></article>
-<article class="art-card"><div class="art plasma-tunnel"></div><div class="info"><small>11 / Spatial flow</small><h3>Chromatic Tunnel</h3><p>Nested plasma ripples create a bold optical pattern.</p></div></article>
-<article class="art-card"><div class="art plasma-storm"></div><div class="info"><small>12 / Charged atmosphere</small><h3>Plasma Storm</h3><p>A turbulent halo of energetic filaments surrounding a radiant core.</p></div></article></section>
+<article class="art-card"><div class="art plasma-flow"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>07 / Energy stream</small><h3>Plasma Ribbons</h3><p>Overlapping neon currents flowing through a dark atmospheric field.</p></div></article>
+<article class="art-card"><div class="art plasma-helix"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>08 / Magnetic field</small><h3>Ion Helix</h3><p>Repeating electric line patterns rotate into a vivid graphic rhythm.</p></div></article>
+<article class="art-card"><div class="art plasma-veil"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>09 / Light fabric</small><h3>Aurora Veil</h3><p>Translucent waves of cyan, violet and magenta drifting like luminous silk.</p></div></article>
+<article class="art-card"><div class="art plasma-arcs"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>10 / Electric orbit</small><h3>Neon Arcs</h3><p>Angular neon bands intersect with soft bloom and crisp graphic edges.</p></div></article>
+<article class="art-card"><div class="art plasma-tunnel"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>11 / Spatial flow</small><h3>Chromatic Tunnel</h3><p>Nested plasma ripples create a bold optical pattern.</p></div></article>
+<article class="art-card"><div class="art plasma-storm"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>12 / Charged atmosphere</small><h3>Plasma Storm</h3><p>A turbulent halo of energetic filaments surrounding a radiant core.</p></div></article></section>
 
 <div class="section-head"><h2>Chromatic worlds</h2><span>13—24 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
-<article class="art-card"><div class="art solar-flare"></div><div class="info"><small>13 / Solar phenomenon</small><h3>Solar Flare</h3><p>Molten gold and hot coral radiate from a burning off-center glow.</p></div></article>
-<article class="art-card"><div class="art abyss-bloom"></div><div class="info"><small>14 / Organic light</small><h3>Abyss Bloom</h3><p>Bioluminescent teal petals emerge from a deep ocean shadow.</p></div></article>
-<article class="art-card"><div class="art cyber-opal"></div><div class="info"><small>15 / Iridescent field</small><h3>Cyber Opal</h3><p>Prismatic cyan, mint, lilac and rose shift through a glowing opal spectrum.</p></div></article>
-<article class="art-card"><div class="art toxic-garden"></div><div class="info"><small>16 / Acid color</small><h3>Toxic Garden</h3><p>Acid lime and electric fuchsia collide in an unruly color garden.</p></div></article>
-<article class="art-card"><div class="art rose-nebula"></div><div class="info"><small>17 / Cosmic haze</small><h3>Rose Nebula</h3><p>Dusty rose, berry and violet clouds drift through a velvet atmosphere.</p></div></article>
-<article class="art-card"><div class="art arctic-fracture"></div><div class="info"><small>18 / Frozen light</small><h3>Arctic Fracture</h3><p>Glacial cyan and sapphire light break into soft crystalline diagonals.</p></div></article>
-<article class="art-card"><div class="art ember-veil"></div><div class="info"><small>19 / Heat haze</small><h3>Ember Veil</h3><p>Amber fire and vermilion drift upward through a dark warm haze.</p></div></article>
-<article class="art-card"><div class="art holo-foil"></div><div class="info"><small>20 / Holographic color</small><h3>Holo Foil</h3><p>Shifting spectral bands flash between pink, violet, aqua and pale gold.</p></div></article>
-<article class="art-card"><div class="art deep-biolume"></div><div class="info"><small>21 / Deep ocean</small><h3>Deep Biolume</h3><p>Small pools of luminous cyan and green glow in a midnight sea.</p></div></article>
-<article class="art-card"><div class="art ultraviolet-ink"></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
-<article class="art-card"><div class="art candy-melt"></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
-<article class="art-card"><div class="art monsoon-glass"></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
+<article class="art-card"><div class="art solar-flare"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>13 / Solar phenomenon</small><h3>Solar Flare</h3><p>Molten gold and hot coral radiate from a burning off-center glow.</p></div></article>
+<article class="art-card"><div class="art abyss-bloom"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>14 / Organic light</small><h3>Abyss Bloom</h3><p>Bioluminescent teal petals emerge from a deep ocean shadow.</p></div></article>
+<article class="art-card"><div class="art cyber-opal"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>15 / Iridescent field</small><h3>Cyber Opal</h3><p>Prismatic cyan, mint, lilac and rose shift through a glowing opal spectrum.</p></div></article>
+<article class="art-card"><div class="art toxic-garden"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>16 / Acid color</small><h3>Toxic Garden</h3><p>Acid lime and electric fuchsia collide in an unruly color garden.</p></div></article>
+<article class="art-card"><div class="art rose-nebula"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>17 / Cosmic haze</small><h3>Rose Nebula</h3><p>Dusty rose, berry and violet clouds drift through a velvet atmosphere.</p></div></article>
+<article class="art-card"><div class="art arctic-fracture"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>18 / Frozen light</small><h3>Arctic Fracture</h3><p>Glacial cyan and sapphire light break into soft crystalline diagonals.</p></div></article>
+<article class="art-card"><div class="art ember-veil"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>19 / Heat haze</small><h3>Ember Veil</h3><p>Amber fire and vermilion drift upward through a dark warm haze.</p></div></article>
+<article class="art-card"><div class="art holo-foil"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>20 / Holographic color</small><h3>Holo Foil</h3><p>Shifting spectral bands flash between pink, violet, aqua and pale gold.</p></div></article>
+<article class="art-card"><div class="art deep-biolume"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>21 / Deep ocean</small><h3>Deep Biolume</h3><p>Small pools of luminous cyan and green glow in a midnight sea.</p></div></article>
+<article class="art-card"><div class="art ultraviolet-ink"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
+<article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
+<article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
 </section>
 </main>
 </body></html>
