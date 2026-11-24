@@ -48,6 +48,9 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 <article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cotton-soft cloud bank"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>A broad, continuous bank of cotton-soft cloud formations.</p></div></article>
 
 <article class="sky-card"><div class="sky-art"><canvas data-sky="9" aria-label="Animated hand-painted cartoon clouds"></canvas></div><div class="info"><small>10 / Soft illustration</small><h3>Cloud Reverie</h3><p>Painterly cloud forms with gentle tonal layers, softened contours and subtle drifting motion.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="10" aria-label="Naturally flowing amber cloud banks"></canvas></div><div class="info"><small>11 / Golden hour</small><h3>Amber Highlands</h3><p>Broad, naturally rounded cloud masses glowing with warm amber light.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="11" aria-label="Soft rose and peach cloud formations"></canvas></div><div class="info"><small>12 / Rose dawn</small><h3>Rosewater Haven</h3><p>Soft rose-pink cloud banks drift around a bright, open center.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="12" aria-label="Layered blue-white natural cloud formations"></canvas></div><div class="info"><small>13 / Clear atmosphere</small><h3>Azure Reverie</h3><p>Voluminous blue-white clouds rise in overlapping atmospheric layers.</p></div></article>
 </section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
 </main>
 <script>
@@ -172,6 +175,18 @@ float cloudField(vec2 p,float m,float t){
  // Broad, drifting smoke masses, gently warped so the cloud field flows across the whole sky.
  vec2 drift=vec2(t*.010,-t*.004);
  vec2 q=p+drift;
+ // Celestial Garden and its three companions share the same organic cloud morphology.
+ if(m<.5 || (m>9.5 && m<12.5)){
+  float variant=clamp(m-10.0,0.0,2.0);
+  vec2 organicP=q*vec2(2.0+variant*.10,3.1-variant*.08);
+  organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
+  organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
+  float organicBase=fbm(organicP*vec2(2.3,3.8)+vec2(1.0+variant*4.1,t*.003));
+  float organicBillow=fbm(organicP*vec2(5.0,6.4)+vec2(7.0-variant*3.2,-t*.004));
+  float organicWisps=fbm(organicP*vec2(1.15,8.5)+vec2(-3.0+variant*2.3,t*.002));
+  float naturalMass=organicBase*.55+organicBillow*.29+organicWisps*.16;
+  return smoothstep(.405,.625,naturalMass)*.94;
+ }
  float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
  vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
  float smoke=fbm(smokeUV+vec2(0.0,t*.006));
@@ -189,17 +204,7 @@ float cloudField(vec2 p,float m,float t){
  float interior=m>2.5&&m<3.5 ? .80 : .76;
  float wool=shape*(interior+smoothstep(.28,.72,broad*.72+detail*.28)*.12);
 
- // Celestial Garden uses broad, naturally warped cloud masses instead of repeated oval puffs.
- if(m<.5){
-  vec2 organicP=q*vec2(2.0,3.1);
-  organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0,1.0))-.5)*.42;
-  organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0))-.5)*.18;
-  float organicBase=fbm(organicP*vec2(2.3,3.8)+vec2(1.0,t*.003));
-  float organicBillow=fbm(organicP*vec2(5.0,6.4)+vec2(7.0,-t*.004));
-  float organicWisps=fbm(organicP*vec2(1.15,8.5)+vec2(-3.0,t*.002));
-  float naturalMass=organicBase*.55+organicBillow*.29+organicWisps*.16;
-  return smoothstep(.405,.625,naturalMass)*.94;
- }
+
  // Other scenes retain their soft cotton-like billows.
  return max(skyCoverage*.94,wool*.78);
 }
@@ -220,7 +225,10 @@ void main(){
  else if(mode<5.5){skyTop=vec3(.012,.025,.075);skyBottom=vec3(.12,.19,.32);cloudLit=vec3(.82,.88,1.0);cloudShade=vec3(.025,.045,.10);accent=vec3(.52,.66,1.0);}
  else if(mode<6.5){skyTop=vec3(.035,.012,.11);skyBottom=vec3(.22,.075,.30);cloudLit=vec3(.91,.67,1.0);cloudShade=vec3(.075,.025,.18);accent=vec3(.70,.35,1.0);}
  else if(mode<7.5){skyTop=vec3(.20,.39,.59);skyBottom=vec3(.75,.85,.91);cloudLit=vec3(.98,1.0,1.0);cloudShade=vec3(.35,.52,.66);accent=vec3(.53,.83,1.0);}
- else{skyTop=vec3(.055,.17,.29);skyBottom=vec3(.52,.68,.76);cloudLit=vec3(.94,.97,.91);cloudShade=vec3(.13,.29,.42);accent=vec3(.55,.84,.92);}
+ else if(mode<8.5){skyTop=vec3(.055,.17,.29);skyBottom=vec3(.52,.68,.76);cloudLit=vec3(.94,.97,.91);cloudShade=vec3(.13,.29,.42);accent=vec3(.55,.84,.92);}
+ else if(mode<10.5){skyTop=vec3(.22,.095,.12);skyBottom=vec3(.88,.48,.31);cloudLit=vec3(1.0,.83,.65);cloudShade=vec3(.34,.15,.20);accent=vec3(1.0,.58,.30);}
+ else if(mode<11.5){skyTop=vec3(.31,.16,.34);skyBottom=vec3(.96,.63,.66);cloudLit=vec3(1.0,.86,.84);cloudShade=vec3(.43,.22,.38);accent=vec3(1.0,.61,.67);}
+ else{skyTop=vec3(.09,.25,.43);skyBottom=vec3(.68,.82,.91);cloudLit=vec3(.96,.99,1.0);cloudShade=vec3(.20,.39,.57);accent=vec3(.48,.76,.94);}
 
  float skyMix=smoothstep(-.60,.62,uv.y);
  vec3 sky=mix(skyBottom,skyTop,skyMix);
@@ -230,7 +238,7 @@ void main(){
 
 
  // Hand-painted cartoon cloud scene: clean outlined puffs, layered cel shading and gentle bobbing.
- if(mode>8.5){
+ if(mode>8.5 && mode<9.5){
   vec3 toonSky=mix(vec3(.76,.88,.98),vec3(.24,.57,.83),smoothstep(.02,.98,uv.y));
   float warmGlow=exp(-length((uv-vec2(.82,.78))*vec2(1.0,1.2))*5.0);
   toonSky=mix(toonSky,vec3(1.0,.79,.56),warmGlow*.48);
@@ -295,10 +303,26 @@ void main(){
   // Diagonal wind lanes sweep across the frame.
   float lanes=fbm(vec2(p.x*2.1+p.y*1.35,p.y*5.5-t*.01));
   density*=smoothstep(.30,.66,lanes)*.95;
- }else{
+ }else if(mode<8.5){
   // Dense, soft cloud ocean with a gently rolling upper edge.
   float sea= smoothstep(.20,.48,fbm(vec2(p.x*2.2,p.y*3.6+t*.006)));
   density=max(density*.68,sea*smoothstep(-.48,.18,p.y)*.82);
+ }else if(mode<10.5){
+  // Amber Highlands: broad, high cloud bank with a warm, open lower horizon.
+  float shelf=smoothstep(-.18,.22,uv.y);
+  float crown=fbm(vec2(p.x*2.0,p.y*3.0+1.4+t*.004));
+  density*=mix(.72,1.08,smoothstep(.25,.66,crown))*shelf;
+ }else if(mode<11.5){
+  // Rosewater Haven: two drifting cloud banks leave a softly lit opening in the center.
+  float bank=abs(uv.x-.5);
+  float centerOpen=1.0-smoothstep(.12,.34,bank);
+  float heightMask=smoothstep(.10,.34,uv.y);
+  density*=mix(.58,1.0,1.0-centerOpen*.55)*heightMask;
+ }else{
+  // Azure Reverie: taller cloud masses gather toward the sides with a layered central valley.
+  float sideMass=smoothstep(.10,.42,abs(uv.x-.5));
+  float height=smoothstep(.04,.42,uv.y);
+  density*=mix(.66,1.12,sideMass)*mix(.72,1.0,height);
  }
 
  // Layered cloud lighting: directional highlights, deep cavities and soft rim scattering.
@@ -392,9 +416,18 @@ void main(){
  }else if(mode<7.5){
   float streak=exp(-pow((uv.y-(.68+.12*sin(uv.x*3.0+t*.08)))*22.0,2.0));
   color+=vec3(.55,.82,1.0)*streak*.16;
- }else{
+ }else if(mode<8.5){
   float horizonLine=exp(-pow((uv.y-.28)*22.0,2.0));
   color+=vec3(.72,.83,.90)*horizonLine*.13;
+ }else if(mode<10.5){
+  float amberHaze=exp(-pow((uv.y-.34)*13.0,2.0));
+  color+=vec3(1.0,.47,.22)*amberHaze*.17;
+ }else if(mode<11.5){
+  float roseGlow=exp(-pow((uv.x-.5)*4.8,2.0))*smoothstep(.22,.62,uv.y);
+  color+=vec3(1.0,.54,.68)*roseGlow*.15;
+ }else{
+  float blueHaze=exp(-pow((uv.y-.32)*16.0,2.0));
+  color+=vec3(.42,.72,.96)*blueHaze*.13;
  }
 
  float ribbon=exp(-pow((uv.y-(.67+.045*sin(uv.x*5.0+t*.13)))*24.0,2.0));
