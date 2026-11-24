@@ -317,8 +317,16 @@ void main(){
  // Scenic foreground and focal elements unique to selected cards.
  if(mode<.5){
   float ground=1.0-smoothstep(.215,.235,uv.y);
+  vec2 sandUv=vec2(uv.x*185.0,uv.y*112.0);
+  float grain=noise(sandUv);
+  float fineGrain=noise(sandUv*2.7+vec2(8.3,2.1));
+  float broadGrain=fbm(uv*vec2(42.0,30.0)+vec2(t*.003,0.0));
+  float sandTexture=(grain-.5)*.105+(fineGrain-.5)*.045+(broadGrain-.5)*.16;
   vec3 sand=mix(vec3(.48,.31,.20),vec3(.83,.62,.39),smoothstep(.0,.24,uv.y));
-  float dune= smoothstep(.0,.035,uv.y-(.17+.018*sin(uv.x*5.0+t*.025)));
+  sand+=vec3(1.0,.78,.52)*sandTexture;
+  float dune=smoothstep(.0,.035,uv.y-(.17+.018*sin(uv.x*5.0+t*.025)));
+  float windRipple=sin(uv.x*145.0+noise(vec2(uv.x*24.0,uv.y*8.0))*3.0)*.5+.5;
+  sand+=vec3(.12,.075,.035)*(windRipple-.5)*.035;
   color=mix(color,sand,ground);
   color=mix(color,vec3(.67,.46,.29),ground*dune*.18);
   float horizonGlow=exp(-pow((uv.y-.235)*38.0,2.0));
