@@ -181,11 +181,14 @@ float cloudField(vec2 p,float m,float t){
   vec2 organicP=q*vec2(1.72+variant*.08,2.72-variant*.06);
   organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
   organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
-  float organicBase=fbm(organicP*vec2(1.75,2.8)+vec2(1.0+variant*4.1,t*.003));
-  float organicBillow=fbm(organicP*vec2(4.6,5.8)+vec2(7.0-variant*3.2,-t*.004));
+  // Broad body keeps the bank connected; medium and small billows create many rounded crowns.
+  float organicBase=fbm(organicP*vec2(1.55,2.35)+vec2(1.0+variant*4.1,t*.003));
+  float organicBillow=fbm(organicP*vec2(4.8,6.2)+vec2(7.0-variant*3.2,-t*.004));
+  float crownNoise=fbm(organicP*vec2(8.2,10.5)+vec2(-5.0+variant*2.3,t*.003));
   float organicWisps=fbm(organicP*vec2(1.0,7.2)+vec2(-3.0+variant*2.3,t*.002));
-  float naturalMass=organicBase*.66+organicBillow*.26+organicWisps*.08;
-  return smoothstep(.375,.595,naturalMass)*.98;
+  float crownShape=smoothstep(.30,.72,crownNoise);
+  float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
+  return smoothstep(.385,.585,naturalMass)*.99;
  }
  float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
  vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
