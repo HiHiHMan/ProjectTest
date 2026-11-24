@@ -190,9 +190,12 @@ float cloudField(vec2 p,float m,float t){
   float crownShape=smoothstep(.30,.72,crownNoise);
   float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
   if(m>12.5){
-   // Card 14: denser, irregular puff clusters with a stronger crown silhouette.
+   // Card 14: soft fleece-like micro-billows gather into irregular, connected cloud lobes.
    float clusteredCrown=smoothstep(.34,.70,crownNoise*.72+organicBillow*.28);
-   naturalMass=organicBase*.39+organicBillow*.34+clusteredCrown*.22+organicWisps*.05;
+   float fleeceRelief=fbm(organicP*vec2(13.5,16.0)+vec2(6.0-variant*1.7,t*.002));
+   float fleecePuffs=smoothstep(.36,.69,fleeceRelief*.58+crownNoise*.42);
+   float woolRidges=smoothstep(.38,.68,organicBillow*.62+fleeceRelief*.38);
+   naturalMass=organicBase*.34+organicBillow*.27+clusteredCrown*.19+fleecePuffs*.14+woolRidges*.02+organicWisps*.04;
    return smoothstep(.405,.575,naturalMass)*1.02;
   }
   return smoothstep(.385,.585,naturalMass)*.99;
