@@ -164,6 +164,34 @@
 @keyframes candyFlow{from{transform:translate(-2%,-2%) scale(.96)}to{transform:translate(3%,3%) scale(1.08)}}
 @keyframes monsoonDrift{from{transform:translate(-2%,2%) rotate(-3deg)}to{transform:translate(3%,-2%) rotate(4deg)}}
 
+
+/* 25 — flowing multi-color spectrum with layered chromatic gradients */
+.multi-spectrum{background:#080817}
+.multi-spectrum:before{
+  content:"";
+  position:absolute;
+  inset:-32%;
+  background:
+    radial-gradient(ellipse at 18% 28%,#ff4f9a 0 7%,transparent 32%),
+    radial-gradient(ellipse at 76% 22%,#ffb52e 0 8%,transparent 33%),
+    radial-gradient(ellipse at 82% 76%,#35e6bd 0 9%,transparent 34%),
+    radial-gradient(ellipse at 34% 82%,#397cff 0 10%,transparent 37%),
+    radial-gradient(ellipse at 52% 46%,#a34dff 0 12%,transparent 39%),
+    conic-gradient(from 35deg at 50% 50%,#ff557c,#ffb43e,#dfff5c,#31e6b2,#36a8ff,#8158ff,#ed53d1,#ff557c);
+  filter:blur(34px);
+  opacity:.94;
+  animation:spectrumFlow 16s ease-in-out infinite alternate;
+}
+.multi-spectrum:after{
+  inset:0;
+  background:radial-gradient(ellipse at 50% 50%,transparent 22%,#08081755 100%);
+  filter:blur(22px);
+}
+@keyframes spectrumFlow{
+  0%{transform:translate(-3%,2%) rotate(-9deg) scale(.94)}
+  100%{transform:translate(3%,-2%) rotate(9deg) scale(1.08)}
+}
+
 @media(max-width:1000px){.art-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.page{width:calc(100% - 28px);padding-top:25px}.topline{margin-bottom:42px}.art-grid{grid-template-columns:1fr}.art{height:240px}.section-head{align-items:start;flex-direction:column;gap:8px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
 /* Remove dark overlays, backdrops and vignette shading from artwork previews. */
@@ -225,7 +253,7 @@
 <article class="art-card"><div class="art plasma-tunnel"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>11 / Spatial flow</small><h3>Chromatic Tunnel</h3><p>Nested plasma ripples create a bold optical pattern.</p></div></article>
 <article class="art-card"><div class="art plasma-storm"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>12 / Charged atmosphere</small><h3>Plasma Storm</h3><p>A turbulent halo of energetic filaments surrounding a radiant core.</p></div></article></section>
 
-<div class="section-head"><h2>Chromatic worlds</h2><span>13—24 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
+<div class="section-head"><h2>Chromatic worlds</h2><span>13—25 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
 <article class="art-card"><div class="art solar-flare"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>13 / Solar phenomenon</small><h3>Solar Flare</h3><p>Molten gold and hot coral radiate from a burning off-center glow.</p></div></article>
 <article class="art-card"><div class="art abyss-bloom"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>14 / Organic light</small><h3>Abyss Bloom</h3><p>Bioluminescent teal petals emerge from a deep ocean shadow.</p></div></article>
 <article class="art-card"><div class="art cyber-opal"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>15 / Iridescent field</small><h3>Cyber Opal</h3><p>Prismatic cyan, mint, lilac and rose shift through a glowing opal spectrum.</p></div></article>
@@ -238,6 +266,7 @@
 <article class="art-card"><div class="art ultraviolet-ink"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
 <article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
 <article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
+<article class="art-card"><div class="art multi-spectrum"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>25 / Full spectrum</small><h3>Multi Spectrum</h3><p>Seven vivid color families blend into a fluid, shifting chromatic field.</p></div></article>
 
 
 </section>
