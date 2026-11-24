@@ -244,6 +244,21 @@
 }
 
 
+/* Global diffusion pass — soften every gradient composition consistently. */
+.art::before,
+.art::after{
+  filter:blur(42px) saturate(.92)!important;
+}
+.plasma-arcs::before,
+.plasma-arcs::after,
+.plasma-tunnel::before{
+  filter:blur(24px) saturate(.92)!important;
+}
+.art::before{
+  opacity:.9;
+}
+
+
 
 
 </style></head><body><main class="page">
