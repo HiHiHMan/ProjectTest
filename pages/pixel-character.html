@@ -44,7 +44,7 @@ main{position:relative;width:100vw;height:100vh;overflow:hidden;background:#0507
 <script type="module">
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 
-const canvas=document.get.querySelector("#scene");
+const canvas=document.querySelector("#scene");
 const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});
 renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
 renderer.setSize(innerWidth,innerHeight);
