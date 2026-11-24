@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090d"><title>Sky Clouds — ProjectTest</title>
+<style>
+*{box-sizing:border-box} :root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#08090d;color:#f3f4f6}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#263b55 0,transparent 55%),#08090d}
+.page{width:min(1800px,calc(100% - 48px));margin:auto;padding:38px 0 72px}
+.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+.back{color:#aab5c5;text-decoration:none;font-size:13px}.back:hover{color:#fff}
+.eyebrow{margin:0 0 12px;color:#9cc8e8;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
+h1{margin:0;font-size:clamp(42px,7vw,78px);letter-spacing:-.075em;line-height:.95}
+.intro{max-width:650px;margin:18px 0 0;color:#9ba9b9;font-size:14px;line-height:1.8}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:38px 0 17px}
+.section-head h2{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase}.section-head span{color:#818c9c;font-size:10px;letter-spacing:.13em}
+.sky-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.sky-card{min-width:0;overflow:hidden;border:1px solid #ffffff19;border-radius:20px;background:linear-gradient(145deg,#ffffff0c,#ffffff03);transition:transform .3s,border-color .3s,box-shadow .3s}
+.sky-card:hover{transform:translateY(-4px);border-color:#a8d9ff66;box-shadow:0 18px 45px #0008}
+.sky-art{height:clamp(190px,19vw,300px);position:relative;overflow:hidden;isolation:isolate;background:#0b1728}
+.sky-art canvas{display:block;width:100%;height:100%}
+.sky-art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(145deg,#ffffff12,transparent 42%,#0003)}
+.info{padding:16px 18px 19px}.info small{color:#8ea9c5;font-size:9px;letter-spacing:.18em;text-transform:uppercase}.info h3{margin:7px 0 6px;font-size:16px}.info p{margin:0;color:#999fac;font-size:11px;line-height:1.6}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#697384;font-size:11px}
+@media(max-width:760px){.page{width:calc(100% - 30px)}.sky-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.sky-art{height:190px}.info{padding:13px}.info h3{font-size:14px}}
+@media(max-width:480px){.sky-grid{grid-template-columns:1fr}.sky-art{height:220px}.page{padding-top:26px}}
+@media(prefers-reduced-motion:reduce){.sky-card{transition:none}}
+</style>
+</head>
+<body><main class="page">
+<div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine atmospheric cloud studies generated with WebGL shaders. Each card has its own cloud formation, lighting and color palette.</p></header>
+<div class="section-head"><h2>Cloud collection</h2><span>09 EXPERIMENTS</span></div>
+<section class="sky-grid">
+<article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Soft Cumulus</h3><p>Voluminous white clouds drifting across a clear blue sky.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Golden Hour</h3><p>Peach and amber cloud edges illuminated by a low sun.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Storm clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Storm Front</h3><p>Deep layered cloud banks with cool silver highlights.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Pastel Drift</h3><p>Soft lilac, rose and powder-blue cloud wisps.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Aurora clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Veil</h3><p>Flowing teal and emerald light folded into night clouds.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moonlit Mist</h3><p>Silver-blue cloud layers floating through a midnight sky.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Nebula clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Nebula Cloud</h3><p>Violet and magenta gas clouds with subtle luminous depth.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="High altitude cirrus"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Cirrus Flow</h3><p>Fine stretched cloud bands sweeping across the atmosphere.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cloud ocean"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Cloud Ocean</h3><p>Broad rolling cloud formations with a luminous horizon.</p></div></article>
+</section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
+</main>
+<script>
+(()=> {
+const vertex='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const fragment=`
+precision highp float;
+uniform vec2 u_res;uniform float u_time;uniform float u_mode;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.02+vec2(13.7,9.2);a*=.5;}return v;}
+void main(){
+ vec2 uv=gl_FragCoord.xy/u_res;vec2 p=(uv-.5)*vec2(u_res.x/u_res.y,1.);float t=u_time;
+ float warp=fbm(p*1.6+vec2(t*.018,-t*.012));
+ float clouds=fbm(p*vec2(2.4,3.1)+vec2(t*.025,-t*.018)+warp*.75);
+ float detail=fbm(p*6.0+vec2(-t*.035,t*.024)+clouds);
+ float shape=smoothstep(.43,.78,clouds*.72+detail*.28);
+ float soft=smoothstep(.30,.75,clouds*.65+detail*.35);
+ vec3 top,bottom,light,shadow;
+ if(u_mode<.5){top=vec3(.16,.43,.72);bottom=vec3(.68,.82,.94);light=vec3(1.0,.99,.91);shadow=vec3(.34,.49,.66);}
+ else if(u_mode<1.5){top=vec3(.25,.19,.39);bottom=vec3(.96,.53,.38);light=vec3(1.,.78,.56);shadow=vec3(.43,.25,.39);}
+ else if(u_mode<2.5){top=vec3(.035,.075,.14);bottom=vec3(.22,.30,.39);light=vec3(.72,.82,.88);shadow=vec3(.055,.085,.14);}
+ else if(u_mode<3.5){top=vec3(.36,.32,.58);bottom=vec3(.88,.62,.72);light=vec3(1.,.86,.88);shadow=vec3(.43,.35,.62);}
+ else if(u_mode<4.5){top=vec3(.012,.10,.16);bottom=vec3(.035,.24,.24);light=vec3(.18,.94,.73);shadow=vec3(.012,.055,.11);}
+ else if(u_mode<5.5){top=vec3(.012,.025,.075);bottom=vec3(.10,.17,.30);light=vec3(.72,.82,.98);shadow=vec3(.025,.045,.10);}
+ else if(u_mode<6.5){top=vec3(.045,.018,.12);bottom=vec3(.22,.055,.27);light=vec3(.86,.49,.94);shadow=vec3(.09,.025,.19);}
+ else if(u_mode<7.5){top=vec3(.25,.48,.68);bottom=vec3(.72,.83,.91);light=vec3(.94,.98,1.);shadow=vec3(.42,.58,.72);}
+ else{top=vec3(.08,.24,.39);bottom=vec3(.55,.70,.78);light=vec3(.93,.94,.87);shadow=vec3(.12,.27,.40);}
+ float horizon=smoothstep(-.48,.42,uv.y);
+ vec3 sky=mix(bottom,top,horizon);
+ float edge=soft*(.65+.35*detail);
+ vec3 cloud=mix(shadow,light,smoothstep(.48,.82,detail+warp*.12));
+ float density=smoothstep(.36,.72,clouds*.78+detail*.22);
+ float wisps=smoothstep(.53,.82,fbm(p*vec2(5.,2.)+vec2(t*.025,0.)));
+ if(u_mode>7.5){density=max(density*.78,wisps*.58);}
+ if(u_mode>3.5&&u_mode<5.5){density*=.88+.12*sin(p.x*2.+t*.2);}
+ float glow=exp(-abs(uv.y-.45)*5.)*.12;
+ sky+=glow*light;
+ vec3 col=mix(sky,cloud,density*.92);
+ float shade=(1.-edge)*density*.12;col-=shade*shadow;
+ float grain=(hash(gl_FragCoord.xy+fract(t))*0.018)-.009;col+=grain;
+ gl_FragColor=vec4(pow(max(col,0.),vec3(.92)),1.);
+}`;
+function compile(gl,type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null;}return s;}
+const canvases=[...document.querySelectorAll('canvas[data-sky]')];
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{const a=e.target.__sky;if(!a)return;a.visible=e.isIntersecting;if(a.visible&&!a.raf)a.raf=requestAnimationFrame(a.draw);}),{rootMargin:'80px'});
+canvases.forEach(canvas=>{
+ const gl=canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});if(!gl)return;
+ const vs=compile(gl,gl.VERTEX_SHADER,vertex),fs=compile(gl,gl.FRAGMENT_SHADER,fragment);if(!vs||!fs)return;
+ const program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))return;
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ gl.useProgram(program);const loc=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ const res=gl.getUniformLocation(program,'u_res'),time=gl.getUniformLocation(program,'u_time'),mode=gl.getUniformLocation(program,'u_mode');
+ const item={visible:false,raf:0,start:performance.now(),draw:null};
+ item.draw=now=>{item.raf=0;if(!item.visible||document.hidden)return;const r=canvas.getBoundingClientRect();const scale=Math.min(devicePixelRatio||1,.75,520/Math.max(r.width,1));const w=Math.max(1,Math.round(r.width*scale)),h=Math.max(1,Math.round(r.height*scale));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}gl.useProgram(program);gl.uniform2f(res,w,h);gl.uniform1f(time,(now-item.start)*.00018);gl.uniform1f(mode,Number(canvas.dataset.sky));gl.drawArrays(gl.TRIANGLE_STRIP,0,4);item.raf=requestAnimationFrame(item.draw);};
+ canvas.__sky=item;observer.observe(canvas);
+});
+document.addEventListener('visibilitychange',()=>canvases.forEach(c=>{const a=c.__sky;if(!a)return;a.visible=!document.hidden&&c.getBoundingClientRect().bottom>0&&c.getBoundingClientRect().top<innerHeight;if(a.visible&&!a.raf)a.raf=requestAnimationFrame(a.draw);}));
+})();
+</script></body></html>
