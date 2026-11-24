@@ -138,7 +138,7 @@ float cloudField(vec2 p,float m,float t){
  float detail=fbm(q*vec2(8.0,10.5)+broad*2.0);
  float fine=fbm(q*vec2(19.0,23.0)-t*.009);
  float d=silhouette(p,m,t);
- float shape=smoothstep(.105,-.095,d + (broad-.5)*.13 + (detail-.5)*.065);
+ float shape=1.0-smoothstep(-.095,.105,d + (broad-.5)*.13 + (detail-.5)*.065);
  float organic=smoothstep(.30,.78,broad*.54+detail*.34+fine*.12);
  float interior=m>2.5&&m<3.5 ? .78 : .70;
  return shape*(interior+organic*.38);
@@ -186,7 +186,7 @@ void main(){
  vec3 sunDir=normalize(vec3(-.42,.58,.72));
  float diffuse=max(dot(normal,sunDir),0.0);
  float rim=pow(1.0-max(normal.z,0.0),2.0);
- float underside=smoothstep(.0,-.55,p.y);
+ float underside=1.0-smoothstep(-.55,0.0,p.y);
  float lightMix=clamp(.30+diffuse*.66+rim*.22-underside*.18,0.0,1.0);
  vec3 shaded=mix(cloudShade,cloudLit,lightMix);
  float edgeGlow=pow(1.0-smoothstep(.0,.15,density),2.0)*density;
