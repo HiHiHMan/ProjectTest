@@ -53,12 +53,33 @@ float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
 float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.02+vec2(13.7,9.2);a*=.5;}return v;}
 void main(){
- vec2 uv=gl_FragCoord.xy/u_res;vec2 p=(uv-.5)*vec2(u_res.x/u_res.y,1.);float t=u_time;
- float warp=fbm(p*1.6+vec2(t*.018,-t*.012));
- float clouds=fbm(p*vec2(2.4,3.1)+vec2(t*.025,-t*.018)+warp*.75);
- float detail=fbm(p*6.0+vec2(-t*.035,t*.024)+clouds);
- float shape=smoothstep(.43,.78,clouds*.72+detail*.28);
- float soft=smoothstep(.30,.75,clouds*.65+detail*.35);
+ vec2 uv=gl_FragCoord.xy/u_res;float t=u_time;
+ // Straight-on camera: look directly into the sky, with subtle vertical camera travel.
+ // Each cloud bank sits at a different depth; perspective changes its scale and drift.
+ float cameraY=sin(t*.22)*.035+sin(t*.09)*.018;
+ vec2 screen=(uv-.5)*vec2(u_res.x/u_res.y,1.);
+ vec2 farP=screen*1.05+vec2(t*.008,-cameraY*.22);
+ vec2 midP=screen*1.65+vec2(-t*.018,-cameraY*.48+.18);
+ vec2 nearP=screen*2.65+vec2(t*.034,-cameraY*.9-.20);
+ vec2 frontP=screen*3.8+vec2(-t*.058,-cameraY*1.35-.42);
+ float farCloud=fbm(farP*vec2(2.0,2.5)+vec2(0.,-.12));
+ float midCloud=fbm(midP*vec2(2.0,2.7)+vec2(0.,-.10));
+ float nearCloud=fbm(nearP*vec2(2.1,3.0));
+ float frontCloud=fbm(frontP*vec2(2.0,3.1));
+ float farDetail=fbm(farP*5.2+farCloud);
+ float midDetail=fbm(midP*5.8+midCloud);
+ float nearDetail=fbm(nearP*6.2+nearCloud);
+ float frontDetail=fbm(frontP*6.8+frontCloud);
+ float farDensity=smoothstep(.42,.73,farCloud*.76+farDetail*.24)*.48;
+ float midDensity=smoothstep(.39,.72,midCloud*.72+midDetail*.28)*.58;
+ float nearDensity=smoothstep(.39,.72,nearCloud*.70+nearDetail*.30)*.72;
+ float frontDensity=smoothstep(.40,.73,frontCloud*.72+frontDetail*.28)*.78;
+ float density=1.-(1.-farDensity)*(1.-midDensity)*(1.-nearDensity)*(1.-frontDensity);
+ float detail=(farDetail*.12+midDetail*.20+nearDetail*.30+frontDetail*.38);
+ float clouds=max(max(farCloud,midCloud),max(nearCloud,frontCloud));
+ float warp=fbm(screen*1.5+vec2(t*.01,-cameraY));
+ float soft=smoothstep(.22,.76,density);
+ float edge=soft*(.65+.35*detail);
  vec3 top,bottom,light,shadow;
  if(u_mode<.5){top=vec3(.16,.43,.72);bottom=vec3(.68,.82,.94);light=vec3(1.0,.99,.91);shadow=vec3(.34,.49,.66);}
  else if(u_mode<1.5){top=vec3(.25,.19,.39);bottom=vec3(.96,.53,.38);light=vec3(1.,.78,.56);shadow=vec3(.43,.25,.39);}
@@ -72,12 +93,11 @@ void main(){
  float horizon=smoothstep(-.48,.42,uv.y);
  vec3 sky=mix(bottom,top,horizon);
  float edge=soft*(.65+.35*detail);
- vec3 cloud=mix(shadow,light,smoothstep(.48,.82,detail+warp*.12));
- float density=smoothstep(.36,.72,clouds*.78+detail*.22);
- float wisps=smoothstep(.53,.82,fbm(p*vec2(5.,2.)+vec2(t*.025,0.)));
+ vec3 cloud=mix(shadow,light,smoothstep(.43,.80,detail+warp*.12));
+ float wisps=smoothstep(.53,.82,fbm(screen*vec2(5.,2.)+vec2(t*.018,-cameraY*.4)));
  if(u_mode>7.5){density=max(density*.78,wisps*.58);}
- if(u_mode>3.5&&u_mode<5.5){density*=.88+.12*sin(p.x*2.+t*.2);}
- float horizonGlow=exp(-abs(uv.y-(.43+.035*sin(p.x*1.7+t*.12)))*7.)*.28;
+ if(u_mode>3.5&&u_mode<5.5){density*=.88+.12*sin(screen.x*2.+t*.2);}
+ float horizonGlow=exp(-abs(uv.y-(.43+.035*sin(screen.x*1.7+t*.12)))*7.)*.28;
  float celestial=exp(-length((uv-vec2(.73,.72))*vec2(1.0,1.35))*8.);
  sky+=horizonGlow*light+celestial*light*.42;
  vec3 col=mix(sky,cloud,density*.88);
@@ -93,8 +113,8 @@ void main(){
  float sparkle=pow(max(0.,sin((uv.x*31.+uv.y*19.)*3.+t*1.8)),18.)*step(.994,hash(floor(uv*vec2(38.,24.))));
  col+=light*(stars*.9+sparkle*.22);
  // Flowing ribbons of enchanted atmospheric light.
- float ribbonA=exp(-pow((uv.y-(.60+.075*sin(uv.x*5.2+t*.22)+.025*sin(uv.x*12.-t*.3)))*15.,2.));
- float ribbonB=exp(-pow((uv.y-(.69+.055*sin(uv.x*4.1-t*.18)))*22.,2.));
+ float ribbonA=exp(-pow((uv.y-(.60+.075*sin(uv.x*5.2+t*.22)+.025*sin(uv.x*12.-t*.3)-cameraY*.25))*15.,2.));
+ float ribbonB=exp(-pow((uv.y-(.69+.055*sin(uv.x*4.1-t*.18)-cameraY*.4))*22.,2.));
  float magic=0.;
  if(u_mode>3.5&&u_mode<5.5)magic=(ribbonA*.30+ribbonB*.18);
  else if(u_mode>5.5&&u_mode<7.5)magic=(ribbonA*.20+ribbonB*.14);
