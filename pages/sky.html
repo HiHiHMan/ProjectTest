@@ -190,16 +190,19 @@ float cloudField(vec2 p,float m,float t){
   float crownShape=smoothstep(.30,.72,crownNoise);
   float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
   if(m>12.5){
-   // Card 14: thick, rounded fleece masses with broad padded lobes and smaller woolly crowns.
+   // Card 14: tightly connected fleece clusters; a broad cloud body bridges the rounded wool lobes.
+   float clusterBody=fbm(organicP*vec2(1.05,1.65)+vec2(2.5+variant*1.2,t*.0015));
+   float clusterBridge=smoothstep(.31,.59,clusterBody*.62+organicBase*.38);
    float clusteredCrown=smoothstep(.30,.68,crownNoise*.68+organicBillow*.32);
    float fleeceBody=fbm(organicP*vec2(5.8,7.2)+vec2(5.0-variant*1.4,t*.002));
    float fleecePuffs=smoothstep(.34,.66,fleeceBody*.68+crownNoise*.32);
    float woolTufts=fbm(organicP*vec2(9.2,11.0)+vec2(-4.0+variant*1.8,-t*.002));
    float tuftCrown=smoothstep(.36,.69,woolTufts*.62+fleeceBody*.38);
    float woolRidges=smoothstep(.34,.67,organicBillow*.58+fleeceBody*.42);
-   // Stronger broad-body contribution makes every puff feel thick, not like surface stippling.
-   naturalMass=organicBase*.30+organicBillow*.22+clusteredCrown*.18+fleecePuffs*.19+tuftCrown*.07+woolRidges*.02+organicWisps*.02;
-   return smoothstep(.385,.555,naturalMass)*1.04;
+   // Fine wool crowns are masked by the large body so they merge into shared masses instead of scattering.
+   float woolDetail=(fleecePuffs*.68+tuftCrown*.32)*mix(.58,1.0,clusterBridge);
+   naturalMass=clusterBridge*.36+organicBase*.24+organicBillow*.16+clusteredCrown*.10+woolDetail*.12+woolRidges*.02;
+   return smoothstep(.355,.535,naturalMass)*1.06;
   }
   return smoothstep(.385,.585,naturalMass)*.99;
  }
