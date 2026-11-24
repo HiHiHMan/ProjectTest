@@ -3,142 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0d17">
-<title>Pixel Character — ProjectTest</title>
+<meta name="theme-color" content="#101010">
+<title>Pixel Grid — ProjectTest</title>
 <style>
-*{box-sizing:border-box} :root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#090b14;color:#f4f2ff}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#30264e 0,transparent 45%),#090b14}
-.page{width:min(1500px,calc(100% - 48px));margin:auto;padding:32px 0 64px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:42px}
-a{color:#aeb5ca;text-decoration:none;font-size:13px}a:hover{color:white}
-.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#b9a1ff;font-weight:800;margin:0 0 12px}
-h1{font-size:clamp(42px,7vw,76px);letter-spacing:-.07em;line-height:.95;margin:0}
-.intro{color:#a5a8bb;max-width:620px;font-size:14px;line-height:1.8;margin:18px 0 0}
-.workspace{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;margin-top:38px}
-.stage,.panel{border:1px solid #ffffff18;border-radius:18px;background:#111321d9;overflow:hidden}
-.stage-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid #ffffff12;color:#aeb3c8;font-size:11px;letter-spacing:.12em}
-.canvas-wrap{padding:22px;display:grid;place-items:center;background-color:#0c0e19;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:20px 20px}
-canvas{display:block;width:min(100%,700px);height:auto;aspect-ratio:1;background:#171a2a;image-rendering:pixelated;image-rendering:crisp-edges;border:1px solid #ffffff20}
-.controls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px;border-top:1px solid #ffffff12}
-button{border:1px solid #ffffff20;background:#202338;color:#e9e8f4;padding:9px 13px;border-radius:9px;font:inherit;font-size:12px;cursor:pointer}
-button:hover{background:#34304e;border-color:#a58cff88}button.active{background:#59458c;border-color:#b69bff}
-.panel{padding:18px}.panel h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 18px;color:#d8caff}
-.field{margin:0 0 20px}.field label{display:block;color:#aeb2c6;font-size:11px;margin-bottom:9px}
-.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.swatch{height:34px;padding:0;border-radius:7px;border:2px solid #ffffff20}.swatch.selected{outline:2px solid #fff;outline-offset:2px}
-.range{width:100%;accent-color:#a78bfa}
-.stat{display:flex;justify-content:space-between;color:#aeb2c6;font-size:11px;padding:9px 0;border-bottom:1px solid #ffffff10}
-.note{font-size:11px;line-height:1.7;color:#7f849b;margin-top:18px}
-@media(max-width:850px){.workspace{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.panel h2{grid-column:1/-1}}
-@media(max-width:560px){.page{width:calc(100% - 28px);padding-top:22px}.panel{display:block}.canvas-wrap{padding:10px}.top{margin-bottom:32px}}
+*{box-sizing:border-box}
+:root{color-scheme:dark;font-family:Arial,sans-serif;background:#101010;color:#eee}
+body{margin:0;min-height:100vh;padding:24px}
+header{width:min(100%,900px);margin:0 auto 20px}
+h1{font-size:24px;margin:0 0 8px}
+p{margin:0;color:#999;font-size:13px}
+main{width:min(100%,900px);margin:auto}
+.grid-viewport{width:100%;overflow:auto;background:#222;border:1px solid #444;padding:12px}
+canvas{display:block;width:1500px;height:1500px;max-width:none;background:#fff;image-rendering:pixelated}
+.info{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:#aaa;font-size:12px}
 </style>
 </head>
-<body><main class="page">
-<div class="top"><a href="../index.html">← All experiments</a><span class="eyebrow">PIXEL ART / CHARACTER ANIMATION</span></div>
-<header><p class="eyebrow">Retro sprite workshop</p><h1>Pixel Character</h1><p class="intro">A 16-bit adventurer shown in a true side view, facing right. Watch the character idle, walk and run inside a 2000 × 2000 pixel workspace.</p></header>
-<section class="workspace">
-<div class="stage">
-<div class="stage-head"><span>SPRITE VIEWPORT</span><span>2000 × 2000 PX</span></div>
-<div class="canvas-wrap"><canvas id="screen" width="2000" height="2000" aria-label="Animated 16-bit pixel character"></canvas></div>
-<div class="controls">
-<button id="idle" class="active">Idle</button><button id="walk">Walk</button><button id="run">Run</button><button id="pause">Pause</button><button id="grid">Grid: Off</button>
-</div>
-</div>
-<aside class="panel">
-<h2>Animation settings</h2>
-<div class="field"><label for="speed">Animation speed <strong id="speedValue">8 FPS</strong></label><input class="range" id="speed" type="range" min="2" max="16" value="8"></div>
-<div class="field"><label>Character palette</label><div class="palette" id="palette"></div></div>
-<div class="field"><label>Canvas information</label><div class="stat"><span>Canvas</span><strong>2000 × 2000</strong></div><div class="stat"><span>Sprite resolution</span><strong>32 × 40 px</strong></div><div class="stat"><span>Pixel rendering</span><strong>Nearest neighbor</strong></div></div>
-<p class="note">Every square in the sprite is a real pixel. The canvas is rendered without smoothing to preserve crisp 16-bit edges.</p>
-</aside>
-</section>
+<body>
+<header>
+  <h1>Pixel Grid</h1>
+  <p>ตารางขนาด 1500 × 1500 พิกเซล · ช่องละ 10 × 10 พิกเซล · 150 × 150 ช่อง</p>
+</header>
+<main>
+  <div class="grid-viewport">
+    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตาราง 150 คูณ 150 ช่อง"></canvas>
+  </div>
+  <div class="info">
+    <span>Canvas: 1500 × 1500 px</span>
+    <span>Cell: 10 × 10 px</span>
+    <span>Total: 22,500 cells</span>
+  </div>
 </main>
 <script>
 (() => {
-  const canvas = document.querySelector("#screen");
+  const canvas = document.getElementById("pixelGrid");
   const ctx = canvas.getContext("2d");
-  const $ = (s) => document.querySelector(s);
-  const palettes = [
-    {skin:"#f2b58e",shade:"#c77e69",hair:"#30243d",hairHi:"#55405e",coat:"#315b87",coatHi:"#568bb4",coatDark:"#203754",scarf:"#e58b4d",gold:"#f4c76b",boot:"#503c43",metal:"#d9e2e8"},
-    {skin:"#e9b18b",shade:"#b96f62",hair:"#392b25",hairHi:"#72503a",coat:"#477b68",coatHi:"#77a88a",coatDark:"#284d49",scarf:"#e9c45f",gold:"#f3d58a",boot:"#55443a",metal:"#dce5d9"},
-    {skin:"#d99a7c",shade:"#a75e59",hair:"#1e243c",hairHi:"#46537b",coat:"#764d91",coatHi:"#ae7bc4",coatDark:"#49345f",scarf:"#df7185",gold:"#f4c76b",boot:"#46364e",metal:"#dce2f0"}
-  ];
-  let palette=0, mode="idle", paused=false, showGrid=false, fps=8, frame=0, last=0, elapsed=0;
-  const px=16;
-  function rect(x,y,w,h,color,dy=0){ctx.fillStyle=color;ctx.fillRect(x*px,(y+dy)*px,w*px,h*px)}
-  function draw(){
-    const p=palettes[palette], phase=frame%4;
-    const moving=mode!=="idle", bob=mode==="idle"?(Math.sin(frame*.12)>0?0:-1):(mode==="run"&&phase%2?-2:0);
-    const stride=moving?(phase<2?1:-1):0;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const bg=ctx.createLinearGradient(0,0,0,1000);bg.addColorStop(0,"#20243a");bg.addColorStop(1,"#101522");ctx.fillStyle=bg;ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#ffffff08";for(let n=0;n<=canvas.width;n+=64){ctx.fillRect(n,0,1,canvas.height);ctx.fillRect(0,n,canvas.width,1)}
-    ctx.fillStyle="#090d18";ctx.fillRect(500,1640,1000,8);ctx.fillStyle="#ffffff18";ctx.fillRect(660,1648,680,3);
-    ctx.fillStyle="#05081299";ctx.fillRect(740,1625,500,36);
-    const x=Math.floor((canvas.width/px-32)/2),y=Math.floor((canvas.height/px-40)/2)+bob;
-
-    // Backpack and sword sheath sit behind the body.
-    rect(x+3,y+12,5,12,p.boot);rect(x+2,y+14,2,7,p.gold);
-    rect(x+1,y+8,2,17,p.metal);rect(x,y+7,4,2,p.gold);rect(x,y+24,4,2,p.gold);
-
-    // Side-profile head: face points right, with one visible eye and nose.
-    rect(x+7,y+1,10,9,p.hair);
-    rect(x+6,y+3,3,7,p.hair);
-    rect(x+8,y+3,8,7,p.skin);
-    rect(x+8,y+7,7,3,p.shade);
-    rect(x+9,y+2,7,3,p.hairHi);
-    rect(x+8,y+2,5,3,p.hair);
-    rect(x+13,y+4,4,2,p.hair);
-    rect(x+15,y+5,2,2,p.skin); // forehead / nose bridge
-    rect(x+16,y+6,2,2,p.skin); // nose points forward
-    rect(x+13,y+5,1,2,"#28202b"); // single side-view eye
-    rect(x+12,y+8,3,1,"#a85f5b");
-    rect(x+7,y+5,2,5,p.hair);
-
-    // Neck and scarf.
-    rect(x+11,y+9,4,4,p.shade);rect(x+12,y+9,2,3,p.skin);
-    rect(x+10,y+11,7,2,p.scarf);rect(x+15,y+12,3,6,p.scarf);rect(x+16,y+17,2,2,p.gold);
-
-    // Side-on torso: narrow silhouette, layered tunic and belt.
-    rect(x+9,y+12,9,14,p.coatDark);
-    rect(x+10,y+12,7,12,p.coat);
-    rect(x+11,y+14,4,8,p.coatHi);
-    rect(x+15,y+14,2,8,p.coatDark);
-    rect(x+10,y+22,8,2,p.boot);rect(x+12,y+22,2,2,p.gold);
-    rect(x+10,y+24,8,2,p.gold);
-
-    // Far arm behind the torso, then the near arm in front.
-    rect(x+7,y+14,3,9,p.shade);rect(x+7,y+15,2,6,p.skin);
-    rect(x+16,y+14,3,8,p.coatDark);
-    rect(x+17,y+16,2,7,p.shade);rect(x+17,y+17,2,5,p.skin);
-    rect(x+17,y+22,2,2,p.gold);
-
-    // Two separated legs with alternating stride for a readable side-view cycle.
-    if(!moving){
-      rect(x+10,y+26,4,6,p.coatDark);rect(x+15,y+26,4,6,p.coatDark);
-      rect(x+9,y+31,5,3,p.boot);rect(x+15,y+31,5,3,p.boot);
-    }else if(stride>0){
-      rect(x+10,y+26,4,5,p.coatDark);rect(x+15,y+26,4,7,p.coatDark);
-      rect(x+9,y+30,6,3,p.boot);rect(x+14,y+32,7,3,p.boot);
-    }else{
-      rect(x+10,y+26,4,7,p.coatDark);rect(x+15,y+26,4,5,p.coatDark);
-      rect(x+8,y+32,7,3,p.boot);rect(x+15,y+30,6,3,p.boot);
-    }
-    rect(x+10,y+31,3,1,"#8d6b62");rect(x+16,y+31,3,1,"#8d6b62");
-
-    // Small shoulder clasp and highlights.
-    rect(x+15,y+13,2,2,p.gold);rect(x+11,y+15,2,2,p.coatHi);
-    rect(x+8,y+4,1,3,"#ffd7b5");
-
-    if(showGrid){ctx.strokeStyle="#ffffff35";ctx.lineWidth=1;for(let n=0;n<=canvas.width;n+=px){ctx.beginPath();ctx.moveTo(n+.5,0);ctx.lineTo(n+.5,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,n+.5);ctx.lineTo(canvas.width,n+.5);ctx.stroke()}}
+  const size = 10;
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.strokeStyle = "#d4d4d4";
+  ctx.lineWidth = 1;
+  for (let pos = 0.5; pos <= 1500; pos += size) {
+    ctx.moveTo(pos, 0);
+    ctx.lineTo(pos, 1500);
+    ctx.moveTo(0, pos);
+    ctx.lineTo(1500, pos);
   }
-  const modes={idle:$("#idle"),walk:$("#walk"),run:$("#run")};
-  Object.entries(modes).forEach(([name,button])=>button.addEventListener("click",()=>{mode=name;frame=0;Object.values(modes).forEach(b=>b.classList.remove("active"));button.classList.add("active");draw()}));
-  $("#pause").addEventListener("click",e=>{paused=!paused;e.currentTarget.textContent=paused?"Play":"Pause"});
-  $("#grid").addEventListener("click",e=>{showGrid=!showGrid;e.currentTarget.textContent="Grid: "+(showGrid?"On":"Off");draw()});
-  $("#speed").addEventListener("input",e=>{fps=Number(e.target.value);$("#speedValue").textContent=fps+" FPS"});
-  palettes.forEach((p,i)=>{const b=document.createElement("button");b.type="button";b.className="swatch"+(!i?" selected":"");b.style.background="linear-gradient(135deg,"+p.coat+","+p.scarf+")";b.title="Palette "+(i+1);b.addEventListener("click",()=>{palette=i;document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("selected"));b.classList.add("selected");draw()});$("#palette").appendChild(b)});
-  function tick(t){if(!last)last=t;elapsed+=Math.min(t-last,100);last=t;if(!paused&&elapsed>=1000/fps){frame++;elapsed=0;draw()}requestAnimationFrame(tick)}
-  draw();requestAnimationFrame(tick);
+  ctx.stroke();
 })();
-</script></body></html>
+</script>
+</body>
+</html>
