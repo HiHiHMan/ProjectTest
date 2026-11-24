@@ -194,23 +194,29 @@ float cloudField(vec2 p,float m,float t){
 
  // Each scene uses a different large-scale silhouette, not a shared puff pattern.
  if(m<.5){
-  // 01 Celestial Garden: a low, connected cumulus bank with broad uneven crowns.
-  float crown=.04+topNoise;
-  float bankTop=-.02+crown;
-  float bank=smoothstep(-.10,.08,bankTop-w.y);
-  float base=smoothstep(-.49,-.20,w.y);
-  density=bank*base;
-  density*=smoothstep(.31,.57,body);
-  density=max(density,.18*smoothstep(-.42,-.20,w.y)*smoothstep(.44,.60,macro));
+  // 01 Horizon frame: dark cloud masses press in from the top and both sides.
+  // The middle stays open; only a thin, broken cloud shelf crosses the horizon.
+  float topCanopy=cloudBelowTop(w.y,.53+topNoise*.65,.18);
+  float leftWall=(1.0-smoothstep(.22,.66,abs(w.x+1.02+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise,-.12);
+  float rightWall=(1.0-smoothstep(.22,.66,abs(w.x-1.02+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise,-.12);
+  float horizonBand=1.0-smoothstep(.018,.095,abs(w.y+.02+(macro-.5)*.09));
+  float broken= smoothstep(.34,.57,body);
+  density=max(topCanopy*.78,max(leftWall,rightWall)*.92)*broken;
+  density=max(density,horizonBand*smoothstep(.38,.62,middle)*.40);
+  float openCenter=(1.0-smoothstep(.48,.94,abs(w.x)))*cloudBelowTop(w.y,.22,-.02);
+  density*=1.0-openCenter*.78;
  }else if(m<1.5){
-  // 02 Sunset Kingdom: two tall cumulonimbus towers with a low connecting shelf.
-  float leftTop=.12+topNoise*1.15;
-  float rightTop=.20+topNoise*1.35;
-  float left=(1.0-smoothstep(.06,.50,abs(w.x+.57)))*cloudBelowTop(w.y,leftTop,-.48);
-  float right=(1.0-smoothstep(.05,.47,abs(w.x-.58)))*cloudBelowTop(w.y,rightTop,-.48);
-  float shelf=smoothstep(-.42,-.18,w.y)*.40;
-  density=max(left,right)*smoothstep(.30,.57,body);
-  density=max(density,shelf*smoothstep(.40,.61,macro));
+  // 02 Cumulus: separate towering white masses with scalloped crowns and a clear sky gap.
+  float leftWidth=.36+.08*macro;
+  float rightWidth=.40+.07*middle;
+  float left=(1.0-smoothstep(.08,leftWidth,abs(w.x+.66+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise*1.1,-.43);
+  float right=(1.0-smoothstep(.08,rightWidth,abs(w.x-.64+(warpY-.5)*.12)))*cloudBelowTop(w.y,.39+topNoise*1.2,-.43);
+  float lowerBank=cloudBelowTop(w.y,-.04+topNoise*.45,-.48)*.42;
+  float puffyCrowns=smoothstep(.30,.59,body);
+  density=max(left,right)*puffyCrowns;
+  density=max(density,lowerBank*smoothstep(.38,.62,macro));
+  float centralGap=(1.0-smoothstep(.20,.48,abs(w.x)))*cloudBelowTop(w.y,.29,-.03);
+  density*=1.0-centralGap*.88;
  }else if(m<2.5){
   // 03 Legacy vertical cloudfall: tall soft curtains and a dense upper canopy.
   float canopy=smoothstep(-.05,.22,.24+topNoise-w.y);
@@ -233,33 +239,43 @@ float cloudField(vec2 p,float m,float t){
   float clouds=cloudBelowTop(w.y,groupTop,-.38)*smoothstep(.28,.55,body);
   density=clouds*max(groups*.95,central*.36);
  }else if(m<5.5){
-  // 06 Moon Shrine: heavy stratocumulus layers, low and overlapping.
-  float deckA=smoothstep(-.05,.13,-w.y+(macro-.5)*.20);
-  float deckB=smoothstep(-.22,-.02,-w.y+(middle-.5)*.16);
-  float gaps=smoothstep(.34,.60,body);
-  density=max(deckA*.72,deckB*.48)*gaps;
+  // 06 Night clouds: low, massive overlapping layers with very restrained surface detail.
+  float lowerShelf=cloudBelowTop(w.y,-.02+topNoise*.30,-.52);
+  float middleShelf=cloudBelowTop(w.y,.18+(macro-.5)*.20,-.30);
+  float upperShadow=cloudBelowTop(w.y,.34+(middle-.5)*.15,.10);
+  density=max(lowerShelf*.82,middleShelf*.68);
+  density=max(density,upperShadow*.42);
+  density*=.78+smoothstep(.35,.62,macro)*.22;
  }else if(m<6.5){
-  // 07 Astral Nebula: one enormous storm tower with a wide anvil-like shoulder.
-  float towerWidth=.37+.10*macro;
-  float tower=(1.0-smoothstep(.08,towerWidth,abs(w.x-.08+(warpX-.5)*.16)));
-  float towerTop=.43+topNoise*1.6;
-  float rising=cloudBelowTop(w.y,towerTop,-.49);
-  float anvil=(1.0-smoothstep(.25,.76,abs(w.x+.02)))*cloudBelowTop(w.y,.13+topNoise,.08);
-  density=max(tower*rising*.88,anvil*.62)*smoothstep(.28,.57,body);
+  // 07 Cumulonimbus: a towering central column, cauliflower crowns and a broad anvil top.
+  float towerWidth=.30+.12*macro;
+  float tower=(1.0-smoothstep(.08,towerWidth,abs(w.x-.02+(warpX-.5)*.12)));
+  float towerCore=cloudBelowTop(w.y,.48+topNoise*1.45,-.48);
+  float shoulder=(1.0-smoothstep(.30,.82,abs(w.x+.04)))*cloudBelowTop(w.y,.29+topNoise,.18);
+  float sideBillows=fbm(w*vec2(5.2,7.4)+vec2(2.0,-drift));
+  float crownBreak=smoothstep(.36,.63,sideBillows);
+  density=max(tower*towerCore*(.78+.22*crownBreak),shoulder*.72);
+  density=max(density,cloudBelowTop(w.y,-.20+topNoise*.25,-.50)*.30);
+  density*=smoothstep(.29,.57,body);
  }else if(m<7.5){
-  // 08 Stardust Passage: long diagonal cirrus bands with fine feathered edges.
-  float flow=fbm(vec2(w.x*1.15+w.y*1.6,w.y*6.5-drift*2.0));
-  float laneA=.22*w.x+.13*sin(w.x*2.4+drift*1.6);
-  float laneB=-.17*w.x-.17+.06*sin(w.x*3.0-drift);
-  float aBand=1.0-smoothstep(.025,.14,abs(w.y-laneA+(flow-.5)*.12));
-  float bBand=1.0-smoothstep(.02,.10,abs(w.y-laneB+(middle-.5)*.09));
-  density=max(aBand*smoothstep(.34,.60,flow),bBand*.42);
+  // 08 Storm clouds: dense slanted masses dragged sideways by strong wind.
+  float stormWarp=fbm(w*vec2(2.0,3.0)+vec2(4.0,-drift));
+  vec2 stormP=vec2(w.x+w.y*.52+(stormWarp-.5)*.28,w.y);
+  float stormBody=fbm(stormP*vec2(2.0,3.4)+vec2(3.0,drift*.25));
+  float stormBillow=fbm(stormP*vec2(5.0,7.0)+vec2(-2.0,-drift*.5));
+  float diagonalTop=.30-.34*stormP.x+(stormBody-.5)*.24;
+  float slantedMass=cloudBelowTop(stormP.y,diagonalTop,-.48);
+  float darkCore=smoothstep(.32,.58,stormBody*.62+stormBillow*.38);
+  float windShelf=1.0-smoothstep(.02,.15,abs(stormP.y-(.06-.28*stormP.x)+(stormBillow-.5)*.10));
+  density=max(slantedMass*darkCore,windShelf*.34);
  }else if(m<8.5){
-  // 09 Ethereal Sea: one broad, continuous cloud ocean with a rolling upper boundary.
-  float seaTop=-.01+topNoise*.95;
-  float ocean=smoothstep(-.12,.10,seaTop-w.y);
-  float under=smoothstep(-.50,-.28,w.y);
-  density=ocean*under*smoothstep(.30,.55,body);
+  // 09 Continuous cloud formation: broad connected base, uneven rising crowns and a front layer.
+  float base=cloudBelowTop(w.y,.02+topNoise*.55,-.52);
+  float crownField=fbm(w*vec2(2.8,4.5)+vec2(1.0,-drift*.3));
+  float risingCrowns=smoothstep(.34,.63,crownField);
+  float frontLayer=cloudBelowTop(w.y,-.18+(middle-.5)*.12,-.55)*.68;
+  density=max(base*(.70+.30*risingCrowns),frontLayer);
+  density*=smoothstep(.29,.56,body);
  }else if(m<9.5){
   density=0.0; // 10 Cloud Reverie is rendered by its separate illustrated composition.
  }else if(m<10.5){
