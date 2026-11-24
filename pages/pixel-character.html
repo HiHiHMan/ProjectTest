@@ -35,7 +35,7 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
 </head>
 <body><main class="page">
 <div class="top"><a href="../index.html">← All experiments</a><span class="eyebrow">PIXEL ART / CHARACTER ANIMATION</span></div>
-<header><p class="eyebrow">Retro sprite workshop</p><h1>Pixel Character</h1><p class="intro">A tiny 16-bit adventurer, built pixel by pixel. Watch the character idle, walk and turn inside a 1000 × 1000 pixel workspace.</p></header>
+<header><p class="eyebrow">Retro sprite workshop</p><h1>Pixel Character</h1><p class="intro">A 16-bit adventurer shown in a true side view, facing right. Watch the character idle, walk and run inside a 1000 × 1000 pixel workspace.</p></header>
 <section class="workspace">
 <div class="stage">
 <div class="stage-head"><span>SPRITE VIEWPORT</span><span>1000 × 1000 PX</span></div>
@@ -57,202 +57,88 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
 (() => {
   const canvas = document.querySelector("#screen");
   const ctx = canvas.getContext("2d");
-  const $ = (selector) => document.querySelector(selector);
-
+  const $ = (s) => document.querySelector(s);
   const palettes = [
-    { skin:"#f2b58e", skinShade:"#c77e69", hair:"#30243d", hairLight:"#55405e", coat:"#315b87", coatLight:"#568bb4", coatDark:"#203754", scarf:"#e58b4d", gold:"#f4c76b", boot:"#503c43", metal:"#d9e2e8" },
-    { skin:"#e9b18b", skinShade:"#b96f62", hair:"#392b25", hairLight:"#72503a", coat:"#477b68", coatLight:"#77a88a", coatDark:"#284d49", scarf:"#e9c45f", gold:"#f3d58a", boot:"#55443a", metal:"#dce5d9" },
-    { skin:"#d99a7c", skinShade:"#a75e59", hair:"#1e243c", hairLight:"#46537b", coat:"#764d91", coatLight:"#ae7bc4", coatDark:"#49345f", scarf:"#df7185", gold:"#f4c76b", boot:"#46364e", metal:"#dce2f0" }
+    {skin:"#f2b58e",shade:"#c77e69",hair:"#30243d",hairHi:"#55405e",coat:"#315b87",coatHi:"#568bb4",coatDark:"#203754",scarf:"#e58b4d",gold:"#f4c76b",boot:"#503c43",metal:"#d9e2e8"},
+    {skin:"#e9b18b",shade:"#b96f62",hair:"#392b25",hairHi:"#72503a",coat:"#477b68",coatHi:"#77a88a",coatDark:"#284d49",scarf:"#e9c45f",gold:"#f3d58a",boot:"#55443a",metal:"#dce5d9"},
+    {skin:"#d99a7c",shade:"#a75e59",hair:"#1e243c",hairHi:"#46537b",coat:"#764d91",coatHi:"#ae7bc4",coatDark:"#49345f",scarf:"#df7185",gold:"#f4c76b",boot:"#46364e",metal:"#dce2f0"}
   ];
+  let palette=0, mode="idle", paused=false, showGrid=false, fps=8, frame=0, last=0, elapsed=0;
+  const px=16;
+  function rect(x,y,w,h,color,dy=0){ctx.fillStyle=color;ctx.fillRect(x*px,(y+dy)*px,w*px,h*px)}
+  function draw(){
+    const p=palettes[palette], phase=frame%4;
+    const moving=mode!=="idle", bob=mode==="idle"?(Math.sin(frame*.12)>0?0:-1):(mode==="run"&&phase%2?-2:0);
+    const stride=moving?(phase<2?1:-1):0;
+    ctx.clearRect(0,0,1000,1000);
+    const bg=ctx.createLinearGradient(0,0,0,1000);bg.addColorStop(0,"#20243a");bg.addColorStop(1,"#101522");ctx.fillStyle=bg;ctx.fillRect(0,0,1000,1000);
+    ctx.fillStyle="#ffffff08";for(let n=0;n<=1000;n+=64){ctx.fillRect(n,0,1,1000);ctx.fillRect(0,n,1000,1)}
+    ctx.fillStyle="#090d18";ctx.fillRect(250,820,500,8);ctx.fillStyle="#ffffff18";ctx.fillRect(330,828,340,3);
+    ctx.fillStyle="#05081299";ctx.fillRect(370,805,250,18);
+    const x=13,y=5+bob;
 
-  let paletteIndex = 0;
-  let animation = "idle";
-  let paused = false;
-  let showGrid = false;
-  let fps = 8;
-  let frame = 0;
-  let previousTime = 0;
-  let accumulator = 0;
+    // Backpack and sword sheath sit behind the body.
+    rect(x+3,y+12,5,12,p.boot);rect(x+2,y+14,2,7,p.gold);
+    rect(x+1,y+8,2,17,p.metal);rect(x,y+7,4,2,p.gold);rect(x,y+24,4,2,p.gold);
 
-  const pixel = 16;
-  const originX = 0;
-  const originY = 0;
+    // Side-profile head: face points right, with one visible eye and nose.
+    rect(x+7,y+1,10,9,p.hair);
+    rect(x+6,y+3,3,7,p.hair);
+    rect(x+8,y+3,8,7,p.skin);
+    rect(x+8,y+7,7,3,p.shade);
+    rect(x+9,y+2,7,3,p.hairHi);
+    rect(x+8,y+2,5,3,p.hair);
+    rect(x+13,y+4,4,2,p.hair);
+    rect(x+15,y+5,2,2,p.skin); // forehead / nose bridge
+    rect(x+16,y+6,2,2,p.skin); // nose points forward
+    rect(x+13,y+5,1,2,"#28202b"); // single side-view eye
+    rect(x+12,y+8,3,1,"#a85f5b");
+    rect(x+7,y+5,2,5,p.hair);
 
-  function block(x, y, w, h, color, offsetY = 0) {
-    ctx.fillStyle = color;
-    ctx.fillRect(originX + x * pixel, originY + (y + offsetY) * pixel, w * pixel, h * pixel);
+    // Neck and scarf.
+    rect(x+11,y+9,4,4,p.shade);rect(x+12,y+9,2,3,p.skin);
+    rect(x+10,y+11,7,2,p.scarf);rect(x+15,y+12,3,6,p.scarf);rect(x+16,y+17,2,2,p.gold);
+
+    // Side-on torso: narrow silhouette, layered tunic and belt.
+    rect(x+9,y+12,9,14,p.coatDark);
+    rect(x+10,y+12,7,12,p.coat);
+    rect(x+11,y+14,4,8,p.coatHi);
+    rect(x+15,y+14,2,8,p.coatDark);
+    rect(x+10,y+22,8,2,p.boot);rect(x+12,y+22,2,2,p.gold);
+    rect(x+10,y+24,8,2,p.gold);
+
+    // Far arm behind the torso, then the near arm in front.
+    rect(x+7,y+14,3,9,p.shade);rect(x+7,y+15,2,6,p.skin);
+    rect(x+16,y+14,3,8,p.coatDark);
+    rect(x+17,y+16,2,7,p.shade);rect(x+17,y+17,2,5,p.skin);
+    rect(x+17,y+22,2,2,p.gold);
+
+    // Two separated legs with alternating stride for a readable side-view cycle.
+    if(!moving){
+      rect(x+10,y+26,4,6,p.coatDark);rect(x+15,y+26,4,6,p.coatDark);
+      rect(x+9,y+31,5,3,p.boot);rect(x+15,y+31,5,3,p.boot);
+    }else if(stride>0){
+      rect(x+10,y+26,4,5,p.coatDark);rect(x+15,y+26,4,7,p.coatDark);
+      rect(x+9,y+30,6,3,p.boot);rect(x+14,y+32,7,3,p.boot);
+    }else{
+      rect(x+10,y+26,4,7,p.coatDark);rect(x+15,y+26,4,5,p.coatDark);
+      rect(x+8,y+32,7,3,p.boot);rect(x+15,y+30,6,3,p.boot);
+    }
+    rect(x+10,y+31,3,1,"#8d6b62");rect(x+16,y+31,3,1,"#8d6b62");
+
+    // Small shoulder clasp and highlights.
+    rect(x+15,y+13,2,2,p.gold);rect(x+11,y+15,2,2,p.coatHi);
+    rect(x+8,y+4,1,3,"#ffd7b5");
+
+    if(showGrid){ctx.strokeStyle="#ffffff22";ctx.lineWidth=1;for(let n=0;n<=1000;n+=px){ctx.beginPath();ctx.moveTo(n+.5,0);ctx.lineTo(n+.5,1000);ctx.stroke();ctx.beginPath();ctx.moveTo(0,n+.5);ctx.lineTo(1000,n+.5);ctx.stroke()}}
   }
-
-  function drawCharacter() {
-    const p = palettes[paletteIndex];
-    const bob = animation === "idle" ? Math.round(Math.sin(frame * 0.12) * 0.25) : (frame % 2 ? -1 : 1);
-    const step = animation === "idle" ? 0 : (frame % 2 ? 2 : -2);
-    const x = 9;
-    const y = 4 + (animation === "idle" ? bob : 0);
-
-    ctx.clearRect(0, 0, 1000, 1000);
-    const background = ctx.createLinearGradient(0, 0, 0, 1000);
-    background.addColorStop(0, "#20243a");
-    background.addColorStop(1, "#101522");
-    ctx.fillStyle = background;
-    ctx.fillRect(0, 0, 1000, 1000);
-
-    // Subtle floor and backdrop marks
-    ctx.fillStyle = "#ffffff08";
-    for (let n = 0; n <= 1000; n += 64) {
-      ctx.fillRect(n, 0, 1, 1000);
-      ctx.fillRect(0, n, 1000, 1);
-    }
-    ctx.fillStyle = "#090d18";
-    ctx.fillRect(250, 820, 500, 8);
-    ctx.fillStyle = "#ffffff18";
-    ctx.fillRect(330, 828, 340, 3);
-
-    // Shadow
-    ctx.fillStyle = "#05081299";
-    ctx.fillRect(365, 805, 270, 18);
-
-    // Back hair and head
-    block(x + 5, y + 1, 12, 10, p.hair);
-    block(x + 4, y + 4, 2, 6, p.hair);
-    block(x + 16, y + 4, 2, 6, p.hair);
-    block(x + 6, y + 3, 10, 8, p.skin);
-    block(x + 6, y + 8, 10, 2, p.skinShade);
-    block(x + 7, y + 2, 9, 3, p.hairLight);
-    block(x + 5, y + 3, 3, 3, p.hair);
-    block(x + 14, y + 3, 3, 3, p.hair);
-    block(x + 8, y + 5, 2, 2, "#28202b");
-    block(x + 13, y + 5, 2, 2, "#28202b");
-    block(x + 10, y + 8, 3, 1, "#a85f5b");
-    // Hair fringe
-    block(x + 6, y + 2, 4, 2, p.hair);
-    block(x + 10, y + 3, 3, 1, p.hair);
-    block(x + 14, y + 2, 3, 3, p.hair);
-
-    // Neck
-    block(x + 9, y + 10, 5, 3, p.skinShade);
-    block(x + 10, y + 10, 3, 2, p.skin);
-
-    // Arms (alternate while walking/running)
-    const armSwing = animation === "idle" ? 0 : step;
-    block(x + 3, y + 13 + Math.max(0, armSwing), 3, 10, p.skinShade);
-    block(x + 4, y + 14 + Math.max(0, armSwing), 2, 7, p.skin);
-    block(x + 17, y + 13 + Math.max(0, -armSwing), 3, 10, p.skinShade);
-    block(x + 17, y + 14 + Math.max(0, -armSwing), 2, 7, p.skin);
-
-    // Tunic body
-    block(x + 7, y + 12, 10, 13, p.coatDark);
-    block(x + 8, y + 12, 8, 12, p.coat);
-    block(x + 9, y + 13, 5, 8, p.coatLight);
-    block(x + 14, y + 14, 2, 8, p.coatDark);
-    block(x + 8, y + 23, 8, 2, p.gold);
-    // Scarf
-    block(x + 8, y + 11, 9, 2, p.scarf);
-    block(x + 15, y + 12, 3, 7, p.scarf);
-    block(x + 15, y + 18, 2, 2, p.gold);
-    // Belt and buckle
-    block(x + 8, y + 21, 9, 2, p.boot);
-    block(x + 11, y + 21, 3, 2, p.gold);
-
-    // Legs and boots: separate positions create a readable walk cycle
-    if (step >= 0) {
-      block(x + 8, y + 25, 4, 6, p.coatDark);
-      block(x + 13, y + 25, 4, 6, p.coatDark);
-      block(x + 7, y + 30, 5, 3, p.boot);
-      block(x + 14, y + 30, 5, 3, p.boot);
-    } else {
-      block(x + 7, y + 25, 4, 6, p.coatDark);
-      block(x + 14, y + 25, 4, 6, p.coatDark);
-      block(x + 6, y + 30, 5, 3, p.boot);
-      block(x + 13, y + 30, 5, 3, p.boot);
-    }
-    block(x + 8, y + 31, 4, 1, "#8d6b62");
-    block(x + 15, y + 31, 4, 1, "#8d6b62");
-
-    // Sword on the character's right side
-    block(x + 21, y + 13, 2, 15, p.metal);
-    block(x + 22, y + 12, 1, 2, "#ffffff");
-    block(x + 20, y + 27, 4, 2, p.gold);
-    block(x + 21, y + 29, 2, 4, p.boot);
-    block(x + 20, y + 32, 4, 1, p.gold);
-
-    // Tiny highlights make the sprite read as 16-bit pixel art
-    block(x + 8, y + 14, 2, 2, p.coatLight);
-    block(x + 14, y + 17, 1, 3, p.coatLight);
-    block(x + 7, y + 6, 1, 2, "#ffd7b5");
-
-    if (showGrid) {
-      ctx.save();
-      ctx.strokeStyle = "#ffffff22";
-      ctx.lineWidth = 1;
-      for (let n = 0; n <= 1000; n += pixel) {
-        ctx.beginPath(); ctx.moveTo(n + .5, 0); ctx.lineTo(n + .5, 1000); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(0, n + .5); ctx.lineTo(1000, n + .5); ctx.stroke();
-      }
-      ctx.restore();
-    }
-  }
-
-  const animationButtons = {
-    idle: $("#idle"),
-    walk: $("#walk"),
-    run: $("#run")
-  };
-
-  Object.entries(animationButtons).forEach(([name, button]) => {
-    button.addEventListener("click", () => {
-      animation = name;
-      frame = 0;
-      Object.values(animationButtons).forEach(item => item.classList.remove("active"));
-      button.classList.add("active");
-      drawCharacter();
-    });
-  });
-
-  $("#pause").addEventListener("click", event => {
-    paused = !paused;
-    event.currentTarget.textContent = paused ? "Play" : "Pause";
-  });
-
-  $("#grid").addEventListener("click", event => {
-    showGrid = !showGrid;
-    event.currentTarget.textContent = "Grid: " + (showGrid ? "On" : "Off");
-    drawCharacter();
-  });
-
-  $("#speed").addEventListener("input", event => {
-    fps = Number(event.target.value);
-    $("#speedValue").textContent = fps + " FPS";
-  });
-
-  palettes.forEach((palette, index) => {
-    const swatch = document.createElement("button");
-    swatch.type = "button";
-    swatch.className = "swatch" + (index === 0 ? " selected" : "");
-    swatch.style.background = "linear-gradient(135deg," + palette.coat + "," + palette.scarf + ")";
-    swatch.title = "Palette " + (index + 1);
-    swatch.addEventListener("click", () => {
-      paletteIndex = index;
-      document.querySelectorAll(".swatch").forEach(item => item.classList.remove("selected"));
-      swatch.classList.add("selected");
-      drawCharacter();
-    });
-    $("#palette").appendChild(swatch);
-  });
-
-  function animate(time) {
-    if (!previousTime) previousTime = time;
-    accumulator += Math.min(time - previousTime, 100);
-    previousTime = time;
-    if (!paused && accumulator >= 1000 / fps) {
-      frame++;
-      accumulator = 0;
-      drawCharacter();
-    }
-    requestAnimationFrame(animate);
-  }
-
-  drawCharacter();
-  requestAnimationFrame(animate);
+  const modes={idle:$("#idle"),walk:$("#walk"),run:$("#run")};
+  Object.entries(modes).forEach(([name,button])=>button.addEventListener("click",()=>{mode=name;frame=0;Object.values(modes).forEach(b=>b.classList.remove("active"));button.classList.add("active");draw()}));
+  $("#pause").addEventListener("click",e=>{paused=!paused;e.currentTarget.textContent=paused?"Play":"Pause"});
+  $("#grid").addEventListener("click",e=>{showGrid=!showGrid;e.currentTarget.textContent="Grid: "+(showGrid?"On":"Off");draw()});
+  $("#speed").addEventListener("input",e=>{fps=Number(e.target.value);$("#speedValue").textContent=fps+" FPS"});
+  palettes.forEach((p,i)=>{const b=document.createElement("button");b.type="button";b.className="swatch"+(!i?" selected":"");b.style.background="linear-gradient(135deg,"+p.coat+","+p.scarf+")";b.title="Palette "+(i+1);b.addEventListener("click",()=>{palette=i;document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("selected"));b.classList.add("selected");draw()});$("#palette").appendChild(b)});
+  function tick(t){if(!last)last=t;elapsed+=Math.min(t-last,100);last=t;if(!paused&&elapsed>=1000/fps){frame++;elapsed=0;draw()}requestAnimationFrame(tick)}
+  draw();requestAnimationFrame(tick);
 })();
 </script></body></html>
