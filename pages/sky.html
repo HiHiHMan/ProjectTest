@@ -172,6 +172,11 @@ float silhouette(vec2 p,float m,float t){
  }
  return d;
 }
+float cloudBelowTop(float y,float top,float floorY){
+ float floorMask=smoothstep(floorY,floorY+.16,y);
+ float topMask=1.0-smoothstep(top-.07,top+.07,y);
+ return floorMask*topMask;
+}
 float cloudField(vec2 p,float m,float t){
  // Normalize the field so every card keeps its cloud proportions on wide and narrow cards.
  vec2 q=vec2(p.x/1.18,p.y);
@@ -201,8 +206,8 @@ float cloudField(vec2 p,float m,float t){
   // 02 Sunset Kingdom: two tall cumulonimbus towers with a low connecting shelf.
   float leftTop=.12+topNoise*1.15;
   float rightTop=.20+topNoise*1.35;
-  float left=(1.0-smoothstep(.06,.50,abs(w.x+.57)))*smoothstep(-.48,leftTop-w.y);
-  float right=(1.0-smoothstep(.05,.47,abs(w.x-.58)))*smoothstep(-.48,rightTop-w.y);
+  float left=(1.0-smoothstep(.06,.50,abs(w.x+.57)))*cloudBelowTop(w.y,leftTop,-.48);
+  float right=(1.0-smoothstep(.05,.47,abs(w.x-.58)))*cloudBelowTop(w.y,rightTop,-.48);
   float shelf=smoothstep(-.42,-.18,w.y)*.40;
   density=max(left,right)*smoothstep(.30,.57,body);
   density=max(density,shelf*smoothstep(.40,.61,macro));
@@ -225,7 +230,7 @@ float cloudField(vec2 p,float m,float t){
   float groups=max((1.0-smoothstep(.05,.36,abs(w.x+.62))),(1.0-smoothstep(.05,.34,abs(w.x-.54))));
   float central=(1.0-smoothstep(.12,.42,abs(w.x+.02)));
   float groupTop=.02+topNoise*1.25;
-  float clouds=smoothstep(-.38,groupTop-w.y)*smoothstep(.28,.55,body);
+  float clouds=cloudBelowTop(w.y,groupTop,-.38)*smoothstep(.28,.55,body);
   density=clouds*max(groups*.95,central*.36);
  }else if(m<5.5){
   // 06 Moon Shrine: heavy stratocumulus layers, low and overlapping.
@@ -236,10 +241,10 @@ float cloudField(vec2 p,float m,float t){
  }else if(m<6.5){
   // 07 Astral Nebula: one enormous storm tower with a wide anvil-like shoulder.
   float towerWidth=.37+.10*macro;
-  float tower=smoothstep(towerWidth,.08,abs(w.x-.08+(warpX-.5)*.16));
+  float tower=(1.0-smoothstep(.08,towerWidth,abs(w.x-.08+(warpX-.5)*.16)));
   float towerTop=.43+topNoise*1.6;
-  float rising=smoothstep(-.49,towerTop-w.y);
-  float anvil=(1.0-smoothstep(.25,.76,abs(w.x+.02)))*smoothstep(.08,.25,.13+topNoise-w.y);
+  float rising=cloudBelowTop(w.y,towerTop,-.49);
+  float anvil=(1.0-smoothstep(.25,.76,abs(w.x+.02)))*cloudBelowTop(w.y,.13+topNoise,.08);
   density=max(tower*rising*.88,anvil*.62)*smoothstep(.28,.57,body);
  }else if(m<7.5){
   // 08 Stardust Passage: long diagonal cirrus bands with fine feathered edges.
@@ -259,8 +264,8 @@ float cloudField(vec2 p,float m,float t){
   density=0.0; // 10 Cloud Reverie is rendered by its separate illustrated composition.
  }else if(m<10.5){
   // 11 Amber Highlands: two massive sunlit towers, joined by a thick cloud base.
-  float left=(1.0-smoothstep(.08,.52,abs(w.x+.57)))*smoothstep(-.48,.30+topNoise-w.y);
-  float right=(1.0-smoothstep(.08,.55,abs(w.x-.48)))*smoothstep(-.48,.38+topNoise*1.3-w.y);
+  float left=(1.0-smoothstep(.08,.52,abs(w.x+.57)))*cloudBelowTop(w.y,.30+topNoise,-.48);
+  float right=(1.0-smoothstep(.08,.55,abs(w.x-.48)))*cloudBelowTop(w.y,.38+topNoise*1.3,-.48);
   float base=smoothstep(-.47,-.16,w.y)*.72;
   density=max(left,right)*smoothstep(.29,.57,body);
   density=max(density,base*smoothstep(.38,.60,macro));
@@ -268,15 +273,15 @@ float cloudField(vec2 p,float m,float t){
   // 12 Rosewater Haven: wide banks curl inward while leaving a luminous central opening.
   float side=smoothstep(.08,.42,abs(w.x));
   float top=.02+topNoise*.9;
-  float bank=smoothstep(-.44,top-w.y)*smoothstep(.30,.58,body);
+  float bank=cloudBelowTop(w.y,top,-.44)*smoothstep(.30,.58,body);
   float opening=smoothstep(.08,.34,abs(w.x))*smoothstep(.05,.28,w.y);
   density=bank*mix(.36,1.0,side);
   density*=1.0-opening*.78;
  }else if(m<12.5){
   // 13 Azure Reverie: several towering cumulus columns with deep valleys between them.
-  float left=(1.0-smoothstep(.07,.43,abs(w.x+.62)))*smoothstep(-.48,.27+topNoise-w.y);
-  float center=(1.0-smoothstep(.06,.35,abs(w.x-.02)))*smoothstep(-.48,.38+topNoise*1.2-w.y);
-  float right=(1.0-smoothstep(.07,.42,abs(w.x-.61)))*smoothstep(-.48,.23+topNoise-w.y);
+  float left=(1.0-smoothstep(.07,.43,abs(w.x+.62)))*cloudBelowTop(w.y,.27+topNoise,-.48);
+  float center=(1.0-smoothstep(.06,.35,abs(w.x-.02)))*cloudBelowTop(w.y,.38+topNoise*1.2,-.48);
+  float right=(1.0-smoothstep(.07,.42,abs(w.x-.61)))*cloudBelowTop(w.y,.23+topNoise,-.48);
   density=max(left,max(center,right)) * smoothstep(.30,.58,body);
  }else{
   // 14 Celestial Woolscape: dense connected fleece masses, with broad lobes and soft wool crowns.
