@@ -178,14 +178,14 @@ float cloudField(vec2 p,float m,float t){
  // Celestial Garden and its three companions share the same organic cloud morphology.
  if(m<.5 || (m>9.5 && m<12.5)){
   float variant=clamp(m-10.0,0.0,2.0);
-  vec2 organicP=q*vec2(2.0+variant*.10,3.1-variant*.08);
+  vec2 organicP=q*vec2(1.72+variant*.08,2.72-variant*.06);
   organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
   organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
-  float organicBase=fbm(organicP*vec2(2.3,3.8)+vec2(1.0+variant*4.1,t*.003));
-  float organicBillow=fbm(organicP*vec2(5.0,6.4)+vec2(7.0-variant*3.2,-t*.004));
-  float organicWisps=fbm(organicP*vec2(1.15,8.5)+vec2(-3.0+variant*2.3,t*.002));
-  float naturalMass=organicBase*.55+organicBillow*.29+organicWisps*.16;
-  return smoothstep(.405,.625,naturalMass)*.94;
+  float organicBase=fbm(organicP*vec2(1.75,2.8)+vec2(1.0+variant*4.1,t*.003));
+  float organicBillow=fbm(organicP*vec2(4.6,5.8)+vec2(7.0-variant*3.2,-t*.004));
+  float organicWisps=fbm(organicP*vec2(1.0,7.2)+vec2(-3.0+variant*2.3,t*.002));
+  float naturalMass=organicBase*.66+organicBillow*.26+organicWisps*.08;
+  return smoothstep(.375,.595,naturalMass)*.98;
  }
  float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
  vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
@@ -348,10 +348,13 @@ void main(){
 
  // Three additional depth planes create visible overlap instead of one flat cloud sheet.
  // Distant clouds are wider, softer and cooler; foreground billows are larger and brighter.
- vec2 farP=cloudP*.66+vec2(-.18,.13)+vec2(-t*.004,t*.002);
- vec2 nearP=cloudP*1.38+vec2(.12,-.10)+vec2(t*.009,-t*.005);
- float farDensity=cloudField(farP,mode,t*.68)*.58;
- float nearDensity=cloudField(nearP,mode,t*1.22)*.48;
+ vec2 farP=cloudP*.62+vec2(-.20,.17)+vec2(-t*.004,t*.002);
+ vec2 midP=cloudP*.88+vec2(.16,-.035)+vec2(t*.003,-t*.002);
+ vec2 nearP=cloudP*1.42+vec2(.13,-.12)+vec2(t*.009,-t*.005);
+ float farDensity=cloudField(farP,mode,t*.68)*.66;
+ float midDensity=0.0;
+ if(mode<.5 || (mode>9.5 && mode<12.5)) midDensity=cloudField(midP,mode,t*.88)*.58;
+ float nearDensity=cloudField(nearP,mode,t*1.22)*.58;
  if(mode<.5){
   float farWarp=fbm(uv*vec2(7.0,10.0)+vec2(2.0+t*.004,1.0));
   float farGapEdge=length((uv-vec2(.505,.615))/vec2(.155,.19))+(farWarp-.5)*.20;
@@ -362,19 +365,23 @@ void main(){
   farDensity*=1.0-farSunGap;
   nearDensity*=1.0-nearSunGap;
  }
- float farAlpha=smoothstep(.035,.39,farDensity);
- float nearAlpha=smoothstep(.025,.30,nearDensity);
+ float farAlpha=smoothstep(.025,.34,farDensity);
+ float midAlpha=smoothstep(.025,.33,midDensity);
+ float nearAlpha=smoothstep(.018,.27,nearDensity);
 
- vec3 farShade=mix(cloudShade*.78,cloudLit*.76,.38+lightFacing*.24+billowLight*.12);
- vec3 nearShade=mix(cloudShade*1.12,cloudLit*1.06,.22+lightFacing*.28+billowLight*.22);
- farShade=mix(farShade,accent,.13);
- nearShade=mix(nearShade,cloudShade*.72,cavityShadow*.16);
+ vec3 farShade=mix(cloudShade*.76,cloudLit*.78,.34+lightFacing*.22+billowLight*.12);
+ vec3 midShade=mix(cloudShade*.92,cloudLit*.91,.25+lightFacing*.30+billowLight*.20);
+ vec3 nearShade=mix(cloudShade*1.12,cloudLit*1.08,.20+lightFacing*.30+billowLight*.25);
+ farShade=mix(farShade,accent,.14);
+ midShade=mix(midShade,accent,.08);
+ nearShade=mix(nearShade,cloudShade*.70,cavityShadow*.18);
  nearShade+=mix(accent,cloudLit,.55)*(1.0-smoothstep(.02,.22,nearDensity))*nearDensity*.15;
 
- // Composite back to front: distant veil -> main billows -> foreground cloud clusters.
- vec3 color=mix(sky,farShade,farAlpha*.76);
- color=mix(color,shaded,cloudAlpha*.92);
- color=mix(color,nearShade,nearAlpha*.88);
+ // Four depth planes: distant cloud bank -> middle billows -> main mass -> close foreground puffs.
+ vec3 color=mix(sky,farShade,farAlpha*.80);
+ color=mix(color,midShade,midAlpha*.84);
+ color=mix(color,shaded,cloudAlpha*.94);
+ color=mix(color,nearShade,nearAlpha*.90);
 
  // Scenic foreground and focal elements unique to selected cards.
  if(mode<.5){
