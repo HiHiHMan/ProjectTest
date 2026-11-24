@@ -19,6 +19,9 @@ h1{margin:0;font-size:clamp(42px,7vw,78px);letter-spacing:-.075em;line-height:.9
 .sky-card:hover{transform:translateY(-4px);border-color:#c9a7ff99;box-shadow:0 18px 55px #6d42c955}
 .sky-art{height:clamp(190px,19vw,300px);position:relative;overflow:hidden;isolation:isolate;background:#0b1728}
 .sky-art canvas{display:block;width:100%;height:100%}
+.sky-moon{position:absolute;z-index:2;width:clamp(34px,4vw,52px);aspect-ratio:1;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 34% 30%,#fff9df 0,#f8e9bd 48%,#e9d4a5 78%,#c8b58e 100%);box-shadow:0 0 12px 4px #f6e5b855,0 0 34px 12px #f5dfaa38,0 0 70px 24px #f2dca51c}
+.sky-moon--parted{left:50%;top:23%;transform:translate(-50%,-50%)}
+.sky-moon--night{left:76%;top:24%;transform:translate(-50%,-50%);width:clamp(38px,4.5vw,58px)}
 .sky-art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(145deg,#ffffff12,transparent 42%,#0003)}
 .info{padding:16px 18px 19px}.info small{color:#8ea9c5;font-size:9px;letter-spacing:.18em;text-transform:uppercase}.info h3{margin:7px 0 6px;font-size:16px}.info p{margin:0;color:#999fac;font-size:11px;line-height:1.6}
 footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#697384;font-size:11px}
@@ -33,11 +36,11 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 <div class="section-head"><h2>Nine Different Sky Scenes</h2><span>09 CLOUD FORMS</span></div>
 <section class="sky-grid">
 <article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas><span class="sky-moon sky-moon--parted" aria-hidden="true"></span></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Waterfall-like flowing clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>Deep, weighty cloud puffs layered into a dramatic formation.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Dreamveil</h3><p>Small, soft cotton puffs in delicate pastel layers.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Mint-lit fluffy clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Sanctuary</h3><p>Rounded cloud clusters with cool mint light and soft edges.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>Quiet, pillowy cloud masses under cool silver moonlight.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas><span class="sky-moon sky-moon--night" aria-hidden="true"></span></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>Quiet, pillowy cloud masses under cool silver moonlight.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Violet wool-like clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Astral Nebula</h3><p>Large overlapping wool-like billows with a violet inner glow.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="Rows of soft cloud puffs"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Stardust Passage</h3><p>Long, low rows of soft puffs with airy gaps between them.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cotton-soft cloud bank"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>A broad, continuous bank of cotton-soft cloud formations.</p></div></article>
@@ -259,11 +262,6 @@ void main(){
   float horizonGlow=exp(-pow((uv.y-.235)*38.0,2.0));
   color+=vec3(1.0,.66,.38)*horizonGlow*.20;
  }else if(mode<1.5){
-  float moonDist=length((uv-vec2(.50,.77))*vec2(1.0,1.12));
-  float moon=1.0-smoothstep(.035,.042,moonDist);
-  float halo=exp(-moonDist*18.0);
-  color+=vec3(1.0,.78,.57)*halo*.32;
-  color=mix(color,vec3(1.0,.91,.76),moon);
   float curtainEdge=exp(-pow((abs(uv.x-.5)-.20)*18.0,2.0))*smoothstep(.48,.72,uv.y);
   color+=vec3(.68,.65,1.0)*curtainEdge*.10;
  }else if(mode<2.5){
@@ -278,10 +276,6 @@ void main(){
   float aurora=pow(max(0.0,sin(uv.x*8.0+t*.10)),5.0)*smoothstep(.38,.72,uv.y);
   color+=vec3(.12,.92,.70)*aurora*.22;
  }else if(mode<5.5){
-  float moonDist=length((uv-vec2(.76,.76))*vec2(1.0,1.1));
-  float moon=1.0-smoothstep(.045,.052,moonDist);
-  color+=vec3(.55,.68,1.0)*exp(-moonDist*15.0)*.25;
-  color=mix(color,vec3(.88,.91,1.0),moon);
  }else if(mode<6.5){
   float nebula=fbm(p*2.4+vec2(0.0,t*.01));
   color+=vec3(.42,.18,.85)*smoothstep(.48,.72,nebula)*.17;
