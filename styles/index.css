@@ -246,3 +246,12 @@
 .gradient-preview i:nth-child(2) { height:145px; background:linear-gradient(180deg,#ffe29a,#ff8c8c 55%,#b36be8); }
 .gradient-preview i:nth-child(3) { height:96px; background:linear-gradient(180deg,#8df5d2,#4ba6ff 55%,#6b62d8); }
 .gradient-preview i:nth-child(4) { height:128px; background:linear-gradient(180deg,#f7b6ff,#8b8cff 55%,#4ce0c1); }
+
+/* Sky Clouds project preview */
+.preview-art--sky { background:linear-gradient(180deg,#182d4a 0%,#6b8ca7 62%,#d5b9aa 100%); }
+.sky-preview-glow { position:absolute; width:74px; height:74px; top:24px; right:22%; border-radius:50%; background:#f4d9b4; filter:blur(2px); box-shadow:0 0 36px #f4d9b488; }
+.sky-preview-cloud { position:absolute; z-index:1; width:145px; height:36px; border-radius:50%; background:linear-gradient(180deg,#fff,#b8c9d9); filter:blur(5px); box-shadow:0 8px 22px #263d5666; }
+.sky-preview-cloud::before,.sky-preview-cloud::after { content:""; position:absolute; bottom:8px; width:64px; height:55px; border-radius:50%; background:inherit; }
+.sky-preview-cloud::before { left:20px; }.sky-preview-cloud::after { right:18px; width:54px; height:45px; }
+.sky-preview-cloud--one { left:8%; bottom:47px; transform:scale(1.05); }
+.sky-preview-cloud--two { right:5%; bottom:24px; transform:scale(.72); opacity:.8; }
