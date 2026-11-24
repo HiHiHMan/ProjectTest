@@ -243,8 +243,12 @@ void main(){
 
  // Each card gets its own sky composition, not just a different color palette.
  if(mode<.5){
-  // Desert edge: broad cloud shelf sits above a clean sand-and-horizon strip.
+  // Desert horizon with cloud banks parting around a clear central opening.
   density*=smoothstep(.13,.34,uv.y);
+  float gapWidth=mix(.055,.19,smoothstep(.24,.82,uv.y));
+  float centerGap=1.0-smoothstep(gapWidth,gapWidth+.055,abs(uv.x-.5));
+  float gapHeight=smoothstep(.20,.34,uv.y)*(1.0-smoothstep(.84,.98,uv.y));
+  density*=1.0-centerGap*gapHeight*.96;
  }else if(mode<1.5){
   // Parted cloud curtains leave a calm opening in the upper middle for the moon.
   float opening=length((uv-vec2(.50,.77))*vec2(1.22,1.0));
@@ -316,6 +320,8 @@ void main(){
 
  // Scenic foreground and focal elements unique to selected cards.
  if(mode<.5){
+  float centerBeam=exp(-pow((uv.x-.5)*7.0,2.0))*smoothstep(.24,.46,uv.y);
+  color+=vec3(.92,.78,.61)*centerBeam*.16;
   float ground=1.0-smoothstep(.215,.235,uv.y);
   vec2 sandUv=vec2(uv.x*185.0,uv.y*112.0);
   float grain=noise(sandUv);
