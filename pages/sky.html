@@ -195,7 +195,6 @@ float cloudField(vec2 p,float m,float t){
    // Amber Highlands: massive sunlit towers with a broad, connected lower body.
    float amberTowers=max(1.0-smoothstep(.20,.58,abs(organicP.x-.34)),1.0-smoothstep(.22,.62,abs(organicP.x+.48)));
    float towerBody=fbm(organicP*vec2(2.0,4.2)+vec2(3.0,-t*.002));
-   naturalMass=organicBase*.28+organicBillow*.22+clusterShapePlaceholder*.0;
    naturalMass=organicBase*.30+organicBillow*.25+amberTowers*.20+towerBody*.18+crownShape*.07;
   }else if(m>10.5 && m<11.5){
    // Rosewater Haven: two broad banks curve around a wide, softly open center.
