@@ -52,6 +52,76 @@ uniform vec2 u_res;uniform float u_time;uniform float u_mode;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
 float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.02+vec2(13.7,9.2);a*=.5;}return v;}
+float sdEllipse(vec2 p,vec2 r){return (length(p/r)-1.)*min(r.x,r.y);}
+float sdBox(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}
+float sdSegment(vec2 p,vec2 a,vec2 b,float r){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h)-r;}
+float cloudShape(vec2 p,float kind,float t){
+ float d=9.;
+ if(kind<.5){
+  // Wool-like cloud: a row of soft rounded fleece puffs.
+  d=min(d,length(p-vec2(-.30,-.015))-.115);
+  d=min(d,length(p-vec2(-.19,.055))-.145);
+  d=min(d,length(p-vec2(-.045,.095))-.16);
+  d=min(d,length(p-vec2(.12,.075))-.145);
+  d=min(d,length(p-vec2(.265,.005))-.12);
+  d=min(d,sdEllipse(p-vec2(-.015,-.095),vec2(.30,.105)));
+ }else if(kind<1.5){
+  // A gentle cloud-animal silhouette, like a floating whale.
+  d=min(d,sdEllipse(p-vec2(-.045,.015),vec2(.30,.145)));
+  d=min(d,sdEllipse(p-vec2(.245,.075),vec2(.115,.115)));
+  d=min(d,sdEllipse(p-vec2(.34,.015),vec2(.085,.055)));
+  d=min(d,sdSegment(p,vec2(-.30,.015),vec2(-.43,.16),.045));
+  d=min(d,sdSegment(p,vec2(-.30,.015),vec2(-.43,-.13),.045));
+  d=min(d,sdEllipse(p-vec2(.10,-.12),vec2(.10,.055)));
+  d=min(d,sdEllipse(p-vec2(.20,.18),vec2(.045,.09)));
+ }else if(kind<2.5){
+  // A curling spiral / coiled cloud.
+  float a=atan(p.y,p.x);float r=length(p);
+  float spiralRadius=.025+.052*(a+3.14159);
+  d=abs(r-spiralRadius)-(.045+.012*sin(a*5.));
+  d=min(d,length(p)-.075);
+ }else if(kind<3.5){
+  // Floating spherical cloud clusters.
+  d=min(d,length(p-vec2(-.22,-.015))-.145);
+  d=min(d,length(p-vec2(-.035,.075))-.19);
+  d=min(d,length(p-vec2(.19,.015))-.155);
+  d=min(d,length(p-vec2(.02,-.12))-.13);
+ }else if(kind<4.5){
+  // A luminous ring / halo cloud.
+  d=abs(length(p)-(.235+.012*sin(atan(p.y,p.x)*5.+t*.25)))-.065;
+  d=min(d,length(p)-.115);
+ }else if(kind<5.5){
+  // Floating cloud castle with towers and rounded turrets.
+  d=min(d,sdBox(p-vec2(0.,-.12),vec2(.29,.085)));
+  d=min(d,sdBox(p-vec2(-.19,.005),vec2(.075,.19)));
+  d=min(d,sdBox(p-vec2(.19,.005),vec2(.075,.19)));
+  d=min(d,sdBox(p-vec2(0.,.035),vec2(.085,.22)));
+  d=min(d,length(p-vec2(-.19,.205))-.075);
+  d=min(d,length(p-vec2(.19,.205))-.075);
+  d=min(d,length(p-vec2(0.,.265))-.085);
+ }else if(kind<6.5){
+  // A bird-like cloud with broad wings.
+  d=min(d,sdEllipse(p-vec2(0.,-.015),vec2(.12,.09)));
+  d=min(d,sdEllipse(p-vec2(-.19,.075),vec2(.22,.065)));
+  d=min(d,sdEllipse(p-vec2(.19,.075),vec2(.22,.065)));
+  d=min(d,sdSegment(p,vec2(.08,-.01),vec2(.30,-.015),.035));
+  d=min(d,sdSegment(p,vec2(-.02,-.07),vec2(-.11,-.19),.045));
+ }else if(kind<7.5){
+  // A long floating airship / cloud vessel.
+  d=min(d,sdEllipse(p-vec2(0.,-.035),vec2(.34,.105)));
+  d=min(d,sdBox(p-vec2(0.,.105),vec2(.14,.075)));
+  d=min(d,sdSegment(p,vec2(-.24,.04),vec2(-.34,.20),.025));
+  d=min(d,sdSegment(p,vec2(.24,.04),vec2(.34,.20),.025));
+ }else{
+  // A broad rolling bank of cloud waves.
+  d=min(d,sdEllipse(p-vec2(-.28,-.055),vec2(.22,.15)));
+  d=min(d,sdEllipse(p-vec2(-.08,.025),vec2(.25,.19)));
+  d=min(d,sdEllipse(p-vec2(.17,-.005),vec2(.24,.17)));
+  d=min(d,sdEllipse(p-vec2(.36,-.07),vec2(.18,.12)));
+  d=min(d,sdEllipse(p-vec2(0.,-.14),vec2(.40,.10)));
+ }
+ return 1.-smoothstep(-.018,.055,d);
+}
 void main(){
  vec2 uv=gl_FragCoord.xy/u_res;float t=u_time;
  // Straight-on camera: look directly into the sky, with subtle vertical camera travel.
@@ -75,7 +145,14 @@ void main(){
  float nearDensity=smoothstep(.39,.72,nearCloud*.70+nearDetail*.30)*.72;
  float frontDensity=smoothstep(.40,.73,frontCloud*.72+frontDetail*.28)*.78;
  float density=1.-(1.-farDensity)*(1.-midDensity)*(1.-nearDensity)*(1.-frontDensity);
+ // Distinct cloud silhouettes: fleece, animal, spiral, spheres, halo, castle, bird, airship and rolling banks.
+ vec2 shapeP=screen*1.12+vec2(0.,-.015-cameraY*.25);
+ float silhouette=cloudShape(shapeP,u_mode,t);
+ float silhouetteNoise=fbm(shapeP*vec2(17.,21.)+vec2(t*.025,-t*.018));
+ silhouette*=smoothstep(.18,.72,silhouetteNoise)*.30+.70;
+ density=max(density*.38,silhouette*.94);
  float detail=(farDetail*.12+midDetail*.20+nearDetail*.30+frontDetail*.38);
+ detail=max(detail,silhouetteNoise*.72);
  float clouds=max(max(farCloud,midCloud),max(nearCloud,frontCloud));
  float warp=fbm(screen*1.5+vec2(t*.01,-cameraY));
  float soft=smoothstep(.22,.76,density);
