@@ -3,145 +3,348 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#05070b">
-<title>Pixel Hulk — ProjectTest</title>
+<meta name="theme-color" content="#101010">
+<title>Pixel Grid — ProjectTest</title>
 <style>
 *{box-sizing:border-box}
-:root{color-scheme:dark;background:#05070b}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070b}
-main{position:relative;width:100vw;height:100vh;overflow:hidden;background:#05070b}
-#pixelGrid{position:absolute;inset:0;display:block;width:100%;height:100%;z-index:0}
-#scene{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;outline:0}
+:root{color-scheme:dark;font-family:Arial,sans-serif;background:#101010;color:#eee}
+body{margin:0;width:100vw;height:100vh;overflow:hidden;padding:0}
+header{display:none}
+h1{font-size:24px;margin:0 0 8px}
+p{margin:0;color:#999;font-size:13px}
+main{width:100vw;height:100vh;margin:0;padding:0}
+.grid-viewport{width:100%;height:100%;overflow:hidden;background:#05070b;border:0;padding:0}
+canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:pixelated}
+.info{display:none;display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:#aaa;font-size:12px}
 </style>
 </head>
 <body>
+<header>
+  <h1>Pixel Grid</h1>
+  <p>ตารางขนาด 1500 × 1500 พิกเซล · ช่องละ 10 × 10 พิกเซล · 150 × 150 ช่อง</p>
+</header>
 <main>
-  <canvas id="pixelGrid" aria-hidden="true"></canvas>
-  <canvas id="scene" aria-label="ตัวละคร Hulk แบบ Voxel ที่กล้องหมุนรอบตัว 360 องศา"></canvas>
+  <div class="grid-viewport">
+    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตารางพิกเซลพร้อมตัวละคร Hulk"></canvas>
+  </div>
+  <div class="info">
+    <span>Canvas: 1500 × 1500 px</span>
+    <span>Cell: 10 × 10 px</span>
+    <span>Total: 22,500 cells</span>
+  </div>
 </main>
 <script>
 (() => {
   const canvas = document.getElementById("pixelGrid");
   const ctx = canvas.getContext("2d");
   const cellSize = 10;
-  function drawGrid(){
-    const w=innerWidth,h=innerHeight,dpr=Math.min(devicePixelRatio||1,2);
-    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    ctx.fillStyle="#05070b";ctx.fillRect(0,0,w,h);
-    for(let y=0;y<h;y+=cellSize)for(let x=0;x<w;x+=cellSize){
-      const cw=Math.min(cellSize,w-x),ch=Math.min(cellSize,h-y);
-      ctx.fillStyle="rgba(145,175,210,.055)";
-      ctx.fillRect(x+.5,y+.5,cw-1,ch-1);
-      ctx.fillStyle="rgba(225,240,255,.075)";
-      ctx.fillRect(x+.5,y+.5,cw-1,.5);
-      ctx.fillRect(x+.5,y+.5,.5,ch-1);
+
+  // Hulk sprite: each character below paints exactly one 10 × 10 grid cell.
+  const sprite = [
+    "...........HHHHHHHHHHH...........",
+    "..........HHhHHHHHHhHHH..........",
+    ".........DDDDDDDDDDDDDDD.........",
+    "........DDGGGGGGGGGGGGGDD........",
+    ".......DDGGGGGGGGGGGGGGGDD.......",
+    ".......DGGGGGGGGGGGGGGGGGDD......",
+    "......DGGGGGKKGGGGGKKGGGGGDD.....",
+    "......DGGGGGWWGGGGGWWGGGGGGD.....",
+    "......DGGGGGGGGGGGGGGGGGGGGD.....",
+    ".......DGGGGGGGGGGGGGGGGGGD......",
+    "........DDGGGGGGGGGGGGGGDD........",
+    "..........DDGGGMMMMGGGDD..........",
+    "............DDDDDDDDD.............",
+    ".........DDDDDDDDDDDDDDD..........",
+    "......DDDDGGGGGGGGGGGGGDDDD.......",
+    "....DDDDGGGGGGGGGGGGGGGGGDDDD.....",
+    "...DDDDGGGGGLLGGGGGGLLGGGGGDDDD...",
+    "..DDDGGGGGGGLLGGGGGLLGGGGGGGDDD....",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    ".DDGGGGGGGGGGGGGGGGGGGGGGGGGGGDD...",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    "..DDDDGGGGGGGGGGGGGGGGGGGGGGDDDD....",
+    "...DDDDGGGGGGGGGGGGGGGGGGGGDDDD.....",
+    "......DDDDGGGGGGGGGGGGGGDDDD........",
+    "........DDDDPPPPPPPPPPDDDD..........",
+    ".........DDPPPPPPPPPPPPDD...........",
+    ".........DPPQQPPPPPPQQPPD............",
+    ".........DPPPPPPPPPPPPPPD............",
+    ".........DDPPPPPPPPPPPPDD............",
+    "..........DDDDPPPPPPDDDD.............",
+    "..........DDDDDD..DDDDDD.............",
+    ".........DDDDDDD..DDDDDDD............",
+    "........DDDDDDD....DDDDDDD...........",
+    ".......DDDDDDD......DDDDDDD.........."
+  ];
+
+  const colors = {
+    D: "#176b32", G: "#36b94f", L: "#83e879", S: "#218b3c",
+    H: "#20242a", h: "#59616b", W: "#f5f5e9", K: "#18251b",
+    M: "#4b2530", P: "#7135b5", p: "#a35be0", Q: "#49217c"
+  };
+
+  let angle = 0;
+  let lastFrame = 0;
+
+  // Build a 2D pixel frame by remapping the existing sprite cells.
+  // No 3D geometry: each frame is a new arrangement of the original pixels.
+  function getRotatedPixels(rotation) {
+    const width = Math.max(...sprite.map(row => row.length));
+    const height = sprite.length;
+    const c = Math.cos(rotation);
+    const s = Math.sin(rotation);
+    const projected = new Map();
+
+    sprite.forEach((row, y) => {
+      const rowOffset = Math.floor((width - row.length) / 2);
+      [...row].forEach((pixel, index) => {
+        if (pixel === "." || !colors[pixel]) return;
+        const x = rowOffset + index;
+
+        // Give face, hair and body pixels slightly different depth layers.
+        let depth = 0;
+        if ("WKM".includes(pixel)) depth = 1.6;
+        else if (pixel === "h") depth = -0.8;
+        else if (pixel === "H") depth = y < 5 ? 0.35 : -0.65;
+        else if ("PpQ".includes(pixel)) depth = 0.15;
+
+        const px = (x - (width - 1) / 2) * c + depth * s;
+        const pz = -(x - (width - 1) / 2) * s + depth * c;
+        const col = Math.round(px + (width - 1) / 2);
+        const key = y + ":" + col;
+        const previous = projected.get(key);
+        if (!previous || pz > previous.depth) {
+          projected.set(key, { x: col, y, pixel, depth: pz });
+        }
+      });
+    });
+
+    return [...projected.values()];
+  }
+
+  function drawGrid(timestamp = 0) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#05070b";
+    ctx.fillRect(0, 0, width, height);
+
+    // Dark glass grid background.
+    for (let y = 0; y < height; y += cellSize) {
+      for (let x = 0; x < width; x += cellSize) {
+        const w = Math.min(cellSize, width - x);
+        const h = Math.min(cellSize, height - y);
+        ctx.fillStyle = "rgba(145, 175, 210, 0.065)";
+        ctx.fillRect(x + 0.5, y + 0.5, w - 1, h - 1);
+        ctx.fillStyle = "rgba(225, 240, 255, 0.10)";
+        ctx.fillRect(x + 0.5, y + 0.5, w - 1, 0.5);
+        ctx.fillRect(x + 0.5, y + 0.5, 0.5, h - 1);
+      }
     }
+
+    // Center the character and snap its position to the grid.
+    const spriteWidth = Math.max(...sprite.map(row => row.length));
+    const spriteHeight = sprite.length;
+    const offsetX = Math.floor((width / cellSize - spriteWidth) / 2) * cellSize;
+    const offsetY = Math.floor((height / cellSize - spriteHeight) / 2) * cellSize;
+
+    pixels.forEach(({ x: colIndex, y: rowIndex, pixel }) => {
+      const x = offsetX + colIndex * cellSize;
+      const y = offsetY + rowIndex * cellSize;
+      ctx.fillStyle = colors[pixel];
+      ctx.fillRect(x, y, cellSize, cellSize);
+      ctx.strokeStyle = "rgba(5, 12, 10, 0.18)";
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(x + 0.3, y + 0.3, cellSize - 0.6, cellSize - 0.6);
+    });e html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>Pixel Grid — ProjectTest</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark;font-family:Arial,sans-serif;background:#101010;color:#eee}
+body{margin:0;width:100vw;height:100vh;overflow:hidden;padding:0}
+header{display:none}
+h1{font-size:24px;margin:0 0 8px}
+p{margin:0;color:#999;font-size:13px}
+main{width:100vw;height:100vh;margin:0;padding:0}
+.grid-viewport{width:100%;height:100%;overflow:hidden;background:#05070b;border:0;padding:0}
+canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:pixelated}
+.info{display:none;display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:#aaa;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pixel Grid</h1>
+  <p>ตารางขนาด 1500 × 1500 พิกเซล · ช่องละ 10 × 10 พิกเซล · 150 × 150 ช่อง</p>
+</header>
+<main>
+  <div class="grid-viewport">
+    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตารางพิกเซลพร้อมตัวละคร Hulk"></canvas>
+  </div>
+  <div class="info">
+    <span>Canvas: 1500 × 1500 px</span>
+    <span>Cell: 10 × 10 px</span>
+    <span>Total: 22,500 cells</span>
+  </div>
+</main>
+<script>
+(() => {
+  const canvas = document.getElementById("pixelGrid");
+  const ctx = canvas.getContext("2d");
+  const cellSize = 10;
+
+  // Hulk sprite: each character below paints exactly one 10 × 10 grid cell.
+  const sprite = [
+    "...........HHHHHHHHHHH...........",
+    "..........HHhHHHHHHhHHH..........",
+    ".........DDDDDDDDDDDDDDD.........",
+    "........DDGGGGGGGGGGGGGDD........",
+    ".......DDGGGGGGGGGGGGGGGDD.......",
+    ".......DGGGGGGGGGGGGGGGGGDD......",
+    "......DGGGGGKKGGGGGKKGGGGGDD.....",
+    "......DGGGGGWWGGGGGWWGGGGGGD.....",
+    "......DGGGGGGGGGGGGGGGGGGGGD.....",
+    ".......DGGGGGGGGGGGGGGGGGGD......",
+    "........DDGGGGGGGGGGGGGGDD........",
+    "..........DDGGGMMMMGGGDD..........",
+    "............DDDDDDDDD.............",
+    ".........DDDDDDDDDDDDDDD..........",
+    "......DDDDGGGGGGGGGGGGGDDDD.......",
+    "....DDDDGGGGGGGGGGGGGGGGGDDDD.....",
+    "...DDDDGGGGGLLGGGGGGLLGGGGGDDDD...",
+    "..DDDGGGGGGGLLGGGGGLLGGGGGGGDDD....",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    ".DDGGGGGGGGGGGGGGGGGGGGGGGGGGGDD...",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    "..DDDDGGGGGGGGGGGGGGGGGGGGGGDDDD....",
+    "...DDDDGGGGGGGGGGGGGGGGGGGGDDDD.....",
+    "......DDDDGGGGGGGGGGGGGGDDDD........",
+    "........DDDDPPPPPPPPPPDDDD..........",
+    ".........DDPPPPPPPPPPPPDD...........",
+    ".........DPPQQPPPPPPQQPPD............",
+    ".........DPPPPPPPPPPPPPPD............",
+    ".........DDPPPPPPPPPPPPDD............",
+    "..........DDDDPPPPPPDDDD.............",
+    "..........DDDDDD..DDDDDD.............",
+    ".........DDDDDDD..DDDDDDD............",
+    "........DDDDDDD....DDDDDDD...........",
+    ".......DDDDDDD......DDDDDDD.........."
+  ];
+
+  const colors = {
+    D: "#176b32", G: "#36b94f", L: "#83e879", S: "#218b3c",
+    H: "#20242a", h: "#59616b", W: "#f5f5e9", K: "#18251b",
+    M: "#4b2530", P: "#7135b5", p: "#a35be0", Q: "#49217c"
+  };
+
+  let angle = 0;
+  let lastFrame = 0;
+
+  // Build a 2D pixel frame by remapping the existing sprite cells.
+  // No 3D geometry: each frame is a new arrangement of the original pixels.
+  function getRotatedPixels(rotation) {
+    const width = Math.max(...sprite.map(row => row.length));
+    const height = sprite.length;
+    const c = Math.cos(rotation);
+    const s = Math.sin(rotation);
+    const projected = new Map();
+
+    sprite.forEach((row, y) => {
+      const rowOffset = Math.floor((width - row.length) / 2);
+      [...row].forEach((pixel, index) => {
+        if (pixel === "." || !colors[pixel]) return;
+        const x = rowOffset + index;
+
+        // Give face, hair and body pixels slightly different depth layers.
+        let depth = 0;
+        if ("WKM".includes(pixel)) depth = 1.6;
+        else if (pixel === "h") depth = -0.8;
+        else if (pixel === "H") depth = y < 5 ? 0.35 : -0.65;
+        else if ("PpQ".includes(pixel)) depth = 0.15;
+
+        const px = (x - (width - 1) / 2) * c + depth * s;
+        const pz = -(x - (width - 1) / 2) * s + depth * c;
+        const col = Math.round(px + (width - 1) / 2);
+        const key = y + ":" + col;
+        const previous = projected.get(key);
+        if (!previous || pz > previous.depth) {
+          projected.set(key, { x: col, y, pixel, depth: pz });
+        }
+      });
+    });
+
+    return [...projected.values()];
   }
-  addEventListener("resize",drawGrid);drawGrid();
+
+  function drawGrid(timestamp = 0) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#05070b";
+    ctx.fillRect(0, 0, width, height);
+
+    // Dark glass grid background.
+    for (let y = 0; y < height; y += cellSize) {
+      for (let x = 0; x < width; x += cellSize) {
+        const w = Math.min(cellSize, width - x);
+        const h = Math.min(cellSize, height - y);
+        ctx.fillStyle = "rgba(145, 175, 210, 0.065)";
+        ctx.fillRect(x + 0.5, y + 0.5, w - 1, h - 1);
+        ctx.fillStyle = "rgba(225, 240, 255, 0.10)";
+        ctx.fillRect(x + 0.5, y + 0.5, w - 1, 0.5);
+        ctx.fillRect(x + 0.5, y + 0.5, 0.5, h - 1);
+      }
+    }
+
+    // Center the character and snap its position to the grid.
+    const spriteWidth = Math.max(...sprite.map(row => row.length));
+    const spriteHeight = sprite.length;
+    const offsetX = Math.floor((width / cellSize - spriteWidth) / 2) * cellSize;
+    const offsetY = Math.floor((height / cellSize - spriteHeight) / 2) * cellSize;
+
+    sprite.forEach((row, rowIndex) => {
+      const rowOffset = Math.floor((spriteWidth - row.length) / 2);
+      [...row].forEach((pixel, colIndex) => {
+        if (pixel === "." || !colors[pixel]) return;
+        const x = offsetX + (rowOffset + colIndex) * cellSize;
+        const y = offsetY + rowIndex * cellSize;
+
+        ctx.fillStyle = colors[pixel];
+        ctx.fillRect(x, y, cellSize, cellSize);
+
+        // Very subtle cell edge keeps the pixel blocks distinct.
+        ctx.strokeStyle = "rgba(5, 12, 10, 0.18)";
+        ctx.lineWidth = 0.6;
+        ctx.strokeRect(x + 0.3, y + 0.3, cellSize - 0.6, cellSize - 0.6);
+      });
+    });
+  }
+
+  window.addEventListener("resize", drawGrid);
+  drawGrid();
 })();
-</script>
-<script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-
-const canvas=document.querySelector("#scene");
-const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
-renderer.setSize(innerWidth,innerHeight);
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.25;
-
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);
-const target=new THREE.Vector3(0,2.55,0);
-const radius=10.8;
-scene.add(new THREE.HemisphereLight(0xdcecff,0x18251c,2.0));
-const key=new THREE.DirectionalLight(0xffffff,3.0);key.position.set(-4,8,6);scene.add(key);
-const rim=new THREE.DirectionalLight(0x75aaff,2.1);rim.position.set(5,4,-6);scene.add(rim);
-const fill=new THREE.DirectionalLight(0x9cff8d,1.0);fill.position.set(4,2,5);scene.add(fill);
-
-const materials={
-  green:new THREE.MeshStandardMaterial({color:0x35b84e,roughness:1}),
-  light:new THREE.MeshStandardMaterial({color:0x83e879,roughness:1}),
-  darkGreen:new THREE.MeshStandardMaterial({color:0x176b32,roughness:1}),
-  shade:new THREE.MeshStandardMaterial({color:0x218b3c,roughness:1}),
-  hair:new THREE.MeshStandardMaterial({color:0x20242a,roughness:1}),
-  hairLight:new THREE.MeshStandardMaterial({color:0x59616b,roughness:1}),
-  white:new THREE.MeshStandardMaterial({color:0xf5f5e9,roughness:1}),
-  eye:new THREE.MeshStandardMaterial({color:0x111a13,roughness:1}),
-  mouth:new THREE.MeshStandardMaterial({color:0x4b2530,roughness:1}),
-  purple:new THREE.MeshStandardMaterial({color:0x7135b5,roughness:1}),
-  purpleLight:new THREE.MeshStandardMaterial({color:0xa35be0,roughness:1}),
-  purpleDark:new THREE.MeshStandardMaterial({color:0x49217c,roughness:1})
-};
-const hulk=new THREE.Group();scene.add(hulk);
-const unit=.5;
-function block(x,y,z,sx,sy,sz,mat){
-  const mesh=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),mat);
-  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;hulk.add(mesh);return mesh;
-}
-function voxelBox(x,y,z,nx,ny,nz,mat,step=unit){
-  for(let ix=0;ix<nx;ix++)for(let iy=0;iy<ny;iy++)for(let iz=0;iz<nz;iz++){
-    block(x+(ix-(nx-1)/2)*step,y+(iy-(ny-1)/2)*step,z+(iz-(nz-1)/2)*step,step*.98,step*.98,step*.98,mat);
-  }
-}
-// Legs and oversized feet
-voxelBox(-.58,.95,0,2,4,2,materials.purple);
-voxelBox(.58,.95,0,2,4,2,materials.purple);
-voxelBox(-.58,.05,.18,3,1,3,materials.purpleDark);
-voxelBox(.58,.05,.18,3,1,3,materials.purpleDark);
-block(-.58,1.65,.52,.42,.35,.08,materials.purpleLight);
-block(.58,1.65,.52,.42,.35,.08,materials.purpleLight);
-// Torso, broad shoulders and chest
-voxelBox(0,3.15,0,6,5,3,materials.green);
-voxelBox(0,4.15,0,7,2,3,materials.darkGreen);
-voxelBox(0,3.55,.78,4,2,1,materials.light);
-// Arms: thick upper arms, forearms and fists
-for(const side of [-1,1]){
-  voxelBox(side*1.78,3.85,0,2,4,3,materials.darkGreen);
-  voxelBox(side*1.9,2.75,.02,2,3,3,materials.green);
-  voxelBox(side*1.95,1.85,.12,2,2,2,materials.shade);
-  voxelBox(side*1.95,1.45,.18,2,1,2,materials.darkGreen);
-}
-// Neck and head
-voxelBox(0,4.95,0,2,1,2,materials.darkGreen);
-voxelBox(0,5.85,0,4,3,3,materials.green);
-voxelBox(0,6.72,0,4,1,3,materials.hair);
-voxelBox(-.78,6.42,0,1,2,3,materials.hair);
-voxelBox(.78,6.42,0,1,2,3,materials.hair);
-voxelBox(-.48,6.92,.05,1,1,2,materials.hairLight);
-voxelBox(.48,6.92,.05,1,1,2,materials.hair);
-for(const side of [-1,1]){
-  block(side*.43,5.95,.79,.32,.16,.08,materials.hair);
-  block(side*.43,5.7,.82,.22,.18,.08,materials.white);
-  block(side*.43,5.7,.88,.09,.15,.06,materials.eye);
-}
-block(0,5.42,.84,.62,.16,.08,materials.mouth);
-block(0,5.27,.78,.38,.10,.08,materials.light);
-// Back hair/neck details give the silhouette depth from every angle
-voxelBox(0,6.35,-.72,3,2,1,materials.hair);
-voxelBox(0,4.95,-.55,2,1,1,materials.shade);
-
-function resize(){
-  const w=innerWidth,h=innerHeight;
-  renderer.setSize(w,h,false);
-  camera.aspect=w/h;camera.updateProjectionMatrix();
-}
-addEventListener("resize",resize);
-let angle=0;
-function animate(){
-  requestAnimationFrame(animate);
-  angle+=0.004;
-  camera.position.set(
-    target.x+Math.sin(angle)*radius,
-    target.y+1.05,
-    target.z+Math.cos(angle)*radius
-  );
-  camera.lookAt(target);
-  renderer.render(scene,camera);
-}
-resize();animate();
 </script>
 </body>
 </html>
