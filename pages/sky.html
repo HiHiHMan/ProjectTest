@@ -305,14 +305,6 @@ void main(){
   color+=vec3(.72,.83,.90)*horizonLine*.13;
  }
 
- // Restrained celestial details, kept behind the cloud mass.
- vec2 grid=uv*vec2(118.0,76.0);
- vec2 cell=floor(grid),local=fract(grid)-.5;
- float rnd=hash(cell+13.7);
- float stars=step(.994,rnd)*(1.0-smoothstep(.06,.48,length(local)));
- float twinkle=.65+.35*sin(t*2.0+rnd*30.0);
- if(mode>1.5) color+=cloudLit*stars*twinkle*.75;
-
  float ribbon=exp(-pow((uv.y-(.67+.045*sin(uv.x*5.0+t*.13)))*24.0,2.0));
  if(mode>3.5&&mode<7.5) color+=accent*ribbon*.12;
  // No pixel grain: preserve clean, soft cotton-like cloud surfaces.
