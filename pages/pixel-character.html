@@ -25,7 +25,7 @@ canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:p
 </header>
 <main>
   <div class="grid-viewport">
-    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตาราง 150 คูณ 150 ช่อง"></canvas>
+    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตารางพิกเซลพร้อมตัวละคร Hulk"></canvas>
   </div>
   <div class="info">
     <span>Canvas: 1500 × 1500 px</span>
@@ -38,6 +38,52 @@ canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:p
   const canvas = document.getElementById("pixelGrid");
   const ctx = canvas.getContext("2d");
   const cellSize = 10;
+
+  // Hulk sprite: each character below paints exactly one 10 × 10 grid cell.
+  const sprite = [
+    "...........HHHHHHHHHHH...........",
+    "..........HHhHHHHHHhHHH..........",
+    ".........DDDDDDDDDDDDDDD.........",
+    "........DDGGGGGGGGGGGGGDD........",
+    ".......DDGGGGGGGGGGGGGGGDD.......",
+    ".......DGGGGGGGGGGGGGGGGGDD......",
+    "......DGGGGGKKGGGGGKKGGGGGDD.....",
+    "......DGGGGGWWGGGGGWWGGGGGGD.....",
+    "......DGGGGGGGGGGGGGGGGGGGGD.....",
+    ".......DGGGGGGGGGGGGGGGGGGD......",
+    "........DDGGGGGGGGGGGGGGDD........",
+    "..........DDGGGMMMMGGGDD..........",
+    "............DDDDDDDDD.............",
+    ".........DDDDDDDDDDDDDDD..........",
+    "......DDDDGGGGGGGGGGGGGDDDD.......",
+    "....DDDDGGGGGGGGGGGGGGGGGDDDD.....",
+    "...DDDDGGGGGLLGGGGGGLLGGGGGDDDD...",
+    "..DDDGGGGGGGLLGGGGGLLGGGGGGGDDD....",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    ".DDGGGGGGGGGGGGGGGGGGGGGGGGGGGDD...",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
+    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
+    "..DDDDGGGGGGGGGGGGGGGGGGGGGGDDDD....",
+    "...DDDDGGGGGGGGGGGGGGGGGGGGDDDD.....",
+    "......DDDDGGGGGGGGGGGGGGDDDD........",
+    "........DDDDPPPPPPPPPPDDDD..........",
+    ".........DDPPPPPPPPPPPPDD...........",
+    ".........DPPQQPPPPPPQQPPD............",
+    ".........DPPPPPPPPPPPPPPD............",
+    ".........DDPPPPPPPPPPPPDD............",
+    "..........DDDDPPPPPPDDDD.............",
+    "..........DDDDDD..DDDDDD.............",
+    ".........DDDDDDD..DDDDDDD............",
+    "........DDDDDDD....DDDDDDD...........",
+    ".......DDDDDDD......DDDDDDD.........."
+  ];
+
+  const colors = {
+    D: "#176b32", G: "#36b94f", L: "#83e879", S: "#218b3c",
+    H: "#20242a", h: "#59616b", W: "#f5f5e9", K: "#18251b",
+    M: "#4b2530", P: "#7135b5", p: "#a35be0", Q: "#49217c"
+  };
 
   function drawGrid() {
     const width = window.innerWidth;
@@ -53,20 +99,41 @@ canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:p
     ctx.fillStyle = "#05070b";
     ctx.fillRect(0, 0, width, height);
 
-    // Subtle glass tiles: minimal separation, no heavy shadows.
+    // Dark glass grid background.
     for (let y = 0; y < height; y += cellSize) {
       for (let x = 0; x < width; x += cellSize) {
         const w = Math.min(cellSize, width - x);
         const h = Math.min(cellSize, height - y);
-
         ctx.fillStyle = "rgba(145, 175, 210, 0.065)";
         ctx.fillRect(x + 0.5, y + 0.5, w - 1, h - 1);
-
         ctx.fillStyle = "rgba(225, 240, 255, 0.10)";
         ctx.fillRect(x + 0.5, y + 0.5, w - 1, 0.5);
         ctx.fillRect(x + 0.5, y + 0.5, 0.5, h - 1);
       }
     }
+
+    // Center the character and snap its position to the grid.
+    const spriteWidth = Math.max(...sprite.map(row => row.length));
+    const spriteHeight = sprite.length;
+    const offsetX = Math.floor((width / cellSize - spriteWidth) / 2) * cellSize;
+    const offsetY = Math.floor((height / cellSize - spriteHeight) / 2) * cellSize;
+
+    sprite.forEach((row, rowIndex) => {
+      const rowOffset = Math.floor((spriteWidth - row.length) / 2);
+      [...row].forEach((pixel, colIndex) => {
+        if (pixel === "." || !colors[pixel]) return;
+        const x = offsetX + (rowOffset + colIndex) * cellSize;
+        const y = offsetY + rowIndex * cellSize;
+
+        ctx.fillStyle = colors[pixel];
+        ctx.fillRect(x, y, cellSize, cellSize);
+
+        // Very subtle cell edge keeps the pixel blocks distinct.
+        ctx.strokeStyle = "rgba(5, 12, 10, 0.18)";
+        ctx.lineWidth = 0.6;
+        ctx.strokeRect(x + 0.3, y + 0.3, cellSize - 0.6, cellSize - 0.6);
+      });
+    });
   }
 
   window.addEventListener("resize", drawGrid);
