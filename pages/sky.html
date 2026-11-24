@@ -29,18 +29,18 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 </head>
 <body><main class="page">
 <div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
-<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine enchanted skies from a dreamlike realm — celestial clouds, stardust, aurora rivers and impossible horizons, rendered live with WebGL.</p></header>
-<div class="section-head"><h2>Enchanted realms</h2><span>09 WORLDS</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine soft cloud studies — wool-like billows, rounded cotton puffs and layered cloud banks, rendered live with WebGL.</p></header>
+<div class="section-head"><h2>Wool & Cotton Cloud Studies</h2><span>09 CLOUD FORMS</span></div>
 <section class="sky-grid">
-<article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Cloud gardens floating beneath a radiant, enchanted dawn.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>A molten golden horizon wrapped in rose and amber magic.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Storm clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>A violet storm realm split by distant electric light.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Dreamveil</h3><p>Cotton-candy nebula clouds drifting through a pastel dream.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Aurora clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Sanctuary</h3><p>Emerald and turquoise aurora curtains over sleeping clouds.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>A luminous moonlit sky with silver mist and scattered stars.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Nebula clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Astral Nebula</h3><p>Deep violet cosmic clouds glowing with celestial energy.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="High altitude cirrus"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Stardust Passage</h3><p>Silken cloud trails sweeping through a field of stardust.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cloud ocean"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>An endless sea of clouds beneath a magical glowing horizon.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Layered fluffy clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>Deep, weighty cloud puffs layered into a dramatic formation.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Dreamveil</h3><p>Small, soft cotton puffs in delicate pastel layers.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Mint-lit fluffy clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Sanctuary</h3><p>Rounded cloud clusters with cool mint light and soft edges.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>Quiet, pillowy cloud masses under cool silver moonlight.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Violet wool-like clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Astral Nebula</h3><p>Large overlapping wool-like billows with a violet inner glow.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="Rows of soft cloud puffs"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Stardust Passage</h3><p>Long, low rows of soft puffs with airy gaps between them.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cotton-soft cloud bank"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>A broad, continuous bank of cotton-soft cloud formations.</p></div></article>
 </section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
 </main>
 <script>
@@ -66,71 +66,79 @@ float sdEllipse(vec2 p,vec2 r){return (length(p/r)-1.0)*min(r.x,r.y);}
 float sdBox(vec2 p,vec2 b){vec2 q=abs(p)-b;return length(max(q,0.0))+min(max(q.x,q.y),0.0);}
 float sdSeg(vec2 p,vec2 a,vec2 b,float r){vec2 v=b-a;float h=clamp(dot(p-a,v)/max(dot(v,v),.0001),0.0,1.0);return length(p-a-v*h)-r;}
 
-/* Nine genuinely different silhouettes, each built from connected soft masses. */
+/* Nine variations of natural wool-like and cotton-puff cloud banks.
+   Every mode is made only from overlapping rounded cloud masses. */
+float puff(vec2 p, vec2 center, vec2 radius){
+ return sdEllipse(p-center,radius);
+}
 float silhouette(vec2 p,float m,float t){
  float d=4.0;
  if(m<.5){
-  d=min(d,sdEllipse(p-vec2(-.31,-.02),vec2(.20,.20)));
-  d=min(d,sdEllipse(p-vec2(-.13,.07),vec2(.22,.27)));
-  d=min(d,sdEllipse(p-vec2(.10,.06),vec2(.25,.29)));
-  d=min(d,sdEllipse(p-vec2(.31,-.02),vec2(.19,.20)));
-  d=min(d,sdEllipse(p-vec2(0.0,-.13),vec2(.43,.13)));
+  d=min(d,puff(p,vec2(-.34,-.04),vec2(.19,.18)));
+  d=min(d,puff(p,vec2(-.19,.045),vec2(.22,.24)));
+  d=min(d,puff(p,vec2(.04,.07),vec2(.25,.28)));
+  d=min(d,puff(p,vec2(.27,.015),vec2(.22,.22)));
+  d=min(d,puff(p,vec2(.43,-.065),vec2(.14,.14)));
+  d=min(d,puff(p,vec2(0.0,-.15),vec2(.47,.13)));
  }else if(m<1.5){
-  d=min(d,sdEllipse(p-vec2(-.02,.0),vec2(.38,.19)));
-  d=min(d,sdEllipse(p-vec2(.30,.10),vec2(.16,.15)));
-  d=min(d,sdEllipse(p-vec2(.43,.035),vec2(.09,.065)));
-  d=min(d,sdSeg(p,vec2(-.34,.02),vec2(-.51,.20),.055));
-  d=min(d,sdSeg(p,vec2(-.34,.02),vec2(-.51,-.16),.055));
-  d=min(d,sdEllipse(p-vec2(.02,-.16),vec2(.17,.07)));
-  d=min(d,sdEllipse(p-vec2(.21,.22),vec2(.065,.11)));
+  d=min(d,puff(p,vec2(-.39,-.08),vec2(.17,.15)));
+  d=min(d,puff(p,vec2(-.25,.015),vec2(.22,.22)));
+  d=min(d,puff(p,vec2(-.04,.10),vec2(.25,.28)));
+  d=min(d,puff(p,vec2(.19,.08),vec2(.24,.25)));
+  d=min(d,puff(p,vec2(.39,-.015),vec2(.18,.18)));
+  d=min(d,puff(p,vec2(-.08,-.16),vec2(.38,.12)));
  }else if(m<2.5){
-  float a=atan(p.y,p.x),rad=length(p);
-  float turn=mod(a+6.28318,6.28318);
-  float coil=.045+.039*turn;
-  d=abs(rad-coil)-(.055+.012*sin(turn*4.0+t*.15));
-  d=min(d,length(p)-.09);
-  d=min(d,sdEllipse(p-vec2(.20,-.22),vec2(.12,.07)));
+  d=min(d,puff(p,vec2(-.38,-.09),vec2(.20,.16)));
+  d=min(d,puff(p,vec2(-.20,.035),vec2(.24,.23)));
+  d=min(d,puff(p,vec2(.03,.015),vec2(.27,.24)));
+  d=min(d,puff(p,vec2(.28,.075),vec2(.22,.24)));
+  d=min(d,puff(p,vec2(.43,-.075),vec2(.15,.14)));
+  d=min(d,puff(p,vec2(.0,-.17),vec2(.49,.12)));
  }else if(m<3.5){
-  d=min(d,length(p-vec2(-.29,-.015))-.19);
-  d=min(d,length(p-vec2(-.08,.075))-.25);
-  d=min(d,length(p-vec2(.19,.025))-.21);
-  d=min(d,length(p-vec2(.02,-.15))-.18);
-  d=min(d,length(p-vec2(.37,-.07))-.12);
+  d=min(d,puff(p,vec2(-.34,-.07),vec2(.20,.18)));
+  d=min(d,puff(p,vec2(-.22,.13),vec2(.18,.20)));
+  d=min(d,puff(p,vec2(-.02,.02),vec2(.25,.29)));
+  d=min(d,puff(p,vec2(.20,.14),vec2(.19,.21)));
+  d=min(d,puff(p,vec2(.36,-.06),vec2(.19,.17)));
+  d=min(d,puff(p,vec2(.02,-.17),vec2(.40,.12)));
  }else if(m<4.5){
-  d=abs(length(p)-(.27+.018*sin(atan(p.y,p.x)*5.0+t*.18)))-.085;
-  d=min(d,length(p)-.105);
-  d=min(d,sdEllipse(p-vec2(0.0,.31),vec2(.11,.065)));
+  d=min(d,puff(p,vec2(-.42,-.10),vec2(.16,.13)));
+  d=min(d,puff(p,vec2(-.29,.00),vec2(.19,.19)));
+  d=min(d,puff(p,vec2(-.12,.08),vec2(.22,.23)));
+  d=min(d,puff(p,vec2(.10,.04),vec2(.23,.25)));
+  d=min(d,puff(p,vec2(.31,.01),vec2(.20,.20)));
+  d=min(d,puff(p,vec2(.45,-.10),vec2(.14,.13)));
+  d=min(d,puff(p,vec2(0.0,-.18),vec2(.48,.10)));
  }else if(m<5.5){
-  d=min(d,sdBox(p-vec2(0.0,-.17),vec2(.37,.12)));
-  d=min(d,sdBox(p-vec2(-.24,.015),vec2(.105,.22)));
-  d=min(d,sdBox(p-vec2(.24,.015),vec2(.105,.22)));
-  d=min(d,sdBox(p-vec2(0.0,.045),vec2(.12,.28)));
-  d=min(d,length(p-vec2(-.24,.245))-.105);
-  d=min(d,length(p-vec2(.24,.245))-.105);
-  d=min(d,length(p-vec2(0.0,.34))-.12);
+  d=min(d,puff(p,vec2(-.31,-.04),vec2(.23,.21)));
+  d=min(d,puff(p,vec2(-.12,.10),vec2(.22,.27)));
+  d=min(d,puff(p,vec2(.10,.09),vec2(.23,.28)));
+  d=min(d,puff(p,vec2(.31,-.025),vec2(.22,.20)));
+  d=min(d,puff(p,vec2(-.02,-.17),vec2(.43,.13)));
  }else if(m<6.5){
-  d=min(d,sdEllipse(p-vec2(0.0,-.015),vec2(.14,.105)));
-  d=min(d,sdEllipse(p-vec2(-.24,.075),vec2(.26,.085)));
-  d=min(d,sdEllipse(p-vec2(.24,.075),vec2(.26,.085)));
-  d=min(d,sdSeg(p,vec2(.08,-.01),vec2(.40,-.02),.045));
-  d=min(d,sdSeg(p,vec2(-.02,-.075),vec2(-.14,-.23),.055));
+  d=min(d,puff(p,vec2(-.42,-.10),vec2(.17,.13)));
+  d=min(d,puff(p,vec2(-.27,.025),vec2(.21,.20)));
+  d=min(d,puff(p,vec2(-.08,.055),vec2(.22,.22)));
+  d=min(d,puff(p,vec2(.13,.045),vec2(.22,.22)));
+  d=min(d,puff(p,vec2(.34,-.015),vec2(.21,.18)));
+  d=min(d,puff(p,vec2(.02,-.16),vec2(.48,.12)));
  }else if(m<7.5){
-  d=min(d,sdEllipse(p-vec2(0.0,-.045),vec2(.43,.14)));
-  d=min(d,sdEllipse(p-vec2(0.0,.12),vec2(.19,.12)));
-  d=min(d,sdSeg(p,vec2(-.28,.0),vec2(-.43,.22),.035));
-  d=min(d,sdSeg(p,vec2(.28,.0),vec2(.43,.22),.035));
-  d=min(d,sdEllipse(p-vec2(-.12,-.18),vec2(.13,.045)));
-  d=min(d,sdEllipse(p-vec2(.12,-.18),vec2(.13,.045)));
+  d=min(d,puff(p,vec2(-.37,-.07),vec2(.18,.16)));
+  d=min(d,puff(p,vec2(-.20,.06),vec2(.21,.23)));
+  d=min(d,puff(p,vec2(.01,.12),vec2(.23,.25)));
+  d=min(d,puff(p,vec2(.23,.045),vec2(.23,.23)));
+  d=min(d,puff(p,vec2(.41,-.065),vec2(.16,.15)));
+  d=min(d,puff(p,vec2(0.0,-.17),vec2(.46,.12)));
  }else{
-  d=min(d,sdEllipse(p-vec2(-.34,-.09),vec2(.24,.18)));
-  d=min(d,sdEllipse(p-vec2(-.12,.015),vec2(.28,.23)));
-  d=min(d,sdEllipse(p-vec2(.16,.005),vec2(.28,.22)));
-  d=min(d,sdEllipse(p-vec2(.39,-.09),vec2(.22,.17)));
-  d=min(d,sdEllipse(p-vec2(.0,-.19),vec2(.48,.12)));
+  d=min(d,puff(p,vec2(-.43,-.13),vec2(.19,.14)));
+  d=min(d,puff(p,vec2(-.28,-.015),vec2(.23,.19)));
+  d=min(d,puff(p,vec2(-.07,.025),vec2(.25,.22)));
+  d=min(d,puff(p,vec2(.16,.015),vec2(.25,.21)));
+  d=min(d,puff(p,vec2(.38,-.075),vec2(.20,.15)));
+  d=min(d,puff(p,vec2(0.0,-.17),vec2(.49,.11)));
  }
  return d;
 }
-
 float cloudField(vec2 p,float m,float t){
  vec2 drift=vec2(t*.012,-t*.006);
  vec2 q=p+drift;
