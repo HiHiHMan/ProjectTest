@@ -5,18 +5,18 @@
 <meta name="theme-color" content="#08090d"><title>Sky Clouds — ProjectTest</title>
 <style>
 *{box-sizing:border-box} :root{color-scheme:dark;font-family:Inter,"Segoe UI",sans-serif;background:#08090d;color:#f3f4f6}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#263b55 0,transparent 55%),#08090d}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -18%,#49306f 0,transparent 48%),radial-gradient(ellipse at 8% 45%,#142e54 0,transparent 42%),#070713}
 .page{width:min(1800px,calc(100% - 48px));margin:auto;padding:38px 0 72px}
 .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
 .back{color:#aab5c5;text-decoration:none;font-size:13px}.back:hover{color:#fff}
-.eyebrow{margin:0 0 12px;color:#9cc8e8;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
+.eyebrow{margin:0 0 12px;color:#d4b4ff;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
 h1{margin:0;font-size:clamp(42px,7vw,78px);letter-spacing:-.075em;line-height:.95}
 .intro{max-width:650px;margin:18px 0 0;color:#9ba9b9;font-size:14px;line-height:1.8}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:38px 0 17px}
 .section-head h2{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase}.section-head span{color:#818c9c;font-size:10px;letter-spacing:.13em}
 .sky-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.sky-card{min-width:0;overflow:hidden;border:1px solid #ffffff19;border-radius:20px;background:linear-gradient(145deg,#ffffff0c,#ffffff03);transition:transform .3s,border-color .3s,box-shadow .3s}
-.sky-card:hover{transform:translateY(-4px);border-color:#a8d9ff66;box-shadow:0 18px 45px #0008}
+.sky-card{min-width:0;overflow:hidden;border:1px solid #bba5ff2b;border-radius:20px;background:linear-gradient(145deg,#211b3cbb,#0d1024ee);transition:transform .3s,border-color .3s,box-shadow .3s}
+.sky-card:hover{transform:translateY(-4px);border-color:#c9a7ff99;box-shadow:0 18px 55px #6d42c955}
 .sky-art{height:clamp(190px,19vw,300px);position:relative;overflow:hidden;isolation:isolate;background:#0b1728}
 .sky-art canvas{display:block;width:100%;height:100%}
 .sky-art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(145deg,#ffffff12,transparent 42%,#0003)}
@@ -29,18 +29,18 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 </head>
 <body><main class="page">
 <div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
-<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine atmospheric cloud studies generated with WebGL shaders. Each card has its own cloud formation, lighting and color palette.</p></header>
-<div class="section-head"><h2>Cloud collection</h2><span>09 EXPERIMENTS</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine enchanted skies from a dreamlike realm — celestial clouds, stardust, aurora rivers and impossible horizons, rendered live with WebGL.</p></header>
+<div class="section-head"><h2>Enchanted realms</h2><span>09 WORLDS</span></div>
 <section class="sky-grid">
-<article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Soft Cumulus</h3><p>Voluminous white clouds drifting across a clear blue sky.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Golden Hour</h3><p>Peach and amber cloud edges illuminated by a low sun.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Storm clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Storm Front</h3><p>Deep layered cloud banks with cool silver highlights.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Pastel Drift</h3><p>Soft lilac, rose and powder-blue cloud wisps.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Aurora clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Veil</h3><p>Flowing teal and emerald light folded into night clouds.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moonlit Mist</h3><p>Silver-blue cloud layers floating through a midnight sky.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Nebula clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Nebula Cloud</h3><p>Violet and magenta gas clouds with subtle luminous depth.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="High altitude cirrus"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Cirrus Flow</h3><p>Fine stretched cloud bands sweeping across the atmosphere.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cloud ocean"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Cloud Ocean</h3><p>Broad rolling cloud formations with a luminous horizon.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Cloud gardens floating beneath a radiant, enchanted dawn.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>A molten golden horizon wrapped in rose and amber magic.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Storm clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>A violet storm realm split by distant electric light.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Dreamveil</h3><p>Cotton-candy nebula clouds drifting through a pastel dream.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Aurora clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Sanctuary</h3><p>Emerald and turquoise aurora curtains over sleeping clouds.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>A luminous moonlit sky with silver mist and scattered stars.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Nebula clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Astral Nebula</h3><p>Deep violet cosmic clouds glowing with celestial energy.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="High altitude cirrus"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Stardust Passage</h3><p>Silken cloud trails sweeping through a field of stardust.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cloud ocean"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>An endless sea of clouds beneath a magical glowing horizon.</p></div></article>
 </section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
 </main>
 <script>
@@ -77,11 +77,31 @@ void main(){
  float wisps=smoothstep(.53,.82,fbm(p*vec2(5.,2.)+vec2(t*.025,0.)));
  if(u_mode>7.5){density=max(density*.78,wisps*.58);}
  if(u_mode>3.5&&u_mode<5.5){density*=.88+.12*sin(p.x*2.+t*.2);}
- float glow=exp(-abs(uv.y-.45)*5.)*.12;
- sky+=glow*light;
- vec3 col=mix(sky,cloud,density*.92);
- float shade=(1.-edge)*density*.12;col-=shade*shadow;
- float grain=(hash(gl_FragCoord.xy+fract(t))*0.018)-.009;col+=grain;
+ float horizonGlow=exp(-abs(uv.y-(.43+.035*sin(p.x*1.7+t*.12)))*7.)*.28;
+ float celestial=exp(-length((uv-vec2(.73,.72))*vec2(1.0,1.35))*8.);
+ sky+=horizonGlow*light+celestial*light*.42;
+ vec3 col=mix(sky,cloud,density*.88);
+ float shade=(1.-edge)*density*.10;col-=shade*shadow;
+ // Fine star field, with a few brighter magical points.
+ vec2 starGrid=uv*vec2(145.,92.);
+ vec2 cell=floor(starGrid), local=fract(starGrid)-.5;
+ float rnd=hash(cell+17.3);
+ float starMask=step(.992,rnd)*smoothstep(.48,.08,length(local));
+ float twinkle=.55+.45*sin(t*2.2+rnd*35.);
+ float starGlow=exp(-length(local)*13.)*step(.986,rnd);
+ float stars=(starMask+starGlow*.45)*twinkle;
+ float sparkle=pow(max(0.,sin((uv.x*31.+uv.y*19.)*3.+t*1.8)),18.)*step(.994,hash(floor(uv*vec2(38.,24.))));
+ col+=light*(stars*.9+sparkle*.22);
+ // Flowing ribbons of enchanted atmospheric light.
+ float ribbonA=exp(-pow((uv.y-(.60+.075*sin(uv.x*5.2+t*.22)+.025*sin(uv.x*12.-t*.3)))*15.,2.));
+ float ribbonB=exp(-pow((uv.y-(.69+.055*sin(uv.x*4.1-t*.18)))*22.,2.));
+ float magic=0.;
+ if(u_mode>3.5&&u_mode<5.5)magic=(ribbonA*.30+ribbonB*.18);
+ else if(u_mode>5.5&&u_mode<7.5)magic=(ribbonA*.20+ribbonB*.14);
+ else magic=ribbonA*.075;
+ vec3 magicTint=mix(light,vec3(.55,.38,1.),.42);
+ col+=magicTint*magic;
+ float grain=(hash(gl_FragCoord.xy+fract(t))*0.012)-.006;col+=grain;
  gl_FragColor=vec4(pow(max(col,0.),vec3(.92)),1.);
 }`;
 function compile(gl,type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null;}return s;}
