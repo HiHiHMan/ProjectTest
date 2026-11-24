@@ -34,8 +34,8 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 </head>
 <body><main class="page">
 <div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
-<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Ten distinct sky compositions, from flowing vapor and layered wool-like clouds to softly illustrated cloud forms.</p></header>
-<div class="section-head"><h2>Ten Different Sky Scenes</h2><span>10 CLOUD FORMS</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Fourteen distinct sky compositions, from flowing vapor and layered wool-like clouds to softly illustrated cloud forms.</p></header>
+<div class="section-head"><h2>Fourteen Different Sky Scenes</h2><span>14 CLOUD FORMS</span></div>
 <section class="sky-grid">
 <article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas><span class="sky-sun" aria-hidden="true"></span></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas><span class="sky-moon sky-moon--parted" aria-hidden="true"></span></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
@@ -51,6 +51,7 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 <article class="sky-card"><div class="sky-art"><canvas data-sky="10" aria-label="Naturally flowing amber cloud banks"></canvas></div><div class="info"><small>11 / Golden hour</small><h3>Amber Highlands</h3><p>Broad, naturally rounded cloud masses glowing with warm amber light.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="11" aria-label="Soft rose and peach cloud formations"></canvas></div><div class="info"><small>12 / Rose dawn</small><h3>Rosewater Haven</h3><p>Soft rose-pink cloud banks drift around a bright, open center.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="12" aria-label="Layered blue-white natural cloud formations"></canvas></div><div class="info"><small>13 / Clear atmosphere</small><h3>Azure Reverie</h3><p>Voluminous blue-white clouds rise in overlapping atmospheric layers.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="13" aria-label="Dense fantasy cloud clusters with many connected rounded billows"></canvas></div><div class="info"><small>14 / Fantasy clusters</small><h3>Celestial Woolscape</h3><p>Dense, connected cloud clusters with varied rounded crowns and deep overlapping layers.</p></div></article>
 </section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
 </main>
 <script>
@@ -176,8 +177,8 @@ float cloudField(vec2 p,float m,float t){
  vec2 drift=vec2(t*.010,-t*.004);
  vec2 q=p+drift;
  // Celestial Garden and its three companions share the same organic cloud morphology.
- if(m<.5 || (m>9.5 && m<12.5)){
-  float variant=clamp(m-10.0,0.0,2.0);
+ if(m<.5 || (m>9.5 && m<13.5)){
+  float variant=clamp(m-10.0,0.0,3.0);
   vec2 organicP=q*vec2(1.72+variant*.08,2.72-variant*.06);
   organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
   organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
@@ -188,6 +189,12 @@ float cloudField(vec2 p,float m,float t){
   float organicWisps=fbm(organicP*vec2(1.0,7.2)+vec2(-3.0+variant*2.3,t*.002));
   float crownShape=smoothstep(.30,.72,crownNoise);
   float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
+  if(m>12.5){
+   // Card 14: denser, irregular puff clusters with a stronger crown silhouette.
+   float clusteredCrown=smoothstep(.34,.70,crownNoise*.72+organicBillow*.28);
+   naturalMass=organicBase*.39+organicBillow*.34+clusteredCrown*.22+organicWisps*.05;
+   return smoothstep(.405,.575,naturalMass)*1.02;
+  }
   return smoothstep(.385,.585,naturalMass)*.99;
  }
  float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
@@ -231,7 +238,8 @@ void main(){
  else if(mode<8.5){skyTop=vec3(.055,.17,.29);skyBottom=vec3(.52,.68,.76);cloudLit=vec3(.94,.97,.91);cloudShade=vec3(.13,.29,.42);accent=vec3(.55,.84,.92);}
  else if(mode<10.5){skyTop=vec3(.22,.095,.12);skyBottom=vec3(.88,.48,.31);cloudLit=vec3(1.0,.83,.65);cloudShade=vec3(.34,.15,.20);accent=vec3(1.0,.58,.30);}
  else if(mode<11.5){skyTop=vec3(.31,.16,.34);skyBottom=vec3(.96,.63,.66);cloudLit=vec3(1.0,.86,.84);cloudShade=vec3(.43,.22,.38);accent=vec3(1.0,.61,.67);}
- else{skyTop=vec3(.09,.25,.43);skyBottom=vec3(.68,.82,.91);cloudLit=vec3(.96,.99,1.0);cloudShade=vec3(.20,.39,.57);accent=vec3(.48,.76,.94);}
+ else if(mode<12.5){skyTop=vec3(.09,.25,.43);skyBottom=vec3(.68,.82,.91);cloudLit=vec3(.96,.99,1.0);cloudShade=vec3(.20,.39,.57);accent=vec3(.48,.76,.94);}
+ else{skyTop=vec3(.105,.075,.22);skyBottom=vec3(.48,.31,.53);cloudLit=vec3(1.0,.86,.91);cloudShade=vec3(.19,.105,.28);accent=vec3(.76,.48,.82);}
 
  float skyMix=smoothstep(-.60,.62,uv.y);
  vec3 sky=mix(skyBottom,skyTop,skyMix);
@@ -321,11 +329,16 @@ void main(){
   float centerOpen=1.0-smoothstep(.12,.34,bank);
   float heightMask=smoothstep(.10,.34,uv.y);
   density*=mix(.58,1.0,1.0-centerOpen*.55)*heightMask;
- }else{
+ }else if(mode<12.5){
   // Azure Reverie: taller cloud masses gather toward the sides with a layered central valley.
   float sideMass=smoothstep(.10,.42,abs(uv.x-.5));
   float height=smoothstep(.04,.42,uv.y);
   density*=mix(.66,1.12,sideMass)*mix(.72,1.0,height);
+ }else{
+  // Celestial Woolscape: dense cloud clusters rise in uneven overlapping tiers.
+  float clusterFlow=fbm(vec2(p.x*2.8+p.y*.55,p.y*3.4-t*.006));
+  float upperCrowns=smoothstep(.28,.62,clusterFlow);
+  density*=smoothstep(-.30,.12,uv.y)*mix(.86,1.16,upperCrowns);
  }
 
  // Layered cloud lighting: directional highlights, deep cavities and soft rim scattering.
@@ -356,7 +369,7 @@ void main(){
  vec2 nearP=cloudP*1.42+vec2(.13,-.12)+vec2(t*.009,-t*.005);
  float farDensity=cloudField(farP,mode,t*.68)*.66;
  float midDensity=0.0;
- if(mode<.5 || (mode>9.5 && mode<12.5)) midDensity=cloudField(midP,mode,t*.88)*.58;
+ if(mode<.5 || (mode>9.5 && mode<13.5)) midDensity=cloudField(midP,mode,t*.88)*.58;
  float nearDensity=cloudField(nearP,mode,t*1.22)*.58;
  if(mode<.5){
   float farWarp=fbm(uv*vec2(7.0,10.0)+vec2(2.0+t*.004,1.0));
