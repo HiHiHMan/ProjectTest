@@ -35,11 +35,11 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
 </head>
 <body><main class="page">
 <div class="top"><a href="../index.html">← All experiments</a><span class="eyebrow">PIXEL ART / CHARACTER ANIMATION</span></div>
-<header><p class="eyebrow">Retro sprite workshop</p><h1>Pixel Character</h1><p class="intro">A 16-bit adventurer shown in a true side view, facing right. Watch the character idle, walk and run inside a 1000 × 1000 pixel workspace.</p></header>
+<header><p class="eyebrow">Retro sprite workshop</p><h1>Pixel Character</h1><p class="intro">A 16-bit adventurer shown in a true side view, facing right. Watch the character idle, walk and run inside a 2000 × 2000 pixel workspace.</p></header>
 <section class="workspace">
 <div class="stage">
-<div class="stage-head"><span>SPRITE VIEWPORT</span><span>1000 × 1000 PX</span></div>
-<div class="canvas-wrap"><canvas id="screen" width="1000" height="1000" aria-label="Animated 16-bit pixel character"></canvas></div>
+<div class="stage-head"><span>SPRITE VIEWPORT</span><span>2000 × 2000 PX</span></div>
+<div class="canvas-wrap"><canvas id="screen" width="2000" height="2000" aria-label="Animated 16-bit pixel character"></canvas></div>
 <div class="controls">
 <button id="idle" class="active">Idle</button><button id="walk">Walk</button><button id="run">Run</button><button id="pause">Pause</button><button id="grid">Grid: Off</button>
 </div>
@@ -48,7 +48,7 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
 <h2>Animation settings</h2>
 <div class="field"><label for="speed">Animation speed <strong id="speedValue">8 FPS</strong></label><input class="range" id="speed" type="range" min="2" max="16" value="8"></div>
 <div class="field"><label>Character palette</label><div class="palette" id="palette"></div></div>
-<div class="field"><label>Canvas information</label><div class="stat"><span>Canvas</span><strong>1000 × 1000</strong></div><div class="stat"><span>Sprite resolution</span><strong>32 × 40 px</strong></div><div class="stat"><span>Pixel rendering</span><strong>Nearest neighbor</strong></div></div>
+<div class="field"><label>Canvas information</label><div class="stat"><span>Canvas</span><strong>2000 × 2000</strong></div><div class="stat"><span>Sprite resolution</span><strong>32 × 40 px</strong></div><div class="stat"><span>Pixel rendering</span><strong>Nearest neighbor</strong></div></div>
 <p class="note">Every square in the sprite is a real pixel. The canvas is rendered without smoothing to preserve crisp 16-bit edges.</p>
 </aside>
 </section>
@@ -70,12 +70,12 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
     const p=palettes[palette], phase=frame%4;
     const moving=mode!=="idle", bob=mode==="idle"?(Math.sin(frame*.12)>0?0:-1):(mode==="run"&&phase%2?-2:0);
     const stride=moving?(phase<2?1:-1):0;
-    ctx.clearRect(0,0,1000,1000);
-    const bg=ctx.createLinearGradient(0,0,0,1000);bg.addColorStop(0,"#20243a");bg.addColorStop(1,"#101522");ctx.fillStyle=bg;ctx.fillRect(0,0,1000,1000);
-    ctx.fillStyle="#ffffff08";for(let n=0;n<=1000;n+=64){ctx.fillRect(n,0,1,1000);ctx.fillRect(0,n,1000,1)}
-    ctx.fillStyle="#090d18";ctx.fillRect(250,820,500,8);ctx.fillStyle="#ffffff18";ctx.fillRect(330,828,340,3);
-    ctx.fillStyle="#05081299";ctx.fillRect(370,805,250,18);
-    const x=13,y=5+bob;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const bg=ctx.createLinearGradient(0,0,0,1000);bg.addColorStop(0,"#20243a");bg.addColorStop(1,"#101522");ctx.fillStyle=bg;ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#ffffff08";for(let n=0;n<=canvas.width;n+=64){ctx.fillRect(n,0,1,canvas.height);ctx.fillRect(0,n,canvas.width,1)}
+    ctx.fillStyle="#090d18";ctx.fillRect(500,1640,1000,8);ctx.fillStyle="#ffffff18";ctx.fillRect(660,1648,680,3);
+    ctx.fillStyle="#05081299";ctx.fillRect(740,1625,500,36);
+    const x=Math.floor((canvas.width/px-32)/2),y=Math.floor((canvas.height/px-40)/2)+bob;
 
     // Backpack and sword sheath sit behind the body.
     rect(x+3,y+12,5,12,p.boot);rect(x+2,y+14,2,7,p.gold);
@@ -130,7 +130,7 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
     rect(x+15,y+13,2,2,p.gold);rect(x+11,y+15,2,2,p.coatHi);
     rect(x+8,y+4,1,3,"#ffd7b5");
 
-    if(showGrid){ctx.strokeStyle="#ffffff22";ctx.lineWidth=1;for(let n=0;n<=1000;n+=px){ctx.beginPath();ctx.moveTo(n+.5,0);ctx.lineTo(n+.5,1000);ctx.stroke();ctx.beginPath();ctx.moveTo(0,n+.5);ctx.lineTo(1000,n+.5);ctx.stroke()}}
+    if(showGrid){ctx.strokeStyle="#ffffff35";ctx.lineWidth=1;for(let n=0;n<=canvas.width;n+=px){ctx.beginPath();ctx.moveTo(n+.5,0);ctx.lineTo(n+.5,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,n+.5);ctx.lineTo(canvas.width,n+.5);ctx.stroke()}}
   }
   const modes={idle:$("#idle"),walk:$("#walk"),run:$("#run")};
   Object.entries(modes).forEach(([name,button])=>button.addEventListener("click",()=>{mode=name;frame=0;Object.values(modes).forEach(b=>b.classList.remove("active"));button.classList.add("active");draw()}));
