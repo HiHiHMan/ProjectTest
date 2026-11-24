@@ -54,45 +54,205 @@ button:hover{background:#34304e;border-color:#a58cff88}button.active{background:
 </section>
 </main>
 <script>
-(()=>{
-const canvas=document.getElementById('screen'),ctx=canvas.getContext('2d');
-ctx.imageSmoothingEnabled=false;
-const palettes=[
-{skin:'#f2b58e',skinShade:'#c77e69',hair:'#30243d',hairLight:'#55405e',coat:'#315b87',coatLight:'#568bb4',coatDark:'#203754',scarf:'#e58b4d',gold:'#f4c76b',boot:'#503c43',metal:'#d9e2e8'},
-{skin:'#e9b18b',skinShade:'#b96f62',hair:'#392b25',hairLight:'#72503a',coat:'#477b68',coatLight:'#77a88a',coatDark:'#284d49',scarf:'#e9c45f',gold:'#f3d58a',boot:'#55443a',metal:'#dce5d9'},
-{skin:'#d99a7c',skinShade:'#a75e59',hair:'#1e243c',hairLight:'#46537b',coat:'#764d91',coatLight:'#ae7bc4',coatDark:'#49345f',scarf:'#df7185',gold:'#f4c76b',boot:'#46364e',metal:'#dce2f0'}
-];
-let palette=0,mode='idle',paused=false,showGrid=false,fps=8,last=0,frame=0,acc=0;
-const patterns={
-idle:[
-['........hhhhhhhh........','......hhhhhhhhhhhh......','.....hhhssssssshhh.....','.....hhssssssssshh......','.....hhssessessshh......','.....hhssssssssshh......','......hhssnnsshh........','.......hssssssh..........','........ssssss...........','.........ssss............','........ccsscc............','.......cccccccc...........','......cccoooccc...........','.....cccocccocc............','.....cccocccocc............','......cccoooccc............','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','......ccc....ccc..........','.....bbbb....bbbb.........','.....bbbb....bbbb.........','.....bbbb....bbbb.........'],
-walk:[
-['........hhhhhhhh........','......hhhhhhhhhhhh......','.....hhhssssssshhh.....','.....hhssssssssshh......','.....hhssessessshh......','.....hhssssssssshh......','......hhssnnsshh........','.......hssssssh..........','........ssssss...........','.........ssss............','........ccsscc............','.......cccccccc...........','......cccoooccc...........','.....cccocccocc............','.....cccocccocc............','......cccoooccc............','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','......ccc....ccc..........','.....bbbb....bbbb.........','....bbbb......bbbb........','....bbbb......bbbb........'],
-run:[
-['........hhhhhhhh........','......hhhhhhhhhhhh......','.....hhhssssssshhh.....','.....hhssssssssshh......','.....hhssessessshh......','.....hhssssssssshh......','......hhssnnsshh........','.......hssssssh..........','........ssssss...........','.........ssss............','........ccsscc............','.......cccccccc...........','......cccoooccc...........','.....cccocccocc............','.....cccocccocc............','......cccoooccc............','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','.......ccoooooc...........','......ccc....ccc..........','....bbbb......bbbb........','...bbbb........bbbb.......','...bbbb........bbbb.......']
-]};
-function drawSprite(){
- const p=palettes[palette],rows=patterns[mode][(frame>>1)%patterns[mode].length];
- const colors={h:p.hair,H:p.hairLight,s:p.skin,S:p.skinShade,e:'#241f2b',n:'#9a554e',c:p.coat,o:p.coatLight,d:p.coatDark,b:p.boot,g:p.gold,m:p.metal};
- const scale=14,sw=32*scale,sh=40*scale,x=(1000-sw)/2,y=(1000-sh)/2+Math.sin(frame*.35)*3;
- ctx.clearRect(0,0,1000,1000);
- const bg=ctx.createLinearGradient(0,0,0,1000);bg.addColorStop(0,'#20243a');bg.addColorStop(1,'#101522');ctx.fillStyle=bg;ctx.fillRect(0,0,1000,1000);
- ctx.fillStyle='#ffffff08';for(let i=0;i<1000;i+=50){ctx.fillRect(i,0,1,1000);ctx.fillRect(0,i,1000,1)}
- ctx.fillStyle='#090d18';ctx.fillRect(270,790,460,5);ctx.fillStyle='#ffffff12';ctx.fillRect(330,795,340,3);
- rows.forEach((row,ry)=>[...row].forEach((ch,rx)=>{if(ch==='.')return;let color=colors[ch];if(!color){if(ch==='o')color=p.coatLight;else return;}ctx.fillStyle=color;ctx.fillRect(x+rx*scale,y+ry*scale,scale,scale)}));
- // scarf and sword details, kept aligned to the sprite grid
- ctx.fillStyle=p.scarf;ctx.fillRect(x+12*scale,y+10*scale,9*scale,2*scale);ctx.fillRect(x+19*scale,y+12*scale,3*scale,5*scale);
- ctx.fillStyle=p.gold;ctx.fillRect(x+14*scale,y+1*scale,4*scale,2*scale);
- ctx.fillStyle=p.metal;ctx.fillRect(x+25*scale,y+12*scale,2*scale,15*scale);ctx.fillStyle='#8c9aa8';ctx.fillRect(x+24*scale,y+25*scale,5*scale,2*scale);
- if(mode!=='idle'&&frame%2){ctx.fillStyle='#ffffff18';ctx.fillRect(x+4*scale,y+34*scale,24*scale,scale)}
- if(showGrid){ctx.strokeStyle='#ffffff18';ctx.lineWidth=1;for(let i=0;i<=1000;i+=14){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,1000);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(1000,i);ctx.stroke()}}
-}
-function loop(t){if(!last)last=t;const step=1000/fps;acc+=Math.min(t-last,100);last=t;if(!paused&&acc>=step){frame++;acc%=step;drawSprite()}requestAnimationFrame(loop)}
-const buttons={idle,walk,run};Object.entries(buttons).forEach(([name,btn])=>btn.addEventListener('click',()=>{mode=name;frame=0;Object.values(buttons).forEach(b=>b.classList.remove('active'));btn.classList.add('active');drawSprite()}));
-document.getElementById('pause').addEventListener('click',e=>{paused=!paused;e.currentTarget.textContent=paused?'Play':'Pause'});
-document.getElementById('grid').addEventListener('click',e=>{showGrid=!showGrid;e.currentTarget.textContent='Grid: '+(showGrid?'On':'Off');drawSprite()});
-document.getElementById('speed').addEventListener('input',e=>{fps=Number(e.target.value);document.getElementById('speedValue').textContent=fps+' FPS'});
-palettes.forEach((p,i)=>{const b=document.createElement('button');b.className='swatch'+(i===0?' selected':'');b.style.background='linear-gradient(135deg,'+p.coat+','+p.scarf+')';b.title='Palette '+(i+1);b.addEventListener('click',()=>{palette=i;document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');drawSprite()});document.getElementById('palette').appendChild(b)});
-drawSprite();requestAnimationFrame(loop);
+(() => {
+  const canvas = document.querySelector("#screen");
+  const ctx = canvas.getContext("2d");
+  const $ = (selector) => document.querySelector(selector);
+
+  const palettes = [
+    { skin:"#f2b58e", skinShade:"#c77e69", hair:"#30243d", hairLight:"#55405e", coat:"#315b87", coatLight:"#568bb4", coatDark:"#203754", scarf:"#e58b4d", gold:"#f4c76b", boot:"#503c43", metal:"#d9e2e8" },
+    { skin:"#e9b18b", skinShade:"#b96f62", hair:"#392b25", hairLight:"#72503a", coat:"#477b68", coatLight:"#77a88a", coatDark:"#284d49", scarf:"#e9c45f", gold:"#f3d58a", boot:"#55443a", metal:"#dce5d9" },
+    { skin:"#d99a7c", skinShade:"#a75e59", hair:"#1e243c", hairLight:"#46537b", coat:"#764d91", coatLight:"#ae7bc4", coatDark:"#49345f", scarf:"#df7185", gold:"#f4c76b", boot:"#46364e", metal:"#dce2f0" }
+  ];
+
+  let paletteIndex = 0;
+  let animation = "idle";
+  let paused = false;
+  let showGrid = false;
+  let fps = 8;
+  let frame = 0;
+  let previousTime = 0;
+  let accumulator = 0;
+
+  const pixel = 16;
+  const originX = 0;
+  const originY = 0;
+
+  function block(x, y, w, h, color, offsetY = 0) {
+    ctx.fillStyle = color;
+    ctx.fillRect(originX + x * pixel, originY + (y + offsetY) * pixel, w * pixel, h * pixel);
+  }
+
+  function drawCharacter() {
+    const p = palettes[paletteIndex];
+    const bob = animation === "idle" ? Math.round(Math.sin(frame * 0.12) * 0.25) : (frame % 2 ? -1 : 1);
+    const step = animation === "idle" ? 0 : (frame % 2 ? 2 : -2);
+    const x = 9;
+    const y = 4 + (animation === "idle" ? bob : 0);
+
+    ctx.clearRect(0, 0, 1000, 1000);
+    const background = ctx.createLinearGradient(0, 0, 0, 1000);
+    background.addColorStop(0, "#20243a");
+    background.addColorStop(1, "#101522");
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, 1000, 1000);
+
+    // Subtle floor and backdrop marks
+    ctx.fillStyle = "#ffffff08";
+    for (let n = 0; n <= 1000; n += 64) {
+      ctx.fillRect(n, 0, 1, 1000);
+      ctx.fillRect(0, n, 1000, 1);
+    }
+    ctx.fillStyle = "#090d18";
+    ctx.fillRect(250, 820, 500, 8);
+    ctx.fillStyle = "#ffffff18";
+    ctx.fillRect(330, 828, 340, 3);
+
+    // Shadow
+    ctx.fillStyle = "#05081299";
+    ctx.fillRect(365, 805, 270, 18);
+
+    // Back hair and head
+    block(x + 5, y + 1, 12, 10, p.hair);
+    block(x + 4, y + 4, 2, 6, p.hair);
+    block(x + 16, y + 4, 2, 6, p.hair);
+    block(x + 6, y + 3, 10, 8, p.skin);
+    block(x + 6, y + 8, 10, 2, p.skinShade);
+    block(x + 7, y + 2, 9, 3, p.hairLight);
+    block(x + 5, y + 3, 3, 3, p.hair);
+    block(x + 14, y + 3, 3, 3, p.hair);
+    block(x + 8, y + 5, 2, 2, "#28202b");
+    block(x + 13, y + 5, 2, 2, "#28202b");
+    block(x + 10, y + 8, 3, 1, "#a85f5b");
+    // Hair fringe
+    block(x + 6, y + 2, 4, 2, p.hair);
+    block(x + 10, y + 3, 3, 1, p.hair);
+    block(x + 14, y + 2, 3, 3, p.hair);
+
+    // Neck
+    block(x + 9, y + 10, 5, 3, p.skinShade);
+    block(x + 10, y + 10, 3, 2, p.skin);
+
+    // Arms (alternate while walking/running)
+    const armSwing = animation === "idle" ? 0 : step;
+    block(x + 3, y + 13 + Math.max(0, armSwing), 3, 10, p.skinShade);
+    block(x + 4, y + 14 + Math.max(0, armSwing), 2, 7, p.skin);
+    block(x + 17, y + 13 + Math.max(0, -armSwing), 3, 10, p.skinShade);
+    block(x + 17, y + 14 + Math.max(0, -armSwing), 2, 7, p.skin);
+
+    // Tunic body
+    block(x + 7, y + 12, 10, 13, p.coatDark);
+    block(x + 8, y + 12, 8, 12, p.coat);
+    block(x + 9, y + 13, 5, 8, p.coatLight);
+    block(x + 14, y + 14, 2, 8, p.coatDark);
+    block(x + 8, y + 23, 8, 2, p.gold);
+    // Scarf
+    block(x + 8, y + 11, 9, 2, p.scarf);
+    block(x + 15, y + 12, 3, 7, p.scarf);
+    block(x + 15, y + 18, 2, 2, p.gold);
+    // Belt and buckle
+    block(x + 8, y + 21, 9, 2, p.boot);
+    block(x + 11, y + 21, 3, 2, p.gold);
+
+    // Legs and boots: separate positions create a readable walk cycle
+    if (step >= 0) {
+      block(x + 8, y + 25, 4, 6, p.coatDark);
+      block(x + 13, y + 25, 4, 6, p.coatDark);
+      block(x + 7, y + 30, 5, 3, p.boot);
+      block(x + 14, y + 30, 5, 3, p.boot);
+    } else {
+      block(x + 7, y + 25, 4, 6, p.coatDark);
+      block(x + 14, y + 25, 4, 6, p.coatDark);
+      block(x + 6, y + 30, 5, 3, p.boot);
+      block(x + 13, y + 30, 5, 3, p.boot);
+    }
+    block(x + 8, y + 31, 4, 1, "#8d6b62");
+    block(x + 15, y + 31, 4, 1, "#8d6b62");
+
+    // Sword on the character's right side
+    block(x + 21, y + 13, 2, 15, p.metal);
+    block(x + 22, y + 12, 1, 2, "#ffffff");
+    block(x + 20, y + 27, 4, 2, p.gold);
+    block(x + 21, y + 29, 2, 4, p.boot);
+    block(x + 20, y + 32, 4, 1, p.gold);
+
+    // Tiny highlights make the sprite read as 16-bit pixel art
+    block(x + 8, y + 14, 2, 2, p.coatLight);
+    block(x + 14, y + 17, 1, 3, p.coatLight);
+    block(x + 7, y + 6, 1, 2, "#ffd7b5");
+
+    if (showGrid) {
+      ctx.save();
+      ctx.strokeStyle = "#ffffff22";
+      ctx.lineWidth = 1;
+      for (let n = 0; n <= 1000; n += pixel) {
+        ctx.beginPath(); ctx.moveTo(n + .5, 0); ctx.lineTo(n + .5, 1000); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, n + .5); ctx.lineTo(1000, n + .5); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  const animationButtons = {
+    idle: $("#idle"),
+    walk: $("#walk"),
+    run: $("#run")
+  };
+
+  Object.entries(animationButtons).forEach(([name, button]) => {
+    button.addEventListener("click", () => {
+      animation = name;
+      frame = 0;
+      Object.values(animationButtons).forEach(item => item.classList.remove("active"));
+      button.classList.add("active");
+      drawCharacter();
+    });
+  });
+
+  $("#pause").addEventListener("click", event => {
+    paused = !paused;
+    event.currentTarget.textContent = paused ? "Play" : "Pause";
+  });
+
+  $("#grid").addEventListener("click", event => {
+    showGrid = !showGrid;
+    event.currentTarget.textContent = "Grid: " + (showGrid ? "On" : "Off");
+    drawCharacter();
+  });
+
+  $("#speed").addEventListener("input", event => {
+    fps = Number(event.target.value);
+    $("#speedValue").textContent = fps + " FPS";
+  });
+
+  palettes.forEach((palette, index) => {
+    const swatch = document.createElement("button");
+    swatch.type = "button";
+    swatch.className = "swatch" + (index === 0 ? " selected" : "");
+    swatch.style.background = "linear-gradient(135deg," + palette.coat + "," + palette.scarf + ")";
+    swatch.title = "Palette " + (index + 1);
+    swatch.addEventListener("click", () => {
+      paletteIndex = index;
+      document.querySelectorAll(".swatch").forEach(item => item.classList.remove("selected"));
+      swatch.classList.add("selected");
+      drawCharacter();
+    });
+    $("#palette").appendChild(swatch);
+  });
+
+  function animate(time) {
+    if (!previousTime) previousTime = time;
+    accumulator += Math.min(time - previousTime, 100);
+    previousTime = time;
+    if (!paused && accumulator >= 1000 / fps) {
+      frame++;
+      accumulator = 0;
+      drawCharacter();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  drawCharacter();
+  requestAnimationFrame(animate);
 })();
 </script></body></html>
