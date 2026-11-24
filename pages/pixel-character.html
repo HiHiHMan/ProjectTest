@@ -13,8 +13,8 @@ header{display:none}
 h1{font-size:24px;margin:0 0 8px}
 p{margin:0;color:#999;font-size:13px}
 main{width:100vw;height:100vh;margin:0;padding:0}
-.grid-viewport{width:100%;height:100%;overflow:hidden;background:#fff;border:0;padding:0}
-canvas{display:block;width:100%;height:100%;background:#fff;image-rendering:pixelated}
+.grid-viewport{width:100%;height:100%;overflow:hidden;background:#05070b;border:0;padding:0}
+canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:pixelated}
 .info{display:none;display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:#aaa;font-size:12px}
 </style>
 </head>
@@ -50,21 +50,30 @@ canvas{display:block;width:100%;height:100%;background:#fff;image-rendering:pixe
     canvas.style.height = height + "px";
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#05070b";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.beginPath();
-    ctx.strokeStyle = "#d4d4d4";
-    ctx.lineWidth = 1;
-    for (let x = 0.5; x <= width; x += cellSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
+    // Individual translucent glass tiles with soft highlights and shaded edges.
+    for (let y = 0; y < height; y += cellSize) {
+      for (let x = 0; x < width; x += cellSize) {
+        const w = Math.min(cellSize, width - x);
+        const h = Math.min(cellSize, height - y);
+
+        ctx.fillStyle = "rgba(125, 157, 190, 0.075)";
+        ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+
+        ctx.fillStyle = "rgba(225, 240, 255, 0.22)";
+        ctx.fillRect(x + 1, y + 1, w - 2, 1);
+        ctx.fillRect(x + 1, y + 1, 1, h - 2);
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+        ctx.fillRect(x + 1, y + h - 2, w - 2, 1);
+        ctx.fillRect(x + w - 2, y + 1, 1, h - 2);
+
+        ctx.fillStyle = "rgba(165, 205, 245, 0.035)";
+        ctx.fillRect(x + 2, y + 2, Math.max(0, w - 4), Math.max(0, h - 4));
+      }
     }
-    for (let y = 0.5; y <= height; y += cellSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-    }
-    ctx.stroke();
   }
 
   window.addEventListener("resize", drawGrid);
