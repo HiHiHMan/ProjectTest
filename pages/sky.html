@@ -190,24 +190,19 @@ float cloudField(vec2 p,float m,float t){
   float crownShape=smoothstep(.30,.72,crownNoise);
   float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
   if(m>12.5){
-   // Card 14: one large spherical cloud vortex, built from thick connected fleece-like lobes.
-   vec2 sphereP=q-vec2(0.0,-.015);
-   float sphereRadius=length(sphereP*vec2(.91,1.0));
-   float sphereAngle=atan(sphereP.y,sphereP.x);
-   float swirlAngle=sphereAngle+sphereRadius*4.2-t*.018;
-   vec2 swirlP=vec2(cos(swirlAngle),sin(swirlAngle))*sphereRadius;
-   float edgeWarp=fbm(vec2(swirlAngle*2.0,sphereRadius*8.0)+vec2(2.0,t*.002));
-   float sphereEdge=sphereRadius-(.69+(edgeWarp-.5)*.095);
-   float sphereMask=1.0-smoothstep(-.035,.075,sphereEdge);
-   // Broad spiral bands keep the whole formation round while smaller puffs sculpt its surface.
-   float spiralBody=fbm(swirlP*vec2(5.0,7.0)+vec2(3.0,-t*.003));
-   float spiralBillows=fbm(swirlP*vec2(10.5,13.0)+vec2(-4.0,t*.002));
-   float fleecePuffs=fbm(swirlP*vec2(18.0,21.0)+vec2(6.0,-t*.002));
-   float roundedRidges=smoothstep(.31,.68,spiralBody*.68+spiralBillows*.32);
-   float woolCrowns=smoothstep(.34,.70,spiralBillows*.58+fleecePuffs*.42);
-   float innerSwirl=smoothstep(.22,.76,fbm(vec2(swirlAngle*1.7,sphereRadius*5.5-t*.012)));
-   float sphericalMass=.58+roundedRidges*.19+woolCrowns*.13+innerSwirl*.10;
-   return sphereMask*clamp(sphericalMass,0.0,1.0);
+   // Card 14: tightly connected fleece clusters; a broad cloud body bridges the rounded wool lobes.
+   float clusterBody=fbm(organicP*vec2(1.05,1.65)+vec2(2.5+variant*1.2,t*.0015));
+   float clusterBridge=smoothstep(.31,.59,clusterBody*.62+organicBase*.38);
+   float clusteredCrown=smoothstep(.30,.68,crownNoise*.68+organicBillow*.32);
+   float fleeceBody=fbm(organicP*vec2(5.8,7.2)+vec2(5.0-variant*1.4,t*.002));
+   float fleecePuffs=smoothstep(.34,.66,fleeceBody*.68+crownNoise*.32);
+   float woolTufts=fbm(organicP*vec2(9.2,11.0)+vec2(-4.0+variant*1.8,-t*.002));
+   float tuftCrown=smoothstep(.36,.69,woolTufts*.62+fleeceBody*.38);
+   float woolRidges=smoothstep(.34,.67,organicBillow*.58+fleeceBody*.42);
+   // Fine wool crowns are masked by the large body so they merge into shared masses instead of scattering.
+   float woolDetail=(fleecePuffs*.68+tuftCrown*.32)*mix(.58,1.0,clusterBridge);
+   naturalMass=clusterBridge*.36+organicBase*.24+organicBillow*.16+clusteredCrown*.10+woolDetail*.12+woolRidges*.02;
+   return smoothstep(.355,.535,naturalMass)*1.06;
   }
   return smoothstep(.385,.585,naturalMass)*.99;
  }
