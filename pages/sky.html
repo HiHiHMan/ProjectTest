@@ -183,12 +183,14 @@ float cloudField(vec2 p,float m,float t){
   organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
   organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
   // Broad body keeps the bank connected; medium and small billows create many rounded crowns.
-  float organicBase=fbm(organicP*vec2(1.55,2.35)+vec2(1.0+variant*4.1,t*.003));
-  float organicBillow=fbm(organicP*vec2(4.8,6.2)+vec2(7.0-variant*3.2,-t*.004));
-  float crownNoise=fbm(organicP*vec2(8.2,10.5)+vec2(-5.0+variant*2.3,t*.003));
-  float organicWisps=fbm(organicP*vec2(1.0,7.2)+vec2(-3.0+variant*2.3,t*.002));
-  float crownShape=smoothstep(.30,.72,crownNoise);
-  float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
+  // Large connected cloud masses with uneven, painterly crowns rather than repeated round puffs.
+  float organicBase=fbm(organicP*vec2(1.12,1.82)+vec2(1.0+variant*4.1,t*.002));
+  float organicBillow=fbm(organicP*vec2(3.25,4.75)+vec2(7.0-variant*3.2,-t*.003));
+  float crownNoise=fbm(organicP*vec2(6.8,8.8)+vec2(-5.0+variant*2.3,t*.002));
+  float organicWisps=fbm(organicP*vec2(1.0,8.6)+vec2(-3.0+variant*2.3,t*.002));
+  float towerNoise=fbm(organicP*vec2(2.0,5.2)+vec2(3.5,-t*.002));
+  float crownShape=smoothstep(.28,.70,crownNoise*.72+towerNoise*.28);
+  float naturalMass=organicBase*.43+organicBillow*.27+crownShape*.19+towerNoise*.07+organicWisps*.04;
   if(m>12.5){
    // Card 14: tightly connected fleece clusters; a broad cloud body bridges the rounded wool lobes.
    float clusterBody=fbm(organicP*vec2(1.05,1.65)+vec2(2.5+variant*1.2,t*.0015));
@@ -206,23 +208,26 @@ float cloudField(vec2 p,float m,float t){
   }
   return smoothstep(.385,.585,naturalMass)*.99;
  }
- float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
- vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
- float smoke=fbm(smokeUV+vec2(0.0,t*.006));
- float billow=fbm(q*vec2(4.0,6.2)+vec2(smoke*1.15,-t*.004));
- float softCloud=fbm(q*vec2(2.6,3.8)+vec2(8.0,2.0));
- float cloudMass=smoothstep(.365,.625,smoke*.48+billow*.34+softCloud*.18);
- float vapor=smoothstep(.43,.68,fbm(vec2(q.x*1.05+(warp-.5)*.22,q.y*5.2-t*.003)));
- float skyCoverage=clamp(cloudMass*.88+vapor*.20,0.0,1.0);
+ float warp=fbm(q*vec2(1.05,1.8)+vec2(3.0,7.0));
+ vec2 smokeUV=vec2(q.x*1.28+(warp-.5)*.42,q.y*3.15);
+ float smoke=fbm(smokeUV+vec2(0.0,t*.004));
+ float billow=fbm(q*vec2(3.35,5.0)+vec2(smoke*1.25,-t*.003));
+ float softCloud=fbm(q*vec2(1.9,3.0)+vec2(8.0,2.0));
+ float tower=fbm(vec2(q.x*2.15+(warp-.5)*.24,q.y*5.6-t*.003));
+ float cloudCore=smoke*.43+softCloud*.25+tower*.17+billow*.15;
+ float cloudMass=smoothstep(.345,.615,cloudCore);
+ float vaporNoise=fbm(vec2(q.x*1.25+(warp-.5)*.30,q.y*6.8-t*.003));
+ float vapor=smoothstep(.48,.70,vaporNoise)*smoothstep(-.35,.35,q.y);
+ float skyCoverage=clamp(cloudMass*.94+vapor*.14,0.0,1.0);
 
  // Wool-like rounded crowns remain visible inside the larger flowing cloud masses.
- float broad=fbm(q*vec2(2.5,3.2)+vec2(2.0,8.0));
- float detail=fbm(q*vec2(5.0,6.0)+broad*1.2);
+ float broad=fbm(q*vec2(1.9,2.65)+vec2(2.0,8.0));
+ float detail=fbm(q*vec2(4.2,5.4)+broad*1.15);
+ float edgeTurbulence=fbm(q*vec2(8.0,10.5)+vec2(-2.0,t*.003));
  float d=silhouette(p*.78,m,t);
- float shape=1.0-smoothstep(-.075,.095,d+(broad-.5)*.045+(detail-.5)*.014);
- float interior=m>2.5&&m<3.5 ? .80 : .76;
- float wool=shape*(interior+smoothstep(.28,.72,broad*.72+detail*.28)*.12);
-
+ float shape=1.0-smoothstep(-.105,.105,d+(broad-.5)*.075+(detail-.5)*.026+(edgeTurbulence-.5)*.012);
+ float interior=m>2.5&&m<3.5 ? .82 : .79;
+ float wool=shape*(interior+smoothstep(.25,.72,broad*.66+detail*.26+edgeTurbulence*.08)*.14);
 
  // Other scenes retain their soft cotton-like billows.
  return max(skyCoverage*.94,wool*.78);
