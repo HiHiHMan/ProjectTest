@@ -32,8 +32,8 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 </head>
 <body><main class="page">
 <div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
-<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine distinct sky compositions built from flowing vapor, soft wool-like clouds, dramatic openings and distant horizons.</p></header>
-<div class="section-head"><h2>Nine Different Sky Scenes</h2><span>09 CLOUD FORMS</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Ten distinct sky compositions, from flowing vapor and layered wool-like clouds to a hand-painted cartoon sky.</p></header>
+<div class="section-head"><h2>Ten Different Sky Scenes</h2><span>10 CLOUD FORMS</span></div>
 <section class="sky-grid">
 <article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas><span class="sky-moon sky-moon--parted" aria-hidden="true"></span></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
@@ -44,6 +44,8 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 <article class="sky-card"><div class="sky-art"><canvas data-sky="6" aria-label="Violet wool-like clouds"></canvas></div><div class="info"><small>07 / Cosmic</small><h3>Astral Nebula</h3><p>Large overlapping wool-like billows with a violet inner glow.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="7" aria-label="Rows of soft cloud puffs"></canvas></div><div class="info"><small>08 / High altitude</small><h3>Stardust Passage</h3><p>Long, low rows of soft puffs with airy gaps between them.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="8" aria-label="Cotton-soft cloud bank"></canvas></div><div class="info"><small>09 / Dreamscape</small><h3>Ethereal Sea</h3><p>A broad, continuous bank of cotton-soft cloud formations.</p></div></article>
+
+<article class="sky-card"><div class="sky-art"><canvas data-sky="9" aria-label="Animated hand-painted cartoon clouds"></canvas></div><div class="info"><small>10 / Cartoon</small><h3>Cloud Storybook</h3><p>Hand-painted fluffy clouds with bold soft outlines, cel shading and a gentle floating motion.</p></div></article>
 </section><footer>ProjectTest · Sky Clouds / WebGL experiments</footer>
 </main>
 <script>
@@ -68,6 +70,27 @@ float fbm(vec2 p){
 float sdEllipse(vec2 p,vec2 r){return (length(p/r)-1.0)*min(r.x,r.y);}
 float sdBox(vec2 p,vec2 b){vec2 q=abs(p)-b;return length(max(q,0.0))+min(max(q.x,q.y),0.0);}
 float sdSeg(vec2 p,vec2 a,vec2 b,float r){vec2 v=b-a;float h=clamp(dot(p-a,v)/max(dot(v,v),.0001),0.0,1.0);return length(p-a-v*h)-r;}
+float toonCloud(vec2 p,vec2 center,vec2 scale){
+ vec2 q=(p-center)/scale;
+ float d=sdEllipse(q,vec2(.30,.43));
+ d=min(d,sdEllipse(q+vec2(.28,-.08),vec2(.31,.34)));
+ d=min(d,sdEllipse(q-vec2(.27,-.06),vec2(.29,.32)));
+ d=min(d,sdEllipse(q-vec2(.02,.18),vec2(.27,.38)));
+ d=min(d,sdEllipse(q-vec2(.02,-.20),vec2(.55,.20)));
+ return d*min(scale.x,scale.y);
+}
+vec3 toonPaint(vec3 bg,vec2 p,vec2 center,vec2 scale,vec3 fill){
+ float shadow=1.0-smoothstep(-.012,.025,toonCloud(p-vec2(0.0,.035),center,scale));
+ float outline=1.0-smoothstep(.012,.045,toonCloud(p,center,scale));
+ float body=1.0-smoothstep(-.012,.018,toonCloud(p,center,scale));
+ bg=mix(bg,vec3(.16,.32,.52),shadow*.42);
+ bg=mix(bg,vec3(.16,.29,.45),outline);
+ bg=mix(bg,fill,body);
+ float highlight=1.0-smoothstep(.008,.045,toonCloud(p,center+vec2(-scale.x*.08,scale.y*.12),scale*vec2(.68,.48)));
+ bg=mix(bg,vec3(1.0,.99,.94),highlight*body*.34);
+ return bg;
+}
+
 
 /* Nine variations of natural wool-like and cotton-puff cloud banks.
    Every mode is made only from overlapping rounded cloud masses. */
@@ -191,6 +214,26 @@ void main(){
  float horizon=exp(-pow((uv.y-(.43+.025*sin(p.x*2.0+t*.08)))*7.0,2.0));
  sky+=accent*(sun*.22+horizon*.17);
 
+
+ // Hand-painted cartoon cloud scene: clean outlined puffs, layered cel shading and gentle bobbing.
+ if(mode>8.5){
+  vec3 toonSky=mix(vec3(.76,.88,.98),vec3(.24,.57,.83),smoothstep(.02,.98,uv.y));
+  float warmGlow=exp(-length((uv-vec2(.82,.78))*vec2(1.0,1.2))*5.0);
+  toonSky=mix(toonSky,vec3(1.0,.79,.56),warmGlow*.48);
+  float sunDisk=1.0-smoothstep(.105,.112,length((uv-vec2(.82,.77))*vec2(aspect,1.0)));
+  toonSky=mix(toonSky,vec3(1.0,.91,.69),sunDisk);
+  float drift=t;
+  vec2 cp=p;
+  cp.x+=sin(drift*.72)*.018;
+  cp.y+=sin(drift*.92)*.012;
+  vec3 toon=toonSky;
+  toon=toonPaint(toon,cp,vec2(-.43,.12)+vec2(sin(drift*.48)*.035,cos(drift*.7)*.018),vec2(.48,.28),vec3(.94,.98,1.0));
+  toon=toonPaint(toon,cp,vec2(.34,.02)+vec2(cos(drift*.42)*.045,sin(drift*.65)*.02),vec2(.57,.34),vec3(1.0,.98,.91));
+  toon=toonPaint(toon,cp,vec2(-.10,-.30)+vec2(sin(drift*.36)*.025,cos(drift*.55)*.015),vec2(.78,.40),vec3(.91,.96,1.0));
+  toon=toonPaint(toon,cp,vec2(.76,-.42)+vec2(cos(drift*.52)*.025,sin(drift*.6)*.015),vec2(.46,.25),vec3(.98,.99,1.0));
+  gl_FragColor=vec4(pow(max(toon,0.0),vec3(.96)),1.0);
+  return;
+ }
  // A wide, front-facing cloud formation; silhouette proportions vary by world.
  vec2 cloudP=p*vec2(1.0,1.18);
  cloudP.x+=sin(t*.22)*.018;
