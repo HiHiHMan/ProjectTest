@@ -86,59 +86,50 @@ canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:p
   };
 
   let angle = 0;
-  let lastFrame = 0;
+  let lastDraw = 0;
 
-  // Build a 2D pixel frame by remapping the existing sprite cells.
-  // No 3D geometry: each frame is a new arrangement of the original pixels.
-  function getRotatedPixels(rotation) {
+  function getRotatedPixels() {
     const width = Math.max(...sprite.map(row => row.length));
-    const height = sprite.length;
-    const c = Math.cos(rotation);
-    const s = Math.sin(rotation);
-    const projected = new Map();
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    const visible = new Map();
 
     sprite.forEach((row, y) => {
-      const rowOffset = Math.floor((width - row.length) / 2);
-      [...row].forEach((pixel, index) => {
+      const pad = Math.floor((width - row.length) / 2);
+      [...row].forEach((pixel, i) => {
         if (pixel === "." || !colors[pixel]) return;
-        const x = rowOffset + index;
+        const x = pad + i;
+        let depth = (x % 5 - 2) * 0.12;
+        if ("WKM".includes(pixel)) depth += 1.4;
+        if (pixel === "H") depth += y < 5 ? 0.6 : -0.5;
+        if (pixel === "h") depth -= 1;
+        if ("PpQ".includes(pixel)) depth += (x % 3 - 1) * 0.2;
 
-        // Give face, hair and body pixels slightly different depth layers.
-        let depth = 0;
-        if ("WKM".includes(pixel)) depth = 1.6;
-        else if (pixel === "h") depth = -0.8;
-        else if (pixel === "H") depth = y < 5 ? 0.35 : -0.65;
-        else if ("PpQ".includes(pixel)) depth = 0.15;
-
-        const px = (x - (width - 1) / 2) * c + depth * s;
-        const pz = -(x - (width - 1) / 2) * s + depth * c;
-        const col = Math.round(px + (width - 1) / 2);
-        const key = y + ":" + col;
-        const previous = projected.get(key);
-        if (!previous || pz > previous.depth) {
-          projected.set(key, { x: col, y, pixel, depth: pz });
+        const centeredX = x - (width - 1) / 2;
+        const projectedX = Math.round(centeredX * c + depth * s + (width - 1) / 2);
+        const projectedDepth = -centeredX * s + depth * c;
+        const key = y + ":" + projectedX;
+        const old = visible.get(key);
+        if (!old || projectedDepth > old.depth) {
+          visible.set(key, { x: projectedX, y, pixel, depth: projectedDepth });
         }
       });
     });
-
-    return [...projected.values()];
+    return [...visible.values()];
   }
 
-  function drawGrid(timestamp = 0) {
+  function drawGrid() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const dpr = window.devicePixelRatio || 1;
-
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = "#05070b";
     ctx.fillRect(0, 0, width, height);
 
-    // Dark glass grid background.
     for (let y = 0; y < height; y += cellSize) {
       for (let x = 0; x < width; x += cellSize) {
         const w = Math.min(cellSize, width - x);
@@ -151,199 +142,32 @@ canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:p
       }
     }
 
-    // Center the character and snap its position to the grid.
     const spriteWidth = Math.max(...sprite.map(row => row.length));
-    const spriteHeight = sprite.length;
     const offsetX = Math.floor((width / cellSize - spriteWidth) / 2) * cellSize;
-    const offsetY = Math.floor((height / cellSize - spriteHeight) / 2) * cellSize;
-
-    pixels.forEach(({ x: colIndex, y: rowIndex, pixel }) => {
-      const x = offsetX + colIndex * cellSize;
-      const y = offsetY + rowIndex * cellSize;
+    const offsetY = Math.floor((height / cellSize - sprite.length) / 2) * cellSize;
+    getRotatedPixels().forEach(({ x, y, pixel }) => {
+      const px = offsetX + x * cellSize;
+      const py = offsetY + y * cellSize;
       ctx.fillStyle = colors[pixel];
-      ctx.fillRect(x, y, cellSize, cellSize);
+      ctx.fillRect(px, py, cellSize, cellSize);
       ctx.strokeStyle = "rgba(5, 12, 10, 0.18)";
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(x + 0.3, y + 0.3, cellSize - 0.6, cellSize - 0.6);
-    });e html>
-<html lang="th">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101010">
-<title>Pixel Grid — ProjectTest</title>
-<style>
-*{box-sizing:border-box}
-:root{color-scheme:dark;font-family:Arial,sans-serif;background:#101010;color:#eee}
-body{margin:0;width:100vw;height:100vh;overflow:hidden;padding:0}
-header{display:none}
-h1{font-size:24px;margin:0 0 8px}
-p{margin:0;color:#999;font-size:13px}
-main{width:100vw;height:100vh;margin:0;padding:0}
-.grid-viewport{width:100%;height:100%;overflow:hidden;background:#05070b;border:0;padding:0}
-canvas{display:block;width:100%;height:100%;background:#05070b;image-rendering:pixelated}
-.info{display:none;display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:#aaa;font-size:12px}
-</style>
-</head>
-<body>
-<header>
-  <h1>Pixel Grid</h1>
-  <p>ตารางขนาด 1500 × 1500 พิกเซล · ช่องละ 10 × 10 พิกเซล · 150 × 150 ช่อง</p>
-</header>
-<main>
-  <div class="grid-viewport">
-    <canvas id="pixelGrid" width="1500" height="1500" aria-label="ตารางพิกเซลพร้อมตัวละคร Hulk"></canvas>
-  </div>
-  <div class="info">
-    <span>Canvas: 1500 × 1500 px</span>
-    <span>Cell: 10 × 10 px</span>
-    <span>Total: 22,500 cells</span>
-  </div>
-</main>
-<script>
-(() => {
-  const canvas = document.getElementById("pixelGrid");
-  const ctx = canvas.getContext("2d");
-  const cellSize = 10;
-
-  // Hulk sprite: each character below paints exactly one 10 × 10 grid cell.
-  const sprite = [
-    "...........HHHHHHHHHHH...........",
-    "..........HHhHHHHHHhHHH..........",
-    ".........DDDDDDDDDDDDDDD.........",
-    "........DDGGGGGGGGGGGGGDD........",
-    ".......DDGGGGGGGGGGGGGGGDD.......",
-    ".......DGGGGGGGGGGGGGGGGGDD......",
-    "......DGGGGGKKGGGGGKKGGGGGDD.....",
-    "......DGGGGGWWGGGGGWWGGGGGGD.....",
-    "......DGGGGGGGGGGGGGGGGGGGGD.....",
-    ".......DGGGGGGGGGGGGGGGGGGD......",
-    "........DDGGGGGGGGGGGGGGDD........",
-    "..........DDGGGMMMMGGGDD..........",
-    "............DDDDDDDDD.............",
-    ".........DDDDDDDDDDDDDDD..........",
-    "......DDDDGGGGGGGGGGGGGDDDD.......",
-    "....DDDDGGGGGGGGGGGGGGGGGDDDD.....",
-    "...DDDDGGGGGLLGGGGGGLLGGGGGDDDD...",
-    "..DDDGGGGGGGLLGGGGGLLGGGGGGGDDD....",
-    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
-    ".DDGGGGGGGGGGGGGGGGGGGGGGGGGGGDD...",
-    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
-    "DDDGGGGGGGGGGGGGGGGGGGGGGGGGGGGDDD..",
-    ".DDDGGGGGGGGGGGGGGGGGGGGGGGGGGDDD...",
-    "..DDDDGGGGGGGGGGGGGGGGGGGGGGDDDD....",
-    "...DDDDGGGGGGGGGGGGGGGGGGGGDDDD.....",
-    "......DDDDGGGGGGGGGGGGGGDDDD........",
-    "........DDDDPPPPPPPPPPDDDD..........",
-    ".........DDPPPPPPPPPPPPDD...........",
-    ".........DPPQQPPPPPPQQPPD............",
-    ".........DPPPPPPPPPPPPPPD............",
-    ".........DDPPPPPPPPPPPPDD............",
-    "..........DDDDPPPPPPDDDD.............",
-    "..........DDDDDD..DDDDDD.............",
-    ".........DDDDDDD..DDDDDDD............",
-    "........DDDDDDD....DDDDDDD...........",
-    ".......DDDDDDD......DDDDDDD.........."
-  ];
-
-  const colors = {
-    D: "#176b32", G: "#36b94f", L: "#83e879", S: "#218b3c",
-    H: "#20242a", h: "#59616b", W: "#f5f5e9", K: "#18251b",
-    M: "#4b2530", P: "#7135b5", p: "#a35be0", Q: "#49217c"
-  };
-
-  let angle = 0;
-  let lastFrame = 0;
-
-  // Build a 2D pixel frame by remapping the existing sprite cells.
-  // No 3D geometry: each frame is a new arrangement of the original pixels.
-  function getRotatedPixels(rotation) {
-    const width = Math.max(...sprite.map(row => row.length));
-    const height = sprite.length;
-    const c = Math.cos(rotation);
-    const s = Math.sin(rotation);
-    const projected = new Map();
-
-    sprite.forEach((row, y) => {
-      const rowOffset = Math.floor((width - row.length) / 2);
-      [...row].forEach((pixel, index) => {
-        if (pixel === "." || !colors[pixel]) return;
-        const x = rowOffset + index;
-
-        // Give face, hair and body pixels slightly different depth layers.
-        let depth = 0;
-        if ("WKM".includes(pixel)) depth = 1.6;
-        else if (pixel === "h") depth = -0.8;
-        else if (pixel === "H") depth = y < 5 ? 0.35 : -0.65;
-        else if ("PpQ".includes(pixel)) depth = 0.15;
-
-        const px = (x - (width - 1) / 2) * c + depth * s;
-        const pz = -(x - (width - 1) / 2) * s + depth * c;
-        const col = Math.round(px + (width - 1) / 2);
-        const key = y + ":" + col;
-        const previous = projected.get(key);
-        if (!previous || pz > previous.depth) {
-          projected.set(key, { x: col, y, pixel, depth: pz });
-        }
-      });
+      ctx.strokeRect(px + 0.3, py + 0.3, cellSize - 0.6, cellSize - 0.6);
     });
-
-    return [...projected.values()];
   }
 
-  function drawGrid(timestamp = 0) {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const dpr = window.devicePixelRatio || 1;
-
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#05070b";
-    ctx.fillRect(0, 0, width, height);
-
-    // Dark glass grid background.
-    for (let y = 0; y < height; y += cellSize) {
-      for (let x = 0; x < width; x += cellSize) {
-        const w = Math.min(cellSize, width - x);
-        const h = Math.min(cellSize, height - y);
-        ctx.fillStyle = "rgba(145, 175, 210, 0.065)";
-        ctx.fillRect(x + 0.5, y + 0.5, w - 1, h - 1);
-        ctx.fillStyle = "rgba(225, 240, 255, 0.10)";
-        ctx.fillRect(x + 0.5, y + 0.5, w - 1, 0.5);
-        ctx.fillRect(x + 0.5, y + 0.5, 0.5, h - 1);
-      }
+  function animate(timestamp) {
+    if (timestamp - lastDraw >= 90) {
+      angle = (angle + 0.035) % (Math.PI * 2);
+      drawGrid();
+      lastDraw = timestamp;
     }
-
-    // Center the character and snap its position to the grid.
-    const spriteWidth = Math.max(...sprite.map(row => row.length));
-    const spriteHeight = sprite.length;
-    const offsetX = Math.floor((width / cellSize - spriteWidth) / 2) * cellSize;
-    const offsetY = Math.floor((height / cellSize - spriteHeight) / 2) * cellSize;
-
-    sprite.forEach((row, rowIndex) => {
-      const rowOffset = Math.floor((spriteWidth - row.length) / 2);
-      [...row].forEach((pixel, colIndex) => {
-        if (pixel === "." || !colors[pixel]) return;
-        const x = offsetX + (rowOffset + colIndex) * cellSize;
-        const y = offsetY + rowIndex * cellSize;
-
-        ctx.fillStyle = colors[pixel];
-        ctx.fillRect(x, y, cellSize, cellSize);
-
-        // Very subtle cell edge keeps the pixel blocks distinct.
-        ctx.strokeStyle = "rgba(5, 12, 10, 0.18)";
-        ctx.lineWidth = 0.6;
-        ctx.strokeRect(x + 0.3, y + 0.3, cellSize - 0.6, cellSize - 0.6);
-      });
-    });
+    requestAnimationFrame(animate);
   }
 
   window.addEventListener("resize", drawGrid);
   drawGrid();
+  requestAnimationFrame(animate);
 })();
 </script>
 </body>
