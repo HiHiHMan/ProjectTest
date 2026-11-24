@@ -14,6 +14,7 @@
 .liquid-drop{background:radial-gradient(ellipse at center,#031a1b 0 27%,#020b12 68%)}
 .liquid-drop:before{content:"";position:absolute;width:78%;aspect-ratio:1;left:11%;top:-2%;border-radius:50%;border:20px solid #00b98d;filter:blur(19px);opacity:.85;animation:haloPulse 8s ease-in-out infinite}
 .liquid-drop:after{inset:4%;background:radial-gradient(ellipse at 50% 50%,transparent 30%,#00f0b355 43%,transparent 57%);filter:blur(24px)}
+.liquid-drop-noise{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");background-size:110px 110px}
 
 /* 03 — one horizontal electric-blue river bending across the canvas */
 .liquid-ribbon{background:#020817}
@@ -193,7 +194,7 @@
 <header class="hero"><p class="eyebrow">Liquid matter × Plasma energy</p><h1>Fluid<br>Studies.</h1><p class="intro">A study of impossible materials and living light. Abstract 2D compositions built from flowing gradients, luminous lines, layered color and expressive shapes. No simulated 3D objects — just graphic motion and atmosphere.</p></header>
 <div class="section-head"><h2>Liquid forms</h2><span>01—06 · REFLECTIVE / ORGANIC / CHROMATIC</span></div><section class="art-grid" aria-label="Liquid digital art">
 <article class="art-card"><div class="art liquid-orb"></div><div class="info"><small>01 / Liquid gemstone</small><h3>Liquid Amethyst</h3><p>Violet and magenta color fields fold into a soft, shifting abstract composition.</p></div></article>
-<article class="art-card"><div class="art liquid-drop"></div><div class="info"><small>02 / Fluid sculpture</small><h3>Violet Nectar</h3><p>A flowing color current with bright highlights and blurred edges.</p></div></article>
+<article class="art-card"><div class="art liquid-drop"><div class="liquid-drop-noise"></div></div><div class="info"><small>02 / Fluid sculpture</small><h3>Violet Nectar</h3><p>A flowing color current with bright highlights and blurred edges.</p></div></article>
 <article class="art-card"><div class="art liquid-ribbon"></div><div class="info"><small>03 / Molten surface</small><h3>Molten Silk</h3><p>Layered bands of pink, violet and cyan sweep across the frame.</p></div></article>
 <article class="art-card"><div class="art liquid-pool"></div><div class="info"><small>04 / Chromatic fluid</small><h3>Prismatic Pool</h3><p>Concentric color waves ripple outward in a prismatic palette.</p></div></article>
 <article class="art-card"><div class="art liquid-chrome"></div><div class="info"><small>05 / Reflective material</small><h3>Liquid Chrome</h3><p>Silver, violet and electric blue gradients cut across one another.</p></div></article>
