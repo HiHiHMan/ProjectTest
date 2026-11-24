@@ -172,148 +172,62 @@ float silhouette(vec2 p,float m,float t){
  }
  return d;
 }
-float cloudBelowTop(float y,float top,float floorY){
- float floorMask=smoothstep(floorY,floorY+.16,y);
- float topMask=1.0-smoothstep(top-.07,top+.07,y);
- return floorMask*topMask;
-}
 float cloudField(vec2 p,float m,float t){
- // Normalize the field so every card keeps its cloud proportions on wide and narrow cards.
- vec2 q=vec2(p.x/1.18,p.y);
- float drift=t*.012;
- float warpX=fbm(q*vec2(1.7,2.4)+vec2(3.1,drift));
- float warpY=fbm(q*vec2(2.2,1.5)+vec2(8.4,-drift*.7));
- vec2 w=q+vec2((warpX-.5)*.27,(warpY-.5)*.13);
- float macro=fbm(w*vec2(2.0,2.8)+vec2(1.2,drift*.35));
- float middle=fbm(w*vec2(4.8,6.1)+vec2(6.7,-drift*.55));
- float small=fbm(w*vec2(9.5,11.0)+vec2(-4.2,drift*.8));
- float detail=mix(middle,small,.28);
- float body=macro*.55+middle*.32+small*.13;
- float topNoise=(macro-.5)*.28+(middle-.5)*.13+(small-.5)*.035;
- float density=0.0;
-
- // Each scene uses a different large-scale silhouette, not a shared puff pattern.
- if(m<.5){
-  // 01 Horizon frame: dark cloud masses press in from the top and both sides.
-  // The middle stays open; only a thin, broken cloud shelf crosses the horizon.
-  float topCanopy=cloudBelowTop(w.y,.53+topNoise*.65,.18);
-  float leftWall=(1.0-smoothstep(.22,.66,abs(w.x+1.02+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise,-.12);
-  float rightWall=(1.0-smoothstep(.22,.66,abs(w.x-1.02+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise,-.12);
-  float horizonBand=1.0-smoothstep(.018,.095,abs(w.y+.02+(macro-.5)*.09));
-  float broken= smoothstep(.34,.57,body);
-  density=max(topCanopy*.78,max(leftWall,rightWall)*.92)*broken;
-  density=max(density,horizonBand*smoothstep(.38,.62,middle)*.40);
-  float openCenter=(1.0-smoothstep(.48,.94,abs(w.x)))*cloudBelowTop(w.y,.22,-.02);
-  density*=1.0-openCenter*.78;
- }else if(m<1.5){
-  // 02 Cumulus: separate towering white masses with scalloped crowns and a clear sky gap.
-  float leftWidth=.36+.08*macro;
-  float rightWidth=.40+.07*middle;
-  float left=(1.0-smoothstep(.08,leftWidth,abs(w.x+.66+(warpX-.5)*.12)))*cloudBelowTop(w.y,.43+topNoise*1.1,-.43);
-  float right=(1.0-smoothstep(.08,rightWidth,abs(w.x-.64+(warpY-.5)*.12)))*cloudBelowTop(w.y,.39+topNoise*1.2,-.43);
-  float lowerBank=cloudBelowTop(w.y,-.04+topNoise*.45,-.48)*.42;
-  float puffyCrowns=smoothstep(.30,.59,body);
-  density=max(left,right)*puffyCrowns;
-  density=max(density,lowerBank*smoothstep(.38,.62,macro));
-  float centralGap=(1.0-smoothstep(.20,.48,abs(w.x)))*cloudBelowTop(w.y,.29,-.03);
-  density*=1.0-centralGap*.88;
- }else if(m<2.5){
-  // 03 Legacy vertical cloudfall: tall soft curtains and a dense upper canopy.
-  float canopy=smoothstep(-.05,.22,.24+topNoise-w.y);
-  float streams=fbm(vec2(w.x*3.2+w.y*.45,w.y*3.0-drift));
-  float curtains=smoothstep(.48,.70,streams)*smoothstep(-.50,.28,w.y);
-  density=max(canopy*.52,curtains*.72);
- }else if(m<3.5){
-  // 04 Dreamveil: thin, broken cirrus ribbons stretched by high-altitude wind.
-  float ribbonNoise=fbm(vec2(w.x*1.4+w.y*1.15,w.y*7.2-drift*1.8));
-  float ribbonY=.23*sin(w.x*2.1+drift*2.0)+.10*sin(w.x*4.7-drift*1.2);
-  float ribbon=1.0-smoothstep(.018,.105,abs(w.y-ribbonY+(ribbonNoise-.5)*.12));
-  float secondY=-.02+.055*sin(w.x*3.2-drift*1.5);
-  float second=1.0-smoothstep(.012,.075,abs(w.y-secondY+(middle-.5)*.07));
-  density=max(ribbon*smoothstep(.37,.62,ribbonNoise),second*.48);
- }else if(m<4.5){
-  // 05 Aurora Sanctuary: separated cumulus groups at different heights.
-  float groups=max((1.0-smoothstep(.05,.36,abs(w.x+.62))),(1.0-smoothstep(.05,.34,abs(w.x-.54))));
-  float central=(1.0-smoothstep(.12,.42,abs(w.x+.02)));
-  float groupTop=.02+topNoise*1.25;
-  float clouds=cloudBelowTop(w.y,groupTop,-.38)*smoothstep(.28,.55,body);
-  density=clouds*max(groups*.95,central*.36);
- }else if(m<5.5){
-  // 06 Night clouds: low, massive overlapping layers with very restrained surface detail.
-  float lowerShelf=cloudBelowTop(w.y,-.02+topNoise*.30,-.52);
-  float middleShelf=cloudBelowTop(w.y,.18+(macro-.5)*.20,-.30);
-  float upperShadow=cloudBelowTop(w.y,.34+(middle-.5)*.15,.10);
-  density=max(lowerShelf*.82,middleShelf*.68);
-  density=max(density,upperShadow*.42);
-  density*=.78+smoothstep(.35,.62,macro)*.22;
- }else if(m<6.5){
-  // 07 Cumulonimbus: a towering central column, cauliflower crowns and a broad anvil top.
-  float towerWidth=.30+.12*macro;
-  float tower=(1.0-smoothstep(.08,towerWidth,abs(w.x-.02+(warpX-.5)*.12)));
-  float towerCore=cloudBelowTop(w.y,.48+topNoise*1.45,-.48);
-  float shoulder=(1.0-smoothstep(.30,.82,abs(w.x+.04)))*cloudBelowTop(w.y,.29+topNoise,.18);
-  float sideBillows=fbm(w*vec2(5.2,7.4)+vec2(2.0,-drift));
-  float crownBreak=smoothstep(.36,.63,sideBillows);
-  density=max(tower*towerCore*(.78+.22*crownBreak),shoulder*.72);
-  density=max(density,cloudBelowTop(w.y,-.20+topNoise*.25,-.50)*.30);
-  density*=smoothstep(.29,.57,body);
- }else if(m<7.5){
-  // 08 Storm clouds: dense slanted masses dragged sideways by strong wind.
-  float stormWarp=fbm(w*vec2(2.0,3.0)+vec2(4.0,-drift));
-  vec2 stormP=vec2(w.x+w.y*.52+(stormWarp-.5)*.28,w.y);
-  float stormBody=fbm(stormP*vec2(2.0,3.4)+vec2(3.0,drift*.25));
-  float stormBillow=fbm(stormP*vec2(5.0,7.0)+vec2(-2.0,-drift*.5));
-  float diagonalTop=.30-.34*stormP.x+(stormBody-.5)*.24;
-  float slantedMass=cloudBelowTop(stormP.y,diagonalTop,-.48);
-  float darkCore=smoothstep(.32,.58,stormBody*.62+stormBillow*.38);
-  float windShelf=1.0-smoothstep(.02,.15,abs(stormP.y-(.06-.28*stormP.x)+(stormBillow-.5)*.10));
-  density=max(slantedMass*darkCore,windShelf*.34);
- }else if(m<8.5){
-  // 09 Continuous cloud formation: broad connected base, uneven rising crowns and a front layer.
-  float base=cloudBelowTop(w.y,.02+topNoise*.55,-.52);
-  float crownField=fbm(w*vec2(2.8,4.5)+vec2(1.0,-drift*.3));
-  float risingCrowns=smoothstep(.34,.63,crownField);
-  float frontLayer=cloudBelowTop(w.y,-.18+(middle-.5)*.12,-.55)*.68;
-  density=max(base*(.70+.30*risingCrowns),frontLayer);
-  density*=smoothstep(.29,.56,body);
- }else if(m<9.5){
-  density=0.0; // 10 Cloud Reverie is rendered by its separate illustrated composition.
- }else if(m<10.5){
-  // 11 Amber Highlands: two massive sunlit towers, joined by a thick cloud base.
-  float left=(1.0-smoothstep(.08,.52,abs(w.x+.57)))*cloudBelowTop(w.y,.30+topNoise,-.48);
-  float right=(1.0-smoothstep(.08,.55,abs(w.x-.48)))*cloudBelowTop(w.y,.38+topNoise*1.3,-.48);
-  float base=smoothstep(-.47,-.16,w.y)*.72;
-  density=max(left,right)*smoothstep(.29,.57,body);
-  density=max(density,base*smoothstep(.38,.60,macro));
- }else if(m<11.5){
-  // 12 Rosewater Haven: wide banks curl inward while leaving a luminous central opening.
-  float side=smoothstep(.08,.42,abs(w.x));
-  float top=.02+topNoise*.9;
-  float bank=cloudBelowTop(w.y,top,-.44)*smoothstep(.30,.58,body);
-  float opening=smoothstep(.08,.34,abs(w.x))*smoothstep(.05,.28,w.y);
-  density=bank*mix(.36,1.0,side);
-  density*=1.0-opening*.78;
- }else if(m<12.5){
-  // 13 Azure Reverie: several towering cumulus columns with deep valleys between them.
-  float left=(1.0-smoothstep(.07,.43,abs(w.x+.62)))*cloudBelowTop(w.y,.27+topNoise,-.48);
-  float center=(1.0-smoothstep(.06,.35,abs(w.x-.02)))*cloudBelowTop(w.y,.38+topNoise*1.2,-.48);
-  float right=(1.0-smoothstep(.07,.42,abs(w.x-.61)))*cloudBelowTop(w.y,.23+topNoise,-.48);
-  density=max(left,max(center,right)) * smoothstep(.30,.58,body);
- }else{
-  // 14 Celestial Woolscape: dense connected fleece masses, with broad lobes and soft wool crowns.
-  float woolMacro=fbm(w*vec2(2.4,3.1)+vec2(2.0,drift*.3));
-  float woolMid=fbm(w*vec2(6.0,7.8)+vec2(-3.0,-drift*.5));
-  float woolFine=fbm(w*vec2(12.0,14.0)+vec2(5.0,drift*.7));
-  float connected=woolMacro*.48+woolMid*.37+woolFine*.15;
-  float woolTop=-.005+(woolMacro-.5)*.24+(woolMid-.5)*.16+(woolFine-.5)*.055;
-  float mainMass=smoothstep(-.13,.08,woolTop-w.y)*smoothstep(-.50,-.27,w.y);
-  float woolTexture=smoothstep(.36,.58,connected);
-  density=mainMass*(.72+.28*woolTexture);
+ // Broad, drifting smoke masses, gently warped so the cloud field flows across the whole sky.
+ vec2 drift=vec2(t*.010,-t*.004);
+ vec2 q=p+drift;
+ // Celestial Garden and its three companions share the same organic cloud morphology.
+ if(m<.5 || (m>9.5 && m<13.5)){
+  float variant=clamp(m-10.0,0.0,3.0);
+  vec2 organicP=q*vec2(1.72+variant*.08,2.72-variant*.06);
+  organicP.x+=(fbm(q*vec2(1.8,2.5)+vec2(4.0+variant*2.7,1.0))-.5)*(.42+variant*.025);
+  organicP.y+=(fbm(q*vec2(3.0,1.7)+vec2(9.0,3.0+variant*1.9))-.5)*.18;
+  // Broad body keeps the bank connected; medium and small billows create many rounded crowns.
+  float organicBase=fbm(organicP*vec2(1.55,2.35)+vec2(1.0+variant*4.1,t*.003));
+  float organicBillow=fbm(organicP*vec2(4.8,6.2)+vec2(7.0-variant*3.2,-t*.004));
+  float crownNoise=fbm(organicP*vec2(8.2,10.5)+vec2(-5.0+variant*2.3,t*.003));
+  float organicWisps=fbm(organicP*vec2(1.0,7.2)+vec2(-3.0+variant*2.3,t*.002));
+  float crownShape=smoothstep(.30,.72,crownNoise);
+  float naturalMass=organicBase*.48+organicBillow*.31+crownShape*.17+organicWisps*.04;
+  if(m>12.5){
+   // Card 14: tightly connected fleece clusters; a broad cloud body bridges the rounded wool lobes.
+   float clusterBody=fbm(organicP*vec2(1.05,1.65)+vec2(2.5+variant*1.2,t*.0015));
+   float clusterBridge=smoothstep(.31,.59,clusterBody*.62+organicBase*.38);
+   float clusteredCrown=smoothstep(.30,.68,crownNoise*.68+organicBillow*.32);
+   float fleeceBody=fbm(organicP*vec2(5.8,7.2)+vec2(5.0-variant*1.4,t*.002));
+   float fleecePuffs=smoothstep(.34,.66,fleeceBody*.68+crownNoise*.32);
+   float woolTufts=fbm(organicP*vec2(9.2,11.0)+vec2(-4.0+variant*1.8,-t*.002));
+   float tuftCrown=smoothstep(.36,.69,woolTufts*.62+fleeceBody*.38);
+   float woolRidges=smoothstep(.34,.67,organicBillow*.58+fleeceBody*.42);
+   // Fine wool crowns are masked by the large body so they merge into shared masses instead of scattering.
+   float woolDetail=(fleecePuffs*.68+tuftCrown*.32)*mix(.58,1.0,clusterBridge);
+   naturalMass=clusterBridge*.36+organicBase*.24+organicBillow*.16+clusteredCrown*.10+woolDetail*.12+woolRidges*.02;
+   return smoothstep(.355,.535,naturalMass)*1.06;
+  }
+  return smoothstep(.385,.585,naturalMass)*.99;
  }
- // Shape the field into a soft but clearly defined cloud volume.
- float edgeNoise=(middle-.5)*.055+(small-.5)*.018;
- return smoothstep(.43,.59,density+edgeNoise);
+ float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
+ vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
+ float smoke=fbm(smokeUV+vec2(0.0,t*.006));
+ float billow=fbm(q*vec2(4.0,6.2)+vec2(smoke*1.15,-t*.004));
+ float softCloud=fbm(q*vec2(2.6,3.8)+vec2(8.0,2.0));
+ float cloudMass=smoothstep(.365,.625,smoke*.48+billow*.34+softCloud*.18);
+ float vapor=smoothstep(.43,.68,fbm(vec2(q.x*1.05+(warp-.5)*.22,q.y*5.2-t*.003)));
+ float skyCoverage=clamp(cloudMass*.88+vapor*.20,0.0,1.0);
+
+ // Wool-like rounded crowns remain visible inside the larger flowing cloud masses.
+ float broad=fbm(q*vec2(2.5,3.2)+vec2(2.0,8.0));
+ float detail=fbm(q*vec2(5.0,6.0)+broad*1.2);
+ float d=silhouette(p*.78,m,t);
+ float shape=1.0-smoothstep(-.075,.095,d+(broad-.5)*.045+(detail-.5)*.014);
+ float interior=m>2.5&&m<3.5 ? .80 : .76;
+ float wool=shape*(interior+smoothstep(.28,.72,broad*.72+detail*.28)*.12);
+
+
+ // Other scenes retain their soft cotton-like billows.
+ return max(skyCoverage*.94,wool*.78);
 }
+
 void main(){
  vec2 uv=gl_FragCoord.xy/u_res;
  float aspect=u_res.x/u_res.y;
@@ -398,13 +312,17 @@ void main(){
   // Aurora sky keeps a wide open upper area and a low cloud shelf.
   density*=smoothstep(-.12,.22,uv.y)*.78;
  }else if(mode<5.5){
-  // Preserve the broad, low layered night-cloud silhouette; only soften its lower edge.
-  density*=smoothstep(-.62,-.48,p.y)*.98+.02;
+  // Moonlit layered cloud deck, heavier near the lower edge.
+  float deck=smoothstep(-.28,.16,uv.y);
+  density=max(density*.62,deck*.46*smoothstep(.20,.52,fbm(vec2(p.x*2.4,p.y*4.0+t*.006))));
  }else if(mode<6.5){
-  // Preserve the towering cumulonimbus silhouette and its broken anvil crown.
-  density*=.98+.02*smoothstep(.28,.62,broadRelief);
+  // Floating cloud islands separated by generous gaps.
+  float islands=fbm(vec2(p.x*2.1,p.y*2.8)+vec2(4.0,t*.008));
+  density*=smoothstep(.39,.68,islands)*1.18;
  }else if(mode<7.5){
-  // Preserve the diagonal storm mass; wind motion is already built into its silhouette.
+  // Diagonal wind lanes sweep across the frame.
+  float lanes=fbm(vec2(p.x*2.1+p.y*1.35,p.y*5.5-t*.01));
+  density*=smoothstep(.30,.66,lanes)*.95;
  }else if(mode<8.5){
   // Dense, soft cloud ocean with a gently rolling upper edge.
   float sea= smoothstep(.20,.48,fbm(vec2(p.x*2.2,p.y*3.6+t*.006)));
