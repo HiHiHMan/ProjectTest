@@ -205,48 +205,55 @@
 }
 
 
-/* 26 — soft noir crescent: a warm illuminated arc with a seamless dark cutout */
+/* 26 — C-shaped noir crescent light, open on the right */
 .dome-light{
   background:transparent!important;
 }
 .dome-light:before{
   content:"";
   position:absolute;
-  width:58%;
-  aspect-ratio:1;
-  left:21%;
-  top:9%;
+  width:68%;
+  height:88%;
+  left:16%;
+  top:6%;
   border-radius:50%;
   background:
-    radial-gradient(ellipse at 28% 34%,
-      #d4c5ad 0%,
-      #aaa092 24%,
-      #777581 48%,
-      #48495b 72%,
-      #292d3d 100%);
-  filter:blur(10px);
-  box-shadow:0 0 30px #b6a58b22;
+    conic-gradient(from 42deg at 50% 50%,
+      transparent 0deg 78deg,
+      #77716f 104deg,
+      #aaa08e 145deg,
+      #c8b99f 180deg,
+      #aaa08e 218deg,
+      #77727a 258deg,
+      #45485a 300deg,
+      transparent 326deg 360deg);
+  -webkit-mask:radial-gradient(ellipse at center,
+    transparent 0 53%,
+    #000 60% 100%);
+  mask:radial-gradient(ellipse at center,
+    transparent 0 53%,
+    #000 60% 100%);
+  filter:blur(13px);
   animation:crescentBreath 16s ease-in-out infinite alternate;
 }
 .dome-light:after{
   content:"";
   position:absolute;
-  width:56%;
-  aspect-ratio:1;
-  left:34%;
-  top:1%;
+  width:68%;
+  height:88%;
+  left:16%;
+  top:6%;
   border-radius:50%;
-  background:radial-gradient(circle at 52% 48%,
-    #080b15 0%,
-    #090c17 65%,
-    #0a0d18 78%,
-    transparent 100%);
-  filter:blur(7px);
+  background:radial-gradient(ellipse at 50% 50%,
+    transparent 0 49%,
+    #080b15 59%,
+    #080b15 100%);
+  filter:blur(17px);
   pointer-events:none;
 }
 @keyframes crescentBreath{
-  from{transform:translate(-1%,1%) rotate(-8deg);filter:blur(11px) brightness(.94)}
-  to{transform:translate(1%,-1%) rotate(-5deg);filter:blur(9px) brightness(1.03)}
+  from{transform:rotate(-3deg) scale(.98);filter:blur(14px) brightness(.92)}
+  to{transform:rotate(3deg) scale(1.02);filter:blur(12px) brightness(1.04)}
 }
 
 </style></head><body><main class="page">
@@ -280,7 +287,7 @@
 <article class="art-card"><div class="art ultraviolet-ink"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
 <article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
 <article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
-<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A muted warm crescent dissolves softly into deep noir shadow.</p></div></article>
+<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A C-shaped crescent of diffused light fades into deep noir shadow.</p></div></article>
 </section>
 </main>
 </body></html>
