@@ -92,7 +92,6 @@ void main(){
  else{top=vec3(.08,.24,.39);bottom=vec3(.55,.70,.78);light=vec3(.93,.94,.87);shadow=vec3(.12,.27,.40);}
  float horizon=smoothstep(-.48,.42,uv.y);
  vec3 sky=mix(bottom,top,horizon);
- float edge=soft*(.65+.35*detail);
  vec3 cloud=mix(shadow,light,smoothstep(.43,.80,detail+warp*.12));
  float wisps=smoothstep(.53,.82,fbm(screen*vec2(5.,2.)+vec2(t*.018,-cameraY*.4)));
  if(u_mode>7.5){density=max(density*.78,wisps*.58);}
