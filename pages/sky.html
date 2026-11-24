@@ -206,8 +206,8 @@ void main(){
   // A circular cloud tunnel: dense billows form a ring around a receding center.
   float radial=length((uv-vec2(.50,.43))*vec2(1.0,.88));
   float tunnel=1.0-smoothstep(.10,.24,radial);
-  float rim=smoothstep(.20,.34,radial);
-  density=max(density*.28,rim*(.52+.20*fbm(p*3.0+vec2(t*.01,0.0)))*(1.0-tunnel));
+  float rim=smoothstep(.16,.25,radial)*(1.0-smoothstep(.48,.64,radial));
+  density=max(density*.24,rim*(.58+.18*fbm(p*3.0+vec2(t*.01,0.0))));
  }else if(mode<3.5){
   // High, broken cloud streamers with open pastel sky between them.
   float bands=fbm(vec2(p.x*2.0+p.y*.75,p.y*7.0-t*.012));
@@ -248,7 +248,7 @@ void main(){
 
  // Scenic foreground and focal elements unique to selected cards.
  if(mode<.5){
-  float ground=smoothstep(.235,.215,uv.y);
+  float ground=1.0-smoothstep(.215,.235,uv.y);
   vec3 sand=mix(vec3(.48,.31,.20),vec3(.83,.62,.39),smoothstep(.0,.24,uv.y));
   float dune= smoothstep(.0,.035,uv.y-(.17+.018*sin(uv.x*5.0+t*.025)));
   color=mix(color,sand,ground);
