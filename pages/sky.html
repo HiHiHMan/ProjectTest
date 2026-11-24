@@ -29,8 +29,8 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 </head>
 <body><main class="page">
 <div class="topline"><a class="back" href="../index.html">← All experiments</a><span class="back">WEBGL / ATMOSPHERE</span></div>
-<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine soft cloud studies — wool-like billows, rounded cotton puffs and layered cloud banks, rendered live with WebGL.</p></header>
-<div class="section-head"><h2>Wool & Cotton Cloud Studies</h2><span>09 CLOUD FORMS</span></div>
+<header><p class="eyebrow">Real-time sky studies</p><h1>Sky Clouds</h1><p class="intro">Nine distinct sky compositions built from flowing vapor, soft wool-like clouds, dramatic openings and distant horizons.</p></header>
+<div class="section-head"><h2>Nine Different Sky Scenes</h2><span>09 CLOUD FORMS</span></div>
 <section class="sky-grid">
 <article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
@@ -193,7 +193,45 @@ void main(){
  cloudP.x+=sin(t*.22)*.018;
  cloudP.y+=sin(t*.16)*.012;
  float density=cloudField(cloudP,mode,t);
- if(mode>3.5&&mode<5.5) density*=.96+.04*sin(p.x*2.0+t*.12);
+
+ // Each card gets its own sky composition, not just a different color palette.
+ if(mode<.5){
+  // Desert edge: broad cloud shelf sits above a clean sand-and-horizon strip.
+  density*=smoothstep(.13,.34,uv.y);
+ }else if(mode<1.5){
+  // Parted cloud curtains leave a calm opening in the upper middle for the moon.
+  float opening=length((uv-vec2(.50,.77))*vec2(1.22,1.0));
+  density*=1.0-smoothstep(.16,.34,opening)*smoothstep(.48,.72,uv.y);
+ }else if(mode<2.5){
+  // A circular cloud tunnel: dense billows form a ring around a receding center.
+  float radial=length((uv-vec2(.50,.43))*vec2(1.0,.88));
+  float tunnel=1.0-smoothstep(.10,.24,radial);
+  float rim=smoothstep(.20,.34,radial);
+  density=max(density*.28,rim*(.52+.20*fbm(p*3.0+vec2(t*.01,0.0)))*(1.0-tunnel));
+ }else if(mode<3.5){
+  // High, broken cloud streamers with open pastel sky between them.
+  float bands=fbm(vec2(p.x*2.0+p.y*.75,p.y*7.0-t*.012));
+  density*=smoothstep(.34,.68,bands)*.92;
+ }else if(mode<4.5){
+  // Aurora sky keeps a wide open upper area and a low cloud shelf.
+  density*=smoothstep(-.12,.22,uv.y)*.78;
+ }else if(mode<5.5){
+  // Moonlit layered cloud deck, heavier near the lower edge.
+  float deck=smoothstep(-.28,.16,uv.y);
+  density=max(density*.62,deck*.46*smoothstep(.20,.52,fbm(vec2(p.x*2.4,p.y*4.0+t*.006))));
+ }else if(mode<6.5){
+  // Floating cloud islands separated by generous gaps.
+  float islands=fbm(vec2(p.x*2.1,p.y*2.8)+vec2(4.0,t*.008));
+  density*=smoothstep(.39,.68,islands)*1.18;
+ }else if(mode<7.5){
+  // Diagonal wind lanes sweep across the frame.
+  float lanes=fbm(vec2(p.x*2.1+p.y*1.35,p.y*5.5-t*.01));
+  density*=smoothstep(.30,.66,lanes)*.95;
+ }else{
+  // Dense, soft cloud ocean with a gently rolling upper edge.
+  float sea= smoothstep(.20,.48,fbm(vec2(p.x*2.2,p.y*3.6+t*.006)));
+  density=max(density*.68,sea*smoothstep(-.48,.18,p.y)*.82);
+ }
 
  // Soft directional volume shading without expensive multi-sample ray marching.
  float inner=fbm(cloudP*vec2(7.0,9.0)+vec2(t*.006,-t*.004));
@@ -207,6 +245,51 @@ void main(){
  shaded*=.97+inner*.06;
  float cloudAlpha=smoothstep(.025,.34,density);
  vec3 color=mix(sky,shaded,cloudAlpha*.96);
+
+ // Scenic foreground and focal elements unique to selected cards.
+ if(mode<.5){
+  float ground=smoothstep(.235,.215,uv.y);
+  vec3 sand=mix(vec3(.48,.31,.20),vec3(.83,.62,.39),smoothstep(.0,.24,uv.y));
+  float dune= smoothstep(.0,.035,uv.y-(.17+.018*sin(uv.x*5.0+t*.025)));
+  color=mix(color,sand,ground);
+  color=mix(color,vec3(.67,.46,.29),ground*dune*.18);
+  float horizonGlow=exp(-pow((uv.y-.235)*38.0,2.0));
+  color+=vec3(1.0,.66,.38)*horizonGlow*.20;
+ }else if(mode<1.5){
+  float moonDist=length((uv-vec2(.50,.77))*vec2(1.0,1.12));
+  float moon=1.0-smoothstep(.035,.042,moonDist);
+  float halo=exp(-moonDist*18.0);
+  color+=vec3(1.0,.78,.57)*halo*.32;
+  color=mix(color,vec3(1.0,.91,.76),moon);
+  float curtainEdge=exp(-pow((abs(uv.x-.5)-.20)*18.0,2.0))*smoothstep(.48,.72,uv.y);
+  color+=vec3(.68,.65,1.0)*curtainEdge*.10;
+ }else if(mode<2.5){
+  float tunnelR=length((uv-vec2(.50,.43))*vec2(1.0,.88));
+  float tunnelLight=exp(-tunnelR*8.0);
+  color+=vec3(.60,.72,1.0)*tunnelLight*.20;
+  float ring=exp(-pow((tunnelR-.29)*18.0,2.0));
+  color+=accent*ring*.24;
+ }else if(mode<3.5){
+  float pastelGlow=exp(-pow((uv.y-.73)*5.0,2.0));
+  color+=vec3(.95,.65,.86)*pastelGlow*.12;
+ }else if(mode<4.5){
+  float aurora=pow(max(0.0,sin(uv.x*8.0+t*.10)),5.0)*smoothstep(.38,.72,uv.y);
+  color+=vec3(.12,.92,.70)*aurora*.22;
+ }else if(mode<5.5){
+  float moonDist=length((uv-vec2(.76,.76))*vec2(1.0,1.1));
+  float moon=1.0-smoothstep(.045,.052,moonDist);
+  color+=vec3(.55,.68,1.0)*exp(-moonDist*15.0)*.25;
+  color=mix(color,vec3(.88,.91,1.0),moon);
+ }else if(mode<6.5){
+  float nebula=fbm(p*2.4+vec2(0.0,t*.01));
+  color+=vec3(.42,.18,.85)*smoothstep(.48,.72,nebula)*.17;
+ }else if(mode<7.5){
+  float streak=exp(-pow((uv.y-(.68+.12*sin(uv.x*3.0+t*.08)))*22.0,2.0));
+  color+=vec3(.55,.82,1.0)*streak*.16;
+ }else{
+  float horizonLine=exp(-pow((uv.y-.28)*22.0,2.0));
+  color+=vec3(.72,.83,.90)*horizonLine*.13;
+ }
 
  // Restrained celestial details, kept behind the cloud mass.
  vec2 grid=uv*vec2(118.0,76.0);
