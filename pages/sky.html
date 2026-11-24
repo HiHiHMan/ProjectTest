@@ -208,29 +208,69 @@ float cloudField(vec2 p,float m,float t){
   }
   return smoothstep(.385,.585,naturalMass)*.99;
  }
- float warp=fbm(q*vec2(1.05,1.8)+vec2(3.0,7.0));
- vec2 smokeUV=vec2(q.x*1.28+(warp-.5)*.42,q.y*3.15);
- float smoke=fbm(smokeUV+vec2(0.0,t*.004));
- float billow=fbm(q*vec2(3.35,5.0)+vec2(smoke*1.25,-t*.003));
- float softCloud=fbm(q*vec2(1.9,3.0)+vec2(8.0,2.0));
- float tower=fbm(vec2(q.x*2.15+(warp-.5)*.24,q.y*5.6-t*.003));
- float cloudCore=smoke*.43+softCloud*.25+tower*.17+billow*.15;
- float cloudMass=smoothstep(.345,.615,cloudCore);
- float vaporNoise=fbm(vec2(q.x*1.25+(warp-.5)*.30,q.y*6.8-t*.003));
- float vapor=smoothstep(.48,.70,vaporNoise)*smoothstep(-.35,.35,q.y);
- float skyCoverage=clamp(cloudMass*.94+vapor*.14,0.0,1.0);
+ // Each non-organic card gets a distinct cloud silhouette and mass distribution.
+ float warp=fbm(q*vec2(1.15,2.0)+vec2(3.0,7.0));
+ vec2 warped=q+vec2((warp-.5)*.34,(fbm(q*vec2(2.0,1.4)+vec2(8.0,2.0))-.5)*.12);
+ float broad=fbm(warped*vec2(1.55,2.35)+vec2(2.0,t*.002));
+ float billow=fbm(warped*vec2(3.8,5.4)+vec2(broad*1.4,-t*.003));
+ float crown=fbm(warped*vec2(6.8,8.8)+vec2(-3.0,t*.002));
+ float tower=fbm(warped*vec2(2.2,5.0)+vec2(6.0,-t*.002));
+ float wisps=fbm(vec2(warped.x*1.15+warped.y*.28,warped.y*8.0-t*.003));
+ float core=broad*.34+billow*.27+tower*.22+crown*.13+.04*wisps;
+ float mass=smoothstep(.385,.625,core);
+ float form=mass;
 
- // Wool-like rounded crowns remain visible inside the larger flowing cloud masses.
- float broad=fbm(q*vec2(1.9,2.65)+vec2(2.0,8.0));
- float detail=fbm(q*vec2(4.2,5.4)+broad*1.15);
- float edgeTurbulence=fbm(q*vec2(8.0,10.5)+vec2(-2.0,t*.003));
- float d=silhouette(p*.78,m,t);
- float shape=1.0-smoothstep(-.105,.105,d+(broad-.5)*.075+(detail-.5)*.026+(edgeTurbulence-.5)*.012);
- float interior=m>2.5&&m<3.5 ? .82 : .79;
- float wool=shape*(interior+smoothstep(.25,.72,broad*.66+detail*.26+edgeTurbulence*.08)*.14);
+ if(m<1.5){
+  // Sunset Kingdom: two towering cumulonimbus walls with a low connecting cloud shelf.
+  float leftTower=1.0-smoothstep(.20,.56,abs(p.x+.63+(warp-.5)*.12));
+  float rightTower=1.0-smoothstep(.19,.54,abs(p.x-.66+(warp-.5)*.12));
+  float towerHeight=smoothstep(-.48,-.12,p.y)*(.62+.38*tower);
+  float baseShelf=smoothstep(-.42,-.20,p.y)*.72;
+  form=max(mass*(leftTower+rightTower)*towerHeight, mass*baseShelf*.48);
+  form=max(form,mass*.24);
+  form*=1.0-smoothstep(.04,.34,abs(p.x))*smoothstep(.22,.46,p.y)*.72;
+ }else if(m<3.5){
+  // Dreamveil: thin, broken, wind-stretched cloud streamers.
+  float bandNoise=fbm(vec2(warped.x*1.65+warped.y*.82,warped.y*8.5-t*.004));
+  float bandY=.12*sin(p.x*2.8+t*.025)+.055*sin(p.x*6.0-t*.018);
+  float band=1.0-smoothstep(.025,.12,abs(p.y-bandY+(bandNoise-.5)*.11));
+  float upperBand=1.0-smoothstep(.018,.09,abs(p.y-(.30+.045*sin(p.x*3.0-t*.02))+(bandNoise-.5)*.08));
+  form=max(mass*.22,max(band* smoothstep(.38,.62,bandNoise),upperBand*.52));
+ }else if(m<4.5){
+  // Aurora Sanctuary: broken cumulus towers rise from a low, airy shelf.
+  float sideClusters=smoothstep(.12,.52,abs(p.x))*(.58+.42*tower);
+  float lowShelf=smoothstep(-.48,-.12,p.y)*.52;
+  form=max(mass*sideClusters, mass*lowShelf);
+  form*=.72+.28*smoothstep(.18,.48,crown);
+ }else if(m<5.5){
+  // Moon Shrine: heavy layered night deck with a few large rounded towers.
+  float deck=smoothstep(-.40,-.04,p.y);
+  float towerMass=max(1.0-smoothstep(.24,.62,abs(p.x+.48)),1.0-smoothstep(.22,.58,abs(p.x-.42)));
+  form=max(mass*deck*.82,mass*towerMass*smoothstep(-.35,.10,p.y)*.74);
+ }else if(m<6.5){
+  // Astral Nebula: immense storm-like cloud towers, overlapping into one dramatic mass.
+  float centralTower=1.0-smoothstep(.28,.78,abs(p.x-.12+(warp-.5)*.16));
+  float sideShoulder=1.0-smoothstep(.22,.62,abs(p.x+.58));
+  float rising=smoothstep(-.48,-.02,p.y);
+  form=max(mass*centralTower*rising,mass*sideShoulder*.62);
+  form=max(form,mass*.30);
+ }else if(m<7.5){
+  // Stardust Passage: long, compressed cloud bands pulled diagonally by high-altitude wind.
+  float flow=fbm(vec2(warped.x*1.4+warped.y*1.45,warped.y*7.0-t*.006));
+  float laneY=.18*sin(p.x*2.2+t*.025)+.10*sin(p.x*4.2-t*.018);
+  float lanes=1.0-smoothstep(.035,.20,abs(p.y-laneY+(flow-.5)*.12));
+  form=max(mass*.28,lanes*smoothstep(.32,.60,flow)*.92);
+ }else{
+  // Ethereal Sea: a broad, connected cloud ocean with a rolling upper edge.
+  float oceanBase=smoothstep(-.46,-.02,p.y+(broad-.5)*.24);
+  float rolling=smoothstep(.30,.68,broad*.55+billow*.45);
+  form=max(mass*.54,oceanBase*(.68+rolling*.32));
+  form*=.88+.12*smoothstep(.25,.72,crown);
+ }
 
- // Other scenes retain their soft cotton-like billows.
- return max(skyCoverage*.94,wool*.78);
+ float edgeDetail=smoothstep(.30,.72,billow*.58+crown*.42);
+ float softness=smoothstep(.34,.62,form);
+ return clamp(softness*(.88+edgeDetail*.12),0.0,1.0);
 }
 
 void main(){
