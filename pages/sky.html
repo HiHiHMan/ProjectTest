@@ -398,17 +398,13 @@ void main(){
   // Aurora sky keeps a wide open upper area and a low cloud shelf.
   density*=smoothstep(-.12,.22,uv.y)*.78;
  }else if(mode<5.5){
-  // Moonlit layered cloud deck, heavier near the lower edge.
-  float deck=smoothstep(-.28,.16,uv.y);
-  density=max(density*.62,deck*.46*smoothstep(.20,.52,fbm(vec2(p.x*2.4,p.y*4.0+t*.006))));
+  // Preserve the broad, low layered night-cloud silhouette; only soften its lower edge.
+  density*=smoothstep(-.62,-.48,p.y)*.98+.02;
  }else if(mode<6.5){
-  // Floating cloud islands separated by generous gaps.
-  float islands=fbm(vec2(p.x*2.1,p.y*2.8)+vec2(4.0,t*.008));
-  density*=smoothstep(.39,.68,islands)*1.18;
+  // Preserve the towering cumulonimbus silhouette and its broken anvil crown.
+  density*=.98+.02*smoothstep(.28,.62,broadRelief);
  }else if(mode<7.5){
-  // Diagonal wind lanes sweep across the frame.
-  float lanes=fbm(vec2(p.x*2.1+p.y*1.35,p.y*5.5-t*.01));
-  density*=smoothstep(.30,.66,lanes)*.95;
+  // Preserve the diagonal storm mass; wind motion is already built into its silhouette.
  }else if(mode<8.5){
   // Dense, soft cloud ocean with a gently rolling upper edge.
   float sea= smoothstep(.20,.48,fbm(vec2(p.x*2.2,p.y*3.6+t*.006)));
