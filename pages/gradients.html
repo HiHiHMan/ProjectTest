@@ -205,105 +205,7 @@
 }
 
 
-/* 26 — C-shaped noir crescent light, open on the right */
-.dome-light{
-  background:transparent!important;
-}
-.dome-light:before{
-  content:"";
-  position:absolute;
-  width:68%;
-  height:88%;
-  left:16%;
-  top:6%;
-  border-radius:50%;
-  background:
-    conic-gradient(from 42deg at 50% 50%,
-      transparent 0deg 78deg,
-      #77716f 104deg,
-      #aaa08e 145deg,
-      #c8b99f 180deg,
-      #aaa08e 218deg,
-      #77727a 258deg,
-      #45485a 300deg,
-      transparent 326deg 360deg);
-  -webkit-mask:radial-gradient(ellipse at center,
-    transparent 0 53%,
-    #000 60% 100%);
-  mask:radial-gradient(ellipse at center,
-    transparent 0 53%,
-    #000 60% 100%);
-  filter:blur(13px);
-  animation:crescentBreath 16s ease-in-out infinite alternate;
-}
-.dome-light:after{
-  content:"";
-  position:absolute;
-  width:68%;
-  height:88%;
-  left:16%;
-  top:6%;
-  border-radius:50%;
-  background:radial-gradient(ellipse at 50% 50%,
-    transparent 0 49%,
-    #080b15 59%,
-    #080b15 100%);
-  filter:blur(17px);
-  pointer-events:none;
-}
-@keyframes crescentBreath{
-  from{transform:rotate(-3deg) scale(.98);filter:blur(14px) brightness(.92)}
-  to{transform:rotate(3deg) scale(1.02);filter:blur(12px) brightness(1.04)}
-}
 
-
-
-/* Atmospheric Horizon — low, wide planetary light instead of a circular rim */
-.atmospheric-rim{
-  position:relative;
-  overflow:hidden;
-  isolation:isolate;
-  background:
-    radial-gradient(ellipse at 50% 100%,#071a2b 0, #02070d 42%, #000 76%)!important;
-}
-.atmospheric-rim:before{
-  content:"";
-  position:absolute;
-  left:-24%;
-  top:54%;
-  width:148%;
-  height:110%;
-  border-radius:50%;
-  border-top:2px solid #b9f4ff;
-  box-shadow:
-    0 -2px 5px #e4fbff,
-    0 -7px 16px #63d8ff,
-    0 -18px 38px #168cffaa,
-    0 -34px 70px #0754a866;
-  filter:blur(1.5px);
-  opacity:.95;
-  z-index:2;
-}
-.atmospheric-rim:after{
-  content:"";
-  position:absolute;
-  left:-15%;
-  bottom:-48%;
-  width:130%;
-  height:105%;
-  border-radius:50%;
-  background:radial-gradient(ellipse at 50% 0%,
-    #1b8acb55 0,
-    #07518c33 23%,
-    #03172a22 48%,
-    transparent 72%);
-  filter:blur(22px);
-  pointer-events:none;
-  z-index:1;
-}
-.atmospheric-rim .atmospheric-glow,
-.atmospheric-rim .atmospheric-bloom{display:none}
-.atmospheric-rim .art-noise{z-index:10}
 
 </style></head><body><main class="page">
 <nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
@@ -323,7 +225,7 @@
 <article class="art-card"><div class="art plasma-tunnel"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>11 / Spatial flow</small><h3>Chromatic Tunnel</h3><p>Nested plasma ripples create a bold optical pattern.</p></div></article>
 <article class="art-card"><div class="art plasma-storm"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>12 / Charged atmosphere</small><h3>Plasma Storm</h3><p>A turbulent halo of energetic filaments surrounding a radiant core.</p></div></article></section>
 
-<div class="section-head"><h2>Chromatic worlds</h2><span>13—27 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
+<div class="section-head"><h2>Chromatic worlds</h2><span>13—24 · NEW PALETTES / ATMOSPHERES / FORMS</span></div><section class="art-grid" aria-label="Chromatic gradient digital art">
 <article class="art-card"><div class="art solar-flare"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>13 / Solar phenomenon</small><h3>Solar Flare</h3><p>Molten gold and hot coral radiate from a burning off-center glow.</p></div></article>
 <article class="art-card"><div class="art abyss-bloom"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>14 / Organic light</small><h3>Abyss Bloom</h3><p>Bioluminescent teal petals emerge from a deep ocean shadow.</p></div></article>
 <article class="art-card"><div class="art cyber-opal"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>15 / Iridescent field</small><h3>Cyber Opal</h3><p>Prismatic cyan, mint, lilac and rose shift through a glowing opal spectrum.</p></div></article>
@@ -336,8 +238,8 @@
 <article class="art-card"><div class="art ultraviolet-ink"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>22 / Pigment cloud</small><h3>Ultraviolet Ink</h3><p>Violet and electric magenta pigment bloom into soft abstract stains.</p></div></article>
 <article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
 <article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
-<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A C-shaped crescent of diffused light fades into deep noir shadow.</p></div></article>
-<article class="art-card"><div class="art atmospheric-rim"><div class="atmospheric-glow"></div><div class="atmospheric-bloom"></div><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>27 / Planetary illumination</small><h3>Atmospheric Rim</h3><p>A cyan-blue planetary edge blooms softly into pure black space.</p></div></article>
+
+
 </section>
 </main>
 </body></html>
