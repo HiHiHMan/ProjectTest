@@ -257,83 +257,73 @@
 }
 
 
-/* 27 — planetary atmospheric rim light, cyan-blue bloom on pure black */
+
+/* Atmospheric Rim visibility correction */
 .atmospheric-rim{
   position:relative;
+  overflow:hidden;
   background:#000!important;
   isolation:isolate;
 }
 .atmospheric-rim:before{
   content:"";
   position:absolute;
-  width:116%;
+  width:180%;
   aspect-ratio:1;
-  left:34%;
-  top:-57%;
+  left:5%;
+  top:-110%;
   border-radius:50%;
-  background:conic-gradient(
-    from 205deg,
-    transparent 0deg 104deg,
-    #1e3a8a 126deg,
-    #1d4ed8 151deg,
-    #38bdf8 174deg,
-    #bfedff 187deg,
-    #60a5fa 199deg,
-    #1d4ed8 225deg,
-    transparent 258deg 360deg
+  background:radial-gradient(circle,
+    transparent 0 64%,
+    #1e3a8a 65%,
+    #1d4ed8 66%,
+    #38bdf8 67%,
+    #e0f7ff 67.5%,
+    #60a5fa 68.2%,
+    #1d4ed8 70%,
+    transparent 73%
   );
-  -webkit-mask:radial-gradient(circle,transparent 0 96.5%,#000 97.2% 100%);
-  mask:radial-gradient(circle,transparent 0 96.5%,#000 97.2% 100%);
-  filter:blur(3px);
-  z-index:1;
+  filter:blur(2px);
+  opacity:1;
+  z-index:2;
 }
-.atmospheric-glow{
+.atmospheric-rim .atmospheric-glow{
   position:absolute;
-  width:116%;
+  width:180%;
   aspect-ratio:1;
-  left:34%;
-  top:-57%;
+  left:5%;
+  top:-110%;
   border-radius:50%;
   pointer-events:none;
-  background:conic-gradient(
-    from 205deg,
-    transparent 0deg 104deg,
-    #1e3a8a 126deg,
-    #1d4ed8 151deg,
-    #38bdf8 174deg,
-    #bfedff 187deg,
-    #60a5fa 199deg,
-    #1d4ed8 225deg,
-    transparent 258deg 360deg
+  background:radial-gradient(circle,
+    transparent 0 61%,
+    #1e3a8a 64%,
+    #1d4ed8 66%,
+    #38bdf8 68%,
+    #60a5fa 70%,
+    transparent 76%
   );
-  -webkit-mask:radial-gradient(circle,transparent 0 89%,#000 95% 100%);
-  mask:radial-gradient(circle,transparent 0 89%,#000 95% 100%);
-  filter:blur(31px);
-  opacity:.72;
-  z-index:0;
+  filter:blur(18px);
+  opacity:.9;
+  z-index:1;
 }
 .atmospheric-rim .atmospheric-bloom{
   position:absolute;
-  width:116%;
+  width:180%;
   aspect-ratio:1;
-  left:34%;
-  top:-57%;
+  left:5%;
+  top:-110%;
   border-radius:50%;
   pointer-events:none;
-  background:conic-gradient(
-    from 205deg,
-    transparent 0deg 104deg,
-    #1e3a8a 126deg,
-    #1d4ed8 151deg,
-    #38bdf8 174deg,
-    #60a5fa 199deg,
-    #1d4ed8 225deg,
-    transparent 258deg 360deg
+  background:radial-gradient(circle,
+    transparent 0 58%,
+    #1e3a8a 64%,
+    #1d4ed8 68%,
+    #38bdf8 71%,
+    transparent 79%
   );
-  -webkit-mask:radial-gradient(circle,transparent 0 82%,#000 94% 100%);
-  mask:radial-gradient(circle,transparent 0 82%,#000 94% 100%);
-  filter:blur(67px);
-  opacity:.32;
+  filter:blur(38px);
+  opacity:.65;
   z-index:0;
 }
 .atmospheric-rim .art-noise{z-index:10}
