@@ -250,7 +250,25 @@ void main(){
  // Fine internal billows soften the cloud surface.
  shaded*=.97+inner*.06;
  float cloudAlpha=smoothstep(.025,.34,density);
- vec3 color=mix(sky,shaded,cloudAlpha*.96);
+
+ // Three additional depth planes create visible overlap instead of one flat cloud sheet.
+ // Distant clouds are wider, softer and cooler; foreground billows are larger and brighter.
+ vec2 farP=cloudP*.66+vec2(-.18,.13)+vec2(-t*.004,t*.002);
+ vec2 nearP=cloudP*1.38+vec2(.12,-.10)+vec2(t*.009,-t*.005);
+ float farDensity=cloudField(farP,mode,t*.68)*.58;
+ float nearDensity=cloudField(nearP,mode,t*1.22)*.48;
+ float farAlpha=smoothstep(.035,.39,farDensity);
+ float nearAlpha=smoothstep(.025,.30,nearDensity);
+
+ vec3 farShade=mix(cloudShade*.78,cloudLit*.76,.48+diffuse*.30);
+ vec3 nearShade=mix(cloudShade*1.08,cloudLit*1.04,.30+diffuse*.62);
+ farShade=mix(farShade,accent,.10);
+ nearShade+=accent*(1.0-smoothstep(.02,.22,nearDensity))*nearDensity*.12;
+
+ // Composite back to front: distant veil -> main billows -> foreground cloud clusters.
+ vec3 color=mix(sky,farShade,farAlpha*.76);
+ color=mix(color,shaded,cloudAlpha*.92);
+ color=mix(color,nearShade,nearAlpha*.88);
 
  // Scenic foreground and focal elements unique to selected cards.
  if(mode<.5){
