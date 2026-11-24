@@ -34,7 +34,7 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 <section class="sky-grid">
 <article class="sky-card"><div class="sky-art"><canvas data-sky="0" aria-label="Soft cumulus clouds"></canvas></div><div class="info"><small>01 / Daylight</small><h3>Celestial Garden</h3><p>Soft, rounded wool-like puffs gathered into a full cloud bank.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="1" aria-label="Golden hour clouds"></canvas></div><div class="info"><small>02 / Warm light</small><h3>Sunset Kingdom</h3><p>Dense cottony billows with warm golden light along their tops.</p></div></article>
-<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Layered fluffy clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>Deep, weighty cloud puffs layered into a dramatic formation.</p></div></article>
+<article class="sky-card"><div class="sky-art"><canvas data-sky="2" aria-label="Waterfall-like flowing clouds"></canvas></div><div class="info"><small>03 / Dramatic</small><h3>Thunder Realm</h3><p>Deep, weighty cloud puffs layered into a dramatic formation.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="3" aria-label="Pastel sky"></canvas></div><div class="info"><small>04 / Pastel</small><h3>Dreamveil</h3><p>Small, soft cotton puffs in delicate pastel layers.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="4" aria-label="Mint-lit fluffy clouds"></canvas></div><div class="info"><small>05 / Polar light</small><h3>Aurora Sanctuary</h3><p>Rounded cloud clusters with cool mint light and soft edges.</p></div></article>
 <article class="sky-card"><div class="sky-art"><canvas data-sky="5" aria-label="Moonlit clouds"></canvas></div><div class="info"><small>06 / Night</small><h3>Moon Shrine</h3><p>Quiet, pillowy cloud masses under cool silver moonlight.</p></div></article>
@@ -203,11 +203,14 @@ void main(){
   float opening=length((uv-vec2(.50,.77))*vec2(1.22,1.0));
   density*=1.0-smoothstep(.16,.34,opening)*smoothstep(.48,.72,uv.y);
  }else if(mode<2.5){
-  // A circular cloud tunnel: dense billows form a ring around a receding center.
-  float radial=length((uv-vec2(.50,.43))*vec2(1.0,.88));
-  float tunnel=1.0-smoothstep(.10,.24,radial);
-  float rim=smoothstep(.16,.25,radial)*(1.0-smoothstep(.48,.64,radial));
-  density=max(density*.24,rim*(.58+.18*fbm(p*3.0+vec2(t*.01,0.0))));
+  // A vertical cloudfall: soft cloud curtains descend from a high, dense cloud shelf.
+  float flowNoise=fbm(vec2(p.x*4.0+p.y*.55,p.y*2.2-t*.012));
+  float streamWidth=.105+.075*flowNoise;
+  float streamCenter=.10*sin(p.y*3.0+t*.10)+.035*sin(p.y*7.0-t*.07);
+  float stream=exp(-pow((p.x-streamCenter)/streamWidth,2.0));
+  float upperShelf=smoothstep(.24,.62,fbm(vec2(p.x*2.8,p.y*3.0+2.0)));
+  float fallingCloud=stream*smoothstep(-.58,.12,uv.y)*(.52+.32*flowNoise);
+  density=max(density*.34,max(fallingCloud,upperShelf*.32));
  }else if(mode<3.5){
   // High, broken cloud streamers with open pastel sky between them.
   float bands=fbm(vec2(p.x*2.0+p.y*.75,p.y*7.0-t*.012));
@@ -264,11 +267,10 @@ void main(){
   float curtainEdge=exp(-pow((abs(uv.x-.5)-.20)*18.0,2.0))*smoothstep(.48,.72,uv.y);
   color+=vec3(.68,.65,1.0)*curtainEdge*.10;
  }else if(mode<2.5){
-  float tunnelR=length((uv-vec2(.50,.43))*vec2(1.0,.88));
-  float tunnelLight=exp(-tunnelR*8.0);
-  color+=vec3(.60,.72,1.0)*tunnelLight*.20;
-  float ring=exp(-pow((tunnelR-.29)*18.0,2.0));
-  color+=accent*ring*.24;
+  float fallingMist=exp(-pow(p.x/.34,2.0))*smoothstep(-.62,-.05,uv.y);
+  color+=vec3(.66,.78,1.0)*fallingMist*.20;
+  float cloudBase=exp(-pow((uv.y-.16)*12.0,2.0));
+  color+=vec3(.72,.82,.96)*cloudBase*.16;
  }else if(mode<3.5){
   float pastelGlow=exp(-pow((uv.y-.73)*5.0,2.0));
   color+=vec3(.95,.65,.86)*pastelGlow*.12;
