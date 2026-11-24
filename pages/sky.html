@@ -48,158 +48,171 @@ footer{margin-top:48px;padding-top:18px;border-top:1px solid #ffffff12;color:#69
 const vertex='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
 const fragment=`
 precision highp float;
-uniform vec2 u_res;uniform float u_time;uniform float u_mode;
+uniform vec2 u_res;
+uniform float u_time;
+uniform float u_mode;
+
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.02+vec2(13.7,9.2);a*=.5;}return v;}
-float sdEllipse(vec2 p,vec2 r){return (length(p/r)-1.)*min(r.x,r.y);}
-float sdBox(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}
-float sdSegment(vec2 p,vec2 a,vec2 b,float r){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h)-r;}
-float cloudShape(vec2 p,float kind,float t){
- float d=9.;
- if(kind<.5){
-  // Wool-like cloud: a row of soft rounded fleece puffs.
-  d=min(d,length(p-vec2(-.30,-.015))-.115);
-  d=min(d,length(p-vec2(-.19,.055))-.145);
-  d=min(d,length(p-vec2(-.045,.095))-.16);
-  d=min(d,length(p-vec2(.12,.075))-.145);
-  d=min(d,length(p-vec2(.265,.005))-.12);
-  d=min(d,sdEllipse(p-vec2(-.015,-.095),vec2(.30,.105)));
- }else if(kind<1.5){
-  // A gentle cloud-animal silhouette, like a floating whale.
-  d=min(d,sdEllipse(p-vec2(-.045,.015),vec2(.30,.145)));
-  d=min(d,sdEllipse(p-vec2(.245,.075),vec2(.115,.115)));
-  d=min(d,sdEllipse(p-vec2(.34,.015),vec2(.085,.055)));
-  d=min(d,sdSegment(p,vec2(-.30,.015),vec2(-.43,.16),.045));
-  d=min(d,sdSegment(p,vec2(-.30,.015),vec2(-.43,-.13),.045));
-  d=min(d,sdEllipse(p-vec2(.10,-.12),vec2(.10,.055)));
-  d=min(d,sdEllipse(p-vec2(.20,.18),vec2(.045,.09)));
- }else if(kind<2.5){
-  // A curling spiral / coiled cloud.
-  float a=atan(p.y,p.x);float r=length(p);
-  float spiralRadius=.025+.052*(a+3.14159);
-  d=abs(r-spiralRadius)-(.045+.012*sin(a*5.));
-  d=min(d,length(p)-.075);
- }else if(kind<3.5){
-  // Floating spherical cloud clusters.
-  d=min(d,length(p-vec2(-.22,-.015))-.145);
-  d=min(d,length(p-vec2(-.035,.075))-.19);
-  d=min(d,length(p-vec2(.19,.015))-.155);
-  d=min(d,length(p-vec2(.02,-.12))-.13);
- }else if(kind<4.5){
-  // A luminous ring / halo cloud.
-  d=abs(length(p)-(.235+.012*sin(atan(p.y,p.x)*5.+t*.25)))-.065;
-  d=min(d,length(p)-.115);
- }else if(kind<5.5){
-  // Floating cloud castle with towers and rounded turrets.
-  d=min(d,sdBox(p-vec2(0.,-.12),vec2(.29,.085)));
-  d=min(d,sdBox(p-vec2(-.19,.005),vec2(.075,.19)));
-  d=min(d,sdBox(p-vec2(.19,.005),vec2(.075,.19)));
-  d=min(d,sdBox(p-vec2(0.,.035),vec2(.085,.22)));
-  d=min(d,length(p-vec2(-.19,.205))-.075);
-  d=min(d,length(p-vec2(.19,.205))-.075);
-  d=min(d,length(p-vec2(0.,.265))-.085);
- }else if(kind<6.5){
-  // A bird-like cloud with broad wings.
-  d=min(d,sdEllipse(p-vec2(0.,-.015),vec2(.12,.09)));
-  d=min(d,sdEllipse(p-vec2(-.19,.075),vec2(.22,.065)));
-  d=min(d,sdEllipse(p-vec2(.19,.075),vec2(.22,.065)));
-  d=min(d,sdSegment(p,vec2(.08,-.01),vec2(.30,-.015),.035));
-  d=min(d,sdSegment(p,vec2(-.02,-.07),vec2(-.11,-.19),.045));
- }else if(kind<7.5){
-  // A long floating airship / cloud vessel.
-  d=min(d,sdEllipse(p-vec2(0.,-.035),vec2(.34,.105)));
-  d=min(d,sdBox(p-vec2(0.,.105),vec2(.14,.075)));
-  d=min(d,sdSegment(p,vec2(-.24,.04),vec2(-.34,.20),.025));
-  d=min(d,sdSegment(p,vec2(.24,.04),vec2(.34,.20),.025));
- }else{
-  // A broad rolling bank of cloud waves.
-  d=min(d,sdEllipse(p-vec2(-.28,-.055),vec2(.22,.15)));
-  d=min(d,sdEllipse(p-vec2(-.08,.025),vec2(.25,.19)));
-  d=min(d,sdEllipse(p-vec2(.17,-.005),vec2(.24,.17)));
-  d=min(d,sdEllipse(p-vec2(.36,-.07),vec2(.18,.12)));
-  d=min(d,sdEllipse(p-vec2(0.,-.14),vec2(.40,.10)));
- }
- return 1.-smoothstep(-.018,.055,d);
+float noise(vec2 p){
+ vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+ return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),f.x),mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0)),f.x),f.y);
 }
+float fbm(vec2 p){
+ float v=0.0,a=.5;
+ for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+vec2(17.1,9.2);a*=.5;}
+ return v;
+}
+float sdEllipse(vec2 p,vec2 r){return (length(p/r)-1.0)*min(r.x,r.y);}
+float sdBox(vec2 p,vec2 b){vec2 q=abs(p)-b;return length(max(q,0.0))+min(max(q.x,q.y),0.0);}
+float sdSeg(vec2 p,vec2 a,vec2 b,float r){vec2 v=b-a;float h=clamp(dot(p-a,v)/max(dot(v,v),.0001),0.0,1.0);return length(p-a-v*h)-r;}
+
+/* Nine genuinely different silhouettes, each built from connected soft masses. */
+float silhouette(vec2 p,float m,float t){
+ float d=4.0;
+ if(m<.5){
+  d=min(d,sdEllipse(p-vec2(-.31,-.02),vec2(.20,.20)));
+  d=min(d,sdEllipse(p-vec2(-.13,.07),vec2(.22,.27)));
+  d=min(d,sdEllipse(p-vec2(.10,.06),vec2(.25,.29)));
+  d=min(d,sdEllipse(p-vec2(.31,-.02),vec2(.19,.20)));
+  d=min(d,sdEllipse(p-vec2(0.0,-.13),vec2(.43,.13)));
+ }else if(m<1.5){
+  d=min(d,sdEllipse(p-vec2(-.02,.0),vec2(.38,.19)));
+  d=min(d,sdEllipse(p-vec2(.30,.10),vec2(.16,.15)));
+  d=min(d,sdEllipse(p-vec2(.43,.035),vec2(.09,.065)));
+  d=min(d,sdSeg(p,vec2(-.34,.02),vec2(-.51,.20),.055));
+  d=min(d,sdSeg(p,vec2(-.34,.02),vec2(-.51,-.16),.055));
+  d=min(d,sdEllipse(p-vec2(.02,-.16),vec2(.17,.07)));
+  d=min(d,sdEllipse(p-vec2(.21,.22),vec2(.065,.11)));
+ }else if(m<2.5){
+  float a=atan(p.y,p.x),rad=length(p);
+  float turn=mod(a+6.28318,6.28318);
+  float coil=.045+.039*turn;
+  d=abs(rad-coil)-(.055+.012*sin(turn*4.0+t*.15));
+  d=min(d,length(p)-.09);
+  d=min(d,sdEllipse(p-vec2(.20,-.22),vec2(.12,.07)));
+ }else if(m<3.5){
+  d=min(d,length(p-vec2(-.29,-.015))-.19);
+  d=min(d,length(p-vec2(-.08,.075))-.25);
+  d=min(d,length(p-vec2(.19,.025))-.21);
+  d=min(d,length(p-vec2(.02,-.15))-.18);
+  d=min(d,length(p-vec2(.37,-.07))-.12);
+ }else if(m<4.5){
+  d=abs(length(p)-(.27+.018*sin(atan(p.y,p.x)*5.0+t*.18)))-.085;
+  d=min(d,length(p)-.105);
+  d=min(d,sdEllipse(p-vec2(0.0,.31),vec2(.11,.065)));
+ }else if(m<5.5){
+  d=min(d,sdBox(p-vec2(0.0,-.17),vec2(.37,.12)));
+  d=min(d,sdBox(p-vec2(-.24,.015),vec2(.105,.22)));
+  d=min(d,sdBox(p-vec2(.24,.015),vec2(.105,.22)));
+  d=min(d,sdBox(p-vec2(0.0,.045),vec2(.12,.28)));
+  d=min(d,length(p-vec2(-.24,.245))-.105);
+  d=min(d,length(p-vec2(.24,.245))-.105);
+  d=min(d,length(p-vec2(0.0,.34))-.12);
+ }else if(m<6.5){
+  d=min(d,sdEllipse(p-vec2(0.0,-.015),vec2(.14,.105)));
+  d=min(d,sdEllipse(p-vec2(-.24,.075),vec2(.26,.085)));
+  d=min(d,sdEllipse(p-vec2(.24,.075),vec2(.26,.085)));
+  d=min(d,sdSeg(p,vec2(.08,-.01),vec2(.40,-.02),.045));
+  d=min(d,sdSeg(p,vec2(-.02,-.075),vec2(-.14,-.23),.055));
+ }else if(m<7.5){
+  d=min(d,sdEllipse(p-vec2(0.0,-.045),vec2(.43,.14)));
+  d=min(d,sdEllipse(p-vec2(0.0,.12),vec2(.19,.12)));
+  d=min(d,sdSeg(p,vec2(-.28,.0),vec2(-.43,.22),.035));
+  d=min(d,sdSeg(p,vec2(.28,.0),vec2(.43,.22),.035));
+  d=min(d,sdEllipse(p-vec2(-.12,-.18),vec2(.13,.045)));
+  d=min(d,sdEllipse(p-vec2(.12,-.18),vec2(.13,.045)));
+ }else{
+  d=min(d,sdEllipse(p-vec2(-.34,-.09),vec2(.24,.18)));
+  d=min(d,sdEllipse(p-vec2(-.12,.015),vec2(.28,.23)));
+  d=min(d,sdEllipse(p-vec2(.16,.005),vec2(.28,.22)));
+  d=min(d,sdEllipse(p-vec2(.39,-.09),vec2(.22,.17)));
+  d=min(d,sdEllipse(p-vec2(.0,-.19),vec2(.48,.12)));
+ }
+ return d;
+}
+
+float cloudField(vec2 p,float m,float t){
+ vec2 drift=vec2(t*.012,-t*.006);
+ vec2 q=p+drift;
+ float broad=fbm(q*vec2(3.2,4.4)+vec2(2.0,8.0));
+ float detail=fbm(q*vec2(8.0,10.5)+broad*2.0);
+ float fine=fbm(q*vec2(19.0,23.0)-t*.009);
+ float d=silhouette(p,m,t);
+ float shape=smoothstep(.105,-.095,d + (broad-.5)*.13 + (detail-.5)*.065);
+ float organic=smoothstep(.30,.78,broad*.54+detail*.34+fine*.12);
+ float interior=m>2.5&&m<3.5 ? .78 : .70;
+ return shape*(interior+organic*.38);
+}
+
 void main(){
- vec2 uv=gl_FragCoord.xy/u_res;float t=u_time;
- // Straight-on camera: look directly into the sky, with subtle vertical camera travel.
- // Each cloud bank sits at a different depth; perspective changes its scale and drift.
- float cameraY=sin(t*.22)*.035+sin(t*.09)*.018;
- vec2 screen=(uv-.5)*vec2(u_res.x/u_res.y,1.);
- vec2 farP=screen*1.05+vec2(t*.008,-cameraY*.22);
- vec2 midP=screen*1.65+vec2(-t*.018,-cameraY*.48+.18);
- vec2 nearP=screen*2.65+vec2(t*.034,-cameraY*.9-.20);
- vec2 frontP=screen*3.8+vec2(-t*.058,-cameraY*1.35-.42);
- float farCloud=fbm(farP*vec2(2.0,2.5)+vec2(0.,-.12));
- float midCloud=fbm(midP*vec2(2.0,2.7)+vec2(0.,-.10));
- float nearCloud=fbm(nearP*vec2(2.1,3.0));
- float frontCloud=fbm(frontP*vec2(2.0,3.1));
- float farDetail=fbm(farP*5.2+farCloud);
- float midDetail=fbm(midP*5.8+midCloud);
- float nearDetail=fbm(nearP*6.2+nearCloud);
- float frontDetail=fbm(frontP*6.8+frontCloud);
- float farDensity=smoothstep(.42,.73,farCloud*.76+farDetail*.24)*.48;
- float midDensity=smoothstep(.39,.72,midCloud*.72+midDetail*.28)*.58;
- float nearDensity=smoothstep(.39,.72,nearCloud*.70+nearDetail*.30)*.72;
- float frontDensity=smoothstep(.40,.73,frontCloud*.72+frontDetail*.28)*.78;
- float density=1.-(1.-farDensity)*(1.-midDensity)*(1.-nearDensity)*(1.-frontDensity);
- // Distinct cloud silhouettes: fleece, animal, spiral, spheres, halo, castle, bird, airship and rolling banks.
- vec2 shapeP=screen*1.12+vec2(0.,-.015-cameraY*.25);
- float silhouette=cloudShape(shapeP,u_mode,t);
- float silhouetteNoise=fbm(shapeP*vec2(17.,21.)+vec2(t*.025,-t*.018));
- silhouette*=smoothstep(.18,.72,silhouetteNoise)*.30+.70;
- density=max(density*.38,silhouette*.94);
- float detail=(farDetail*.12+midDetail*.20+nearDetail*.30+frontDetail*.38);
- detail=max(detail,silhouetteNoise*.72);
- float clouds=max(max(farCloud,midCloud),max(nearCloud,frontCloud));
- float warp=fbm(screen*1.5+vec2(t*.01,-cameraY));
- float soft=smoothstep(.22,.76,density);
- float edge=soft*(.65+.35*detail);
- vec3 top,bottom,light,shadow;
- if(u_mode<.5){top=vec3(.16,.43,.72);bottom=vec3(.68,.82,.94);light=vec3(1.0,.99,.91);shadow=vec3(.34,.49,.66);}
- else if(u_mode<1.5){top=vec3(.25,.19,.39);bottom=vec3(.96,.53,.38);light=vec3(1.,.78,.56);shadow=vec3(.43,.25,.39);}
- else if(u_mode<2.5){top=vec3(.035,.075,.14);bottom=vec3(.22,.30,.39);light=vec3(.72,.82,.88);shadow=vec3(.055,.085,.14);}
- else if(u_mode<3.5){top=vec3(.36,.32,.58);bottom=vec3(.88,.62,.72);light=vec3(1.,.86,.88);shadow=vec3(.43,.35,.62);}
- else if(u_mode<4.5){top=vec3(.012,.10,.16);bottom=vec3(.035,.24,.24);light=vec3(.18,.94,.73);shadow=vec3(.012,.055,.11);}
- else if(u_mode<5.5){top=vec3(.012,.025,.075);bottom=vec3(.10,.17,.30);light=vec3(.72,.82,.98);shadow=vec3(.025,.045,.10);}
- else if(u_mode<6.5){top=vec3(.045,.018,.12);bottom=vec3(.22,.055,.27);light=vec3(.86,.49,.94);shadow=vec3(.09,.025,.19);}
- else if(u_mode<7.5){top=vec3(.25,.48,.68);bottom=vec3(.72,.83,.91);light=vec3(.94,.98,1.);shadow=vec3(.42,.58,.72);}
- else{top=vec3(.08,.24,.39);bottom=vec3(.55,.70,.78);light=vec3(.93,.94,.87);shadow=vec3(.12,.27,.40);}
- float horizon=smoothstep(-.48,.42,uv.y);
- vec3 sky=mix(bottom,top,horizon);
- vec3 cloud=mix(shadow,light,smoothstep(.43,.80,detail+warp*.12));
- float wisps=smoothstep(.53,.82,fbm(screen*vec2(5.,2.)+vec2(t*.018,-cameraY*.4)));
- if(u_mode>7.5){density=max(density*.78,wisps*.58);}
- if(u_mode>3.5&&u_mode<5.5){density*=.88+.12*sin(screen.x*2.+t*.2);}
- float horizonGlow=exp(-abs(uv.y-(.43+.035*sin(screen.x*1.7+t*.12)))*7.)*.28;
- float celestial=exp(-length((uv-vec2(.73,.72))*vec2(1.0,1.35))*8.);
- sky+=horizonGlow*light+celestial*light*.42;
- vec3 col=mix(sky,cloud,density*.88);
- float shade=(1.-edge)*density*.10;col-=shade*shadow;
- // Fine star field, with a few brighter magical points.
- vec2 starGrid=uv*vec2(145.,92.);
- vec2 cell=floor(starGrid), local=fract(starGrid)-.5;
- float rnd=hash(cell+17.3);
- float starMask=step(.992,rnd)*smoothstep(.48,.08,length(local));
- float twinkle=.55+.45*sin(t*2.2+rnd*35.);
- float starGlow=exp(-length(local)*13.)*step(.986,rnd);
- float stars=(starMask+starGlow*.45)*twinkle;
- float sparkle=pow(max(0.,sin((uv.x*31.+uv.y*19.)*3.+t*1.8)),18.)*step(.994,hash(floor(uv*vec2(38.,24.))));
- col+=light*(stars*.9+sparkle*.22);
- // Flowing ribbons of enchanted atmospheric light.
- float ribbonA=exp(-pow((uv.y-(.60+.075*sin(uv.x*5.2+t*.22)+.025*sin(uv.x*12.-t*.3)-cameraY*.25))*15.,2.));
- float ribbonB=exp(-pow((uv.y-(.69+.055*sin(uv.x*4.1-t*.18)-cameraY*.4))*22.,2.));
- float magic=0.;
- if(u_mode>3.5&&u_mode<5.5)magic=(ribbonA*.30+ribbonB*.18);
- else if(u_mode>5.5&&u_mode<7.5)magic=(ribbonA*.20+ribbonB*.14);
- else magic=ribbonA*.075;
- vec3 magicTint=mix(light,vec3(.55,.38,1.),.42);
- col+=magicTint*magic;
- float grain=(hash(gl_FragCoord.xy+fract(t))*0.012)-.006;col+=grain;
- gl_FragColor=vec4(pow(max(col,0.),vec3(.92)),1.);
+ vec2 uv=gl_FragCoord.xy/u_res;
+ float aspect=u_res.x/u_res.y;
+ vec2 p=(uv-.5)*vec2(aspect,1.0);
+ float t=u_time;
+ float mode=u_mode;
+
+ vec3 skyTop,skyBottom,cloudLit,cloudShade,accent;
+ if(mode<.5){skyTop=vec3(.12,.30,.54);skyBottom=vec3(.78,.86,.91);cloudLit=vec3(1.0,.98,.91);cloudShade=vec3(.31,.46,.63);accent=vec3(.95,.75,.47);}
+ else if(mode<1.5){skyTop=vec3(.20,.12,.31);skyBottom=vec3(.91,.43,.34);cloudLit=vec3(1.0,.78,.59);cloudShade=vec3(.35,.19,.34);accent=vec3(1.0,.55,.32);}
+ else if(mode<2.5){skyTop=vec3(.025,.045,.105);skyBottom=vec3(.20,.25,.36);cloudLit=vec3(.74,.82,.94);cloudShade=vec3(.035,.055,.12);accent=vec3(.50,.42,.95);}
+ else if(mode<3.5){skyTop=vec3(.38,.29,.57);skyBottom=vec3(.94,.67,.77);cloudLit=vec3(1.0,.91,.94);cloudShade=vec3(.48,.34,.60);accent=vec3(.91,.65,.92);}
+ else if(mode<4.5){skyTop=vec3(.012,.09,.14);skyBottom=vec3(.035,.27,.27);cloudLit=vec3(.55,1.0,.86);cloudShade=vec3(.012,.075,.12);accent=vec3(.10,.94,.72);}
+ else if(mode<5.5){skyTop=vec3(.012,.025,.075);skyBottom=vec3(.12,.19,.32);cloudLit=vec3(.82,.88,1.0);cloudShade=vec3(.025,.045,.10);accent=vec3(.52,.66,1.0);}
+ else if(mode<6.5){skyTop=vec3(.035,.012,.11);skyBottom=vec3(.22,.075,.30);cloudLit=vec3(.91,.67,1.0);cloudShade=vec3(.075,.025,.18);accent=vec3(.70,.35,1.0);}
+ else if(mode<7.5){skyTop=vec3(.20,.39,.59);skyBottom=vec3(.75,.85,.91);cloudLit=vec3(.98,1.0,1.0);cloudShade=vec3(.35,.52,.66);accent=vec3(.53,.83,1.0);}
+ else{skyTop=vec3(.055,.17,.29);skyBottom=vec3(.52,.68,.76);cloudLit=vec3(.94,.97,.91);cloudShade=vec3(.13,.29,.42);accent=vec3(.55,.84,.92);}
+
+ float skyMix=smoothstep(-.60,.62,uv.y);
+ vec3 sky=mix(skyBottom,skyTop,skyMix);
+ float sun=exp(-length((uv-vec2(.73,.72))*vec2(1.0,1.3))*7.0);
+ float horizon=exp(-pow((uv.y-(.43+.025*sin(p.x*2.0+t*.08)))*7.0,2.0));
+ sky+=accent*(sun*.22+horizon*.17);
+
+ // A wide, front-facing cloud formation; silhouette proportions vary by world.
+ vec2 cloudP=p*vec2(1.0,1.18);
+ cloudP.x+=sin(t*.22)*.018;
+ cloudP.y+=sin(t*.16)*.012;
+ float density=cloudField(cloudP,mode,t);
+ if(mode>7.5){
+  float bank=fbm(vec2(p.x*3.0,p.y*5.0+t*.012));
+  density=max(density*.48,smoothstep(.42,.70,bank)*smoothstep(-.50,.30,p.y)*.78);
+ }
+ if(mode>3.5&&mode<5.5) density*=.90+.10*sin(p.x*3.0+t*.2);
+
+ // Estimate a soft normal from neighboring density samples for rounded cloud lighting.
+ float dx=cloudField(cloudP+vec2(.008,0.0),mode,t)-cloudField(cloudP-vec2(.008,0.0),mode,t);
+ float dy=cloudField(cloudP+vec2(0.0,.008),mode,t)-cloudField(cloudP-vec2(0.0,.008),mode,t);
+ vec3 normal=normalize(vec3(-dx*5.0,-dy*5.0,1.0));
+ vec3 sunDir=normalize(vec3(-.42,.58,.72));
+ float diffuse=max(dot(normal,sunDir),0.0);
+ float rim=pow(1.0-max(normal.z,0.0),2.0);
+ float underside=smoothstep(.0,-.55,p.y);
+ float lightMix=clamp(.30+diffuse*.66+rim*.22-underside*.18,0.0,1.0);
+ vec3 shaded=mix(cloudShade,cloudLit,lightMix);
+ float edgeGlow=pow(1.0-smoothstep(.0,.15,density),2.0)*density;
+ shaded+=accent*edgeGlow*.16;
+
+ // Fine internal billows and silver lining.
+ float inner=fbm(cloudP*vec2(23.0,28.0)+vec2(t*.018,-t*.012));
+ shaded*=.91+inner*.16;
+ float cloudAlpha=smoothstep(.025,.34,density);
+ vec3 color=mix(sky,shaded,cloudAlpha*.96);
+
+ // Restrained celestial details, kept behind the cloud mass.
+ vec2 grid=uv*vec2(118.0,76.0);
+ vec2 cell=floor(grid),local=fract(grid)-.5;
+ float rnd=hash(cell+13.7);
+ float stars=step(.994,rnd)*smoothstep(.48,.06,length(local));
+ float twinkle=.65+.35*sin(t*2.0+rnd*30.0);
+ if(mode>1.5) color+=cloudLit*stars*twinkle*.75;
+
+ float ribbon=exp(-pow((uv.y-(.67+.045*sin(uv.x*5.0+t*.13)))*24.0,2.0));
+ if(mode>3.5&&mode<7.5) color+=accent*ribbon*.12;
+ float grain=(hash(gl_FragCoord.xy+fract(t))-.5)*.012;
+ color+=grain;
+ gl_FragColor=vec4(pow(max(color,0.0),vec3(.92)),1.0);
 }`;
+
 function compile(gl,type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null;}return s;}
 const canvases=[...document.querySelectorAll('canvas[data-sky]')];
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{const a=e.target.__sky;if(!a)return;a.visible=e.isIntersecting;if(a.visible&&!a.raf)a.raf=requestAnimationFrame(a.draw);}),{rootMargin:'80px'});
