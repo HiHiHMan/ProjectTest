@@ -140,16 +140,28 @@ float silhouette(vec2 p,float m,float t){
  return d;
 }
 float cloudField(vec2 p,float m,float t){
- vec2 drift=vec2(t*.012,-t*.006);
+ // Broad, drifting smoke masses, gently warped so the cloud field flows across the whole sky.
+ vec2 drift=vec2(t*.010,-t*.004);
  vec2 q=p+drift;
+ float warp=fbm(q*vec2(1.35,2.1)+vec2(3.0,7.0));
+ vec2 smokeUV=vec2(q.x*1.55+(warp-.5)*.30,q.y*3.8);
+ float smoke=fbm(smokeUV+vec2(0.0,t*.006));
+ float billow=fbm(q*vec2(4.0,6.2)+vec2(smoke*1.15,-t*.004));
+ float softCloud=fbm(q*vec2(2.6,3.8)+vec2(8.0,2.0));
+ float cloudMass=smoothstep(.365,.625,smoke*.48+billow*.34+softCloud*.18);
+ float vapor=smoothstep(.43,.68,fbm(vec2(q.x*1.05+(warp-.5)*.22,q.y*5.2-t*.003)));
+ float skyCoverage=clamp(cloudMass*.88+vapor*.20,0.0,1.0);
+
+ // Wool-like rounded crowns remain visible inside the larger flowing cloud masses.
  float broad=fbm(q*vec2(2.5,3.2)+vec2(2.0,8.0));
  float detail=fbm(q*vec2(5.0,6.0)+broad*1.2);
- float d=silhouette(p,m,t);
- // Keep the silhouette soft and stable; noise only gently varies the billow edges.
- float shape=1.0-smoothstep(-.075,.095,d + (broad-.5)*.055 + (detail-.5)*.018);
- float organic=smoothstep(.28,.72,broad*.72+detail*.28);
+ float d=silhouette(p*.78,m,t);
+ float shape=1.0-smoothstep(-.075,.095,d+(broad-.5)*.045+(detail-.5)*.014);
  float interior=m>2.5&&m<3.5 ? .80 : .76;
- return shape*(interior+organic*.16);
+ float wool=shape*(interior+smoothstep(.28,.72,broad*.72+detail*.28)*.12);
+
+ // Merge the two styles: flowing smoke layers underneath soft cottony billows.
+ return max(skyCoverage*.94,wool*.78);
 }
 
 void main(){
@@ -181,11 +193,7 @@ void main(){
  cloudP.x+=sin(t*.22)*.018;
  cloudP.y+=sin(t*.16)*.012;
  float density=cloudField(cloudP,mode,t);
- if(mode>7.5){
-  float bank=fbm(vec2(p.x*3.0,p.y*5.0+t*.012));
-  density=max(density*.48,smoothstep(.42,.70,bank)*smoothstep(-.50,.30,p.y)*.78);
- }
- if(mode>3.5&&mode<5.5) density*=.90+.10*sin(p.x*3.0+t*.2);
+ if(mode>3.5&&mode<5.5) density*=.96+.04*sin(p.x*2.0+t*.12);
 
  // Soft directional volume shading without expensive multi-sample ray marching.
  float inner=fbm(cloudP*vec2(7.0,9.0)+vec2(t*.006,-t*.004));
