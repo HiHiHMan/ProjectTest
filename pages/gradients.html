@@ -218,6 +218,36 @@
   to{background-position:0 0, 2% -1%, 0 0}
 }
 
+
+/* 26 — softly lit half-dome with a gradual light-to-shadow transition */
+.dome-light{
+  background:transparent!important;
+}
+.dome-light:before{
+  content:"";
+  position:absolute;
+  width:76%;
+  height:92%;
+  left:12%;
+  top:4%;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at 31% 34%,
+      #f5e9d2 0%,
+      #dfcfbd 17%,
+      #b4a0a2 35%,
+      #71677f 55%,
+      #38354f 76%,
+      #24243b 100%);
+  filter:blur(13px);
+  box-shadow:0 0 38px #c7a9a044,0 0 75px #76658a22;
+  animation:domeBreath 12s ease-in-out infinite alternate;
+}
+@keyframes domeBreath{
+  from{transform:translate(-1%,1%) scale(.97);filter:blur(14px) brightness(.94)}
+  to{transform:translate(1%,-1%) scale(1.02);filter:blur(12px) brightness(1.04)}
+}
+
 </style></head><body><main class="page">
 <nav class="topline"><a class="back" href="../index.html">← All experiments</a><span class="eyebrow">ProjectTest / Visual lab</span></nav>
 <header class="hero"><p class="eyebrow">Liquid matter × Plasma energy</p><h1>Fluid<br>Studies.</h1><p class="intro">A study of impossible materials and living light. Abstract 2D compositions built from flowing gradients, luminous lines, layered color and expressive shapes. No simulated 3D objects — just graphic motion and atmosphere.</p></header>
@@ -250,6 +280,7 @@
 <article class="art-card"><div class="art candy-melt"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>23 / Sweet spectrum</small><h3>Candy Melt</h3><p>Strawberry, peach and lilac melt together in a glossy pastel haze.</p></div></article>
 <article class="art-card"><div class="art monsoon-glass"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>24 / Liquid atmosphere</small><h3>Monsoon Glass</h3><p>Rain-washed jade and ocean blue layers form a cool translucent field.</p></div></article>
 <article class="art-card"><div class="art moon-crescent"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>25 / Lunar phase</small><h3>Moon Crescent</h3><p>A warm crescent moon formed from layered golden and violet light.</p></div></article>
+<article class="art-card"><div class="art dome-light"><div class="art-noise" aria-hidden="true"></div></div><div class="info"><small>26 / Diffused illumination</small><h3>Dome Light</h3><p>A softly illuminated dome fades from warm light into muted shadow.</p></div></article>
 </section>
 </main>
 </body></html>
