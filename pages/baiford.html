@@ -108,7 +108,7 @@
           gradient.addColorStop(0.36, thread.colors[1] + 'bb');
           gradient.addColorStop(0.62, thread.colors[2] + 'dd');
           gradient.addColorStop(0.84, thread.colors[3] + 'ee');
-          gradient.addColorStop(1, '#ffffff');
+          gradient.addColorStop(1, thread.colors[3]);
 
           ctx.save();
           ctx.globalAlpha = thread.alpha * brightness;
@@ -129,8 +129,10 @@
             const threadX = thread.x + thread.drift * grain.y;
             ctx.beginPath();
             ctx.arc(threadX + grain.x, grainY, grain.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha * brightness})`;
+            ctx.fillStyle = thread.colors[2] + '88';
+            ctx.globalAlpha = grain.alpha * brightness;
             ctx.fill();
+            ctx.globalAlpha = 1;
           });
         });
         requestAnimationFrame(draw);
