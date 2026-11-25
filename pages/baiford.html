@@ -122,20 +122,22 @@
           float yellow = smoothstep(0.44, 0.84, cloud2 + 0.12 * sin(p.y * 4.0 + 1.0));
           float orange = smoothstep(0.46, 0.86, fbm(p * 2.6 + warp + 13.0));
 
-          // เน้นเขียวเป็นสีหลัก แซมเหลืองและส้มเพียงเล็กน้อย
+          // เขียวเป็นสีหลัก แต่คงปื้นเหลืองและส้มให้มองเห็นชัด
           float hue = fract(cloud * 0.72 + cloud2 * 0.34 + p.x * 0.075 + p.y * 0.045);
-          vec3 greenBase = vec3(0.12, 0.78, 0.24);
-          vec3 yellowAccent = vec3(0.82, 0.88, 0.12);
-          vec3 orangeAccent = vec3(1.0, 0.38, 0.035);
+          vec3 greenBase = vec3(0.12, 0.82, 0.22);
+          vec3 yellowAccent = vec3(1.0, 0.88, 0.08);
+          vec3 orangeAccent = vec3(1.0, 0.34, 0.025);
           vec3 rainbow;
-          if (hue < 0.72) {
-            rainbow = mix(greenBase, yellowAccent, smoothstep(0.18, 0.72, hue) * 0.42);
+          if (hue < 0.62) {
+            rainbow = mix(greenBase, yellowAccent, smoothstep(0.22, 0.62, hue) * 0.78);
           } else {
-            rainbow = mix(yellowAccent, orangeAccent, smoothstep(0.72, 1.0, hue) * 0.48);
+            rainbow = mix(yellowAccent, orangeAccent, smoothstep(0.62, 0.9, hue));
           }
-          float nebula = max(max(green, yellow * 0.48), orange * 0.22);
-          color += rainbow * nebula * 0.115;
-          color += greenBase * smoothstep(0.58, 0.9, cloud2) * 0.045;
+          float yellowCloud = smoothstep(0.43, 0.68, cloud2 + 0.10 * sin(p.y * 3.2));
+          float orangeCloud = smoothstep(0.48, 0.72, fbm(p * 2.8 + warp + 7.0));
+          float nebula = max(green, max(yellowCloud * 0.72, orangeCloud * 0.52));
+          color += rainbow * nebula * 0.14;
+          color += greenBase * smoothstep(0.58, 0.9, cloud2) * 0.035;
 
           // ดาวเม็ดเล็กจำนวนมาก กระจายเป็นจุดละเอียดทั่วท้องฟ้า
           vec2 starGrid = uv * vec2(230.0, 150.0);
