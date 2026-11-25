@@ -38,7 +38,7 @@
         vec3 rainbow(float h) {
           vec3 c = abs(fract(h + vec3(0.0, 0.6666667, 0.3333333)) * 6.0 - 3.0);
           c = clamp(c - 1.0, 0.0, 1.0);
-          return mix(vec3(1.0), c, 0.38);
+          return mix(vec3(1.0), c, 0.68);
         }
 
         void main() {
@@ -46,30 +46,39 @@
           float radius = length(p);
           float angle = atan(p.y, p.x);
 
-          float sphere = 1.0 - smoothstep(174.0, 175.0, radius);
-          float border = smoothstep(174.0, 174.5, radius) *
-                         (1.0 - smoothstep(175.0, 175.5, radius));
-
+          float border = smoothstep(174.0, 174.35, radius) *
+                         (1.0 - smoothstep(175.0, 175.35, radius));
           vec3 color = vec3(border);
 
-          // 60 fine pastel-rainbow light threads orbiting the sphere
+          // 60 separated, crisp pastel smoke wisps flowing around the sphere
           for (int i = 0; i < 60; i++) {
             float fi = float(i);
             float phase = fi * 6.2831853 / 60.0;
-            float speed = 0.22 + mod(fi, 5.0) * 0.018;
-            float orbitAngle = phase + time * speed;
-            float delta = atan(sin(angle - orbitAngle), cos(angle - orbitAngle));
+            float drift = time * 0.48 + sin(time * 0.7 + fi * 1.7) * 0.012;
+            float centerAngle = phase + drift;
+            float delta = atan(sin(angle - centerAngle), cos(angle - centerAngle));
 
-            float orbitRadius = 184.0 + mod(fi * 7.31, 22.0);
-            float radialDistance = abs(radius - orbitRadius);
-            float strandWidth = 0.18;
-            float strandLength = 5.45;
+            float angularWidth = 0.034 + 0.006 * sin(fi * 2.13);
+            float along = delta / angularWidth;
+            float segmentMask = exp(-along * along * 1.35);
 
-            float strand = (1.0 - smoothstep(strandWidth, strandWidth + 0.22, radialDistance)) *
-                           (1.0 - smoothstep(strandLength, strandLength + 0.025, abs(delta)));
+            float turbulence = sin(along * 5.0 - time * 2.1 + fi) * 2.2 +
+                               sin(along * 9.0 + time * 1.4 + fi * 0.7) * 1.0;
+            float centerRadius = 185.0 + mod(fi * 7.31, 13.0) +
+                                 sin(time * 1.1 + fi * 0.83) * 1.8 + turbulence;
+            float radialDelta = radius - centerRadius;
 
+            float smokeBody = exp(-radialDelta * radialDelta / 15.0) *
+                              segmentMask;
+            float smokeWisps = exp(-radialDelta * radialDelta / 2.2) *
+                              segmentMask *
+                              (0.62 + 0.38 * sin(along * 13.0 - time * 3.0 + fi * 0.4));
+            float fineCore = exp(-radialDelta * radialDelta / 0.22) *
+                             segmentMask * 0.72;
+
+            float intensity = max(smokeBody * 0.34, smokeWisps * 0.62) + fineCore;
             vec3 strandColor = rainbow(fi / 60.0);
-            color += strandColor * strand * 0.58;
+            color = max(color, strandColor * intensity);
           }
 
           gl_FragColor = vec4(color, 1.0);
