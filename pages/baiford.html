@@ -56,8 +56,8 @@
       let startTime = 0;
 
       function createThreads() {
-        // วางเส้นด้ายต่อเนื่องตลอดความกว้าง โดยไม่เว้นช่องไฟระหว่างกลุ่มเส้น
-        const count = Math.max(24, Math.min(54, Math.round(width / 27)));
+        // เพิ่มจำนวนเส้นให้ชิดกันจนซ้อนขอบเล็กน้อย ไม่มีช่องพื้นหลังคั่น
+        const count = Math.max(1, Math.ceil(width / 1.5));
         const step = width / count;
 
         threads = Array.from({ length: count }, (_, index) => {
@@ -71,11 +71,11 @@
             top: startY,
             bottom: startY + length,
             color,
-            width: 1.5,
+            width: 1.8,
             alpha: 0.48 + Math.random() * 0.42,
-            drift: (Math.random() - 0.5) * 5,
+            drift: (Math.random() - 0.5) * 0.3,
             flickerDelay: Math.random() * 3000,
-            noise: Array.from({ length: Math.max(18, Math.round(length / 5)) }, () => ({
+            noise: Array.from({ length: 12 }, () => ({
               x: (Math.random() - 0.5) * 3.2,
               y: Math.random(),
               radius: 0.2 + Math.random() * 0.65,
