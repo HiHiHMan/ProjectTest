@@ -229,9 +229,10 @@
       const noiseCtx = noiseCanvas.getContext('2d', { alpha: true });
       if (!ctx || !noiseCtx) return;
 
+      // ชุดสีเดิม ปรับให้เข้มขึ้นเพียงเล็กน้อยโดยคงโทนและความสดไว้
       const palette = [
-        '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
-        '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
+        '#28194A', '#925FCF', '#7097E5', '#CFAF68', '#F58BAF',
+        '#F7833D', '#F54899', '#CC9F49', '#2474F2', '#11368F'
       ];
 
       let width = 0;
