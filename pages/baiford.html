@@ -56,12 +56,13 @@
       let startTime = 0;
 
       function createThreads() {
+        // วางเส้นด้ายต่อเนื่องตลอดความกว้าง โดยไม่เว้นช่องไฟระหว่างกลุ่มเส้น
         const count = Math.max(24, Math.min(54, Math.round(width / 27)));
         const step = width / count;
 
         threads = Array.from({ length: count }, (_, index) => {
           const color = palette[Math.floor(Math.random() * palette.length)];
-          const startX = step * (index + 0.5) + (Math.random() - 0.5) * step * 0.72;
+          const startX = index * step;
           const startY = 22 + Math.random() * Math.min(210, height * 0.22);
           const length = 650 + Math.random() * 500;
 
