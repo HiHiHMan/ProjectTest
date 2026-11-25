@@ -85,9 +85,15 @@
           hot = mix(hot, vec3(1.0, 0.82, 0.48), smoothstep(0.25, 0.9, disk));
           col += hot * disk * 2.0;
 
-          // Thin bright ring around the photon sphere
+          // Circular photon ring with a bright streak orbiting around it
           float ring = exp(-pow((r - 0.205) * 100.0, 2.0));
-          col += vec3(1.0, 0.58, 0.24) * ring * 0.8;
+          float orbitAngle = angle - time * 1.15;
+          float streakAngle = atan(sin(orbitAngle), cos(orbitAngle));
+          float movingLight = exp(-pow(streakAngle * 5.0, 2.0));
+          float trailingLight = exp(-pow(atan(sin(streakAngle + 0.42), cos(streakAngle + 0.42)) * 3.2, 2.0));
+          float ringPulse = 0.35 + movingLight * 2.8 + trailingLight * 0.65;
+          vec3 ringColor = mix(vec3(1.0, 0.25, 0.08), vec3(1.0, 0.9, 0.62), movingLight);
+          col += ringColor * ring * ringPulse;
 
           // Event horizon and soft gravitational lensing halo
           float horizon = 0.168;
