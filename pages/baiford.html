@@ -92,14 +92,14 @@
         trail.addColorStop(0.72, thread.trailColor + 'dd');
         trail.addColorStop(1, '#ffffff');
 
-        // เส้นแสง: ความหนา แสงเรือง และการกระพริบเหมือน Dream Star
+        // เส้นแสง: เพิ่มความหนาขึ้นเล็กน้อย โดยคงแสงและการกระพริบเดิม
         ctx.save();
         ctx.globalAlpha = brightness;
         ctx.beginPath();
         ctx.moveTo(thread.x, thread.top);
         ctx.lineTo(thread.x, thread.bottom);
         ctx.strokeStyle = trail;
-        ctx.lineWidth = 0.8 + pulse * 0.25;
+        ctx.lineWidth = 1.0 + pulse * 0.25;
         ctx.shadowBlur = 7;
         ctx.shadowColor = thread.trailColor;
         ctx.stroke();
