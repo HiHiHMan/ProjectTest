@@ -3,168 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#05050a">
+  <meta name="theme-color" content="#000000">
   <title>Baiford</title>
   <style>
-    * { box-sizing: border-box; }
-    html, body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       width: 100%;
       height: 100%;
       margin: 0;
-      overflow: hidden;
-      background: #05050a;
-    }
-    body { min-height: 320px; }
-    .baiford-scene {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at 50% 0%, rgba(38, 31, 67, .18), transparent 58%),
-        #05050a;
-    }
-    #baiford-threads {
-      position: absolute;
-      z-index: 4;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .ly-3-noise {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-      pointer-events: none;
-      opacity: 0.3;
-      mix-blend-mode: overlay;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 80px 80px;
+      background: #000;
     }
   </style>
 </head>
 <body>
-  <main class="baiford-scene" aria-label="Baiford thread strands">
-    <canvas id="baiford-threads" aria-hidden="true"></canvas>
-  </main>
-  <div class="ly-3-noise" aria-hidden="true"></div>
-  <script>
-  </script>
-  <script>
-    (() => {
-      const canvas = document.getElementById('baiford-threads');
-      const ctx = canvas.getContext('2d', { alpha: true });
-      if (!ctx) return;
-
-      // ใช้ชุดสีเส้นแสงเดียวกับ Dream Star
-      const palette = [
-        '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
-        '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
-      ];
-
-      let width = 0;
-      let height = 0;
-      let dpr = 1;
-      let threads = [];
-      let startTime = 0;
-      let lastFrame = 0;
-      const frameInterval = 1000 / 30;
-
-      function createThreads() {
-        // เพิ่มเป็น 300 เส้น โดยคงความกว้างกลุ่มเดิมไว้
-        const count = 300;
-        const groupWidth = 150 * 1.8;
-        const step = groupWidth / count;
-        const groupLeft = (width - groupWidth) / 2;
-
-        threads = Array.from({ length: count }, (_, index) => {
-          // กระจายเส้นด้ายเรียงขนานกัน ไม่ซ้อนทับ
-          const startX = groupLeft + index * step;
-          const safeBottom = Math.max(0, height + 5);
-          const startY = Math.min(22 + Math.random() * Math.min(210, height * 0.22), safeBottom);
-          const length = Math.min(650 + Math.random() * 500, safeBottom - startY);
-
-          return {
-            x: startX,
-            top: startY,
-            bottom: safeBottom,
-            color: palette[Math.floor(Math.random() * palette.length)],
-            trailColor: palette[Math.floor(Math.random() * palette.length)],
-            // ค่าความยาวและจังหวะกระพริบตาม Dream Star
-            flickerDelay: Math.random() * 3000,
-            noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 5)) }, () => ({
-              x: (Math.random() - 0.5) * 3.2,
-              y: Math.random(),
-              radius: 0.2 + Math.random() * 0.65,
-              alpha: 0.08 + Math.random() * 0.28
-            }))
-          };
-        });
-      }
-
-      function draw(time = 0) {
-        requestAnimationFrame(draw);
-        if (time - lastFrame < frameInterval) return;
-        lastFrame = time;
-        if (!startTime) startTime = time;
-        ctx.clearRect(0, 0, width, height);
-
-        threads.forEach(thread => {
-          // จังหวะกระพริบแบบเดียวกับเส้นแสง Dream Star
-          const flickerCycle = ((time + thread.flickerDelay) % 3000) / 3000;
-          const pulse = (1 - Math.cos(flickerCycle * Math.PI * 2)) / 2;
-          const brightness = 0.42 + pulse * 0.58;
-          const trail = ctx.createLinearGradient(thread.x, thread.top, thread.x, thread.bottom);
-          trail.addColorStop(0, 'rgba(255,255,255,0)');
-          trail.addColorStop(0.25, thread.trailColor + '66');
-          trail.addColorStop(0.72, thread.trailColor + 'dd');
-          trail.addColorStop(1, '#ffffff');
-
-          // รูปแบบเส้น ความหนา และแสงเรืองตรงกับ Dream Star
-          ctx.save();
-          ctx.globalAlpha = brightness;
-          ctx.beginPath();
-          ctx.moveTo(thread.x, thread.top);
-          ctx.lineTo(thread.x, thread.bottom);
-          ctx.strokeStyle = trail;
-          ctx.lineWidth = 0.8 + pulse * 0.25;
-          ctx.shadowBlur = 7;
-          ctx.shadowColor = thread.trailColor;
-          ctx.stroke();
-          ctx.restore();
-
-          // เม็ด Noise ใช้ขนาด ความโปร่งใส และวิธีวาดเดียวกับ Dream Star
-          thread.noise.forEach(grain => {
-            const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
-            ctx.beginPath();
-            ctx.arc(thread.x + grain.x, grainY, grain.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
-            ctx.fill();
-          });
-        });
-      }
-
-      function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        createThreads();
-      }
-
-      window.addEventListener('resize', resize, { passive: true });
-      resize();
-      requestAnimationFrame(draw);
-    })();
-  </script>
 </body>
 </html>
