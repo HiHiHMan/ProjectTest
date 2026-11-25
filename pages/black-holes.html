@@ -68,7 +68,9 @@
 
           // Flowing, turbulent fog that follows a circular path around the sphere.
           float flowAngle = angle - time * 0.22;
-          vec2 flowUV = vec2(flowAngle * 2.8, radius * 0.035);
+          // Circular coordinates keep the noise continuous across the -PI / PI seam.
+          vec2 flowUV = vec2(cos(flowAngle), sin(flowAngle)) * 5.0
+                      + vec2(radius * 0.012, radius * 0.012);
           float cloudA = fbm(flowUV * vec2(1.0, 1.35) + vec2(0.0, time * 0.20));
           float cloudB = fbm(flowUV * vec2(1.8, 2.0) - vec2(time * 0.12, time * 0.28));
           float cloud = cloudA * 0.65 + cloudB * 0.35;
@@ -77,6 +79,7 @@
           float bandWidth = 17.0 + cloud * 7.0;
           float distanceToFog = abs(radius - centerRadius);
           float fogShape = exp(-pow(distanceToFog / bandWidth, 2.0));
+          float glowShape = exp(-pow(distanceToFog / (bandWidth * 2.7), 2.0));
 
           // Uneven wisps create a soft smoke-like edge instead of a perfect ring.
           float wisps = smoothstep(0.28, 0.78, cloud);
@@ -92,7 +95,9 @@
             vec3(0.72, 0.78, 0.92),
             clamp(cloud * 1.15, 0.0, 1.0)
           );
-          vec3 color = fogColor * density;
+          // A broad luminous halo sits behind the sharper moving fog wisps.
+          float glow = glowShape * (0.10 + wisps * 0.16) * (0.65 + detail * 0.35);
+          vec3 color = fogColor * (density * 2.0 + glow * 0.9);
 
           // Keep the black sphere clean, with only its thin white outline visible.
           float sphereMask = 1.0 - smoothstep(174.2, 176.0, radius);
