@@ -33,15 +33,45 @@
         precision highp float;
         varying vec2 uv;
         uniform vec2 resolution;
+        uniform float time;
+
+        vec3 rainbow(float h) {
+          vec3 c = abs(fract(h + vec3(0.0, 0.6666667, 0.3333333)) * 6.0 - 3.0);
+          c = clamp(c - 1.0, 0.0, 1.0);
+          return mix(vec3(1.0), c, 0.38);
+        }
 
         void main() {
           vec2 p = (uv - 0.5) * resolution;
           float radius = length(p);
+          float angle = atan(p.y, p.x);
+
           float sphere = 1.0 - smoothstep(174.0, 175.0, radius);
           float border = smoothstep(174.0, 174.5, radius) *
                          (1.0 - smoothstep(175.0, 175.5, radius));
 
           vec3 color = vec3(border);
+
+          // 60 fine pastel-rainbow light threads orbiting the sphere
+          for (int i = 0; i < 60; i++) {
+            float fi = float(i);
+            float phase = fi * 6.2831853 / 60.0;
+            float speed = 0.22 + mod(fi, 5.0) * 0.018;
+            float orbitAngle = phase + time * speed;
+            float delta = atan(sin(angle - orbitAngle), cos(angle - orbitAngle));
+
+            float orbitRadius = 184.0 + mod(fi * 7.31, 22.0);
+            float radialDistance = abs(radius - orbitRadius);
+            float strandWidth = 0.48;
+            float strandLength = 0.035 + mod(fi, 4.0) * 0.006;
+
+            float strand = (1.0 - smoothstep(strandWidth, strandWidth + 0.55, radialDistance)) *
+                           (1.0 - smoothstep(strandLength, strandLength + 0.012, abs(delta)));
+
+            vec3 strandColor = rainbow(fi / 60.0);
+            color += strandColor * strand * 0.72;
+          }
+
           gl_FragColor = vec4(color, 1.0);
         }
       `;
@@ -83,6 +113,7 @@
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       const resolution = gl.getUniformLocation(program, 'resolution');
+      const time = gl.getUniformLocation(program, 'time');
 
       function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -93,8 +124,15 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
+      function render(now) {
+        gl.uniform1f(time, now * 0.001);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+
       window.addEventListener('resize', resize, { passive: true });
       resize();
+      requestAnimationFrame(render);
     })();
   </script>
 </body>
