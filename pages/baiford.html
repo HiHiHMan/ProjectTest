@@ -128,7 +128,7 @@
           vec2 cell = floor(starGrid);
           vec2 local = fract(starGrid) - 0.5;
           float seed = hash(cell);
-          float star = step(0.982, seed);
+          float star = step(0.73, seed);
           float radius = 0.035 + hash(cell + 9.1) * 0.055;
           float point = 1.0 - smoothstep(radius * 0.35, radius, length(local));
           float twinkle = 0.65 + 0.35 * sin(time * 0.0015 + seed * 90.0);
