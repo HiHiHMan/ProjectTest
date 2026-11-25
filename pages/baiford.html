@@ -60,14 +60,12 @@
     (() => {
       const canvas = document.getElementById('baiford-threads');
       const ctx = canvas.getContext('2d', { alpha: true });
-      const noiseCanvas = document.createElement('canvas');
-      const noiseCtx = noiseCanvas.getContext('2d', { alpha: true });
-      if (!ctx || !noiseCtx) return;
+      if (!ctx) return;
 
-      // สีรุ้งชุดเดิม เพิ่มความเข้มอีกเล็กน้อยโดยรักษาความสดและสมดุลของสี
+      // ใช้ชุดสีเส้นแสงเดียวกับ Dream Star
       const palette = [
-        '#261847', '#8C65C5', '#6A9BE8', '#D0B26A', '#F58FB1',
-        '#F58640', '#F54B9D', '#CD9E4B', '#2675F5', '#113895'
+        '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
+        '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
       ];
 
       let width = 0;
@@ -98,16 +96,11 @@
             x: startX,
             top: startY,
             bottom: safeBottom,
-            colors,
-            width: 1.8,
-            alpha: 0.48 + Math.random() * 0.42,
-            // เส้นด้ายตั้งตรง ไม่เอียง
-            drift: 0,
+            color: palette[Math.floor(Math.random() * palette.length)],
+            trailColor: palette[Math.floor(Math.random() * palette.length)],
+            // ค่าความยาวและจังหวะกระพริบตาม Dream Star
             flickerDelay: Math.random() * 3000,
-            flowSpeed: 18 + Math.random() * 24,
-            flowOffset: Math.random(),
-            // ใช้ขนาดและความโปร่งใสของเกรนแบบ Dream Star
-            noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 9)) }, () => ({
+            noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 5)) }, () => ({
               x: (Math.random() - 0.5) * 3.2,
               y: Math.random(),
               radius: 0.2 + Math.random() * 0.65,
@@ -117,61 +110,45 @@
         });
       }
 
-      function renderNoise() {
-        noiseCtx.clearRect(0, 0, width, height);
-        threads.forEach(thread => {
-          thread.noise.forEach(grain => {
-            const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
-            const threadX = thread.x + thread.drift * grain.y;
-            // วาดเกรนวงกลมเล็กแบบ Dream Star โดยไม่ใช้เงาหรือ Blur
-            noiseCtx.beginPath();
-            noiseCtx.arc(threadX + grain.x, grainY, grain.radius, 0, Math.PI * 2);
-            noiseCtx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
-            noiseCtx.shadowBlur = 0;
-            noiseCtx.fill();
-          });
-        });
-        noiseCtx.globalAlpha = 1;
-      }
-
       function draw(time = 0) {
         requestAnimationFrame(draw);
         if (time - lastFrame < frameInterval) return;
         lastFrame = time;
         if (!startTime) startTime = time;
         ctx.clearRect(0, 0, width, height);
-        ctx.drawImage(noiseCanvas, 0, 0, width, height);
 
         threads.forEach(thread => {
-          // ใช้จังหวะกระพริบแบบเดียวกับเส้นแสงใน Dream Star
-          const cycle = ((time + thread.flickerDelay) % 3000) / 3000;
-          const pulse = (1 - Math.cos(cycle * Math.PI * 2)) / 2;
+          // จังหวะกระพริบแบบเดียวกับเส้นแสง Dream Star
+          const flickerCycle = ((time + thread.flickerDelay) % 3000) / 3000;
+          const pulse = (1 - Math.cos(flickerCycle * Math.PI * 2)) / 2;
           const brightness = 0.42 + pulse * 0.58;
-          const gradient = ctx.createLinearGradient(
-            thread.x, thread.top, thread.x + thread.drift, thread.bottom
-          );
-          // ไล่สีหลายช่วงให้เห็นสีที่แตกต่างกันภายในเส้นด้ายเส้นเดียว
-          gradient.addColorStop(0, 'rgba(0,0,0,0)');
-          gradient.addColorStop(0.12, thread.colors[0] + 'bb');
-          gradient.addColorStop(0.34, thread.colors[1] + 'ee');
-          gradient.addColorStop(0.58, thread.colors[2] + 'ff');
-          gradient.addColorStop(0.82, thread.colors[3] + 'ee');
-          gradient.addColorStop(1, thread.colors[0] + 'cc');
+          const trail = ctx.createLinearGradient(thread.x, thread.top, thread.x, thread.bottom);
+          trail.addColorStop(0, 'rgba(255,255,255,0)');
+          trail.addColorStop(0.25, thread.trailColor + '66');
+          trail.addColorStop(0.72, thread.trailColor + 'dd');
+          trail.addColorStop(1, '#ffffff');
 
+          // รูปแบบเส้น ความหนา และแสงเรืองตรงกับ Dream Star
           ctx.save();
+          ctx.globalAlpha = brightness;
           ctx.beginPath();
           ctx.moveTo(thread.x, thread.top);
-          ctx.lineTo(thread.x + thread.drift, thread.bottom);
-          ctx.strokeStyle = gradient;
-          ctx.lineCap = 'round';
-
-          // วาดเฉพาะเส้นด้ายหลัก ไม่มีแสงฟุ้งหรือเงาเบลอ
-          ctx.globalAlpha = thread.alpha * brightness;
-          ctx.lineWidth = 1.15 + pulse * 0.15;
-          ctx.shadowBlur = 0;
+          ctx.lineTo(thread.x, thread.bottom);
+          ctx.strokeStyle = trail;
+          ctx.lineWidth = 0.8 + pulse * 0.25;
+          ctx.shadowBlur = 7;
+          ctx.shadowColor = thread.trailColor;
           ctx.stroke();
           ctx.restore();
 
+          // เม็ด Noise ใช้ขนาด ความโปร่งใส และวิธีวาดเดียวกับ Dream Star
+          thread.noise.forEach(grain => {
+            const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
+            ctx.beginPath();
+            ctx.arc(thread.x + grain.x, grainY, grain.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
+            ctx.fill();
+          });
         });
       }
 
@@ -184,11 +161,7 @@
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        noiseCanvas.width = Math.round(width * dpr);
-        noiseCanvas.height = Math.round(height * dpr);
-        noiseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
         createThreads();
-        renderNoise();
       }
 
       window.addEventListener('resize', resize, { passive: true });
