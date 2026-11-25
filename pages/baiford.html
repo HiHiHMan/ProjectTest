@@ -229,11 +229,9 @@
       const noiseCtx = noiseCanvas.getContext('2d', { alpha: true });
       if (!ctx || !noiseCtx) return;
 
-      // สีรุ้งโทนเข้ม อิ่มสีสูง ลดความสว่างขาวเพื่อให้สีแน่นและชัด
       const palette = [
-        '#4B16A8', '#7015B8', '#A90B82', '#C20D58',
-        '#B91625', '#C9440B', '#C77A08', '#A99A08',
-        '#238B22', '#087B60', '#08769B', '#1745A8'
+        '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
+        '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
       ];
 
       let width = 0;
@@ -252,14 +250,8 @@
         const groupLeft = (width - groupWidth) / 2;
 
         threads = Array.from({ length: count }, (_, index) => {
-          // ไล่เฉดสีตามลำดับรุ้งแบบคุมโทน ไม่สุ่มสีจนตัดกันเกินไป
-          const colorOffset = index % palette.length;
-          const colors = [
-            palette[colorOffset],
-            palette[(colorOffset + 3) % palette.length],
-            palette[(colorOffset + 6) % palette.length],
-            palette[(colorOffset + 9) % palette.length]
-          ];
+          const shuffled = [...palette].sort(() => Math.random() - 0.5);
+          const colors = shuffled.slice(0, 4);
           // กระจายเส้นด้ายเรียงขนานกัน ไม่ซ้อนทับ
           const startX = groupLeft + index * step;
           const safeBottom = Math.max(0, height + 5);
