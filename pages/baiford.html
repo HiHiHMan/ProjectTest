@@ -145,7 +145,10 @@
           vec2 starDelta = (local - starPosition) * (resolution / vec2(230.0, 150.0));
           float radius = 0.45 + hash(cell + 9.1) * 0.85;
           float point = 1.0 - smoothstep(radius * 0.25, radius, length(starDelta));
-          float twinkle = 0.72 + 0.28 * sin(time * 0.00045 + seed * 90.0);
+          // ดาวแต่ละดวงวิบวับเบา ๆ ด้วยจังหวะและความเร็วที่ต่างกัน
+          float twinklePhase = time * (0.0011 + hash(cell + 31.7) * 0.0012)
+                             + seed * 90.0;
+          float twinkle = 0.78 + 0.22 * sin(twinklePhase);
           float stars = star * point * twinkle;
           color += vec3(0.62, 0.68, 0.78) * stars * 0.72;
 
