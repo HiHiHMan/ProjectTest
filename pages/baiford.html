@@ -106,11 +106,12 @@
             flickerDelay: Math.random() * 3000,
             flowSpeed: 18 + Math.random() * 24,
             flowOffset: Math.random(),
-            noise: Array.from({ length: Math.max(10, Math.round((safeBottom - startY) / 18)) }, () => ({
-              x: (Math.random() - 0.5) * 3.2,
+            // เพิ่มเม็ด Noise ให้ถี่และเห็นพื้นผิวเส้นด้ายชัดขึ้น
+            noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 9)) }, () => ({
+              x: (Math.random() - 0.5) * 4.2,
               y: Math.random(),
-              radius: 0.2 + Math.random() * 0.65,
-              alpha: 0.05 + Math.random() * 0.16
+              radius: 0.3 + Math.random() * 0.8,
+              alpha: 0.09 + Math.random() * 0.2
             }))
           };
         });
