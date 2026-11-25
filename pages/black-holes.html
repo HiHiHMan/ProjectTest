@@ -8,7 +8,7 @@
   <style>
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; }
-    body { overflow: hidden; background: #101010; }
+    body { overflow: hidden; background: #000000; }
     canvas { display: block; width: 100%; height: 100%; }
   </style>
 </head>
@@ -39,7 +39,7 @@
           float radius = length(p);
           float sphere = 1.0 - smoothstep(174.0, 175.0, radius);
 
-          vec3 background = vec3(0.063);
+          vec3 background = vec3(0.0);
           vec3 blackSphere = vec3(0.0);
           float edgeShade = smoothstep(165.0, 175.0, radius) * 0.035;
           vec3 color = mix(background, blackSphere, sphere);
