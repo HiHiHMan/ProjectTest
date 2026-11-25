@@ -56,13 +56,16 @@
       let startTime = 0;
 
       function createThreads() {
-        // เพิ่มจำนวนเส้นให้ชิดกันจนซ้อนขอบเล็กน้อย ไม่มีช่องพื้นหลังคั่น
-        const count = Math.max(1, Math.ceil(width / 1.5));
-        const step = width / count;
+        // จัดเส้นด้าย 30 เส้นเป็นกลุ่มไว้กึ่งกลางหน้าจอ
+        const count = 30;
+        const threadWidth = 1.8;
+        const groupWidth = count * threadWidth;
+        const step = groupWidth / count;
+        const groupLeft = (width - groupWidth) / 2;
 
         threads = Array.from({ length: count }, (_, index) => {
           const color = palette[Math.floor(Math.random() * palette.length)];
-          const startX = index * step;
+          const startX = groupLeft + index * step;
           const startY = 22 + Math.random() * Math.min(210, height * 0.22);
           const length = 650 + Math.random() * 500;
 
