@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#030308">
+  <title>Black Holes</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #030308; }
+    canvas { display: block; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <canvas id="black-hole" aria-label="Animated black hole in deep space"></canvas>
+  <script>
+    (() => {
+      const canvas = document.getElementById('black-hole');
+      const gl = canvas.getContext('webgl', { antialias: true, alpha: false });
+      if (!gl) return;
+
+      const vertex = `
+        attribute vec2 position;
+        varying vec2 uv;
+        void main() {
+          uv = position * 0.5 + 0.5;
+          gl_Position = vec4(position, 0.0, 1.0);
+        }
+      `;
+
+      const fragment = `
+        precision highp float;
+        varying vec2 uv;
+        uniform vec2 resolution;
+        uniform float time;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+        }
+        float noise(vec2 p) {
+          vec2 i = floor(p), f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                     mix(hash(i + vec2(0.0, 1.0)), hash(i + 1.0), f.x), f.y);
+        }
+        float fbm(vec2 p) {
+          float v = 0.0, a = 0.5;
+          for (int i = 0; i < 5; i++) {
+            v += noise(p) * a;
+            p *= 2.03;
+            a *= 0.5;
+          }
+          return v;
+        }
+
+        void main() {
+          vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
+          float r = length(p);
+          float angle = atan(p.y, p.x);
+          vec3 col = vec3(0.003, 0.004, 0.012);
+
+          // Sparse stars
+          vec2 starCell = floor(uv * resolution.y * 0.42);
+          float star = step(0.9975, hash(starCell));
+          float twinkle = 0.55 + 0.45 * sin(time * 1.4 + hash(starCell) * 30.0);
+          col += vec3(0.55, 0.68, 1.0) * star * twinkle;
+
+          // Faint nebula clouds
+          float nebula = fbm(p * 5.0 + vec2(time * 0.008, -time * 0.004));
+          col += vec3(0.025, 0.012, 0.055) * smoothstep(0.48, 0.82, nebula) * (1.0 - smoothstep(0.2, 1.0, r));
+
+          // Distorted glowing accretion disk
+          float diskY = abs(p.y + 0.025 * sin(angle * 2.0));
+          float diskRadius = length(vec2(p.x * 0.92, p.y * 2.8));
+          float band = exp(-pow((diskY - 0.105) * 19.0, 2.0));
+          float innerCut = smoothstep(0.22, 0.34, r);
+          float outerFade = 1.0 - smoothstep(0.48, 0.82, r);
+          float turbulence = fbm(vec2(angle * 3.0 + time * 0.12, r * 18.0 - time * 0.18));
+          float stream = 0.55 + 0.75 * turbulence;
+          float rotation = 0.72 + 0.28 * sin(angle * 3.0 - time * 0.35 + r * 13.0);
+          float disk = band * innerCut * outerFade * stream * rotation;
+
+          vec3 hot = mix(vec3(0.18, 0.34, 0.95), vec3(1.0, 0.28, 0.055), smoothstep(-0.1, 0.35, p.y));
+          hot = mix(hot, vec3(1.0, 0.82, 0.48), smoothstep(0.25, 0.9, disk));
+          col += hot * disk * 2.0;
+
+          // Thin bright ring around the photon sphere
+          float ring = exp(-pow((r - 0.205) * 100.0, 2.0));
+          col += vec3(1.0, 0.58, 0.24) * ring * 0.8;
+
+          // Event horizon and soft gravitational lensing halo
+          float horizon = 0.168;
+          float halo = exp(-pow((r - 0.235) * 18.0, 2.0));
+          col += vec3(0.16, 0.22, 0.55) * halo * 0.22;
+          if (r < horizon) col = vec3(0.0);
+
+          // Gentle vignette
+          float vignette = 1.0 - smoothstep(0.45, 1.15, length((uv - 0.5) * vec2(1.0, 0.85)));
+          col *= vignette;
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      function shader(type, source) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, source);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          console.error(gl.getShaderInfoLog(s));
+          gl.deleteShader(s);
+          return null;
+        }
+        return s;
+      }
+
+      const vs = shader(gl.VERTEX_SHADER, vertex);
+      const fs = shader(gl.FRAGMENT_SHADER, fragment);
+      if (!vs || !fs) return;
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error(gl.getProgramInfoLog(program));
+        return;
+      }
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+      gl.useProgram(program);
+      const position = gl.getAttribLocation(program, 'position');
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      const resolution = gl.getUniformLocation(program, 'resolution');
+      const time = gl.getUniformLocation(program, 'time');
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(innerWidth * dpr);
+        canvas.height = Math.round(innerHeight * dpr);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(resolution, canvas.width, canvas.height);
+      }
+      function render(now) {
+        gl.uniform1f(time, now * 0.001);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>
