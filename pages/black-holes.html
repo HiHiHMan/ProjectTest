@@ -29,7 +29,9 @@
         }
       `;
 
+      const hasDerivatives = !!gl.getExtension('OES_standard_derivatives');
       const fragment = `
+        ${hasDerivatives ? "#extension GL_OES_standard_derivatives : enable\\n" : ""}
         precision highp float;
         varying vec2 uv;
         uniform vec2 resolution;
@@ -42,12 +44,13 @@
           float border = smoothstep(174.0, 174.35, radius) *
                          (1.0 - smoothstep(175.0, 175.35, radius));
 
-          // Smooth circular hairlines with a fixed one-pixel edge transition.
+          // Analytic anti-aliasing keeps each circular hairline crisp.
           float lines = 0.0;
+          float edgeWidth = ${hasDerivatives ? "max(fwidth(radius) * 0.5, 0.35)" : "0.75"};
           for (int i = 0; i < 6; i++) {
             float ringRadius = 186.0 + float(i) * 5.0;
             float distanceToLine = abs(radius - ringRadius);
-            float line = 1.0 - smoothstep(0.0, 1.0, distanceToLine);
+            float line = 1.0 - smoothstep(0.45 - edgeWidth, 0.45 + edgeWidth, distanceToLine);
             lines = max(lines, line * 0.48);
           }
 
