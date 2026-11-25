@@ -24,8 +24,18 @@
         radial-gradient(ellipse at 50% 0%, rgba(38, 31, 67, .18), transparent 58%),
         #05050a;
     }
+    #baiford-galaxy {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
     #baiford-threads {
       position: absolute;
+      z-index: 1;
       inset: 0;
       display: block;
       width: 100%;
@@ -50,9 +60,137 @@
 </head>
 <body>
   <main class="baiford-scene" aria-label="Baiford thread strands">
+    <canvas id="baiford-galaxy" aria-hidden="true"></canvas>
     <canvas id="baiford-threads" aria-hidden="true"></canvas>
   </main>
   <div class="ly-3-noise" aria-hidden="true"></div>
+  <script>
+    // พื้นหลัง Galaxy แบบ WebGL: เนบิวลาสีเข้มและดาวขนาดเล็ก
+    (() => {
+      const canvas = document.getElementById('baiford-galaxy');
+      const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' });
+      if (!gl) return;
+
+      const vertexSource = `
+        attribute vec2 position;
+        void main() { gl_Position = vec4(position, 0.0, 1.0); }
+      `;
+      const fragmentSource = `
+        precision mediump float;
+        uniform vec2 resolution;
+        uniform float time;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+        }
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                     mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+        }
+        float fbm(vec2 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          for (int i = 0; i < 4; i++) {
+            value += noise(p) * amplitude;
+            p *= 2.03;
+            amplitude *= 0.5;
+          }
+          return value;
+        }
+        void main() {
+          vec2 uv = gl_FragCoord.xy / resolution.xy;
+          vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
+          float t = time * 0.018;
+
+          vec2 warp = vec2(
+            fbm(p * 2.0 + vec2(t, 1.7)),
+            fbm(p * 2.0 + vec2(4.2, -t))
+          );
+          float cloud = fbm(p * 3.2 + warp * 1.8);
+          float cloud2 = fbm(p * 5.5 - warp * 1.2 + 8.0);
+
+          vec3 color = vec3(0.008, 0.009, 0.018);
+          float green = smoothstep(0.48, 0.78, cloud + 0.08 * sin(p.x * 3.0));
+          float red = smoothstep(0.52, 0.82, cloud2 + 0.12 * sin(p.y * 4.0 + 1.0));
+          float pink = smoothstep(0.55, 0.84, fbm(p * 2.6 + warp + 13.0));
+
+          color += vec3(0.018, 0.105, 0.055) * green * 0.72;
+          color += vec3(0.13, 0.018, 0.028) * red * 0.68;
+          color += vec3(0.12, 0.025, 0.075) * pink * 0.48;
+
+          // ดาวเม็ดเล็กจำนวนมาก กระจายเป็นจุดละเอียดทั่วท้องฟ้า
+          vec2 starGrid = uv * vec2(230.0, 150.0);
+          vec2 cell = floor(starGrid);
+          vec2 local = fract(starGrid) - 0.5;
+          float seed = hash(cell);
+          float star = step(0.982, seed);
+          float radius = 0.035 + hash(cell + 9.1) * 0.055;
+          float point = 1.0 - smoothstep(radius * 0.35, radius, length(local));
+          float twinkle = 0.65 + 0.35 * sin(time * 0.0015 + seed * 90.0);
+          float stars = star * point * twinkle;
+          color += vec3(0.62, 0.68, 0.78) * stars * 0.72;
+
+          float vignette = 1.0 - smoothstep(0.35, 0.9, length((uv - 0.5) * vec2(1.0, 0.85)));
+          color *= 0.62 + vignette * 0.38;
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `;
+
+      function compile(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+      const vertex = compile(gl.VERTEX_SHADER, vertexSource);
+      const fragment = compile(gl.FRAGMENT_SHADER, fragmentSource);
+      if (!vertex || !fragment) return;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vertex);
+      gl.attachShader(program, fragment);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      gl.useProgram(program);
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const position = gl.getAttribLocation(program, 'position');
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+      const resolution = gl.getUniformLocation(program, 'resolution');
+      const timeUniform = gl.getUniformLocation(program, 'time');
+      let lastFrame = 0;
+      const frameInterval = 1000 / 30;
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1);
+        canvas.width = Math.max(1, Math.round(window.innerWidth * dpr));
+        canvas.height = Math.max(1, Math.round(window.innerHeight * dpr));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(resolution, canvas.width, canvas.height);
+      }
+      function render(time) {
+        requestAnimationFrame(render);
+        if (time - lastFrame < frameInterval) return;
+        lastFrame = time;
+        gl.uniform1f(timeUniform, time);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+      requestAnimationFrame(render);
+    })();
+  </script>
   <script>
     (() => {
       const canvas = document.getElementById('baiford-threads');
