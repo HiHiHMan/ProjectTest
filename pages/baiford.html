@@ -253,7 +253,8 @@
         threads = Array.from({ length: count }, (_, index) => {
           const shuffled = [...palette].sort(() => Math.random() - 0.5);
           const colors = shuffled.slice(0, 4);
-          const startX = groupLeft + index * step;
+          // สุ่มตำแหน่งแนวนอนภายในกลุ่ม ให้เส้นตั้งตรงและซ้อนทับกันเป็นชั้น
+          const startX = groupLeft + Math.random() * groupWidth;
           const safeBottom = Math.max(0, height + 5);
           const startY = Math.min(22 + Math.random() * Math.min(210, height * 0.22), safeBottom);
           const length = Math.min(650 + Math.random() * 500, safeBottom - startY);
@@ -265,8 +266,8 @@
             colors,
             width: 1.8,
             alpha: 0.48 + Math.random() * 0.42,
-            // สุ่มมุมเอียงของแต่ละเส้น เพื่อให้เส้นด้ายไขว้และซ้อนทับกันอย่างเป็นธรรมชาติ
-            drift: (Math.random() - 0.5) * Math.min(180, groupWidth * 0.65),
+            // เส้นด้ายตั้งตรง ไม่เอียง
+            drift: 0,
             flickerDelay: Math.random() * 3000,
             flowSpeed: 18 + Math.random() * 24,
             flowOffset: Math.random(),
