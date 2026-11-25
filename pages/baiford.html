@@ -53,6 +53,7 @@
       let height = 0;
       let dpr = 1;
       let threads = [];
+      let startTime = 0;
 
       function createThreads() {
         const count = Math.max(24, Math.min(54, Math.round(width / 27)));
@@ -71,15 +72,21 @@
             color,
             width: 1.5,
             alpha: 0.48 + Math.random() * 0.42,
-            drift: (Math.random() - 0.5) * 5
+            drift: (Math.random() - 0.5) * 5,
+            flickerDelay: Math.random() * 3000
           };
         });
       }
 
-      function draw() {
+      function draw(time = 0) {
+        if (!startTime) startTime = time;
         ctx.clearRect(0, 0, width, height);
 
         threads.forEach(thread => {
+          // ใช้จังหวะกระพริบแบบเดียวกับเส้นแสงใน Dream Star
+          const cycle = ((time + thread.flickerDelay) % 3000) / 3000;
+          const pulse = (1 - Math.cos(cycle * Math.PI * 2)) / 2;
+          const brightness = 0.42 + pulse * 0.58;
           const gradient = ctx.createLinearGradient(
             thread.x, thread.top, thread.x + thread.drift, thread.bottom
           );
@@ -90,18 +97,19 @@
           gradient.addColorStop(1, '#ffffff');
 
           ctx.save();
-          ctx.globalAlpha = thread.alpha;
+          ctx.globalAlpha = thread.alpha * brightness;
           ctx.beginPath();
           ctx.moveTo(thread.x, thread.top);
           ctx.lineTo(thread.x + thread.drift, thread.bottom);
           ctx.strokeStyle = gradient;
-          ctx.lineWidth = thread.width;
+          ctx.lineWidth = thread.width + pulse * 0.25;
           ctx.lineCap = 'round';
           ctx.shadowColor = thread.color;
           ctx.shadowBlur = 4;
           ctx.stroke();
           ctx.restore();
         });
+        requestAnimationFrame(draw);
       }
 
       function resize() {
@@ -114,11 +122,11 @@
         canvas.style.height = height + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         createThreads();
-        draw();
       }
 
       window.addEventListener('resize', resize, { passive: true });
       resize();
+      requestAnimationFrame(draw);
     })();
   </script>
 </body>
