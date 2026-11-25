@@ -106,12 +106,12 @@
             flickerDelay: Math.random() * 3000,
             flowSpeed: 18 + Math.random() * 24,
             flowOffset: Math.random(),
-            // เพิ่มเม็ด Noise ให้ถี่และเห็นพื้นผิวเส้นด้ายชัดขึ้น
+            // ใช้ขนาดและความโปร่งใสของเกรนแบบ Dream Star
             noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 9)) }, () => ({
-              x: (Math.random() - 0.5) * 4.2,
+              x: (Math.random() - 0.5) * 3.2,
               y: Math.random(),
-              size: 0.5 + Math.random() * 0.65,
-              alpha: 0.3 + Math.random() * 0.25
+              radius: 0.2 + Math.random() * 0.65,
+              alpha: 0.08 + Math.random() * 0.28
             }))
           };
         });
@@ -123,15 +123,12 @@
           thread.noise.forEach(grain => {
             const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
             const threadX = thread.x + thread.drift * grain.y;
-            // วาดเป็นเม็ดพิกเซลคม ๆ ไม่มีขอบวงกลมฟุ้งหรือการเบลอ
-            noiseCtx.globalAlpha = grain.alpha;
-            noiseCtx.fillStyle = thread.colors[2];
-            noiseCtx.fillRect(
-              Math.round(threadX + grain.x),
-              Math.round(grainY),
-              grain.size,
-              grain.size
-            );
+            // วาดเกรนวงกลมเล็กแบบ Dream Star โดยไม่ใช้เงาหรือ Blur
+            noiseCtx.beginPath();
+            noiseCtx.arc(threadX + grain.x, grainY, grain.radius, 0, Math.PI * 2);
+            noiseCtx.fillStyle = `rgba(255, 255, 255, ${grain.alpha})`;
+            noiseCtx.shadowBlur = 0;
+            noiseCtx.fill();
           });
         });
         noiseCtx.globalAlpha = 1;
