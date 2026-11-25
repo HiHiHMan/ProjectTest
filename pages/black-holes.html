@@ -42,12 +42,13 @@
           float border = smoothstep(174.0, 174.35, radius) *
                          (1.0 - smoothstep(175.0, 175.35, radius));
 
-          // Separate, continuous circular lines with fixed spacing.
+          // Smooth, anti-aliased circular hairlines with fixed spacing.
           float lines = 0.0;
+          float aa = max(fwidth(radius), 0.65);
           for (int i = 0; i < 6; i++) {
             float ringRadius = 186.0 + float(i) * 5.0;
             float distanceToLine = abs(radius - ringRadius);
-            float line = 1.0 - smoothstep(0.42, 0.58, distanceToLine);
+            float line = 1.0 - smoothstep(0.0, aa, distanceToLine);
             lines = max(lines, line * 0.42);
           }
 
