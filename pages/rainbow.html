@@ -36,12 +36,56 @@
 <body>
   <main class="rainbow-wrap" aria-label="สายรุ้งครึ่งวงกลม">
     <svg viewBox="0 0 720 360" role="img" aria-label="สายรุ้ง 6 สี">
-      <path class="rainbow-band" d="M 24 360 A 336 336 0 0 1 696 360" stroke="#ff4545"/>
-      <path class="rainbow-band" d="M 48 360 A 312 312 0 0 1 672 360" stroke="#ff9f32"/>
-      <path class="rainbow-band" d="M 72 360 A 288 288 0 0 1 648 360" stroke="#ffe34a"/>
-      <path class="rainbow-band" d="M 96 360 A 264 264 0 0 1 624 360" stroke="#55d879"/>
-      <path class="rainbow-band" d="M 120 360 A 240 240 0 0 1 600 360" stroke="#4da9ff"/>
-      <path class="rainbow-band" d="M 144 360 A 216 216 0 0 1 576 360" stroke="#a477ff"/>
+      <defs>
+        <linearGradient id="rainbow-red" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#ff4545" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#ff4545" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#ff4545" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#ff4545" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ff4545" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rainbow-orange" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#ff9f32" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#ff9f32" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#ff9f32" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#ff9f32" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ff9f32" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rainbow-yellow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#ffe34a" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#ffe34a" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#ffe34a" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#ffe34a" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ffe34a" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rainbow-green" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#55d879" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#55d879" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#55d879" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#55d879" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#55d879" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rainbow-blue" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#4da9ff" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#4da9ff" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#4da9ff" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#4da9ff" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#4da9ff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rainbow-purple" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+          <stop offset="0%" stop-color="#a477ff" stop-opacity="0"/>
+          <stop offset="35%" stop-color="#a477ff" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#a477ff" stop-opacity="1"/>
+          <stop offset="65%" stop-color="#a477ff" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#a477ff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path class="rainbow-band" d="M 24 360 A 336 336 0 0 1 696 360" stroke="url(#rainbow-red)"/>
+      <path class="rainbow-band" d="M 48 360 A 312 312 0 0 1 672 360" stroke="url(#rainbow-orange)"/>
+      <path class="rainbow-band" d="M 72 360 A 288 288 0 0 1 648 360" stroke="url(#rainbow-yellow)"/>
+      <path class="rainbow-band" d="M 96 360 A 264 264 0 0 1 624 360" stroke="url(#rainbow-green)"/>
+      <path class="rainbow-band" d="M 120 360 A 240 240 0 0 1 600 360" stroke="url(#rainbow-blue)"/>
+      <path class="rainbow-band" d="M 144 360 A 216 216 0 0 1 576 360" stroke="url(#rainbow-purple)"/>
     </svg>
   </main>
 </body>
