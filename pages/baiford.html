@@ -73,7 +73,13 @@
             width: 1.5,
             alpha: 0.48 + Math.random() * 0.42,
             drift: (Math.random() - 0.5) * 5,
-            flickerDelay: Math.random() * 3000
+            flickerDelay: Math.random() * 3000,
+            noise: Array.from({ length: Math.max(18, Math.round(length / 5)) }, () => ({
+              x: (Math.random() - 0.5) * 3.2,
+              y: Math.random(),
+              radius: 0.2 + Math.random() * 0.65,
+              alpha: 0.08 + Math.random() * 0.28
+            }))
           };
         });
       }
@@ -108,6 +114,16 @@
           ctx.shadowBlur = 4;
           ctx.stroke();
           ctx.restore();
+
+          // เกรน noise เล็ก ๆ กระจายตามแนวเส้นด้าย เหมือนพื้นผิวใน Dream Star
+          thread.noise.forEach(grain => {
+            const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
+            const threadX = thread.x + thread.drift * grain.y;
+            ctx.beginPath();
+            ctx.arc(threadX + grain.x, grainY, grain.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${grain.alpha * brightness})`;
+            ctx.fill();
+          });
         });
         requestAnimationFrame(draw);
       }
