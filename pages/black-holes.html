@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-  <canvas id="black-hole" aria-label="Black sphere"></canvas>
+  <canvas id="black-hole" aria-label="Black sphere surrounded by flowing luminous fog"></canvas>
   <script>
     (() => {
       const canvas = document.getElementById('black-hole');
@@ -33,13 +33,76 @@
         precision highp float;
         varying vec2 uv;
         uniform vec2 resolution;
+        uniform float time;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+        }
+
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(
+            mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+            mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+            f.y
+          );
+        }
+
+        float fbm(vec2 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          for (int i = 0; i < 4; i++) {
+            value += noise(p) * amplitude;
+            p *= 2.03;
+            amplitude *= 0.5;
+          }
+          return value;
+        }
 
         void main() {
           vec2 p = (uv - 0.5) * resolution;
           float radius = length(p);
+          float angle = atan(p.y, p.x);
+
+          // Flowing, turbulent fog that follows a circular path around the sphere.
+          float flowAngle = angle - time * 0.22;
+          vec2 flowUV = vec2(flowAngle * 2.8, radius * 0.035);
+          float cloudA = fbm(flowUV * vec2(1.0, 1.35) + vec2(0.0, time * 0.20));
+          float cloudB = fbm(flowUV * vec2(1.8, 2.0) - vec2(time * 0.12, time * 0.28));
+          float cloud = cloudA * 0.65 + cloudB * 0.35;
+
+          float centerRadius = 198.0 + (cloud - 0.48) * 42.0;
+          float bandWidth = 17.0 + cloud * 7.0;
+          float distanceToFog = abs(radius - centerRadius);
+          float fogShape = exp(-pow(distanceToFog / bandWidth, 2.0));
+
+          // Uneven wisps create a soft smoke-like edge instead of a perfect ring.
+          float wisps = smoothstep(0.28, 0.78, cloud);
+          float detail = noise(flowUV * 7.0 + vec2(0.0, -time * 0.38));
+          float density = fogShape * (0.16 + wisps * 0.30) * (0.55 + detail * 0.65);
+
+          float secondary = fbm(flowUV * vec2(0.72, 2.8) + vec2(time * 0.08, -time * 0.16));
+          float outerFog = exp(-pow((radius - (220.0 + (secondary - 0.5) * 24.0)) / 23.0, 2.0));
+          density += outerFog * smoothstep(0.42, 0.82, secondary) * 0.10;
+
+          vec3 fogColor = mix(
+            vec3(0.30, 0.42, 0.62),
+            vec3(0.72, 0.78, 0.92),
+            clamp(cloud * 1.15, 0.0, 1.0)
+          );
+          vec3 color = fogColor * density;
+
+          // Keep the black sphere clean, with only its thin white outline visible.
+          float sphereMask = 1.0 - smoothstep(174.2, 176.0, radius);
+          color *= 1.0 - sphereMask;
+
           float border = smoothstep(174.0, 174.35, radius) *
                          (1.0 - smoothstep(175.0, 175.35, radius));
-          gl_FragColor = vec4(vec3(border), 1.0);
+          color = max(color, vec3(border));
+
+          gl_FragColor = vec4(color, 1.0);
         }
       `;
 
@@ -80,6 +143,7 @@
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       const resolution = gl.getUniformLocation(program, 'resolution');
+      const time = gl.getUniformLocation(program, 'time');
 
       function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -87,11 +151,17 @@
         canvas.height = Math.round(innerHeight * dpr);
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.uniform2f(resolution, canvas.width, canvas.height);
+      }
+
+      function render(now) {
+        gl.uniform1f(time, now * 0.001);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
       }
 
       window.addEventListener('resize', resize, { passive: true });
       resize();
+      requestAnimationFrame(render);
     })();
   </script>
 </body>
