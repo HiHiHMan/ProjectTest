@@ -253,8 +253,8 @@
         threads = Array.from({ length: count }, (_, index) => {
           const shuffled = [...palette].sort(() => Math.random() - 0.5);
           const colors = shuffled.slice(0, 4);
-          // สุ่มตำแหน่งแนวนอนภายในกลุ่ม ให้เส้นตั้งตรงและซ้อนทับกันเป็นชั้น
-          const startX = groupLeft + Math.random() * groupWidth;
+          // กระจายเส้นด้ายเรียงขนานกัน ไม่ซ้อนทับ
+          const startX = groupLeft + index * step;
           const safeBottom = Math.max(0, height + 5);
           const startY = Math.min(22 + Math.random() * Math.min(210, height * 0.22), safeBottom);
           const length = Math.min(650 + Math.random() * 500, safeBottom - startY);
