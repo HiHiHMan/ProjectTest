@@ -62,14 +62,14 @@
 
             float orbitRadius = 184.0 + mod(fi * 7.31, 22.0);
             float radialDistance = abs(radius - orbitRadius);
-            float strandWidth = 0.48;
-            float strandLength = 0.035 + mod(fi, 4.0) * 0.006;
+            float strandWidth = 0.18;
+            float strandLength = 5.45;
 
-            float strand = (1.0 - smoothstep(strandWidth, strandWidth + 0.55, radialDistance)) *
-                           (1.0 - smoothstep(strandLength, strandLength + 0.012, abs(delta)));
+            float strand = (1.0 - smoothstep(strandWidth, strandWidth + 0.22, radialDistance)) *
+                           (1.0 - smoothstep(strandLength, strandLength + 0.025, abs(delta)));
 
             vec3 strandColor = rainbow(fi / 60.0);
-            color += strandColor * strand * 0.72;
+            color += strandColor * strand * 0.58;
           }
 
           gl_FragColor = vec4(color, 1.0);
