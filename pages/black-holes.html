@@ -35,13 +35,13 @@
         uniform vec2 resolution;
 
         void main() {
-          vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
+          vec2 p = (uv - 0.5) * resolution;
           float radius = length(p);
-          float sphere = 1.0 - smoothstep(0.495, 0.5, radius);
+          float sphere = 1.0 - smoothstep(174.0, 175.0, radius);
 
           vec3 background = vec3(0.063);
           vec3 blackSphere = vec3(0.0);
-          float edgeShade = smoothstep(0.47, 0.5, radius) * 0.035;
+          float edgeShade = smoothstep(165.0, 175.0, radius) * 0.035;
           vec3 color = mix(background, blackSphere, sphere);
           color += vec3(edgeShade) * (1.0 - sphere);
 
