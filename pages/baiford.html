@@ -135,16 +135,16 @@
           vec2 cell = floor(starGrid);
           vec2 local = fract(starGrid);
           float seed = hash(cell);
-          float star = step(0.973, seed);
+          float star = step(0.73, seed);
 
           // สุ่มตำแหน่งดาวภายในแต่ละช่อง เพื่อตัดลักษณะเรียงเป็นตาราง
           vec2 starPosition = vec2(
             hash(cell + vec2(17.3, 41.7)),
-            hash(cell + vec2(63.1,  localseed(cell)))
+            hash(cell + vec2(63.1, localseed(cell)))
           );
-          vec2 starDelta = local - starPosition;
-          float radius = 0.012 + hash(cell + 9.1) * 0.026;
-          float point = 1.0 - smoothstep(radius * 0.3, radius, length(starDelta));
+          vec2 starDelta = (local - starPosition) * (resolution / vec2(230.0, 150.0));
+          float radius = 0.45 + hash(cell + 9.1) * 0.85;
+          float point = 1.0 - smoothstep(radius * 0.25, radius, length(starDelta));
           float twinkle = 0.72 + 0.28 * sin(time * 0.00045 + seed * 90.0);
           float stars = star * point * twinkle;
           color += vec3(0.62, 0.68, 0.78) * stars * 0.72;
