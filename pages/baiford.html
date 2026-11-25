@@ -129,11 +129,13 @@
           const gradient = ctx.createLinearGradient(
             thread.x, thread.top, thread.x + thread.drift, thread.bottom
           );
-          gradient.addColorStop(0, 'rgba(255,255,255,0)');
-          gradient.addColorStop(0.12, thread.colors[0] + '30');
-          gradient.addColorStop(0.36, thread.colors[1] + '66');
-          gradient.addColorStop(0.72, thread.colors[2] + 'dd');
-          gradient.addColorStop(1, thread.colors[3]);
+          // ไล่สีหลายช่วงให้เห็นสีที่แตกต่างกันภายในเส้นด้ายเส้นเดียว
+          gradient.addColorStop(0, 'rgba(0,0,0,0)');
+          gradient.addColorStop(0.12, thread.colors[0] + 'bb');
+          gradient.addColorStop(0.34, thread.colors[1] + 'ee');
+          gradient.addColorStop(0.58, thread.colors[2] + 'ff');
+          gradient.addColorStop(0.82, thread.colors[3] + 'ee');
+          gradient.addColorStop(1, thread.colors[0] + 'cc');
 
           ctx.save();
           ctx.globalAlpha = thread.alpha * brightness;
