@@ -309,15 +309,23 @@
           gradient.addColorStop(1, thread.colors[0] + 'cc');
 
           ctx.save();
-          ctx.globalAlpha = thread.alpha * brightness;
           ctx.beginPath();
           ctx.moveTo(thread.x, thread.top);
           ctx.lineTo(thread.x + thread.drift, thread.bottom);
           ctx.strokeStyle = gradient;
-          ctx.lineWidth = 1.4 + pulse * 0.35;
           ctx.lineCap = 'round';
+
+          // ชั้นแสงฟุ้งด้านหลัง ลดความเข้มเพื่อไม่ให้กลบขอบเส้น
+          ctx.globalAlpha = thread.alpha * brightness * 0.38;
+          ctx.lineWidth = 1.6 + pulse * 0.2;
           ctx.shadowBlur = 4;
           ctx.shadowColor = thread.colors[2];
+          ctx.stroke();
+
+          // แกนเส้นด้ายคมชัด วาดทับโดยปิดเงาเบลอ
+          ctx.globalAlpha = thread.alpha * brightness;
+          ctx.lineWidth = 1.15 + pulse * 0.15;
+          ctx.shadowBlur = 0;
           ctx.stroke();
           ctx.restore();
 
