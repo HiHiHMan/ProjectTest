@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05050a">
+  <title>Baiford</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #05050a;
+    }
+    body { min-height: 320px; }
+    .baiford-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(38, 31, 67, .18), transparent 58%),
+        #05050a;
+    }
+    #baiford-threads {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="baiford-scene" aria-label="Baiford thread strands">
+    <canvas id="baiford-threads" aria-hidden="true"></canvas>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById('baiford-threads');
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+
+      const palette = [
+        '#2A1B4E', '#9C6ADE', '#78A2F2', '#D9B96F', '#FF94B8',
+        '#FF8C42', '#FF4FA3', '#D6A94F', '#287BFF', '#123A9C'
+      ];
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let threads = [];
+
+      function createThreads() {
+        const count = Math.max(24, Math.min(54, Math.round(width / 27)));
+        const step = width / count;
+
+        threads = Array.from({ length: count }, (_, index) => {
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          const startX = step * (index + 0.5) + (Math.random() - 0.5) * step * 0.72;
+          const startY = 22 + Math.random() * Math.min(210, height * 0.22);
+          const length = 650 + Math.random() * 500;
+
+          return {
+            x: startX,
+            top: startY,
+            bottom: startY + length,
+            color,
+            width: 1.5,
+            alpha: 0.48 + Math.random() * 0.42,
+            drift: (Math.random() - 0.5) * 5
+          };
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        threads.forEach(thread => {
+          const gradient = ctx.createLinearGradient(
+            thread.x, thread.top, thread.x + thread.drift, thread.bottom
+          );
+          gradient.addColorStop(0, thread.color + '00');
+          gradient.addColorStop(0.16, thread.color + '20');
+          gradient.addColorStop(0.48, thread.color + '88');
+          gradient.addColorStop(0.82, thread.color + 'dd');
+          gradient.addColorStop(1, '#ffffff');
+
+          ctx.save();
+          ctx.globalAlpha = thread.alpha;
+          ctx.beginPath();
+          ctx.moveTo(thread.x, thread.top);
+          ctx.lineTo(thread.x + thread.drift, thread.bottom);
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = thread.width;
+          ctx.lineCap = 'round';
+          ctx.shadowColor = thread.color;
+          ctx.shadowBlur = 4;
+          ctx.stroke();
+          ctx.restore();
+        });
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        createThreads();
+        draw();
+      }
+
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+    })();
+  </script>
+</body>
+</html>
