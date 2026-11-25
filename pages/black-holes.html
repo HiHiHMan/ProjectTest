@@ -97,22 +97,32 @@
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       const resolution = gl.getUniformLocation(program, 'resolution');
 
-      function resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.round(innerWidth * dpr);
-        canvas.height = Math.round(innerHeight * dpr);
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.uniform2f(resolution, canvas.width, canvas.height);
-      }
+      // Render at 2x the device-pixel resolution, then let the browser
+      // downsample the result for smoother circular edges.
+      const supersample = 2;
 
       function render() {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-        requestAnimationFrame(render);
+      }
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const pixelRatio = dpr * supersample;
+        canvas.width = Math.round(innerWidth * pixelRatio);
+        canvas.height = Math.round(innerHeight * pixelRatio);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+
+        // Keep shader geometry in the original device-pixel coordinate space.
+        gl.uniform2f(
+          resolution,
+          canvas.width / supersample,
+          canvas.height / supersample
+        );
+        render();
       }
 
       window.addEventListener('resize', resize, { passive: true });
       resize();
-      requestAnimationFrame(render);
     })();
   </script>
 </body>
