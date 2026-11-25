@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101010">
+  <meta name="theme-color" content="#000000">
   <title>Black Holes</title>
   <style>
     * { box-sizing: border-box; }
@@ -33,55 +33,13 @@
         precision highp float;
         varying vec2 uv;
         uniform vec2 resolution;
-        uniform float time;
-
-        vec3 rainbow(float h) {
-          vec3 c = abs(fract(h + vec3(0.0, 0.6666667, 0.3333333)) * 6.0 - 3.0);
-          c = clamp(c - 1.0, 0.0, 1.0);
-          return mix(vec3(1.0), c, 0.68);
-        }
 
         void main() {
           vec2 p = (uv - 0.5) * resolution;
           float radius = length(p);
-          float angle = atan(p.y, p.x);
-
           float border = smoothstep(174.0, 174.35, radius) *
                          (1.0 - smoothstep(175.0, 175.35, radius));
-          vec3 color = vec3(border);
-
-          // 60 separated, crisp pastel smoke wisps flowing around the sphere
-          for (int i = 0; i < 60; i++) {
-            float fi = float(i);
-            float phase = fi * 6.2831853 / 60.0;
-            float drift = time * 0.48 + sin(time * 0.7 + fi * 1.7) * 0.012;
-            float centerAngle = phase + drift;
-            float delta = atan(sin(angle - centerAngle), cos(angle - centerAngle));
-
-            float angularWidth = 0.034 + 0.006 * sin(fi * 2.13);
-            float along = delta / angularWidth;
-            float segmentMask = exp(-along * along * 1.35);
-
-            float turbulence = sin(along * 5.0 - time * 2.1 + fi) * 2.2 +
-                               sin(along * 9.0 + time * 1.4 + fi * 0.7) * 1.0;
-            float centerRadius = 185.0 + mod(fi * 7.31, 13.0) +
-                                 sin(time * 1.1 + fi * 0.83) * 1.8 + turbulence;
-            float radialDelta = radius - centerRadius;
-
-            float smokeBody = exp(-radialDelta * radialDelta / 15.0) *
-                              segmentMask;
-            float smokeWisps = exp(-radialDelta * radialDelta / 2.2) *
-                              segmentMask *
-                              (0.62 + 0.38 * sin(along * 13.0 - time * 3.0 + fi * 0.4));
-            float fineCore = exp(-radialDelta * radialDelta / 0.22) *
-                             segmentMask * 0.72;
-
-            float intensity = max(smokeBody * 0.34, smokeWisps * 0.62) + fineCore;
-            vec3 strandColor = rainbow(fi / 60.0);
-            color = max(color, strandColor * intensity);
-          }
-
-          gl_FragColor = vec4(color, 1.0);
+          gl_FragColor = vec4(vec3(border), 1.0);
         }
       `;
 
@@ -122,7 +80,6 @@
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       const resolution = gl.getUniformLocation(program, 'resolution');
-      const time = gl.getUniformLocation(program, 'time');
 
       function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -133,15 +90,8 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
-      function render(now) {
-        gl.uniform1f(time, now * 0.001);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-        requestAnimationFrame(render);
-      }
-
       window.addEventListener('resize', resize, { passive: true });
       resize();
-      requestAnimationFrame(render);
     })();
   </script>
 </body>
