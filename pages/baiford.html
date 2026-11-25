@@ -229,10 +229,11 @@
       const noiseCtx = noiseCanvas.getContext('2d', { alpha: true });
       if (!ctx || !noiseCtx) return;
 
+      // สีรุ้งโทนอัญมณี ลดความนีออนและคุมความสว่างให้สมดุล
       const palette = [
-        '#6A00FF', '#A000FF', '#E000FF', '#FF007F', '#FF1744',
-        '#FF5A00', '#FFB000', '#F5E600', '#00D66B', '#00CFFF',
-        '#176BFF', '#2638D9'
+        '#65458F', '#80508F', '#A6537D', '#B95762',
+        '#C4774F', '#C49A55', '#A6A45A', '#5D936B',
+        '#438C83', '#477E9B', '#506FA0', '#5B5B9A'
       ];
 
       let width = 0;
@@ -251,8 +252,14 @@
         const groupLeft = (width - groupWidth) / 2;
 
         threads = Array.from({ length: count }, (_, index) => {
-          const shuffled = [...palette].sort(() => Math.random() - 0.5);
-          const colors = shuffled.slice(0, 4);
+          // ไล่เฉดสีตามลำดับรุ้งแบบคุมโทน ไม่สุ่มสีจนตัดกันเกินไป
+          const colorOffset = index % palette.length;
+          const colors = [
+            palette[colorOffset],
+            palette[(colorOffset + 3) % palette.length],
+            palette[(colorOffset + 6) % palette.length],
+            palette[(colorOffset + 9) % palette.length]
+          ];
           // กระจายเส้นด้ายเรียงขนานกัน ไม่ซ้อนทับ
           const startX = groupLeft + index * step;
           const safeBottom = Math.max(0, height + 5);
