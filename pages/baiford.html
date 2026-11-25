@@ -244,10 +244,9 @@
       const frameInterval = 1000 / 30;
 
       function createThreads() {
-        // จัดเส้นด้าย 150 เส้นเป็นกลุ่มไว้กึ่งกลางหน้าจอ
-        const count = 150;
-        const threadWidth = 1.8;
-        const groupWidth = count * threadWidth;
+        // เพิ่มเป็น 300 เส้น โดยคงความกว้างกลุ่มเดิมไว้
+        const count = 300;
+        const groupWidth = 150 * 1.8;
         const step = groupWidth / count;
         const groupLeft = (width - groupWidth) / 2;
 
