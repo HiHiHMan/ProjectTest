@@ -135,7 +135,7 @@
           vec2 cell = floor(starGrid);
           vec2 local = fract(starGrid);
           float seed = hash(cell);
-          float star = step(0.73, seed);
+          float star = step(0.973, seed);
 
           // สุ่มตำแหน่งดาวภายในแต่ละช่อง เพื่อตัดลักษณะเรียงเป็นตาราง
           vec2 starPosition = vec2(
