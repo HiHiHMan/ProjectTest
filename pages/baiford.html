@@ -103,7 +103,7 @@
         void main() {
           vec2 uv = gl_FragCoord.xy / resolution.xy;
           vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
-          float t = time * 0.006;
+          float t = time * 0.0012;
 
           // ค่อย ๆ เคลื่อนมวลเมฆด้วยการเปลี่ยนตำแหน่ง warp อย่างนุ่มนวล
           vec2 drift = vec2(t * 0.42, -t * 0.28);
