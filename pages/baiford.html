@@ -165,14 +165,7 @@
           ctx.strokeStyle = gradient;
           ctx.lineCap = 'round';
 
-          // ชั้นแสงฟุ้งด้านหลัง ลดความเข้มเพื่อไม่ให้กลบขอบเส้น
-          ctx.globalAlpha = thread.alpha * brightness * 0.38;
-          ctx.lineWidth = 1.6 + pulse * 0.2;
-          ctx.shadowBlur = 4;
-          ctx.shadowColor = thread.colors[2];
-          ctx.stroke();
-
-          // แกนเส้นด้ายคมชัด วาดทับโดยปิดเงาเบลอ
+          // วาดเฉพาะเส้นด้ายหลัก ไม่มีแสงฟุ้งหรือเงาเบลอ
           ctx.globalAlpha = thread.alpha * brightness;
           ctx.lineWidth = 1.15 + pulse * 0.15;
           ctx.shadowBlur = 0;
