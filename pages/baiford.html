@@ -83,6 +83,9 @@
         float hash(vec2 p) {
           return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
         }
+        float localseed(vec2 p) {
+          return hash(p + vec2(29.4, 83.2));
+        }
         float noise(vec2 p) {
           vec2 i = floor(p);
           vec2 f = fract(p);
@@ -103,7 +106,7 @@
         void main() {
           vec2 uv = gl_FragCoord.xy / resolution.xy;
           vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
-          float t = time * 0.0012;
+          float t = time * 0.00012;
 
           // ค่อย ๆ เคลื่อนมวลเมฆด้วยการเปลี่ยนตำแหน่ง warp อย่างนุ่มนวล
           vec2 drift = vec2(t * 0.42, -t * 0.28);
@@ -126,12 +129,19 @@
           // ดาวเม็ดเล็กจำนวนมาก กระจายเป็นจุดละเอียดทั่วท้องฟ้า
           vec2 starGrid = uv * vec2(230.0, 150.0);
           vec2 cell = floor(starGrid);
-          vec2 local = fract(starGrid) - 0.5;
+          vec2 local = fract(starGrid);
           float seed = hash(cell);
           float star = step(0.73, seed);
-          float radius = 0.035 + hash(cell + 9.1) * 0.055;
-          float point = 1.0 - smoothstep(radius * 0.35, radius, length(local));
-          float twinkle = 0.65 + 0.35 * sin(time * 0.0015 + seed * 90.0);
+
+          // สุ่มตำแหน่งดาวภายในแต่ละช่อง เพื่อตัดลักษณะเรียงเป็นตาราง
+          vec2 starPosition = vec2(
+            hash(cell + vec2(17.3, 41.7)),
+            hash(cell + vec2(63.1,  localseed(cell)))
+          );
+          vec2 starDelta = local - starPosition;
+          float radius = 0.012 + hash(cell + 9.1) * 0.026;
+          float point = 1.0 - smoothstep(radius * 0.3, radius, length(starDelta));
+          float twinkle = 0.72 + 0.28 * sin(time * 0.00045 + seed * 90.0);
           float stars = star * point * twinkle;
           color += vec3(0.62, 0.68, 0.78) * stars * 0.72;
 
