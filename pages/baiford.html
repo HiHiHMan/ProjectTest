@@ -67,13 +67,14 @@
           const shuffled = [...palette].sort(() => Math.random() - 0.5);
           const colors = shuffled.slice(0, 4);
           const startX = groupLeft + index * step;
-          const startY = 22 + Math.random() * Math.min(210, height * 0.22);
-          const length = 650 + Math.random() * 500;
+          const safeBottom = Math.max(0, height - 40);
+          const startY = Math.min(22 + Math.random() * Math.min(210, height * 0.22), safeBottom);
+          const length = Math.min(650 + Math.random() * 500, safeBottom - startY);
 
           return {
             x: startX,
             top: startY,
-            bottom: startY + length,
+            bottom: safeBottom,
             colors,
             width: 1.8,
             alpha: 0.48 + Math.random() * 0.42,
