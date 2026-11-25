@@ -31,7 +31,7 @@
 
       const hasDerivatives = !!gl.getExtension('OES_standard_derivatives');
       const fragment = `
-        ${hasDerivatives ? "#extension GL_OES_standard_derivatives : enable\\n" : ""}
+        ${hasDerivatives ? "#extension GL_OES_standard_derivatives : enable\n" : ""}
         precision highp float;
         varying vec2 uv;
         uniform vec2 resolution;
