@@ -165,8 +165,8 @@
 
           float vignette = 1.0 - smoothstep(0.35, 0.9, length((uv - 0.5) * vec2(1.0, 0.85)));
           color *= 0.62 + vignette * 0.38;
-          // ลดความทึบของ WebGL เพื่อให้พื้นหลังด้านล่างมองทะลุได้
-          gl_FragColor = vec4(color, 0.72);
+          // เพิ่มความโปร่งใสให้ WebGL มองเห็นพื้นหลังด้านล่างได้ชัดขึ้น
+          gl_FragColor = vec4(color, 0.55);
         }
       `;
 
