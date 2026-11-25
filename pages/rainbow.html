@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090d">
+  <title>Rainbow</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: #08090d;
+    }
+    .rainbow-wrap {
+      width: min(82vw, 720px);
+      aspect-ratio: 2 / 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .rainbow-band {
+      fill: none;
+      stroke-width: 24;
+      stroke-linecap: butt;
+    }
+    @media (max-width: 600px) {
+      .rainbow-wrap { width: 88vw; }
+      .rainbow-band { stroke-width: 18; }
+    }
+  </style>
+</head>
+<body>
+  <main class="rainbow-wrap" aria-label="สายรุ้งครึ่งวงกลม">
+    <svg viewBox="0 0 720 360" role="img" aria-label="สายรุ้ง 6 สี">
+      <path class="rainbow-band" d="M 24 360 A 336 336 0 0 1 696 360" stroke="#ff4545"/>
+      <path class="rainbow-band" d="M 48 360 A 312 312 0 0 1 672 360" stroke="#ff9f32"/>
+      <path class="rainbow-band" d="M 72 360 A 288 288 0 0 1 648 360" stroke="#ffe34a"/>
+      <path class="rainbow-band" d="M 96 360 A 264 264 0 0 1 624 360" stroke="#55d879"/>
+      <path class="rainbow-band" d="M 120 360 A 240 240 0 0 1 600 360" stroke="#4da9ff"/>
+      <path class="rainbow-band" d="M 144 360 A 216 216 0 0 1 576 360" stroke="#a477ff"/>
+    </svg>
+  </main>
+</body>
+</html>
