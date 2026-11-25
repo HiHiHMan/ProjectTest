@@ -110,8 +110,8 @@
             noise: Array.from({ length: Math.max(18, Math.round((safeBottom - startY) / 9)) }, () => ({
               x: (Math.random() - 0.5) * 4.2,
               y: Math.random(),
-              radius: 0.3 + Math.random() * 0.8,
-              alpha: 0.09 + Math.random() * 0.2
+              size: 0.5 + Math.random() * 0.65,
+              alpha: 0.3 + Math.random() * 0.25
             }))
           };
         });
@@ -123,11 +123,15 @@
           thread.noise.forEach(grain => {
             const grainY = thread.top + (thread.bottom - thread.top) * grain.y;
             const threadX = thread.x + thread.drift * grain.y;
-            noiseCtx.beginPath();
-            noiseCtx.arc(threadX + grain.x, grainY, grain.radius, 0, Math.PI * 2);
-            noiseCtx.fillStyle = thread.colors[2] + '88';
+            // วาดเป็นเม็ดพิกเซลคม ๆ ไม่มีขอบวงกลมฟุ้งหรือการเบลอ
             noiseCtx.globalAlpha = grain.alpha;
-            noiseCtx.fill();
+            noiseCtx.fillStyle = thread.colors[2];
+            noiseCtx.fillRect(
+              Math.round(threadX + grain.x),
+              Math.round(grainY),
+              grain.size,
+              grain.size
+            );
           });
         });
         noiseCtx.globalAlpha = 1;
