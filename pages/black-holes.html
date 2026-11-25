@@ -34,17 +34,35 @@
         varying vec2 uv;
         uniform vec2 resolution;
 
+        float hash(float n) {
+          return fract(sin(n * 127.1) * 43758.5453);
+        }
+
         void main() {
           vec2 p = (uv - 0.5) * resolution;
           float radius = length(p);
+          float angle = atan(p.y, p.x);
 
-          // Clean black background and sphere; retain only the thin white outline.
+          // Thin sphere outline.
           float border = smoothstep(174.0, 174.35, radius) *
                          (1.0 - smoothstep(175.0, 175.35, radius));
 
-          gl_FragColor = vec4(vec3(border), 1.0);
-        }
+          // Fine, separated hairline arcs around the sphere. Static, no glow.
+          const float count = 72.0;
+          float sector = (angle + 3.14159265) / 6.2831853 * count;
+          float index = floor(sector);
+          float localAngle = fract(sector);
+          float segment = smoothstep(0.08, 0.13, localAngle) *
+                          (1.0 - smoothstep(0.48, 0.53, localAngle));
+          float ringRadius = 188.0 + hash(index) * 13.0;
+          float lineDistance = abs(radius - ringRadius);
+          float line = (1.0 - smoothstep(0.35, 0.85, lineDistance)) * segment;
+          float lineTone = 0.30 + hash(index + 19.0) * 0.28;
 
+          vec3 color = vec3(border) + vec3(line * lineTone);
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `;
 
       function createShader(type, source) {
         const shader = gl.createShader(type);
