@@ -117,20 +117,30 @@
           float cloud = fbm(p * 3.2 + warp * 1.8);
           float cloud2 = fbm(p * 5.5 - warp * 1.2 + 8.0);
 
-          vec3 color = vec3(0.006, 0.007, 0.018);
-          float green = smoothstep(0.34, 0.78, cloud + 0.08 * sin(p.x * 3.0));
-          float red = smoothstep(0.36, 0.8, cloud2 + 0.12 * sin(p.y * 4.0 + 1.0));
-          float pink = smoothstep(0.38, 0.82, fbm(p * 2.6 + warp + 13.0));
+          vec3 color = vec3(0.008, 0.009, 0.018);
+          float green = smoothstep(0.42, 0.82, cloud + 0.08 * sin(p.x * 3.0));
+          float red = smoothstep(0.44, 0.84, cloud2 + 0.12 * sin(p.y * 4.0 + 1.0));
+          float pink = smoothstep(0.46, 0.86, fbm(p * 2.6 + warp + 13.0));
 
-          // รุ้งสดใสขึ้น เพิ่มความอิ่มสีและแสงของเนบิวลา
+          // รุ้งโทนเดิม แต่ตัดเฉดน้ำเงินออก เหลือแดง ส้ม เหลือง เขียว ชมพู และม่วง
           float hue = fract(cloud * 0.72 + cloud2 * 0.34 + p.x * 0.075 + p.y * 0.045);
-          vec3 rainbow = abs(fract(hue + vec3(0.0, 0.6667, 0.3333)) * 6.0 - 3.0);
-          rainbow = clamp(rainbow - 1.0, 0.0, 1.0);
+          vec3 rainbow;
+          if (hue < 0.18) {
+            rainbow = mix(vec3(1.0, 0.12, 0.16), vec3(1.0, 0.62, 0.08), hue / 0.18);
+          } else if (hue < 0.36) {
+            rainbow = mix(vec3(1.0, 0.62, 0.08), vec3(1.0, 0.92, 0.18), (hue - 0.18) / 0.18);
+          } else if (hue < 0.54) {
+            rainbow = mix(vec3(1.0, 0.92, 0.18), vec3(0.18, 0.82, 0.32), (hue - 0.36) / 0.18);
+          } else if (hue < 0.72) {
+            rainbow = mix(vec3(0.18, 0.82, 0.32), vec3(1.0, 0.24, 0.48), (hue - 0.54) / 0.18);
+          } else if (hue < 0.88) {
+            rainbow = mix(vec3(1.0, 0.24, 0.48), vec3(0.68, 0.24, 0.88), (hue - 0.72) / 0.16);
+          } else {
+            rainbow = mix(vec3(0.68, 0.24, 0.88), vec3(1.0, 0.12, 0.16), (hue - 0.88) / 0.12);
+          }
           float nebula = max(max(green, red), pink);
-          float colorIntensity = smoothstep(0.28, 0.82, nebula);
-          color += rainbow * colorIntensity * 0.32;
-          color += rainbow * smoothstep(0.48, 0.86, cloud2) * 0.13;
-          color += rainbow * smoothstep(0.5, 0.88, cloud) * 0.07;
+          color += rainbow * nebula * 0.115;
+          color += rainbow * smoothstep(0.58, 0.9, cloud2) * 0.045;
 
           // ดาวเม็ดเล็กจำนวนมาก กระจายเป็นจุดละเอียดทั่วท้องฟ้า
           vec2 starGrid = uv * vec2(230.0, 150.0);
