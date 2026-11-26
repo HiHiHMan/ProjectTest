@@ -195,32 +195,37 @@
         }
       }
 
-      function launch(x = width * (0.16 + Math.random() * 0.68), targetY) {
+      function launch(x = width * (0.16 + Math.random() * 0.68), targetY, targetX = x) {
         const color = palette[Math.floor(Math.random() * palette.length)];
+        const destinationY = targetY ?? height * (0.20 + Math.random() * 0.36);
+        const flightTime = (height + 8 - destinationY) / (height * 0.70);
         rockets.push({
           x, y: height + 8,
-          targetY: targetY ?? height * (0.20 + Math.random() * 0.36),
-          vx: (Math.random() - 0.5) * 42,
+          targetY: destinationY,
+          vx: (targetX - x) / flightTime,
           vy: -(height * 0.70),
           color,
           trailTimer: 0
         });
       }
 
-      // Launch exactly 20 rockets together as one synchronized salvo.
+      // Launch 70 rockets together from three fixed points, fanning outward in different directions.
       function launchBatch() {
-        // All rockets rise from exactly three fixed launch points.
         const launchPoints = [width * 0.30, width * 0.50, width * 0.70];
         const usedCoordinates = new Set();
         for (let i = 0; i < 70; i++) {
           const x = Math.round(launchPoints[i % launchPoints.length]);
-          let targetY, coordinate;
+          let targetX, targetY, coordinate;
           do {
+            targetX = Math.round(Math.max(
+              width * 0.04,
+              Math.min(width * 0.96, x + (Math.random() - 0.5) * width * 0.40)
+            ));
             targetY = Math.round(height * (0.20 + Math.random() * 0.30));
-            coordinate = `${x},${targetY}`;
+            coordinate = `${targetX},${targetY}`;
           } while (usedCoordinates.has(coordinate));
           usedCoordinates.add(coordinate);
-          launch(x, targetY);
+          launch(x, targetY, targetX);
         }
       }
 
