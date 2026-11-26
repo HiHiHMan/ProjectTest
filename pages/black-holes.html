@@ -86,6 +86,15 @@
           gradient.addColorStop(0.77, baseColor);
           gradient.addColorStop(0.82, dimColor);
           gradient.addColorStop(1, dimColor);
+          // Subtle per-thread haze, kept separate from the crisp hairline.
+          ctx.save();
+          ctx.globalAlpha = 0.22;
+          ctx.lineWidth = 1.1;
+          ctx.strokeStyle = gradient;
+          ctx.filter = 'blur(1.4px)';
+          ctx.stroke();
+          ctx.restore();
+
           ctx.strokeStyle = gradient;
           ctx.stroke();
         }
