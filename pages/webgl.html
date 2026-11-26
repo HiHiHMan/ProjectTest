@@ -136,8 +136,27 @@ const totalPages=Math.ceil(demos.length/perPage);
 let currentPage=1;
 let visibilityObserver=null;
 const activeCanvases=new Map();
+const queuedCanvases=new Set();
+let initQueue=[];
+let initTimer=0;
+function processInitQueue(){
+ if(initTimer||!initQueue.length)return;
+ initTimer=setTimeout(()=>{
+  initTimer=0;
+  const item=initQueue.shift();
+  if(item&&item.canvas.isConnected&&item.canvas.dataset.visible==='1'&&!activeCanvases.has(item.canvas)){
+   const dispose=initWebGL(item.canvas,demos[item.index][4]);
+   activeCanvases.set(item.canvas,dispose||null);
+  }
+  if(item)queuedCanvases.delete(item.canvas);
+  processInitQueue();
+ },120);
+}
 function clearPage(){
  if(visibilityObserver){visibilityObserver.disconnect();visibilityObserver=null;}
+ if(initTimer){clearTimeout(initTimer);initTimer=0;}
+ initQueue=[];
+ queuedCanvases.clear();
  activeCanvases.forEach(dispose=>{if(dispose)dispose()});
  activeCanvases.clear();
  gallery.replaceChildren();
@@ -154,14 +173,21 @@ function renderPage(page){
  });
  visibilityObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
   const canvas=entry.target;
-  if(entry.isIntersecting&&!activeCanvases.has(canvas)){
-   const index=Number(canvas.closest('.card').querySelector('.index').textContent.split('/')[1])-1;
-   const dispose=initWebGL(canvas,demos[index][4]);
-   activeCanvases.set(canvas,dispose||null);
-  }else if(!entry.isIntersecting&&activeCanvases.has(canvas)){
-   const dispose=activeCanvases.get(canvas);if(dispose)dispose();activeCanvases.delete(canvas);
+  if(entry.isIntersecting){
+   canvas.dataset.visible='1';
+   if(!activeCanvases.has(canvas)&&!queuedCanvases.has(canvas)){
+    const index=Number(canvas.closest('.card').querySelector('.index').textContent.split('/')[1])-1;
+    queuedCanvases.add(canvas);
+    initQueue.push({canvas,index});
+    processInitQueue();
+   }
+  }else{
+   canvas.dataset.visible='0';
+   if(activeCanvases.has(canvas)){
+    const dispose=activeCanvases.get(canvas);if(dispose)dispose();activeCanvases.delete(canvas);
+   }
   }
- }),{rootMargin:'120px 0px'});
+ }),{rootMargin:'0px'});
  gallery.querySelectorAll('.visual canvas').forEach(canvas=>visibilityObserver.observe(canvas));
  renderPagination();
 }
@@ -305,9 +331,9 @@ function initWebGL(canvas,type){
  const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
  gl.useProgram(program);const p=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(p);gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
  const timeLoc=gl.getUniformLocation(program,'t'),resLoc=gl.getUniformLocation(program,'res'),modeLoc=gl.getUniformLocation(program,'mode');gl.uniform1i(modeLoc,type);
- const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
+ const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=1,w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
  const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
- const start=performance.now();let frame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);frame=requestAnimationFrame(draw)}frame=requestAnimationFrame(draw);
+ const start=performance.now();let frame=0,lastFrame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}frame=requestAnimationFrame(draw);if(now-lastFrame<33)return;lastFrame=now;resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6)}frame=requestAnimationFrame(draw);
  return ()=>{observer.disconnect();cancelAnimationFrame(frame);const ext=gl.getExtension('WEBGL_lose_context');if(ext)ext.loseContext()};
 }
 </script>
