@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08090d">
+<title>WebGL 4 — Visual Playground</title>
+<style>
+:root{color-scheme:dark;--bg:#08090d;--panel:#11141c;--line:#252b38;--muted:#929bad;--text:#edf1fa;--accent:#8bb8ff}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1b2740 0,transparent 48%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(1440px,calc(100% - 48px));margin:auto;padding:58px 0 70px}
+header{max-width:760px;margin-bottom:34px}.eyebrow{color:#8fb8ff;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+h1{font-size:clamp(38px,6vw,68px);letter-spacing:-.055em;margin:10px 0 12px;line-height:1}
+.intro{color:#aeb7c8;line-height:1.7;font-size:15px;max-width:680px}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.meta span{border:1px solid var(--line);background:#111722;border-radius:999px;padding:7px 11px;color:#c4ccda;font-size:11px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 15px}.toolbar strong{font-size:13px;letter-spacing:.12em;text-transform:uppercase}.toolbar small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pagination{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:28px 0 8px}.pagination button{min-width:38px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#111722;color:#c4ccda;font:12px ui-monospace,monospace;cursor:pointer}.pagination button[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}.pagination button:disabled{opacity:.35;cursor:not-allowed}.page-info{width:100%;text-align:center;color:var(--muted);font-size:11px;margin-top:5px}
+.card{min-width:0;background:linear-gradient(150deg,#151a25,#0e1118);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:border-color .2s,transform .2s}
+.card:hover{border-color:#526a91;transform:translateY(-2px)}
+.visual{height:210px;position:relative;background:#05070c;overflow:hidden}.visual canvas{width:100%;height:100%;display:block}
+.index{position:absolute;left:13px;top:12px;color:#aab5c8;font:10px ui-monospace,monospace;background:#080b12b8;border:1px solid #ffffff18;padding:5px 7px;border-radius:5px}
+.content{padding:16px 17px 18px}.content h2{font-size:16px;margin:0 0 6px;letter-spacing:-.02em}.content p{font-size:12px;line-height:1.55;color:#9da8ba;margin:0 0 13px;min-height:38px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tags span{font:10px ui-monospace,monospace;color:#a9c6f5;background:#1a2639;border:1px solid #263b59;border-radius:5px;padding:4px 6px}
+footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){main{width:calc(100% - 28px);padding-top:36px}.grid{grid-template-columns:1fr;gap:13px}.visual{height:220px}.toolbar{align-items:flex-start;flex-direction:column}}
+ .page-switch{display:flex;gap:8px;margin:18px 0 26px}.page-switch a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;color:#c4ccda;text-decoration:none;background:#111722;font:12px ui-monospace,monospace}.page-switch a[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="eyebrow">Real-time graphics laboratory</p>
+<h1>WebGL Playground 4</h1>
+<p class="intro">สำรวจว่า WebGL สร้างภาพเคลื่อนไหวและเอฟเฟกต์ได้หลากหลายแค่ไหน ตั้งแต่ Raymarching, Volumetric Lighting, Particle Physics, Fluid Fields ไปจนถึงวัตถุ 3D ที่สร้างจากสมการทางคณิตศาสตร์</p>
+<div class="meta"><span>18 ADVANCED STUDIES · 10 CARDS / PAGE</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
+</header>
+<div class="toolbar"><strong>Explore the possibilities</strong><small>แต่ละ Card คือแนวทางสร้างภาพคนละประเภท</small></div>
+<section class="grid" id="gallery" aria-label="WebGL visual examples"></section>\n<nav class="pagination" id="pagination" aria-label="WebGL pages"></nav>
+<footer>WEBGL PLAYGROUND · FRAGMENT SHADERS · REQUEST ANIMATION FRAME</footer>
+</main>
+<script>
+const demos=[
+['Mechanical Gearbox','ชุดเฟืองหลายขนาดขบกันและหมุนสัมพันธ์กัน','Gear Kinematics','Mechanical Motion',67],
+['Pendulum Wave','ลูกตุ้มหลายเส้นแกว่งเหลื่อมจังหวะจนเกิดรูปคลื่น','Harmonic Oscillation','Phase Difference',68],
+['Cellular Automaton','เซลล์บนกริดเปลี่ยนสถานะตามกฎของเพื่อนบ้าน','Cellular Automata','Discrete Simulation',69],
+['Möbius Strip','พื้นผิวแถบโมบิอุสที่บิดครึ่งรอบและวนกลับด้าน','Parametric Surface','Non-orientable Geometry',70],
+['Architectural Blueprint','แบบพิมพ์เขียวอาคารพร้อมเส้นโครงสร้างและมิติ','Technical Drawing','Line Geometry',71],
+['LiDAR Point Cloud','กลุ่มจุดสแกนสามมิติสร้างรูปร่างวัตถุและพื้นผิว','Point Cloud','3D Sampling',72],
+['Acoustic Standing Waves','คลื่นเสียงนิ่งแสดงตำแหน่งปมและป่องของการสั่น','Standing Waves','Acoustics',73],
+['Fractal Tree Growth','กิ่งไม้แตกแขนงเป็นโครงสร้างซ้ำตามกฎการเติบโต','Recursive Geometry','Branching Systems',74],
+['Trefoil Knot','เส้นโค้งปมสามแฉกหมุนในพื้นที่สามมิติ','Parametric Knot','3D Projection',75],
+['CT Scan Slices','ชั้นภาพตัดขวางซ้อนกันเผยรูปทรงภายในวัตถุ','Volumetric Slicing','Cross-section',76],
+['Woven Textile','เส้นด้ายแนวตั้งและแนวนอนสอดประสานเป็นผืนผ้า','Weave Pattern','Material Geometry',77],
+['Circuit Board','ลายวงจรอิเล็กทรอนิกส์ เส้นทองแดง จุดเชื่อมต่อ และสัญญาณวิ่งตามทาง','Procedural Routing','Signal Tracing',78],
+['Thermal Imaging','ภาพความร้อนจำลองแสดงอุณหภูมิของวัตถุด้วยแผนที่สี','Temperature Field','False-color Mapping',79],
+['Rubik’s Cube','ลูกบาศก์รูบิกสามมิติที่หมุนชั้นและเผยการจัดเรียงสี','3D Cube Geometry','Layer Rotation',80],
+['Gyroid Surface','พื้นผิวมินิมอลสามมิติที่เกิดจากสมการ implicit','Implicit Surface','Isosurface',81],
+['Weather Radar','เรดาร์ตรวจอากาศแบบ sweep แสดงกลุ่มฝนและความเข้ม','Radar Projection','Polar Sampling',82],
+['Seismograph','กราฟคลื่นแผ่นดินไหวหลายช่องพร้อมแรงสั่นที่เปลี่ยนตามเวลา','Signal Visualization','Waveform Tracing',83],
+['Barcode Scanner','ลำแสงสแกนผ่านบาร์โค้ดพร้อมการอ่านแถบข้อมูล','Binary Encoding','Scan Animation',84],
+];
+const gallery=document.getElementById('gallery');
+const pagination=document.getElementById('pagination');
+const perPage=10;
+const totalPages=Math.ceil(demos.length/perPage);
+let currentPage=1;
+let visibilityObserver=null;
+const activeCanvases=new Map();
+const queuedCanvases=new Set();
+let initQueue=[];
+let initTimer=0;
+function processInitQueue(){
+ if(initTimer||!initQueue.length)return;
+ initTimer=setTimeout(()=>{
+  initTimer=0;
+  const item=initQueue.shift();
+  if(item&&item.canvas.isConnected&&item.canvas.dataset.visible==='1'&&!activeCanvases.has(item.canvas)){
+   const dispose=initWebGL(item.canvas,demos[item.index][4]);
+   activeCanvases.set(item.canvas,dispose||null);
+  }
+  if(item)queuedCanvases.delete(item.canvas);
+  processInitQueue();
+ },120);
+}
+function clearPage(){
+ if(visibilityObserver){visibilityObserver.disconnect();visibilityObserver=null;}
+ if(initTimer){clearTimeout(initTimer);initTimer=0;}
+ initQueue=[];
+ queuedCanvases.clear();
+ activeCanvases.forEach(dispose=>{if(dispose)dispose()});
+ activeCanvases.clear();
+ gallery.replaceChildren();
+}
+function renderPage(page){
+ currentPage=Math.max(1,Math.min(totalPages,page));
+ clearPage();
+ const start=(currentPage-1)*perPage;
+ demos.slice(start,start+perPage).forEach((d,offset)=>{
+  const i=start+offset;
+  const card=document.createElement('article');card.className='card';
+  card.innerHTML='<div class="visual"><canvas aria-label="'+d[0]+' WebGL animation"></canvas><span class="index">WEBGL / '+String(i+1).padStart(2,'0')+'</span></div><div class="content"><h2>'+d[0]+'</h2><p>'+d[1]+'</p><div class="tags"><span>'+d[2]+'</span><span>'+d[3]+'</span></div></div>';
+  gallery.appendChild(card);
+ });
+ visibilityObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  const canvas=entry.target;
+  if(entry.isIntersecting){
+   canvas.dataset.visible='1';
+   if(!activeCanvases.has(canvas)&&!queuedCanvases.has(canvas)){
+    const index=Number(canvas.closest('.card').querySelector('.index').textContent.split('/')[1])-1;
+    queuedCanvases.add(canvas);
+    initQueue.push({canvas,index});
+    processInitQueue();
+   }
+  }else{
+   canvas.dataset.visible='0';
+   if(activeCanvases.has(canvas)){
+    const dispose=activeCanvases.get(canvas);if(dispose)dispose();activeCanvases.delete(canvas);
+   }
+  }
+ }),{rootMargin:'0px'});
+ gallery.querySelectorAll('.visual canvas').forEach(canvas=>visibilityObserver.observe(canvas));
+ renderPagination();
+}
+function renderPagination(){
+ pagination.replaceChildren();
+ const makeButton=(label,page,disabled=false,current=false)=>{
+  const button=document.createElement('button');button.type='button';button.textContent=label;button.disabled=disabled;
+  if(current)button.setAttribute('aria-current','page');
+  button.addEventListener('click',()=>{renderPage(page);document.querySelector('header').scrollIntoView({behavior:'smooth',block:'start'});});
+  pagination.appendChild(button);
+ };
+ makeButton('‹',currentPage-1,currentPage===1);
+ for(let page=1;page<=totalPages;page++)makeButton(String(page),page,false,page===currentPage);
+ makeButton('›',currentPage+1,currentPage===totalPages);
+ const info=document.createElement('div');info.className='page-info';
+ const first=(currentPage-1)*perPage+1,last=Math.min(currentPage*perPage,demos.length);
+ info.textContent='PAGE '+currentPage+' / '+totalPages+' · SHOWING '+first+'–'+last+' OF '+demos.length+' CARDS';
+ pagination.appendChild(info);
+}
+renderPage(1);
+function initWebGL(canvas,type){
+ const gl=canvas.getContext('webgl',{alpha:false,antialias:true,powerPreference:'low-power'});
+ if(!gl){canvas.parentElement.style.background='linear-gradient(135deg,#17233b,#070910)';return}
+ const vs='attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+ const fs=`precision highp float;varying vec2 uv;uniform float t;uniform vec2 res;uniform int mode;
+ float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.)),f.x),f.y);}
+ float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=mat2(1.6,-1.2,1.2,1.6)*p;a*=.5;}return v;}
+ vec3 palette(float x){return .5+.5*cos(6.28318*(x+vec3(0.,.33,.67)));}
+ void main(){vec2 q=(uv-.5)*vec2(res.x/res.y,1.);float tm=t;float n=0.;vec3 c=vec3(0.);float r=length(q);float a=atan(q.y,q.x);
+ if(mode==67){float a=atan(q.y,q.x);float r=length(q);float teeth=abs(sin(a*12.+r*18.-tm*.65));float ring=abs(r-(.27+.045*cos(a*12.+tm*.65)));float inner=abs(r-.105);float gear=exp(-ring*95.)+exp(-inner*75.);float spokes=pow(max(0.,cos(a*6.+tm*.65)),18.)*smoothstep(.22,.14,r);c=vec3(.012,.018,.028)+vec3(.42,.52,.62)*gear*.8+vec3(.7,.8,.9)*spokes*.5;c+=vec3(.16,.22,.3)*teeth*.08;}
+ else if(mode==68){for(int i=0;i<13;i++){float fi=float(i);float x=(fi-6.)*.075;float phase=tm*(.75+fi*.012)+fi*.52;float y=-.34+.58*cos(phase);float bob=exp(-length(q-vec2(x+.12*sin(phase),y))*38.);float string=exp(-abs(q.x-x)*90.)*step(y,q.y)*step(q.y,.36);c+=vec3(.3,.65,.95)*bob*.9+vec3(.12,.25,.4)*string*.55;}c+=vec3(.004,.009,.02);}
+ else if(mode==69){vec2 cell=floor((q+vec2(.5))*vec2(38.,24.));vec2 f=fract((q+vec2(.5))*vec2(38.,24.));float seed=hash(cell);float phase=mod(floor(tm*2.2)+seed*17.,5.);float alive=step(.52,hash(cell+floor(tm*2.2)*.13));float pulse=.45+.55*sin(tm*1.7+seed*6.28);float edge=step(.91,max(f.x,f.y))*step(.91,max(1.-f.x,1.-f.y));c=vec3(.003,.012,.018)+vec3(.08,.65,.42)*alive*pulse*.65+vec3(.18,.9,.65)*edge*.12;c+=vec3(.02,.08,.07)*phase*.08;}
+ else if(mode==70){float u=atan(q.y,q.x);float v=length(q);float twist=u+v*3.14159;float band=abs(v-(.23+.07*cos(twist*2.+tm*.12)));float seam=abs(sin(twist*8.+v*18.));float edge=exp(-band*55.);c=vec3(.006,.012,.026)+palette(twist*.12+tm*.008)*edge*.65;c+=vec3(.3,.7,1.)*exp(-seam*35.)*.14;c+=vec3(.5,.7,.9)*exp(-abs(v-.34)*70.)*.25;}
+ else if(mode==71){float grid=max(abs(fract(q.x*12.)-.5),abs(fract(q.y*12.)-.5));float major=max(abs(fract(q.x*3.)-.5),abs(fract(q.y*3.)-.5));float fine=1.-smoothstep(.475,.5,grid);float bold=1.-smoothstep(.46,.5,major);float building=1.-smoothstep(.012,.035,abs(q.y-.12*sin(q.x*5.)-.08));float dimension=1.-smoothstep(.008,.02,abs(q.x+.34));c=vec3(.003,.018,.035)+vec3(.04,.18,.28)*fine*.35+vec3(.08,.42,.62)*bold*.35;c+=vec3(.22,.72,.95)*(building*.65+dimension*.3);}
+ else if(mode==72){float points=0.;for(int i=0;i<180;i++){float fi=float(i);vec2 p=vec2(sin(fi*12.989+floor(tm*.25)*.17)*.36,cos(fi*7.23)*.28);p.x+=.08*sin(p.y*8.+tm*.2);float d=length(q-p);points+=exp(-d*260.)*(.35+hash(vec2(fi,2.))*.8);}float scan=exp(-abs(q.y-.28*sin(tm*.35))*90.);c=vec3(.003,.009,.02)+vec3(.08,.48,.72)*points*.42+vec3(.2,.8,1.)*scan*.18;}
+ else if(mode==73){float wave=sin(q.x*17.-tm*1.2)*cos(q.y*4.);float nodes=abs(wave);float lines=exp(-nodes*45.);float envelope=pow(max(0.,cos(q.x*2.2)),2.);float contour=1.-smoothstep(.015,.04,abs(q.y-.2*sin(q.x*17.-tm*1.2)));c=vec3(.003,.012,.028)+vec3(.08,.32,.58)*(.5+.5*wave)*.22;c+=vec3(.2,.72,1.)*(lines*.65+contour*.35)*envelope;}
+ else if(mode==74){float tree=0.;vec2 p=q-vec2(0.,-.48);float scale=1.;for(int i=0;i<8;i++){float d=abs(p.x);float branch=abs(p.y-.18);tree=max(tree,exp(-min(d,branch)*180.)/scale);p=mat2(.78,-.62,.62,.78)*p*1.72;p.x=abs(p.x)-.16;scale*=1.25;}c=vec3(.004,.014,.012)+vec3(.12,.48,.25)*tree*.7+vec3(.35,.75,.4)*pow(tree,2.)*.3;}
+ else if(mode==75){float d=1.;for(int i=0;i<72;i++){float fi=float(i)/72.;float a=fi*6.28318+tm*.18;vec3 p=vec3(.28*sin(a)+.12*sin(2.*a),.28*cos(a)-.12*cos(2.*a),.12*sin(3.*a));float dd=length(q-p.xy);d=min(d,dd);}float line=exp(-d*95.);c=vec3(.004,.01,.026)+palette(atan(q.y,q.x)*.12+tm*.015)*line*.8;c+=vec3(.3,.7,1.)*exp(-d*24.)*.22;}
+ else if(mode==76){float radius=length(q);float slice=abs(fract(radius*13.-tm*.08)-.5);float contour=1.-smoothstep(.025,.09,slice);float organ=exp(-((q.x*.85)*(q.x*.85)+(q.y*1.2)*(q.y*1.2))*8.);float inner=exp(-abs(radius-.23-.045*sin(atan(q.y,q.x)*4.))*65.);c=vec3(.003,.012,.022)+vec3(.08,.22,.32)*organ+vec3(.18,.62,.82)*contour*.35+vec3(.45,.8,1.)*inner*.5;}
+ else if(mode==77){float x=abs(sin(q.x*62.+sin(q.y*8.)*.16));float y=abs(sin(q.y*62.+sin(q.x*8.)*.16));float warp=sin(q.x*8.)*sin(q.y*8.);float over=step(.5,fract((q.x+q.y)*31.+warp));float threadX=exp(-x*24.);float threadY=exp(-y*24.);float shade=.55+.45*over;c=vec3(.018,.025,.04)+vec3(.12,.28,.42)*(threadX+threadY*.7)*shade;c+=vec3(.32,.55,.78)*(threadX*threadY)*.25;}
+ else if(mode==78){vec2 p=q*vec2(5.,3.);vec2 cell=floor(p);vec2 f=fract(p);float route=abs(sin((p.x+floor(p.y))*1.5708));float trace=exp(-abs(f.y-.5-.12*sin(f.x*6.))*90.)+exp(-abs(f.x-.5-.12*cos(f.y*6.))*90.);float pad=exp(-length(f-.5)*22.);float pulse=pow(max(0.,1.-abs(fract(f.x*.7-tm*.28)-.5)*2.),12.);c=vec3(.003,.012,.022)+vec3(.035,.16,.2)*route*.2+vec3(.12,.62,.48)*trace*.55+vec3(.75,.58,.24)*pad*.55+vec3(.3,.9,.75)*pulse*trace*.6;}
+ else if(mode==79){float heat=fbm(q*3.+vec2(tm*.035,-tm*.018));float hot=exp(-length(q-vec2(.22*sin(tm*.3),.08))*3.);float temp=clamp(heat*.55+hot*.65,0.,1.);vec3 thermal= mix(vec3(.015,.025,.22),vec3(.05,.45,.85),smoothstep(.05,.38,temp));thermal=mix(thermal,vec3(.95,.18,.025),smoothstep(.48,.82,temp));thermal=mix(thermal,vec3(1.,.88,.35),smoothstep(.82,.98,temp));c=thermal;}
+ else if(mode==80){vec2 p=q*vec2(1.1,.95);float face=max(abs(p.x),max(abs(p.y),abs(p.x+p.y)*.72));float grid=max(abs(fract(p.x*3.)-.5),abs(fract(p.y*3.)-.5));float tile=step(.46,grid);float turn=.5+.5*sin(tm*.35);float edge=1.-smoothstep(.018,.045,abs(face-.34));float colors=mod(floor((p.x+1.)*3.)+floor((p.y+1.)*3.),3.);vec3 cube=mix(vec3(.04,.16,.55),vec3(.9,.12,.035),step(1.,colors));cube=mix(cube,vec3(.08,.62,.24),step(2.,colors));c=vec3(.003,.008,.018)+cube*(1.-tile*.35)*edge;c+=vec3(.25,.55,.9)*exp(-abs(face-.34)*45.)*.35;c*=.75+.25*turn;}
+ else if(mode==81){vec3 p=vec3(q*2.,0.);float v=sin(p.x)*cos(p.y)+sin(p.y)*cos(p.z)+sin(p.z)*cos(p.x);float surface=exp(-abs(v)*18.);float stripes=abs(sin(v*24.+tm*.15));c=vec3(.004,.012,.026)+palette(v*.13+tm*.01)*surface*.65+vec3(.15,.55,.85)*surface*stripes*.2;}
+ else if(mode==82){float a=atan(q.y,q.x);float r=length(q);float sweep=mod(a-tm*.55,6.28318);float beam=exp(-sweep*8.)*step(sweep,.8);float rain=fbm(vec2(a*5.,r*11.));float cells=smoothstep(.48,.72,rain)*smoothstep(.8,.18,r);float rings=1.-smoothstep(.008,.025,abs(fract(r*5.)-.5));c=vec3(.003,.014,.025)+vec3(.02,.22,.12)*cells*.5+vec3(.1,.85,.38)*cells*beam*.85+vec3(.1,.35,.25)*rings*.18;}
+ else if(mode==83){float signal=0.;for(int i=0;i<4;i++){float fi=float(i);float y=(fi-1.5)*.22;float wave=.018*sin(q.x*18.-tm*(1.1+fi*.12)+fi)+.012*sin(q.x*39.-tm*.7);float spike=exp(-pow((q.x-.18*sin(tm*.3+fi))/ .018,2.))*.16;float trace=exp(-abs(q.y-y-wave-spike)*180.);signal+=trace*(.45+fi*.12);}float grid=max(abs(fract(q.x*12.)-.5),abs(fract(q.y*7.)-.5));c=vec3(.003,.014,.016)+vec3(.025,.12,.1)*(1.-smoothstep(.47,.5,grid))*.3+vec3(.2,.95,.62)*signal;}
+ else if(mode==84){float bars=0.;for(int i=0;i<31;i++){float fi=float(i);float w=step(.48,hash(vec2(fi,2.)))*.012+.004;float x=-.36+fi*.024;float line=1.-smoothstep(w,w+.003,abs(q.x-x));bars=max(bars,line*step(-.22,q.y)*step(q.y,.22));}float scan=exp(-abs(q.y-.28*sin(tm*1.3))*90.)*step(abs(q.x),.4);c=vec3(.003,.006,.014)+vec3(.55,.68,.82)*bars*.72+vec3(.12,.85,1.)*scan*.8;} float vignette=1.-smoothstep(.35,.95,r);c*=.55+vignette*.45;gl_FragColor=vec4(c,1.);}`;
+ function shader(kind,src){const s=gl.createShader(kind);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
+ const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);if(!v||!f)return;
+ const program=gl.createProgram();gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))return;
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+ gl.useProgram(program);const p=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(p);gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
+ const timeLoc=gl.getUniformLocation(program,'t'),resLoc=gl.getUniformLocation(program,'res'),modeLoc=gl.getUniformLocation(program,'mode');gl.uniform1i(modeLoc,type);
+ const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=1,w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
+ const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
+ const start=performance.now();let frame=0,lastFrame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}frame=requestAnimationFrame(draw);if(now-lastFrame<33)return;lastFrame=now;resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6)}frame=requestAnimationFrame(draw);
+ return ()=>{observer.disconnect();cancelAnimationFrame(frame);const ext=gl.getExtension('WEBGL_lose_context');if(ext)ext.loseContext()};
+}
+</script>
+</body></html>
