@@ -172,7 +172,7 @@ function initWebGL(canvas,type){
  const timeLoc=gl.getUniformLocation(program,'t'),resLoc=gl.getUniformLocation(program,'res'),modeLoc=gl.getUniformLocation(program,'mode');gl.uniform1i(modeLoc,type);
  const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=1,w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
  const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
- const start=performance.now();let frame=0,lastFrame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}frame=requestAnimationFrame(draw);if(now-lastFrame<33)return;lastFrame=now;resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6)}frame=requestAnimationFrame(draw);
+ const start=performance.now();let frame=0,lastFrame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}frame=requestAnimationFrame(draw);if(now-lastFrame<1000/30)return;lastFrame=now;resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6)}frame=requestAnimationFrame(draw);
  return ()=>{observer.disconnect();cancelAnimationFrame(frame);const ext=gl.getExtension('WEBGL_lose_context');if(ext)ext.loseContext()};
 }
 </script>
