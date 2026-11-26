@@ -31,7 +31,7 @@ footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
 <p class="eyebrow">Real-time graphics laboratory</p>
 <h1>WebGL Playground</h1>
 <p class="intro">สำรวจว่า WebGL สร้างภาพเคลื่อนไหวและเอฟเฟกต์ได้หลากหลายแค่ไหน ตั้งแต่ Raymarching, Volumetric Lighting, Particle Physics, Fluid Fields ไปจนถึงวัตถุ 3D ที่สร้างจากสมการทางคณิตศาสตร์</p>
-<div class="meta"><span>15 ADVANCED STUDIES</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
+<div class="meta"><span>26 ADVANCED STUDIES</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
 </header>
 <div class="toolbar"><strong>Explore the possibilities</strong><small>แต่ละ Card คือแนวทางสร้างภาพคนละประเภท</small></div>
 <section class="grid" id="gallery" aria-label="WebGL visual examples"></section>
@@ -44,7 +44,6 @@ const demos=[
 ['Fluid Dynamics','ของไหลที่บิดตัวด้วยสนามเวกเตอร์และความปั่นป่วน','Flow Field','Domain Warping'],
 ['Dynamic Ocean','คลื่นหลายความถี่พร้อมแสงสะท้อนและผิวน้ำจำลอง','Wave Layers','Specular Lighting'],
 ['Raymarched Landscape','ภูมิประเทศ 3D พร้อมระยะชัดลึกและหมอกตามระยะ','Raymarching','Height Field'],
-['Procedural Galaxy','กาแล็กซีเกลียวที่มีแขนฝุ่นและดาวจำนวนมาก','Particle Disks','Polar Coordinates'],
 ['Volumetric Aurora','ม่านแสงเหนือหลายชั้นที่ไหลและเปลี่ยนรูป','Layered Fields','Light Scattering'],
 ['Fire & Heat','เปลวไฟจำลองการไหลขึ้นพร้อมแกนความร้อน','Flow Noise','Heat Gradient'],
 ['Molten Lava','พื้นผิวลาวาพร้อมรอยแตกและขอบความร้อน','Cellular Field','Emission'],
@@ -53,14 +52,34 @@ const demos=[
 ['Energy Wormhole','อุโมงค์พลังงานบิดโค้งด้วยพิกัดเชิงขั้ว','Polar Raymarch','Chromatic Glow'],
 ['Hyperspace','ดาวและเศษอนุภาคพุ่งผ่านกล้องแบบ 3D','3D Particles','Motion Streaks'],
 ['Volumetric Storm Clouds','เมฆพายุหลายชั้นพร้อมแสงกระจายภายใน','3D Density Field','Light Marching'],
-['Holographic 3D Object','วัตถุทรงกลม 3D พร้อม Fresnel แสงขอบและเส้นสแกน','SDF Raymarching','Fresnel Lighting']
+['Holographic 3D Object','วัตถุทรงกลม 3D พร้อม Fresnel แสงขอบและเส้นสแกน','SDF Raymarching','Fresnel Lighting'],
+['Glass Refraction','ทรงแก้วโปร่งใสที่หักเหแสงและบิดเบือนฉากด้านหลัง','Screen Refraction','Fresnel'],
+['Metaballs','มวลของเหลวที่หลอมรวมและแยกออกจากกันอย่างต่อเนื่อง','Signed Distance Fields','Smooth Union'],
+['Cloth Simulation','ผืนผ้าจำลองที่พลิ้วไหวด้วยคลื่นและแรงลม','Wave Deformation','Surface Shading'],
+['Flocking Simulation','ฝูงอนุภาคที่เคลื่อนที่ประสานกันตามกฎฝูง','Boids Behavior','Procedural Particles'],
+['Procedural Terrain','ภูมิประเทศหลายระดับพร้อมชั้นหินและแนวสันเขา','Fractal Heightmap','Terrain Shading'],
+['Particle Vortex','กระแสอนุภาคจำนวนมากหมุนวนเข้าสู่ใจกลาง','Curl-like Flow','Particle Trails'],
+['Liquid Splash','มงกุฎน้ำและหยดของเหลวจากแรงกระแทก','Radial Waves','Surface Ripples'],
+['Holographic Sculpture','ประติมากรรมเรขาคณิตสามมิติแบบโฮโลแกรม','SDF Geometry','Holographic Scan'],
+['3D Fractal','รูปทรงแฟร็กทัลสามมิติที่หมุนและเผยรายละเอียด','Distance Estimation','Raymarching'],
+['Plasma & Lightning','เส้นสายฟ้าแตกแขนงและสนามพลาสมาเคลื่อนไหว','Fractal Noise','Electric Emission'],
+['Magnetic Field','เส้นสนามแม่เหล็กโค้งวนรอบขั้วพลังงาน','Field Line Tracing','Vector Field'],
+['Procedural City','เมืองสามมิติที่มีอาคารหลากหลายและแสงหน้าต่าง','Grid Instancing','Procedural Architecture']
 ];
 const gallery=document.getElementById('gallery');
 demos.forEach((d,i)=>{
  const card=document.createElement('article');card.className='card';
  card.innerHTML='<div class="visual"><canvas aria-label="'+d[0]+' WebGL animation"></canvas><span class="index">WEBGL / '+String(i+1).padStart(2,'0')+'</span></div><div class="content"><h2>'+d[0]+'</h2><p>'+d[1]+'</p><div class="tags"><span>'+d[2]+'</span><span>'+d[3]+'</span></div></div>';
- gallery.appendChild(card);initWebGL(card.querySelector('canvas'),i);
+ gallery.appendChild(card);
 });
+// Initialize only visible cards to stay within browser WebGL context limits.
+const activeCanvases=new Map();
+const visibilityObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+ const canvas=entry.target;
+ if(entry.isIntersecting&&!activeCanvases.has(canvas))activeCanvases.set(canvas,initWebGL(canvas,Number(canvas.closest('.card').querySelector('.index').textContent.split('/')[1])-1));
+ else if(!entry.isIntersecting&&activeCanvases.has(canvas)){const dispose=activeCanvases.get(canvas);if(dispose)dispose();activeCanvases.delete(canvas)}
+}),{rootMargin:'120px 0px'});
+document.querySelectorAll('.visual canvas').forEach(canvas=>visibilityObserver.observe(canvas));
 function initWebGL(canvas,type){
  const gl=canvas.getContext('webgl',{alpha:false,antialias:true,powerPreference:'low-power'});
  if(!gl){canvas.parentElement.style.background='linear-gradient(135deg,#17233b,#070910)';return}
@@ -85,7 +104,21 @@ function initWebGL(canvas,type){
  else if(mode==11){float v=fract(1./(r*5.+.18)-tm*.55);float ring=pow(max(0.,1.-abs(v-.5)*2.),10.);float ray=pow(max(0.,cos(a*12.+tm*.15)),18.);c=vec3(.008,.012,.03)+palette(a/6.28318+tm*.025)*(ring*.7+ray*.16);}
  else if(mode==12){vec2 p=q*vec2(1.,res.y/res.x);float z=fract(tm*.28);float stars=0.;for(int i=0;i<4;i++){float fi=float(i);vec2 cell=floor(p*(8.+fi*8.)+vec2(0.,tm*(.4+fi*.2)));vec2 f=fract(p*(8.+fi*8.)+vec2(0.,tm*(.4+fi*.2)))-.5;stars+=pow(max(0.,1.-length(f)*2.),18.)*hash(cell+fi*13.);}c=vec3(.004,.008,.025)+vec3(.35,.65,1.)*stars;}
  else if(mode==13){float density=0.;float light=0.;for(int k=0;k<9;k++){float z=float(k)/9.;vec2 p=q*(1.1+z*.8)+vec2(tm*.012*z,-tm*.006);float d=fbm(p*3.+z*2.);float layer=smoothstep(.48-z*.08,.78,d)*smoothstep(-.7,.15,q.y+z*.32);density+=layer*(1.-z*.055);light+=smoothstep(.55,.85,fbm(p*3.+vec2(.12,.08)))*layer;}float silver=pow(max(0.,density*.14),1.35);c=mix(vec3(.006,.014,.035),vec3(.48,.59,.72),clamp(silver,0.,.9));c+=vec3(.32,.43,.58)*light*.11;}
- else {vec3 ro=vec3(0.,0.,-3.2);vec3 rd=normalize(vec3(q,1.8));float b=dot(ro,rd);float h=b*b-dot(ro,ro)+1.05;float d=-b-sqrt(max(0.,h));if(h>0.&&d>0.){vec3 pos=ro+rd*d;vec3 normal=normalize(pos);vec3 light=normalize(vec3(-.5,.7,-.8));float diffuse=max(0.,dot(normal,light));float fres=pow(1.-max(0.,dot(-rd,normal)),3.);float scan=sin(pos.y*42.-tm*3.)*.5+.5;float longitude=atan(pos.z,pos.x);float grid=step(.94,fract((longitude+3.14159)*13.));c=vec3(.015,.08,.15)+palette(longitude*.12+tm*.025)*(.12+diffuse*.3);c+=vec3(.12,.8,1.)*(fres*.8+grid*.22+scan*.05);c*=.7+diffuse*.5;}else{float scan=sin(uv.y*res.y*.35-tm*3.)*.5+.5;c=vec3(.008,.018,.035)+vec3(.02,.12,.2)*scan*.15;}}
+
+ else if(mode==15){float d=length(q-vec2(.12*sin(tm*.35),.02*cos(tm*.4)));float lens=smoothstep(.43,.39,d);float edge=pow(max(0.,1.-abs(d-.34)*18.),3.);vec2 bend=q*(1.+.12/(d+.18));float bg=fbm(bend*4.+tm*.025);vec3 refr=palette(bg*.42+tm*.008)*.32+vec3(.025,.06,.1);float fres=pow(clamp(d/.42,0.,1.),5.);c=mix(refr,vec3(.015,.025,.04),lens);c+=vec3(.5,.8,1.)*(edge*.65+fres*.12);c+=vec3(.8,.95,1.)*pow(max(0.,1.-length(q-vec2(-.13,.18))*18.),18.)*.8;}
+ else if(mode==16){float d1=length(q-vec2(.22*sin(tm*.7),.12*cos(tm*.5)))-.24;float d2=length(q-vec2(-.2*cos(tm*.6),-.12*sin(tm*.8)))-.27;float d3=length(q-vec2(.02*sin(tm*.4),.28*sin(tm*.65)))-.2;float k=.16;float h=max(k-abs(d1-d2),0.)/k;float d=min(d1,d2)-h*h*k*.25;h=max(k-abs(d-d3),0.)/k;d=min(d,d3)-h*h*k*.25;float glow=exp(-abs(d)*24.);float inside=1.-smoothstep(-.015,.018,d);c=vec3(.008,.015,.035)+palette(d*2.+tm*.035)*inside*.65+vec3(.12,.65,.95)*glow*.7;}
+ else if(mode==17){float fold=abs(fract((q.x*.8+sin(q.y*2.+tm)*.12)*3.)-.5);float cloth=sin(q.x*9.+sin(q.y*4.+tm*1.3)*1.4)*.5+.5;float seam=1.-smoothstep(.015,.045,min(fold,abs(fract((q.y+sin(q.x*2.+tm)*.08)*3.)-.5)));float highlight=pow(max(0.,cloth),7.);c=vec3(.012,.025,.055)+vec3(.12,.3,.55)*(.2+cloth*.45)+vec3(.45,.78,1.)*seam*.42+vec3(.35,.65,.9)*highlight*.35;}
+ else if(mode==18){for(int i=0;i<46;i++){float fi=float(i);float phase=tm*(.18+hash(vec2(fi,2.))*.22)+fi*.71;vec2 center=vec2(sin(phase+sin(fi*.31))*(.22+.15*hash(vec2(fi,4.))),cos(phase*.83+fi)*.34);float d=length(q-center);float tail=pow(max(0.,1.-abs(q.y-center.y)*2.8),3.);c+=palette(fi*.037+tm*.018)*(.008/(d*d+.002))*tail;}c+=vec3(.004,.009,.022);}
+ else if(mode==19){float h=fbm(q*vec2(3.,5.)+tm*.035);float ridge=abs(h-.5);float strata=sin((q.y*3.+h*1.8)*15.);float snow=smoothstep(.66,.82,h+strata*.025);c=mix(vec3(.018,.055,.065),vec3(.22,.3,.28),h);c=mix(c,vec3(.72,.79,.76),snow*.8);c*=.55+.45*max(0.,dot(normalize(vec3(.4,1.,-.3)),vec3(0.,1.,0.)));c+=vec3(.025,.08,.09)*pow(ridge,2.);}
+ else if(mode==20){for(int i=0;i<55;i++){float fi=float(i);float a=fi*2.399+tm*(.18+fi*.0008);float radius=.035+fract(fi*.618)*.5;float spin=a+radius*5.;vec2 pos=vec2(cos(spin),sin(spin))*radius;float d=length(q-pos);float streak=exp(-d*85.)*(.3+radius);c+=palette(fi*.061+tm*.025)*streak*.22;}float core=exp(-r*9.);c+=vec3(.12,.45,.95)*core*.4;}
+ else if(mode==21){float dist=length(q);float wave=sin(dist*23.-tm*3.2)*exp(-dist*2.2);float crown=pow(max(0.,sin(a*18.+tm*.35)),5.)*smoothstep(.12,.42,dist)*smoothstep(.65,.35,dist);float rings=pow(max(0.,1.-abs(wave)*.5),14.)*smoothstep(.7,.12,dist);c=vec3(.004,.025,.045)+vec3(.015,.3,.48)*(.25+max(0.,wave)*.35);c+=vec3(.25,.75,1.)*(rings*.5+crown*.75);c+=vec3(.5,.8,1.)*pow(max(0.,1.-abs(dist-.28)*35.),8.);}
+ else if(mode==22){float box=max(abs(q.x)*.75+abs(q.y)*.2,abs(q.y)*.75)-.24;float ring=abs(length(q)-.32);float scan=sin((q.x+q.y)*55.-tm*3.)*.5+.5;float lines=1.-smoothstep(.008,.025,min(abs(fract((q.x+q.y*.4)*9.)-.5),abs(fract((q.y-q.x*.4)*9.)-.5)));float glow=exp(-abs(box)*35.)+exp(-ring*38.);c=vec3(.005,.018,.04)+vec3(.08,.65,.9)*glow*.45+palette(atan(q.y,q.x)/6.283+tm*.02)*lines*.22;c+=vec3(.15,.75,1.)*scan*.05;}
+ else if(mode==23){vec3 ro=vec3(0.,0.,-3.);vec3 rd=normalize(vec3(q,1.65));float travel=0.;float trap=0.;for(int j=0;j<48;j++){vec3 p=ro+rd*travel;vec3 z=p;float scale=1.;for(int k=0;k<5;k++){z=abs(z)/max(dot(z,z),.18)-vec3(.72,.65,.8);scale*=2.1;}float d=length(z)/scale-.012;trap=min(trap,abs(d));travel+=max(.012,d*.6);if(d<.002||travel>6.)break;}float glow=exp(-trap*24.);c=vec3(.006,.01,.03)+palette(trap*2.+tm*.015)*glow*.8;c+=vec3(.08,.35,.8)*exp(-travel*.7)*.12;}
+ else if(mode==24){float bolt=abs(q.x-.18*sin(q.y*17.+tm*2.)-.08*sin(q.y*39.-tm*1.4));float branch=abs(q.x+.23*sin(q.y*13.-tm)-.04*sin(q.y*31.+tm));float arc=exp(-bolt*95.)+exp(-branch*125.)*.65;float plasma=fbm(q*5.+tm*.18);c=vec3(.008,.008,.035)+palette(plasma*.35+tm*.02)*plasma*.28;c+=vec3(.25,.55,1.)*arc*1.5;c+=vec3(.55,.8,1.)*pow(arc,3.)*1.4;}
+ else if(mode==25){float field=atan(q.y,q.x)+.65*sin(r*8.-tm*.35);float lines=abs(sin(field*7.+r*9.));float filaments=1.-smoothstep(.02,.13,lines);float poles=exp(-length(q-vec2(0.,.34))*12.)+exp(-length(q+vec2(0.,.34))*12.);float loops=pow(max(0.,cos(field*5.+r*6.)),14.)*smoothstep(.65,.12,r);c=vec3(.004,.012,.03)+vec3(.08,.3,.62)*filaments*.38+vec3(.18,.65,1.)*(loops*.45+poles*.4);}
+ else if(mode==26){vec2 cell=floor(q*vec2(12.,7.));vec2 f=fract(q*vec2(12.,7.));float seed=hash(cell);float height=.18+seed*.7;float building=step(f.y,height)*step(.08,f.x)*step(f.x,.92);float windows=step(.55,hash(floor(f*vec2(5.,9.))+cell*3.))*step(.12,fract(f.y*9.));float lit=building*windows*(.45+.55*(.5+.5*sin(tm*1.7+seed*9.)));c=vec3(.004,.008,.022)+vec3(.025,.07,.13)*building+vec3(1.,.55,.2)*lit*.85;c+=vec3(.025,.08,.12)*smoothstep(-.5,.5,q.y);}
+
+ else if(mode==14){vec3 ro=vec3(0.,0.,-3.2);vec3 rd=normalize(vec3(q,1.8));float b=dot(ro,rd);float h=b*b-dot(ro,ro)+1.05;float d=-b-sqrt(max(0.,h));if(h>0.&&d>0.){vec3 pos=ro+rd*d;vec3 normal=normalize(pos);vec3 light=normalize(vec3(-.5,.7,-.8));float diffuse=max(0.,dot(normal,light));float fres=pow(1.-max(0.,dot(-rd,normal)),3.);float scan=sin(pos.y*42.-tm*3.)*.5+.5;float longitude=atan(pos.z,pos.x);float grid=step(.94,fract((longitude+3.14159)*13.));c=vec3(.015,.08,.15)+palette(longitude*.12+tm*.025)*(.12+diffuse*.3);c+=vec3(.12,.8,1.)*(fres*.8+grid*.22+scan*.05);c*=.7+diffuse*.5;}else{float scan=sin(uv.y*res.y*.35-tm*3.)*.5+.5;c=vec3(.008,.018,.035)+vec3(.02,.12,.2)*scan*.15;}}
  float vignette=1.-smoothstep(.35,.95,r);c*=.55+vignette*.45;gl_FragColor=vec4(c,1.);}`;
  function shader(kind,src){const s=gl.createShader(kind);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
  const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);if(!v||!f)return;
@@ -95,7 +128,8 @@ function initWebGL(canvas,type){
  const timeLoc=gl.getUniformLocation(program,'t'),resLoc=gl.getUniformLocation(program,'res'),modeLoc=gl.getUniformLocation(program,'mode');gl.uniform1i(modeLoc,type);
  const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
  const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
- const start=performance.now();function draw(now){if(!canvas.isConnected){observer.disconnect();return}resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);requestAnimationFrame(draw)}requestAnimationFrame(draw);
+ const start=performance.now();let frame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);frame=requestAnimationFrame(draw)}frame=requestAnimationFrame(draw);
+ return ()=>{observer.disconnect();cancelAnimationFrame(frame);const ext=gl.getExtension('WEBGL_lose_context');if(ext)ext.loseContext()};
 }
 </script>
 </body></html>
