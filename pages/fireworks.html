@@ -209,14 +209,13 @@
 
       // Launch exactly 20 rockets together as one synchronized salvo.
       function launchBatch() {
-        // Keep all launch X positions within the central 60% of the screen.
-        const minX = width * 0.20;
-        const maxX = width * 0.80;
+        // All rockets rise from exactly three fixed launch points.
+        const launchPoints = [width * 0.30, width * 0.50, width * 0.70];
         const usedCoordinates = new Set();
         for (let i = 0; i < 70; i++) {
-          let x, targetY, coordinate;
+          const x = Math.round(launchPoints[i % launchPoints.length]);
+          let targetY, coordinate;
           do {
-            x = Math.round(minX + Math.random() * (maxX - minX));
             targetY = Math.round(height * (0.20 + Math.random() * 0.30));
             coordinate = `${x},${targetY}`;
           } while (usedCoordinates.has(coordinate));
