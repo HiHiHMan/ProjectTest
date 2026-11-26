@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08090d">
+<title>WebGL 6 — Nature Studies</title>
+<style>
+:root{color-scheme:dark;--bg:#08090d;--panel:#11141c;--line:#252b38;--muted:#929bad;--text:#edf1fa;--accent:#8bb8ff}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1b2740 0,transparent 48%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(1440px,calc(100% - 48px));margin:auto;padding:58px 0 70px}
+header{max-width:760px;margin-bottom:34px}.eyebrow{color:#8fb8ff;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+h1{font-size:clamp(38px,6vw,68px);letter-spacing:-.055em;margin:10px 0 12px;line-height:1}
+.intro{color:#aeb7c8;line-height:1.7;font-size:15px;max-width:680px}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.meta span{border:1px solid var(--line);background:#111722;border-radius:999px;padding:7px 11px;color:#c4ccda;font-size:11px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 15px}.toolbar strong{font-size:13px;letter-spacing:.12em;text-transform:uppercase}.toolbar small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pagination{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:28px 0 8px}.pagination button{min-width:38px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#111722;color:#c4ccda;font:12px ui-monospace,monospace;cursor:pointer}.pagination button[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}.pagination button:disabled{opacity:.35;cursor:not-allowed}.page-info{width:100%;text-align:center;color:var(--muted);font-size:11px;margin-top:5px}
+.card{min-width:0;background:linear-gradient(150deg,#151a25,#0e1118);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:border-color .2s,transform .2s}
+.card:hover{border-color:#526a91;transform:translateY(-2px)}
+.visual{height:210px;position:relative;background:#05070c;overflow:hidden}.visual canvas{width:100%;height:100%;display:block}
+.index{position:absolute;left:13px;top:12px;color:#aab5c8;font:10px ui-monospace,monospace;background:#080b12b8;border:1px solid #ffffff18;padding:5px 7px;border-radius:5px}
+.content{padding:16px 17px 18px}.content h2{font-size:16px;margin:0 0 6px;letter-spacing:-.02em}.content p{font-size:12px;line-height:1.55;color:#9da8ba;margin:0 0 13px;min-height:38px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tags span{font:10px ui-monospace,monospace;color:#a9c6f5;background:#1a2639;border:1px solid #263b59;border-radius:5px;padding:4px 6px}
+footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){main{width:calc(100% - 28px);padding-top:36px}.grid{grid-template-columns:1fr;gap:13px}.visual{height:220px}.toolbar{align-items:flex-start;flex-direction:column}}
+ .page-switch{display:flex;gap:8px;margin:18px 0 26px}.page-switch a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;color:#c4ccda;text-decoration:none;background:#111722;font:12px ui-monospace,monospace}.page-switch a[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}
+.page-switch{display:flex;gap:8px;margin:18px 0 26px}.page-switch a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;color:#c4ccda;text-decoration:none;background:#111722;font:12px ui-monospace,monospace}.page-switch a[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="eyebrow">Real-time graphics laboratory</p>
+<h1>WebGL Playground 6</h1>
+<p class="intro">สำรวจธรรมชาติผ่านภาพจำลองแบบเรียลไทม์ ตั้งแต่ป่าไม้ ภูเขา น้ำตก กระแสน้ำ ปะการัง พายุ แสงเหนือ ไปจนถึงการเติบโตของดอกไม้</p>
+<div class="meta"><span>10 NATURE STUDIES · 10 CARDS / PAGE</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
+</header>
+<nav class="page-switch" aria-label="WebGL collections"><a href="./webgl.html">1</a><a href="./webgl2.html">2</a><a href="./webgl3.html">3</a><a href="./webgl4.html">4</a><a href="./webgl5.html">5</a><a href="./webgl6.html" aria-current="page">6</a></nav>
+<div class="toolbar"><strong>Explore the possibilities</strong><small>แต่ละ Card คือแนวทางสร้างภาพคนละประเภท</small></div>
+<section class="grid" id="gallery" aria-label="WebGL visual examples"></section>\n<nav class="pagination" id="pagination" aria-label="WebGL pages"></nav>
+<footer>WEBGL PLAYGROUND · FRAGMENT SHADERS · REQUEST ANIMATION FRAME</footer>
+</main>
+<script>
+const demos=[
+['Forest Canopy','เรือนยอดป่าไม้หลายชั้นไหวตามแรงลมและแสงลอดผ่านใบไม้','Procedural Foliage','Wind Simulation',163],
+['Mountain Sunrise','แนวเทือกเขาซ้อนชั้นพร้อมแสงอาทิตย์ค่อย ๆ โผล่พ้นขอบฟ้า','Layered Terrain','Atmospheric Scattering',164],
+['Waterfall','สายน้ำตกไหลลงตามหน้าผาพร้อมละอองน้ำฟุ้งกระจาย','Flow Simulation','Water Particles',165],
+['Ocean Currents','กระแสน้ำทะเลไหลวนเป็นริ้วพร้อมคลื่นหลายทิศทาง','Vector Flow','Ocean Surface',166],
+['Fireflies in the Woods','หิ่งห้อยเรืองแสงลอยเคลื่อนที่อย่างอิสระในป่ายามค่ำ','Particle System','Organic Motion',167],
+['Coral Reef','แนวปะการังแตกกิ่งก้านพร้อมสิ่งมีชีวิตเรืองแสงใต้ทะเล','Branching Growth','Bioluminescence',168],
+['Thunderstorm Clouds','เมฆพายุหมุนวนหนาทึบพร้อมสายฟ้าแลบเป็นช่วง ๆ','Volumetric Noise','Lightning Emission',169],
+['Aurora Sky','ม่านแสงเหนือพลิ้วไหวเป็นริ้วบนท้องฟ้ายามค่ำคืน','Domain Warping','Atmospheric Light',170],
+['Desert Dunes','เนินทรายโค้งซ้อนชั้นพร้อมลมพัดริ้วทรายบนผิวเนิน','Procedural Terrain','Wind Erosion',171],
+['Blooming Flower','ดอกไม้ค่อย ๆ คลี่กลีบออกจากใจกลางด้วยรูปทรงพาราเมตริก','Parametric Petals','Growth Animation',172]
+];
+const MAX_CARDS_PER_FILE=30;
+const CARDS_PER_PAGE=10;
+if(demos.length>MAX_CARDS_PER_FILE){
+ console.error('WebGL page overflow:',demos.length,'cards. Move cards after index 30 to the next webgl file.');
+}
+const gallery=document.getElementById('gallery');
+const pagination=document.getElementById('pagination');
+const perPage=CARDS_PER_PAGE;
+const totalPages=Math.ceil(Math.min(demos.length,MAX_CARDS_PER_FILE)/perPage);
+let currentPage=1;
+let visibilityObserver=null;
+const activeCanvases=new Map();
+const queuedCanvases=new Set();
+let initQueue=[];
+let initTimer=0;
+function processInitQueue(){
+ if(initTimer||!initQueue.length)return;
+ initTimer=setTimeout(()=>{
+  initTimer=0;
+  const item=initQueue.shift();
+  if(item&&item.canvas.isConnected&&item.canvas.dataset.visible==='1'&&!activeCanvases.has(item.canvas)){
+   const dispose=initWebGL(item.canvas,demos[item.index][4]);
+   activeCanvases.set(item.canvas,dispose||null);
+  }
+  if(item)queuedCanvases.delete(item.canvas);
+  processInitQueue();
+ },120);
+}
+function clearPage(){
+ if(visibilityObserver){visibilityObserver.disconnect();visibilityObserver=null;}
+ if(initTimer){clearTimeout(initTimer);initTimer=0;}
+ initQueue=[];
+ queuedCanvases.clear();
+ activeCanvases.forEach(dispose=>{if(dispose)dispose()});
+ activeCanvases.clear();
+ gallery.replaceChildren();
+}
+function renderPage(page){
+ currentPage=Math.max(1,Math.min(totalPages,page));
+ clearPage();
+ const start=(currentPage-1)*perPage;
+ demos.slice(start,Math.min(start+perPage,MAX_CARDS_PER_FILE)).forEach((d,offset)=>{
+  const i=start+offset;
+  const card=document.createElement('article');card.className='card';
+  card.innerHTML='<div class="visual"><canvas aria-label="'+d[0]+' WebGL animation"></canvas><span class="index">WEBGL / '+String(i+1).padStart(2,'0')+'</span></div><div class="content"><h2>'+d[0]+'</h2><p>'+d[1]+'</p><div class="tags"><span>'+d[2]+'</span><span>'+d[3]+'</span></div></div>';
+  gallery.appendChild(card);
+ });
+ visibilityObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  const canvas=entry.target;
+  if(entry.isIntersecting){
+   canvas.dataset.visible='1';
+   if(!activeCanvases.has(canvas)&&!queuedCanvases.has(canvas)){
+    const index=Number(canvas.closest('.card').querySelector('.index').textContent.split('/')[1])-1;
+    queuedCanvases.add(canvas);
+    initQueue.push({canvas,index});
+    processInitQueue();
+   }
+  }else{
+   canvas.dataset.visible='0';
+   if(activeCanvases.has(canvas)){
+    const dispose=activeCanvases.get(canvas);if(dispose)dispose();activeCanvases.delete(canvas);
+   }
+  }
+ }),{rootMargin:'0px'});
+ gallery.querySelectorAll('.visual canvas').forEach(canvas=>visibilityObserver.observe(canvas));
+ renderPagination();
+}
+function renderPagination(){
+ pagination.replaceChildren();
+ const makeButton=(label,page,disabled=false,current=false)=>{
+  const button=document.createElement('button');button.type='button';button.textContent=label;button.disabled=disabled;
+  if(current)button.setAttribute('aria-current','page');
+  button.addEventListener('click',()=>{renderPage(page);document.querySelector('header').scrollIntoView({behavior:'smooth',block:'start'});});
+  pagination.appendChild(button);
+ };
+ makeButton('‹',currentPage-1,currentPage===1);
+ for(let page=1;page<=totalPages;page++)makeButton(String(page),page,false,page===currentPage);
+ makeButton('›',currentPage+1,currentPage===totalPages);
+ const info=document.createElement('div');info.className='page-info';
+ const first=(currentPage-1)*perPage+1,last=Math.min(currentPage*perPage,MAX_CARDS_PER_FILE,demos.length);
+ info.textContent='PAGE '+currentPage+' / '+totalPages+' · SHOWING '+first+'–'+last+' OF '+Math.min(demos.length,MAX_CARDS_PER_FILE)+' CARDS';
+ pagination.appendChild(info);
+}
+renderPage(1);
+function initWebGL(canvas,type){
+ const gl=canvas.getContext('webgl',{alpha:false,antialias:true,powerPreference:'low-power'});
+ if(!gl){canvas.parentElement.style.background='linear-gradient(135deg,#17233b,#070910)';return}
+ const vs='attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+ const fs=`precision highp float;varying vec2 uv;uniform float t;uniform vec2 res;uniform int mode;
+ float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.)),f.x),f.y);}
+ float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=mat2(1.6,-1.2,1.2,1.6)*p;a*=.5;}return v;}
+ vec3 palette(float x){return .5+.5*cos(6.28318*(x+vec3(0.,.33,.67)));}
+ void main(){vec2 q=(uv-.5)*vec2(res.x/res.y,1.);float tm=t;float n=0.;vec3 c=vec3(0.);float r=length(q);float a=atan(q.y,q.x);
+ if(mode==85){float t=tm*.22;float pieces=0.;for(int i=0;i<7;i++){float fi=float(i);vec2 center=vec2((fi-3.)*.12,.12*sin(fi*2.));vec2 offset=vec2(cos(fi*1.7+t),sin(fi*1.3+t))*.035;float d=max(abs(q.x-center.x-offset.x),abs(q.y-center.y-offset.y));pieces+=exp(-abs(d-.045)*85.);}float axis=exp(-abs(q.y)*100.)+exp(-abs(q.x)*100.);c=vec3(.004,.012,.025)+vec3(.12,.38,.62)*pieces*.45+vec3(.35,.68,.95)*axis*.12;}else if(mode==86){vec2 p=(q+vec2(.42,.3))*vec2(7.,5.);vec2 cell=floor(p);vec2 f=fract(p)-.5;float col=mod(cell.x,2.);float row=mod(cell.y,3.);float dotOn=step(.42,hash(vec2(col,row)+floor(tm*.2)*.01));float dotShape=exp(-length(f)*26.);float highlight=pow(max(0.,dot(normalize(vec2(-.5,.7)),normalize(f+vec2(.001)))),4.);c=vec3(.003,.01,.022)+vec3(.08,.16,.25)*dotShape*.12+vec3(.28,.68,.95)*dotShape*dotOn*(.35+highlight*.65);}else if(mode==87){vec2 board=(q+vec2(.48,.48))*8.;vec2 cell=floor(board);vec2 f=fract(board);float checker=mod(cell.x+cell.y,2.);float grid=1.-smoothstep(.46,.5,max(abs(f.x-.5),abs(f.y-.5)));float stepper=mod(floor(tm*1.4),64.);float path=exp(-abs(q.y-(.32*sin(q.x*4.+tm*.18)))*35.);float knight=exp(-length(f-vec2(.5))*18.)*step(.6,hash(cell+floor(tm*.6)));c=vec3(.006,.012,.024)+mix(vec3(.035,.06,.1),vec3(.12,.2,.3),checker)*.45+vec3(.08,.48,.82)*grid*.22+vec3(.2,.8,1.)*(path*.4+knight*.5);}else if(mode==88){float a=atan(q.y,q.x);float r=length(q);float projected=r/(1.+.45*cos(a*4.+tm*.12));float meridian=abs(sin(a*8.));float latitude=abs(sin(projected*38.));float lines=exp(-meridian*65.)+exp(-latitude*65.);float boundary=exp(-abs(r-.42)*45.);c=vec3(.004,.012,.028)+palette(a*.08+projected*.22)*lines*.32+vec3(.18,.65,.95)*boundary*.45;}else if(mode==89){float a=atan(q.y,q.x);float r=length(q);float tile=abs(sin(q.x*7.+.6*sin(q.y*5.))*sin(q.y*7.+.6*sin(q.x*5.)));float fold=exp(-abs(tile-.42)*35.);float crease=exp(-abs(sin(q.x*7.)*sin(q.y*7.)) *85.);c=vec3(.006,.014,.03)+palette(tile*.3+tm*.008)*fold*.45+vec3(.35,.65,.9)*crease*.22+vec3(.06,.1,.16)*r;}else if(mode==90){float a=atan(q.y,q.x);float r=length(q);float orbit=0.;for(int i=0;i<5;i++){float fi=float(i);float rr=.09+fi*.075;orbit+=exp(-abs(r-rr)*170.)*.16;float phase=tm*(.35-fi*.035)+fi*1.7;vec2 planet=vec2(cos(phase)*rr,sin(phase)*rr*.72);float body=exp(-length(q-planet)*85.)*(.5+fi*.12);orbit+=body*2.;}float star=exp(-r*75.);c=vec3(.003,.008,.02)+vec3(.12,.32,.55)*orbit+vec3(1.,.72,.3)*star*.8;}else if(mode==91){float z=q.y*2.5;float phase=q.x*19.+tm*.55;float strand1=abs(z-.28*sin(phase));float strand2=abs(z+.28*sin(phase));float rung=abs(sin(phase*.5));float rails=exp(-strand1*75.)+exp(-strand2*75.);float steps=exp(-abs(sin(phase*.5))*35.)*exp(-abs(z)*1.8);c=vec3(.003,.01,.024)+vec3(.15,.55,.9)*rails*.55+vec3(.85,.35,.55)*steps*.65;}else if(mode==92){vec2 p=q*vec2(5.,4.);vec2 cell=floor(p);vec2 f=fract(p)-.5;float atom=exp(-length(f)*24.);float bondX=exp(-abs(f.y)*65.)*step(.12,abs(f.x));float bondY=exp(-abs(f.x)*65.)*step(.12,abs(f.y));float species=mod(cell.x+cell.y,3.);vec3 atomColor=mix(vec3(.2,.65,1.),vec3(.95,.28,.2),step(1.,species));atomColor=mix(atomColor,vec3(.3,.9,.55),step(2.,species));c=vec3(.003,.009,.02)+atomColor*atom*.8+vec3(.3,.42,.58)*(bondX+bondY)*.22;}else if(mode==93){float balls=0.;for(int i=0;i<5;i++){float fi=float(i);float phase=tm*1.15;float x=(fi-2.)*.17;float swing=0.;if(i==0)swing=.34*cos(phase);if(i==4)swing=.34*cos(phase-3.14159);float y=-.25-.34*cos(swing*2.);float d=length(q-vec2(x+swing,y));balls+=exp(-abs(d-.055)*90.);}float strings=0.;for(int i=0;i<5;i++){float fi=float(i);float x=(fi-2.)*.17;strings+=exp(-abs(q.x-x)*100.)*step(-.25,q.y)*step(q.y,.32);}c=vec3(.004,.01,.022)+vec3(.48,.62,.78)*balls*.8+vec3(.16,.28,.42)*strings*.5;}else if(mode==94){float neck=abs(q.x)-(.035+.12*abs(q.y));float flow=exp(-abs(neck)*65.)*step(-.03,q.y);float grains=0.;for(int i=0;i<90;i++){float fi=float(i);float x=sin(fi*17.13+floor(tm*2.)*.7)*(.08+.13*step(.0,q.y));float y=mod(hash(vec2(fi,3.))*1.1-tm*(.18+hash(vec2(fi,4.))*.25),1.1)-.5;float d=length(q-vec2(x,y));grains+=exp(-d*220.)*.35;}float pile=exp(-abs(q.y+.36+q.x*q.x*2.)*55.)*step(-.3,q.y);c=vec3(.003,.009,.02)+vec3(.65,.48,.25)*(grains+flow*.25)+vec3(.9,.72,.42)*pile*.45;}else if(mode==95){float a=atan(q.y,q.x);float r=length(q);float blades=0.;for(int i=0;i<7;i++){float fi=float(i);float angle=a+fi*6.28318/7.+tm*.22;float edge=abs(r-(.12+.22*fract(angle/6.28318*7.)));float blade=exp(-edge*65.)*step(.12,r)*step(r,.38);blades+=blade;}float aperture=1.-smoothstep(.12,.16,r);float rim=exp(-abs(r-.39)*90.);c=vec3(.003,.008,.018)+vec3(.18,.3,.45)*blades*.55+vec3(.62,.76,.92)*rim*.5+vec3(.015,.025,.04)*aperture;}else if(mode==96){vec2 p=vec2(abs(q.x),q.y);float n=fbm(p*5.+vec2(0.,tm*.025));float ink=smoothstep(.28,.68,n+exp(-length(p-vec2(.18,.08))*4.)*.35);float edge=abs(n-.52);float veins=exp(-edge*38.)*ink;c=vec3(.004,.008,.018)+vec3(.24,.38,.58)*ink*.72+vec3(.52,.68,.86)*veins*.35;}else if(mode==97){float phase1=q.x*36.+q.y*8.;float phase2=q.x*36.-q.y*8.+tm*.35;float beam1=exp(-abs(q.y-.18)*18.)*step(-.42,q.x)*step(q.x,.12);float beam2=exp(-abs(q.y+.18)*18.)*step(-.42,q.x)*step(q.x,.12);float fringe=pow(.5+.5*cos(phase1-phase2),8.);float fringeIntensity=exp(-abs(q.x-.25)*12.)*fringe;c=vec3(.003,.009,.022)+vec3(.12,.42,.72)*(beam1+beam2)*.45+vec3(.3,.78,1.)*fringeIntensity*.8;}else if(mode==98){float warp=fbm(vec2(q.x*2.,q.y*3.));float layers=q.y*7.+.5*sin(q.x*5.+warp*3.)+.25*sin(q.x*11.-tm*.02);float band=abs(fract(layers)-.5);float boundary=1.-smoothstep(.025,.09,band);float strata=.5+.5*sin(layers*6.28318);vec3 rock=mix(vec3(.055,.035,.025),vec3(.38,.22,.12),strata);rock=mix(rock,vec3(.16,.22,.25),smoothstep(.72,.9,warp));c=rock+vec3(.72,.52,.3)*boundary*.28;}else if(mode==99){float points=0.;float golden=2.399963;for(int i=0;i<180;i++){float fi=float(i);float radius=sqrt(fi/180.)*.43;float angle=fi*golden+tm*.035;vec2 p=vec2(cos(angle),sin(angle))*radius;float d=length(q-p);points+=exp(-d*180.)*(.35+fi/300.);}float center=exp(-length(q)*12.);c=vec3(.003,.01,.022)+vec3(.12,.48,.28)*points*.55+vec3(.55,.82,.38)*center*.2;}else if(mode==100){float a=atan(q.y,q.x);float r=length(q);float wave=.19+.14*pow(abs(cos(a*17.+sin(tm*.7+a*3.)*.7)),1.7);float tip=exp(-abs(r-wave)*85.);float core=exp(-abs(r-.12)*35.);float ripples=exp(-abs(sin(a*17.+tm*.8))*18.)*smoothstep(.1,.25,r);c=vec3(.003,.009,.02)+vec3(.06,.3,.48)*tip*.55+vec3(.35,.78,.95)*ripples*.3+vec3(.12,.24,.38)*core*.45;}else if(mode==101){float crystal=0.;float branches=0.;for(int i=0;i<6;i++){float ang=float(i)*1.0471976+tm*.025;vec2 dir=vec2(cos(ang),sin(ang));vec2 side=vec2(-dir.y,dir.x);float along=dot(q,dir);float across=abs(dot(q,side));float arm=exp(-across*115.)*step(0.,along)*step(along,.43);crystal+=arm;float twigPos=.12+float(i)*.0;float twigAlong=abs(along-twigPos);float twigSide=abs(across-(.025+max(0.,along-twigPos)*.72));branches+=exp(-twigAlong*34.)*exp(-twigSide*105.)*step(twigPos,along)*step(along,.39);}float core=exp(-length(q)*32.);c=vec3(.003,.012,.028)+vec3(.22,.58,.82)*crystal*.42+vec3(.62,.88,1.)*branches*.65+vec3(.4,.75,1.)*core*.5;}else if(mode==102){float rot=tm*.24;float rot2=-tm*.19;vec2 p1=vec2(cos(rot)*q.x-sin(rot)*q.y,sin(rot)*q.x+cos(rot)*q.y);vec2 p2=vec2(cos(rot2)*q.x-sin(rot2)*q.y,sin(rot2)*q.x+cos(rot2)*q.y);float outer=exp(-abs(max(abs(p1.x),abs(p1.y))-.31)*100.);float innerLine=exp(-abs(max(abs(p2.x),abs(p2.y))-.13)*110.);float connectors=0.;for(int i=0;i<4;i++){float ang=float(i)*1.5707963+.785398;vec2 d=vec2(cos(ang),sin(ang));vec2 start=d*.13;vec2 finish=d*.31;vec2 ab=finish-start;float h=clamp(dot(q-start,ab)/dot(ab,ab),0.,1.);connectors+=exp(-length(q-(start+h*ab))*105.);}float pulse=.75+.25*sin(tm*1.4);c=vec3(.003,.009,.022)+vec3(.12,.42,.72)*outer*.72+vec3(.3,.78,1.)*innerLine*.75+vec3(.22,.58,.92)*connectors*.6*pulse;}else if(mode==103){float track=0.;for(int i=0;i<36;i++){float fi=float(i);float u=fi/36.*6.28318+tm*.12;vec2 p=vec2(cos(u)*(.28+.07*sin(u*2.)),sin(u)*.27+.08*sin(u*2.));float v=(fi+1.)/36.*6.28318+tm*.12;vec2 p2=vec2(cos(v)*(.28+.07*sin(v*2.)),sin(v)*.27+.08*sin(v*2.));vec2 ab=p2-p;float h=clamp(dot(q-p,ab)/max(dot(ab,ab),.0001),0.,1.);track+=exp(-length(q-(p+h*ab))*125.);}float u=tm*.65;vec2 ball=vec2(cos(u)*(.28+.07*sin(u*2.)),sin(u)*.27+.08*sin(u*2.));float marble=exp(-length(q-ball)*95.);c=vec3(.003,.009,.02)+vec3(.12,.3,.48)*track*.45+vec3(.3,.68,.92)*track*.22+vec3(1.,.55,.22)*marble*.9;}else if(mode==104){float a=atan(q.y,q.x);float r=length(q);float bottle=abs((r-.23)-.07*sin(a*2.+tm*.08));float neck=exp(-abs(q.x-.12)*70.)*step(-.05,q.y)*step(q.y,.38);float mouth=exp(-abs(length(q-vec2(.12,.37))-.055)*100.);float grid=exp(-abs(sin(a*12.+r*8.))*55.)*exp(-abs(sin(r*48.))*38.);float seam=exp(-abs(q.x-.12-q.y*.22)*90.)*step(.0,q.y);c=vec3(.003,.01,.023)+vec3(.12,.38,.58)*exp(-bottle*65.)*.55+vec3(.25,.7,.92)*grid*.24+vec3(.65,.85,1.)*(neck+mouth+seam)*.2;} else if(mode==153){float spin=a+sin(r*14.0-tm*1.52)*.35;float spokes=pow(max(0.,cos(spin*9.)),18.);float rim=exp(-abs(r-(.12+.22*fract(spin*1.1)))*65.);c=vec3(.003,.009,.022)+palette(spin*.13+tm*.018)*spokes*.38+vec3(.25,.72,1.)*rim*.35;}else if(mode==154){float field=fbm(q*8.8+vec2(tm*0.26,-tm*.08));float trail=pow(max(0.,1.-abs(fract(field*9.+tm*.12)-.5)*2.),8.);float grain=hash(floor(q*48.0+tm*.4));c=vec3(.003,.008,.02)+palette(field+tm*.02)*trail*.48+vec3(.3,.72,.95)*grain*trail*.16;}else if(mode==155){vec2 fp=q*1.34;float flow=fbm(fp*5.4+vec2(tm*0.33,-tm*.13));float warped=fbm(fp*8.1+vec2(flow*2.,-flow)+tm*.04);float edge=exp(-abs(fract(warped*8.)-.5)*56.);c=vec3(.003,.01,.025)+palette(warped+tm*.015)*(.12+edge*.55);}else if(mode==156){float wave=sin(q.x*20.0+sin(q.y*12.0+tm)*1.00-tm*1.6);float nodes=sin(q.y*28.0-tm*.7);float crest=pow(max(0.,1.-abs(wave*.5+nodes*.22)),11.);c=vec3(.003,.012,.026)+vec3(.04,.28,.48)*(.2+.3*wave)+palette(wave*.12+tm*.02)*crest*.65;}else if(mode==157){float h=fbm(q*4.0+tm*.035);float contour=exp(-abs(fract(h*6.)-.5)*56.);float slope=abs(h-fbm(q*4.2+tm*.035));c=mix(vec3(.018,.035,.052),palette(h*.3+tm*.012),.25+h*.35)+vec3(.3,.68,.88)*contour*.38+vec3(.1,.18,.22)*slope;}else if(mode==158){float spoke=abs(sin(a*13.+tm*0.26+sin(r*10.0)*.4));float rays=exp(-spoke*30.)*smoothstep(.08,.2,r);float core=exp(-r*24.);c=vec3(.003,.008,.02)+palette(a*.1+tm*.025)*rays*.52+vec3(.35,.78,1.)*core*.4;}else if(mode==159){float orbit=0.;for(int j=0;j<5;j++){float fj=float(j);float rr=.08+fj*.065;float ph=tm*1.32+fj*6.28318/5.;vec2 pos=vec2(cos(ph)*rr,sin(ph)*rr*.72);orbit+=exp(-abs(r-rr)*110.)*.13+exp(-length(q-pos)*104.)*.65;}c=vec3(.003,.008,.02)+vec3(.08,.32,.58)*orbit+palette(a*.08+tm*.02)*orbit*.32;}else if(mode==160){float cell=fbm(q*9.1+vec2(sin(tm*.2),cos(tm*.17)));float membrane=exp(-abs(cell-.5)*67.);float pores=exp(-abs(sin(q.x*14.0+cell*5.)*sin(q.y*14.0-cell*4.))*37.);c=vec3(.003,.009,.022)+palette(cell+tm*.012)*membrane*.4+vec3(.2,.68,.9)*pores*.32;}else if(mode==161){float box=max(abs(q.x+sin(tm*.2)*.04),abs(q.y+cos(tm*.18)*.04));float edge=exp(-abs(box-(.12+.18*abs(sin(a*6.+tm*.12))))*126.);float inner=exp(-abs(r-.1)*65.);c=vec3(.003,.009,.023)+palette(a*.08+tm*.018)*edge*.52+vec3(.35,.72,1.)*inner*.25;}else if(mode==162){float signal=sin(q.x*18.0+tm*2.00+sin(q.x*4.)*2.);float trace=exp(-abs(q.y-signal*.12)*65.);float grid=max(exp(-abs(fract(q.x*9.0)-.5)*80.),exp(-abs(fract(q.y*9.0)-.5)*80.));c=vec3(.003,.009,.02)+vec3(.12,.45,.72)*grid*.18+palette(signal*.08+tm*.015)*trace*.7;} else if(mode==163){float wind=fbm(vec2(q.x*3.2, q.y*5.0-tm*.18));float trunk=exp(-abs(q.x-sin(q.y*3.+tm*.12)*.025)*95.)*step(-.42,q.y);float canopy=fbm(q*vec2(8.,12.)+vec2(tm*.08,-tm*.025));float leaves=smoothstep(.42,.72,canopy)*step(.02,q.y);float shafts=pow(max(0.,sin(q.x*19.+wind*2.)),10.)*step(.12,q.y);c=vec3(.002,.012,.009)+vec3(.025,.16,.075)*leaves+vec3(.12,.38,.17)*leaves*wind*.7+vec3(.72,.82,.42)*shafts*.22+vec3(.12,.25,.12)*trunk;}else if(mode==164){float horizon=q.y+.12;float mountains=0.;for(int i=0;i<4;i++){float fi=float(i);float ridge=-.02-fi*.11+.055*fbm(vec2(q.x*(2.4+fi),fi*3.));mountains+=smoothstep(ridge+.012,ridge-.012,horizon)*(.22-fi*.035);}float sun=exp(-length(q-vec2(.18,.18))*28.);float glow=exp(-abs(q.y-.18)*3.)*step(-.1,q.y);c=vec3(.008,.018,.035)+vec3(.12,.24,.34)*mountains+vec3(1.,.48,.2)*sun*.8+vec3(.5,.22,.12)*glow*.18;}else if(mode==165){float cliff=step(q.x,.18+.04*sin(q.y*8.));float stream=exp(-abs(q.x-(.1+.025*sin(q.y*13.+tm*1.8)))*38.)*step(-.38,q.y)*step(q.y,.34);float streak=pow(max(0.,sin(q.y*85.-tm*5.+q.x*13.)),12.)*stream;float mist=fbm(q*vec2(12.,7.)+vec2(0.,-tm*.5))*exp(-abs(q.y+.34)*7.);float pool=exp(-abs(q.y+.4+q.x*q.x*.5)*32.);c=vec3(.002,.012,.025)+vec3(.12,.42,.62)*stream*.65+vec3(.65,.88,1.)*streak*.5+vec3(.2,.48,.62)*mist*.3+vec3(.08,.3,.42)*pool*.6+vec3(.025,.045,.055)*cliff;}else if(mode==166){float flow=fbm(q*vec2(5.,8.)+vec2(tm*.12,-tm*.08));float bend=sin(q.x*7.+flow*5.+tm*.2)+sin(q.y*9.-flow*4.);float current=pow(max(0.,1.-abs(sin(bend*1.4))),9.);float caustic=pow(max(0.,sin(q.x*19.+flow*7.+tm*.8)*sin(q.y*17.-tm*.6)),8.);float depth=smoothstep(-.5,.5,q.y);c=vec3(.002,.018,.035)+mix(vec3(.015,.12,.18),vec3(.02,.34,.42),depth)+vec3(.1,.55,.62)*current*.3+vec3(.45,.85,.78)*caustic*.22;}else if(mode==167){float field=fbm(q*3.+vec2(tm*.025,0.));float lights=0.;for(int i=0;i<38;i++){float fi=float(i);vec2 p=vec2(hash(vec2(fi,2.))*1.5-.75,mod(hash(vec2(fi,5.))*.95-tm*(.025+hash(vec2(fi,8.))*.035),.95)-.47);p.x+=sin(tm*.7+fi)*.035;float pulse=.45+.55*sin(tm*2.2+fi*4.);lights+=exp(-length(q-p)*180.)*pulse;}float silhouettes=smoothstep(.12,.18,abs(q.x+.45*sin(q.y*3.)));c=vec3(.002,.008,.014)+vec3(.018,.055,.035)*field+vec3(.38,.9,.48)*lights*.75+vec3(.12,.25,.12)*silhouettes*.15;}else if(mode==168){float branches=0.;for(int i=0;i<7;i++){float fi=float(i);float x=-.48+fi*.16;float stem=exp(-abs(q.x-x-.035*sin(q.y*9.+fi+tm*.15))*42.)*step(-.46,q.y);float fork=exp(-abs(q.x-x-.035*sin(q.y*9.+fi+tm*.15)-.045*sin(q.y*17.+fi))*65.)*step(-.2,q.y);branches+=stem+fork*.7;}float polyps=pow(max(0.,sin(q.x*72.+sin(q.y*31.)*2.)*sin(q.y*55.)),8.);float glow=fbm(q*13.+tm*.04);c=vec3(.002,.012,.027)+vec3(.08,.34,.38)*branches*.5+vec3(.25,.8,.72)*polyps*.22+vec3(.12,.48,.62)*glow*.16;}else if(mode==169){float cloud=fbm(q*vec2(4.,7.)+vec2(tm*.035,0.));float dense=smoothstep(.32,.76,cloud+(.25-q.y)*.3);float flash=pow(max(0.,sin(tm*2.1+floor(tm*1.7)*8.)),22.)*step(.72,hash(vec2(floor(tm*1.7),3.)));float bolt=exp(-abs(q.x-.16-.035*sin(q.y*23.+tm))*95.)*step(-.42,q.y)*step(q.y,.25);float fork=exp(-abs(q.x-.16-.035*sin(q.y*23.+tm)-.05*sin(q.y*41.))*100.)*step(-.2,q.y)*step(q.y,.1);c=vec3(.003,.006,.018)+vec3(.035,.055,.12)*dense+vec3(.38,.52,.82)*bolt*.75+vec3(.5,.7,1.)*fork*.45+vec3(.32,.42,.72)*flash*.18;}else if(mode==170){float flow=fbm(vec2(q.x*3.2+sin(q.y*4.+tm*.3),q.y*2.4-tm*.12));float curtain=pow(max(0.,sin(q.x*8.+flow*5.+tm*.22)),5.);float veil=smoothstep(.18,.72,flow)*curtain;float rays=pow(max(0.,sin(q.x*22.+flow*7.-tm*.18)),12.)*veil;c=vec3(.002,.008,.02)+palette(flow*.32+tm*.018)*veil*.62+vec3(.25,.95,.68)*rays*.22;}else if(mode==171){float dune=sin(q.x*5.2+fbm(q*vec2(2.,7.))*2.+tm*.035)*.5+.5;float ridge=exp(-abs(fract((q.y+dune*.12)*5.)-.5)*35.);float wind=pow(max(0.,sin(q.x*28.+q.y*8.-tm*1.3)),14.)*step(.05,q.y);float shade=smoothstep(-.4,.5,q.y);c=mix(vec3(.055,.025,.012),vec3(.42,.22,.085),shade)+vec3(.72,.43,.2)*ridge*.28+vec3(.95,.7,.38)*wind*.12;}else if(mode==172){float a=atan(q.y,q.x);float r=length(q);float open=.5+.5*sin(tm*.65);float petal=pow(max(0.,cos(a*9.)),5.);float radius=.08+(.24*open)*petal;float edge=exp(-abs(r-radius)*75.)*step(.07,r);float veins=exp(-abs(sin(a*9.)*r)*120.)*edge;float center=exp(-r*45.);c=vec3(.006,.008,.022)+vec3(.62,.16,.36)*edge*.75+vec3(1.,.62,.68)*veins*.5+vec3(1.,.72,.2)*center*.8;} float vignette=1.-smoothstep(.35,.95,r);c*=.55+vignette*.45;gl_FragColor=vec4(c,1.);}`;
+ function shader(kind,src){const s=gl.createShader(kind);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
+ const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);if(!v||!f)return;
+ const program=gl.createProgram();gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))return;
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+ gl.useProgram(program);const p=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(p);gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
+ const timeLoc=gl.getUniformLocation(program,'t'),resLoc=gl.getUniformLocation(program,'res'),modeLoc=gl.getUniformLocation(program,'mode');gl.uniform1i(modeLoc,type);
+ const resize=()=>{const box=canvas.getBoundingClientRect(),dpr=1,w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);gl.useProgram(program);gl.uniform2f(resLoc,w,h)}};
+ const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
+ const start=performance.now();let frame=0,lastFrame=0;function draw(now){if(!canvas.isConnected){observer.disconnect();return}frame=requestAnimationFrame(draw);if(now-lastFrame<1000/30)return;lastFrame=now;resize();gl.useProgram(program);gl.uniform1f(timeLoc,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6)}frame=requestAnimationFrame(draw);
+ return ()=>{observer.disconnect();cancelAnimationFrame(frame);const ext=gl.getExtension('WEBGL_lose_context');if(ext)ext.loseContext()};
+}
+</script>
+</body></html>
