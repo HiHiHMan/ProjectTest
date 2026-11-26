@@ -22,26 +22,26 @@
       width: min(26vw, 156px);
       height: min(46vh, 340px);
       display: block;
+      overflow: visible;
+    }
+    #water-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #06232b;
     }
   </style>
 </head>
 <body>
-  <svg class="door-lines" viewBox="-90 -130 100 650" preserveAspectRatio="none" aria-label="White geometric door outline" style="overflow: visible">
+  <svg class="door-lines" viewBox="-90 -130 100 650" preserveAspectRatio="none" aria-label="Door filled with animated realistic water">
     <defs>
-      <filter id="door-light" x="-250%" y="-30%" width="600%" height="160%" color-interpolation-filters="sRGB">
-        <feGaussianBlur stdDeviation="7" />
-      </filter>
+      <clipPath id="door-water-mask" clipPathUnits="userSpaceOnUse">
+        <path d="M 0 500 L 0 0 L -80 -120 L -80 380 Z" />
+      </clipPath>
     </defs>
-    <path
-      d="M 0 500 L 0 0 L -80 -120 L -80 380 Z"
-      fill="#fff"
-      opacity="0.65"
-      filter="url(#door-light)"
-    />
-    <path
-      d="M 0 500 L 0 0 L -80 -120 L -80 380 Z"
-      fill="#fff"
-    />
+    <foreignObject x="-90" y="-130" width="100" height="650" clip-path="url(#door-water-mask)">
+      <canvas id="water-canvas">Animated water surface</canvas>
+    </foreignObject>
     <path
       d="M 0 500 L 0 0 L -80 -120 L -80 380 L 0 500"
       fill="none"
@@ -52,5 +52,180 @@
       stroke-linejoin="miter"
     />
   </svg>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('water-canvas');
+      const gl = canvas.getContext('webgl', {
+        alpha: false,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+
+      if (!gl) {
+        canvas.style.background = 'linear-gradient(160deg, #b9e8e8, #176477 35%, #03131d 85%)';
+        return;
+      }
+
+      const vertexSource = `
+        attribute vec2 a_position;
+        varying vec2 v_uv;
+        void main() {
+          v_uv = a_position * 0.5 + 0.5;
+          gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+      `;
+
+      const fragmentSource = `
+        precision highp float;
+        varying vec2 v_uv;
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+        }
+
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(
+            mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+            mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+            f.y
+          );
+        }
+
+        float fbm(vec2 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          for (int i = 0; i < 5; i++) {
+            value += noise(p) * amplitude;
+            p = mat2(1.6, -1.2, 1.2, 1.6) * p;
+            amplitude *= 0.5;
+          }
+          return value;
+        }
+
+        float waterHeight(vec2 p) {
+          float t = u_time;
+          vec2 q = p;
+          q += 0.11 * vec2(
+            fbm(p * 2.1 + vec2(t * 0.10, -t * 0.07)),
+            fbm(p * 2.1 + vec2(-t * 0.08, t * 0.09))
+          );
+          float broad = sin(q.x * 5.0 + q.y * 2.2 + t * 0.48) * 0.42;
+          broad += sin(q.x * 8.0 - q.y * 3.1 - t * 0.36) * 0.22;
+          broad += sin(q.y * 12.0 + q.x * 2.8 + t * 0.27) * 0.12;
+          float fine = fbm(q * 8.0 + vec2(t * 0.08, -t * 0.12));
+          return broad + (fine - 0.5) * 0.8;
+        }
+
+        void main() {
+          vec2 uv = v_uv;
+          vec2 p = uv * vec2(2.2, 7.0);
+          float h = waterHeight(p);
+          float hx = waterHeight(p + vec2(0.012, 0.0)) - waterHeight(p - vec2(0.012, 0.0));
+          float hy = waterHeight(p + vec2(0.0, 0.012)) - waterHeight(p - vec2(0.0, 0.012));
+          vec3 normal = normalize(vec3(-hx * 2.8, -hy * 2.8, 1.0));
+
+          vec3 deep = vec3(0.006, 0.045, 0.064);
+          vec3 blue = vec3(0.025, 0.22, 0.27);
+          vec3 teal = vec3(0.12, 0.43, 0.46);
+          float depth = smoothstep(0.0, 0.9, uv.y);
+          vec3 water = mix(deep, blue, 0.25 + depth * 0.5);
+          water = mix(water, teal, smoothstep(0.25, 0.95, h) * 0.28);
+
+          vec3 lightDir = normalize(vec3(-0.42, 0.62, 0.72));
+          float diffuse = max(dot(normal, lightDir), 0.0);
+          float fresnel = pow(1.0 - max(normal.z, 0.0), 3.0);
+
+          vec2 reflected = uv + normal.xy * 0.085;
+          float reflectionNoise = fbm(reflected * vec2(13.0, 31.0) + vec2(u_time * 0.05, -u_time * 0.12));
+          float streak = smoothstep(0.70, 0.94, reflectionNoise);
+          streak *= smoothstep(0.05, 0.55, uv.y) * 0.75;
+
+          float glint = pow(max(dot(normal, normalize(vec3(-0.5, 0.7, 0.8))), 0.0), 22.0);
+          float movingShimmer = 0.5 + 0.5 * sin(p.x * 17.0 + p.y * 8.0 + u_time * 1.2);
+
+          water += vec3(0.045, 0.12, 0.14) * diffuse * 0.55;
+          water += vec3(0.30, 0.66, 0.68) * streak * (0.25 + movingShimmer * 0.5);
+          water += vec3(0.48, 0.78, 0.78) * glint * 0.35;
+          water += vec3(0.10, 0.28, 0.32) * fresnel * 0.55;
+
+          float vignette = smoothstep(0.0, 0.22, uv.x) * (1.0 - smoothstep(0.78, 1.0, uv.x));
+          water *= 0.72 + vignette * 0.28;
+          gl_FragColor = vec4(water, 1.0);
+        }
+      `;
+
+      function compile(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.error(gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vertexShader = compile(gl.VERTEX_SHADER, vertexSource);
+      const fragmentShader = compile(gl.FRAGMENT_SHADER, fragmentSource);
+      if (!vertexShader || !fragmentShader) return;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error(gl.getProgramInfoLog(program));
+        return;
+      }
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1, 1, -1, -1, 1,
+        -1, 1, 1, -1, 1, 1
+      ]), gl.STATIC_DRAW);
+
+      gl.useProgram(program);
+      const position = gl.getAttribLocation(program, 'a_position');
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      const timeLocation = gl.getUniformLocation(program, 'u_time');
+      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.round(rect.width * dpr));
+        const height = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          gl.viewport(0, 0, width, height);
+          gl.uniform2f(resolutionLocation, width, height);
+        }
+      }
+
+      const observer = new ResizeObserver(resize);
+      observer.observe(canvas);
+      resize();
+
+      const start = performance.now();
+      function render(now) {
+        resize();
+        gl.useProgram(program);
+        gl.uniform1f(timeLocation, (now - start) * 0.001);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    })();
+  </script>
 </body>
 </html>
