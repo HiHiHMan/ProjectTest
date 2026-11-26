@@ -30,8 +30,8 @@ footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
 <header>
 <p class="eyebrow">Real-time graphics laboratory</p>
 <h1>WebGL Playground</h1>
-<p class="intro">สำรวจว่า WebGL สร้างภาพเคลื่อนไหวและเอฟเฟกต์ได้หลากหลายแค่ไหน ตั้งแต่แสง อนุภาค ของไหล ไปจนถึงพื้นผิวสามมิติ ทุกช่องด้านล่างเรนเดอร์ด้วย WebGL shader แบบเรียลไทม์</p>
-<div class="meta"><span>15 LIVE EXPERIMENTS</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
+<p class="intro">สำรวจว่า WebGL สร้างภาพเคลื่อนไหวและเอฟเฟกต์ได้หลากหลายแค่ไหน ตั้งแต่ Raymarching, Volumetric Lighting, Particle Physics, Fluid Fields ไปจนถึงวัตถุ 3D ที่สร้างจากสมการทางคณิตศาสตร์</p>
+<div class="meta"><span>15 ADVANCED STUDIES</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
 </header>
 <div class="toolbar"><strong>Explore the possibilities</strong><small>แต่ละ Card คือแนวทางสร้างภาพคนละประเภท</small></div>
 <section class="grid" id="gallery" aria-label="WebGL visual examples"></section>
@@ -39,21 +39,21 @@ footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
 </main>
 <script>
 const demos=[
-['Particle Field','จุดอนุภาคจำนวนมากเคลื่อนที่เป็นสนามพลัง','Particles','Motion'],
-['Nebula','กลุ่มก๊าซและฝุ่นอวกาศที่ซ้อนทับกัน','FBM Noise','Color Mixing'],
-['Liquid Plasma','พลังงานของเหลวสีสดที่ไหลและบิดตัว','Domain Warp','Noise'],
-['Ocean Surface','ผิวน้ำพร้อมคลื่นและแสงสะท้อน','Wave Function','Specular'],
-['Procedural Terrain','ภูมิประเทศจำลองพร้อมสันเขาและหมอก','Height Map','Raymarch'],
-['Galaxy Spiral','กาแล็กซีหมุนวนพร้อมแขนเกลียวและดาว','Polar Math','Particles'],
-['Aurora','ม่านแสงเหนือที่พลิ้วไหวบนท้องฟ้า','Layered Noise','Glow'],
-['Fire Simulation','เปลวไฟที่ไหลขึ้นและเปลี่ยนสีตามความร้อน','Noise Field','Gradient'],
-['Molten Lava','ลาวาหลอมเหลวและรอยแตกเรืองแสง','Cellular Noise','Voronoi'],
-['Liquid Marble','ลวดลายหินอ่อนที่เคลื่อนไหวต่อเนื่อง','Domain Distortion','FBM'],
-['Wireframe Grid','ตาข่ายเส้นเรขาคณิตแบบมุมมองสามมิติ','Perspective','Grid Lines'],
-['Energy Tunnel','อุโมงค์พลังงานที่พุ่งเข้าหาจุดศูนย์กลาง','Polar Coordinates','Ray Effect'],
-['Starfield Warp','ดวงดาวพุ่งผ่านกล้องด้วยความเร็วสูง','Point Pattern','Motion Blur'],
-['Volumetric Clouds','กลุ่มเมฆนุ่มที่มีมิติและแสงภายใน','Fractal Noise','Lighting'],
-['Holographic Surface','พื้นผิวโฮโลแกรมพร้อมเส้นสแกนและสีเหลือบ','Fresnel','Scanlines']
+['GPU Particle Physics','อนุภาคจำนวนมากโคจรตามสนามแรงและแรงดึงดูด','Particle System','Force Field'],
+['Volumetric Nebula','เนบิวลาสามมิติจากชั้นหมอก ฝุ่น และแสงภายใน','Volumetric Noise','Raymarching'],
+['Fluid Dynamics','ของไหลที่บิดตัวด้วยสนามเวกเตอร์และความปั่นป่วน','Flow Field','Domain Warping'],
+['Dynamic Ocean','คลื่นหลายความถี่พร้อมแสงสะท้อนและผิวน้ำจำลอง','Wave Layers','Specular Lighting'],
+['Raymarched Landscape','ภูมิประเทศ 3D พร้อมระยะชัดลึกและหมอกตามระยะ','Raymarching','Height Field'],
+['Procedural Galaxy','กาแล็กซีเกลียวที่มีแขนฝุ่นและดาวจำนวนมาก','Particle Disks','Polar Coordinates'],
+['Volumetric Aurora','ม่านแสงเหนือหลายชั้นที่ไหลและเปลี่ยนรูป','Layered Fields','Light Scattering'],
+['Fire & Heat','เปลวไฟจำลองการไหลขึ้นพร้อมแกนความร้อน','Flow Noise','Heat Gradient'],
+['Molten Lava','พื้นผิวลาวาพร้อมรอยแตกและขอบความร้อน','Cellular Field','Emission'],
+['Fluid Marble','ของไหลผสมสีคล้ายหมึกในน้ำ','Advected Noise','Color Mixing'],
+['3D Wireframe World','ตาข่ายสามมิติแบบ perspective พร้อมระยะลึก','Perspective Projection','Grid Geometry'],
+['Energy Wormhole','อุโมงค์พลังงานบิดโค้งด้วยพิกัดเชิงขั้ว','Polar Raymarch','Chromatic Glow'],
+['Hyperspace','ดาวและเศษอนุภาคพุ่งผ่านกล้องแบบ 3D','3D Particles','Motion Streaks'],
+['Volumetric Storm Clouds','เมฆพายุหลายชั้นพร้อมแสงกระจายภายใน','3D Density Field','Light Marching'],
+['Holographic 3D Object','วัตถุทรงกลม 3D พร้อม Fresnel แสงขอบและเส้นสแกน','SDF Raymarching','Fresnel Lighting']
 ];
 const gallery=document.getElementById('gallery');
 demos.forEach((d,i)=>{
@@ -75,17 +75,17 @@ function initWebGL(canvas,type){
  else if(mode==1){n=fbm(q*3.+vec2(tm*.05,-tm*.025));float cloud=smoothstep(.28,.78,n);c=mix(vec3(.008,.012,.04),palette(n*.65+tm*.015)*vec3(.42,.5,.95),cloud);}
  else if(mode==2){vec2 p=q*3.;float w=fbm(p+tm*.18);n=fbm(p+vec2(w*2.,-w)+tm*.12);c=palette(n*.8+tm*.035)*(.25+n*.8);}
  else if(mode==3){float wave=sin(q.x*9.+sin(q.y*5.+tm)*1.4-tm*1.5)+.45*sin(q.y*18.+tm*1.2);float h=fbm(q*vec2(5.,12.)+tm*.13);float shine=pow(max(0.,1.-abs(wave*.24+h*.18)),9.);c=vec3(.008,.07,.12)+vec3(.02,.3,.42)*(h*.7+.2)+vec3(.45,.85,1.)*shine;}
- else if(mode==4){vec2 p=q*2.;float h=fbm(p*2.)*.8+sin(p.x*2.+tm*.18)*.1;float bands=smoothstep(.03,.0,abs(q.y-h));c=mix(vec3(.015,.04,.07),vec3(.17,.43,.52),bands*.8);c+=palette(h*.4)*.08*fbm(p*5.);}
+ else if(mode==4){vec3 ro=vec3(q.x*2.,1.15,q.y*3.-4.);vec3 rd=normalize(vec3(q.x*.45,-.42,1.));float travel=0.;float hit=0.;for(int j=0;j<42;j++){vec3 p=ro+rd*travel;float terrain=fbm(p.xz*.72)*1.25+sin(p.x*.65)*.22;float d=p.y-terrain;if(d<.012){hit=1.;break;}travel+=max(.025,d*.22);if(travel>9.)break;}if(hit>.5){vec3 p=ro+rd*travel;float h=fbm(p.xz*.7);float shade=.35+.65*max(0.,dot(normalize(vec3(.2,1.,-.3)),normalize(vec3(.1,1.,.1))));c=mix(vec3(.025,.075,.09),vec3(.35,.58,.55),h)*shade*exp(-travel*.11);}else{float sky=fbm(q*2.+tm*.015);c=mix(vec3(.008,.018,.045),vec3(.12,.25,.34),smoothstep(-.4,.5,q.y+sky*.2));}}
  else if(mode==5){float spiral=a*2.5+log(r+.08)*5.-tm*.45;float arms=pow(max(0.,cos(spiral)),14.);float dust=fbm(vec2(a*5.,r*16.-tm*.25));float stars=pow(hash(floor(q*170.)),22.);c=vec3(.008,.01,.035)+palette(r*.6+tm*.01)*arms*(1.-r)*(.25+dust)+vec3(1.)*stars*.8;}
  else if(mode==6){float bands=sin(q.x*8.+fbm(q*3.+tm*.12)*5.+tm*.4);float curtain=pow(max(0.,.5+.5*bands),5.)*smoothstep(-.5,.4,q.y);c=vec3(.008,.02,.04)+palette(q.x*.23+tm*.02)*curtain*.85;}
- else if(mode==7){float f=fbm(vec2(q.x*3.+tm*.12,q.y*3.-tm*.5));float flame=smoothstep(.2,.85,f+(.5-q.y)*.9);c=mix(vec3(.05,.008,.02),vec3(1.,.18,.015),flame);c=mix(c,vec3(1.,.83,.18),pow(flame,4.));}
+ else if(mode==7){vec2 p=vec2(q.x*3.,q.y*2.2-tm*.75);float warp=fbm(p+vec2(0.,tm*.1));float f=fbm(p+vec2(warp*.8,0.));float flame=smoothstep(.22,.82,f+(.48-q.y)*.95);float core=pow(max(0.,flame),3.);c=mix(vec3(.012,.004,.018),vec3(.95,.075,.006),flame);c=mix(c,vec3(1.,.82,.22),core);c+=vec3(.25,.045,.005)*pow(flame,1.5);}
  else if(mode==8){n=fbm(q*5.+tm*.08);float cells=abs(sin((q.x+n)*8.)*sin((q.y-n)*8.));float crack=smoothstep(.78,.94,cells);c=mix(vec3(.09,.012,.006),vec3(1.,.22,.015),n*.7);c+=vec3(1.,.55,.06)*crack*.9;}
  else if(mode==9){float v=fbm(q*4.+vec2(fbm(q*3.+tm*.08),tm*.06)*2.);float marble=sin((q.x+v*1.8)*12.);c=mix(vec3(.015,.04,.07),vec3(.25,.78,.83),smoothstep(-.35,.8,marble));c+=palette(v*.5)*.2;}
- else if(mode==10){vec2 p=vec2(q.x*12.,(q.y*12.)/max(.25,1.+q.y*.6));vec2 g=abs(fract(p)-.5);float line=1.-smoothstep(.025,.055,min(g.x,g.y));float horizon=smoothstep(-.7,.5,q.y);c=vec3(.015,.04,.08)+vec3(.08,.65,.95)*line*horizon;}
+ else if(mode==10){float ca=cos(tm*.12),sa=sin(tm*.12);vec2 p=mat2(ca,-sa,sa,ca)*q;float perspective=1./max(.18,1.15+p.y*.72);vec2 g=p*vec2(13.,10.)*perspective;vec2 edge=abs(fract(g)-.5);float line=1.-smoothstep(.012,.04,min(edge.x,edge.y));float horizon=smoothstep(-.72,.35,q.y);float depth=clamp(perspective*.55,0.,1.);c=vec3(.004,.012,.028)+vec3(.04,.42,.72)*line*horizon*(.25+depth);c+=vec3(.12,.45,.7)*pow(line,8.)*.4;}
  else if(mode==11){float v=fract(1./(r*5.+.18)-tm*.55);float ring=pow(max(0.,1.-abs(v-.5)*2.),10.);float ray=pow(max(0.,cos(a*12.+tm*.15)),18.);c=vec3(.008,.012,.03)+palette(a/6.28318+tm*.025)*(ring*.7+ray*.16);}
  else if(mode==12){vec2 p=q*vec2(1.,res.y/res.x);float z=fract(tm*.28);float stars=0.;for(int i=0;i<4;i++){float fi=float(i);vec2 cell=floor(p*(8.+fi*8.)+vec2(0.,tm*(.4+fi*.2)));vec2 f=fract(p*(8.+fi*8.)+vec2(0.,tm*(.4+fi*.2)))-.5;stars+=pow(max(0.,1.-length(f)*2.),18.)*hash(cell+fi*13.);}c=vec3(.004,.008,.025)+vec3(.35,.65,1.)*stars;}
- else if(mode==13){n=fbm(q*3.+vec2(tm*.025,0.));float cloud=smoothstep(.43,.78,n);float light=fbm(q*3.+vec2(.15,.08));c=mix(vec3(.012,.025,.065),vec3(.55,.67,.82),cloud*.72);c+=vec3(.18,.24,.36)*light*.25;}
- else {float scan=sin(uv.y*res.y*.45-tm*4.)*.5+.5;float grid=max(smoothstep(.97,1.,fract(uv.x*18.)),smoothstep(.97,1.,fract(uv.y*18.)));float fres=pow(1.-abs(q.y)*.8,2.);c=palette(uv.x*.4+tm*.04)*(.12+fres*.45);c+=vec3(.2,.8,1.)*(scan*.08+grid*.2);}
+ else if(mode==13){float density=0.;float light=0.;for(int k=0;k<9;k++){float z=float(k)/9.;vec2 p=q*(1.1+z*.8)+vec2(tm*.012*z,-tm*.006);float d=fbm(p*3.+z*2.);float layer=smoothstep(.48-z*.08,.78,d)*smoothstep(-.7,.15,q.y+z*.32);density+=layer*(1.-z*.055);light+=smoothstep(.55,.85,fbm(p*3.+vec2(.12,.08)))*layer;}float silver=pow(max(0.,density*.14),1.35);c=mix(vec3(.006,.014,.035),vec3(.48,.59,.72),clamp(silver,0.,.9));c+=vec3(.32,.43,.58)*light*.11;}
+ else {vec3 ro=vec3(0.,0.,-3.2);vec3 rd=normalize(vec3(q,1.8));float b=dot(ro,rd);float h=b*b-dot(ro,ro)+1.05;float d=-b-sqrt(max(0.,h));if(h>0.&&d>0.){vec3 pos=ro+rd*d;vec3 normal=normalize(pos);vec3 light=normalize(vec3(-.5,.7,-.8));float diffuse=max(0.,dot(normal,light));float fres=pow(1.-max(0.,dot(-rd,normal)),3.);float scan=sin(pos.y*42.-tm*3.)*.5+.5;float longitude=atan(pos.z,pos.x);float grid=step(.94,fract((longitude+3.14159)*13.));c=vec3(.015,.08,.15)+palette(longitude*.12+tm*.025)*(.12+diffuse*.3);c+=vec3(.12,.8,1.)*(fres*.8+grid*.22+scan*.05);c*=.7+diffuse*.5;}else{float scan=sin(uv.y*res.y*.35-tm*3.)*.5+.5;c=vec3(.008,.018,.035)+vec3(.02,.12,.2)*scan*.15;}}
  float vignette=1.-smoothstep(.35,.95,r);c*=.55+vignette*.45;gl_FragColor=vec4(c,1.);}`;
  function shader(kind,src){const s=gl.createShader(kind);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
  const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);if(!v||!f)return;
