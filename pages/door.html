@@ -17,21 +17,24 @@
     body {
       display: grid;
       place-items: center;
-      perspective: 1000px;
     }
-    .door-frame {
-      width: min(30vw, 300px);
-      height: min(68vh, 480px);
-      min-width: 180px;
-      min-height: 280px;
-      border: 2px solid #fff;
-      background: transparent;
-      transform: rotateY(28deg) rotateX(5deg) rotateZ(-2deg);
-      transform-style: preserve-3d;
+    .door-lines {
+      width: min(70vw, 420px);
+      height: min(88vh, 650px);
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="door-frame" aria-label="Empty white rectangular frame"></div>
+  <svg class="door-lines" viewBox="-10 -130 100 650" preserveAspectRatio="none" aria-label="White geometric door outline">
+    <polyline
+      points="0,100 0,0 70,-25 70,65 0,500 0,0 80,-120 80,380 0,500"
+      fill="none"
+      stroke="#fff"
+      stroke-width="2"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+    />
+  </svg>
 </body>
 </html>
