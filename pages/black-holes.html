@@ -39,12 +39,12 @@
         ctx.lineWidth = 0.45;
         ctx.stroke();
 
-        // Six continuous circular hairlines, spaced 5 CSS pixels apart.
-        ctx.lineWidth = 0.25;
+        // Six thinner, smaller continuous circular hairlines.
+        ctx.lineWidth = 0.15;
         ctx.strokeStyle = 'rgba(205, 205, 205, 0.42)';
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.arc(centerX, centerY, 185.5 + i * 4.5, 0, Math.PI * 2);
+          ctx.arc(centerX, centerY, 185 + i * 4, 0, Math.PI * 2);
           ctx.stroke();
         }
       }
