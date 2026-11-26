@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070910"><title>WebGPU Gallery — ProjectTest</title>
+<style>
+*{box-sizing:border-box}html{background:#070910;color:#edf1fb;font-family:Inter,system-ui,sans-serif}body{margin:0;padding:38px clamp(16px,4vw,64px) 56px;background:radial-gradient(ellipse at 50% -15%,#18243b 0,transparent 48%),#070910;min-height:100vh}header{max-width:1200px;margin:0 auto 30px}a{color:#9cbcff;text-decoration:none;font-size:12px}h1{font-size:clamp(27px,4vw,42px);letter-spacing:-.045em;margin:13px 0 8px}.intro{color:#8d98ad;font-size:13px;line-height:1.7;margin:0}.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8ba6d9}.grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{overflow:hidden;border:1px solid #222a3b;border-radius:12px;background:linear-gradient(145deg,#111725,#0c101a);min-width:0}canvas{display:block;width:100%;height:190px;background:#080c15}.info{padding:13px 15px 15px}.number{font-size:9px;letter-spacing:.16em;color:#687b9d}.info h2{font-size:14px;margin:6px 0 4px;font-weight:600}.info p{font-size:11px;color:#8994a8;margin:0;line-height:1.5}.status{max-width:1200px;margin:18px auto 0;color:#68758b;font-size:10px;letter-spacing:.1em;text-transform:uppercase}@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}canvas{height:165px}}@media(max-width:480px){body{padding:25px 12px}.grid{gap:9px}canvas{height:140px}.info{padding:10px}.info h2{font-size:12px}}
+</style></head><body>
+<header><a href="../index.html">← PROJECTTEST</a><p class="eyebrow">GPU shader playground / 01—10</p><h1>WebGPU Experiments</h1><p class="intro">Ten independent real-time shader studies. Each card is rendered directly on the GPU with WebGPU and WGSL.</p></header>
+<main class="grid">
+<article class="card"><canvas></canvas><div class="info"><span class="number">01 / FORM</span><h2>Rotating Torus</h2><p>A luminous ring with shifting surface bands.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">02 / FLUID</span><h2>Metaballs</h2><p>Soft liquid masses that merge and separate.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">03 / MOTION</span><h2>Particle Orbit</h2><p>Orbital particles tracing curved paths.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">04 / TERRAIN</span><h2>Wave Terrain</h2><p>A rippling height field drawn as contour lines.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">05 / GEOMETRY</span><h2>Crystal Prism</h2><p>Angular facets rotating through colored light.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">06 / FIELD</span><h2>Magnetic Field</h2><p>Curving field lines around opposing poles.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">07 / STRUCTURE</span><h2>Instanced Cubes</h2><p>An animated array of dimensional cube forms.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">08 / SURFACE</span><h2>Twisted Surface</h2><p>A spiral membrane with concentric interference.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">09 / DEPTH</span><h2>Light Tunnel</h2><p>Nested luminous rings receding into depth.</p></div></article>
+<article class="card"><canvas></canvas><div class="info"><span class="number">10 / PATTERN</span><h2>Voronoi Structure</h2><p>Organic cellular boundaries flowing over time.</p></div></article>
+</main><p class="status" id="status">Initializing WebGPU renderer…</p>
+<script type="module">
+const canvases=[...document.querySelectorAll("canvas")],status=document.querySelector("#status");
+if(!navigator.gpu){status.textContent="WebGPU is unavailable. Open in a compatible browser over HTTPS or localhost.";}
+else{
+const adapter=await navigator.gpu.requestAdapter();
+if(!adapter){status.textContent="No compatible GPU adapter found.";}
+else{
+const device=await adapter.requestDevice(),format=navigator.gpu.getPreferredCanvasFormat();
+const common=[
+'struct Clock{time:f32,dims:vec2f}',
+'@group(0) @binding(0) var<uniform> clock:Clock;',
+'struct Out{@builtin(position) pos:vec4f}',
+'@vertex fn vs(@builtin(vertex_index) i:u32)->Out{var p=array<vec2f,3>(vec2f(-1.0,-1.0),vec2f(3.0,-1.0),vec2f(-1.0,3.0));var o:Out;o.pos=vec4f(p[i],0.0,1.0);return o;}'
+].join('\\n');
+const sources=[
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let a=atan2(uv.y,uv.x);let r=length(uv);let band=sin(a*18.0+clock.time*1.7+r*9.0);let d=abs(r-(0.31+0.025*band));let glow=exp(-d*75.0);let rim=exp(-abs(r-0.39)*22.0);return vec4f(vec3f(0.18,0.72,0.95)*glow+vec3f(0.55,0.28,0.95)*rim*0.5,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let t=clock.time;let a=length(uv-vec2f(sin(t*0.8)*0.17,cos(t)*0.12));let b=length(uv-vec2f(cos(t*0.7)*0.19,sin(t*1.1)*0.13));let c=length(uv+vec2f(sin(t*0.6)*0.14,cos(t*0.9)*0.18));let f=0.018/(a*a+0.002)+0.018/(b*b+0.002)+0.016/(c*c+0.002);let edge=smoothstep(0.82,1.08,f)-smoothstep(1.08,1.3,f);return vec4f(vec3f(0.025,0.08,0.16)+vec3f(0.2,0.85,0.76)*edge+vec3f(0.12,0.28,0.5)*clamp(f*0.12,0.0,0.5),1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let t=clock.time;var glow=0.0;for(var i:i32=0;i<9;i=i+1){let f=f32(i);let a=f*0.698+t*(0.45+f*0.012);let r=0.12+0.19*fract(f*0.618);let q=uv-vec2f(cos(a)*r,sin(a)*r);glow+=0.002/(dot(q,q)+0.00012);}let core=exp(-length(uv)*22.0);return vec4f(vec3f(0.12,0.55,0.95)*glow*0.7+vec3f(0.9,0.48,0.2)*core,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let t=clock.time;let h=sin(uv.x*19.0+t)*0.12+sin(uv.y*14.0-t*0.8)*0.1+sin((uv.x+uv.y)*11.0+t*0.6)*0.08;let line=1.0-smoothstep(0.012,0.026,abs(uv.y-h));let line2=1.0-smoothstep(0.012,0.025,abs(uv.x-h*1.7));let shade=0.5+0.5*sin(h*18.0+t);return vec4f(vec3f(0.08,0.42,0.52)*(line+line2)+vec3f(0.12,0.2,0.34)*shade*0.35,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let a=atan2(uv.y,uv.x)+clock.time*0.22;let r=length(uv);let sector=6.2831853/6.0;let edge=cos(floor(0.5+a/sector)*sector-a)*r;let inside=1.0-smoothstep(0.352,0.368,edge);let facet=0.5+0.5*cos(floor((a+3.14159)/sector)*sector*3.0+clock.time);let glow=exp(-abs(edge-0.36)*55.0);return vec4f(mix(vec3f(0.07,0.35,0.58),vec3f(0.55,0.83,1.0),facet)*inside+vec3f(0.35,0.72,1.0)*glow,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let ra=uv-vec2f(-0.22,0.0);let rb=uv-vec2f(0.22,0.0);let field=ra/(dot(ra,ra)+0.012)-rb/(dot(rb,rb)+0.012);let phase=atan2(field.y,field.x);let bands=abs(fract((phase+length(field)*0.014+clock.time*0.04)*5.0)-0.5);let lines=1.0-smoothstep(0.04,0.12,bands);let poles=exp(-length(ra)*45.0)+exp(-length(rb)*45.0);return vec4f(vec3f(0.08,0.48,0.82)*lines+vec3f(0.95,0.42,0.22)*poles,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let cell=uv*vec2f(8.0,6.0);let id=floor(cell);let f=fract(cell)-0.5;let wobble=0.08*sin(clock.time+id.x*1.7+id.y*2.1);let d=max(abs(f.x+wobble),abs(f.y-wobble*0.7));let bevel=1.0-smoothstep(0.36,0.43,d);let top=step(f.y,f.x*0.55+0.02);let col=mix(vec3f(0.08,0.2,0.34),vec3f(0.24,0.62,0.8),top);let edge=1.0-smoothstep(0.46,0.5,d);return vec4f(col*bevel+vec3f(0.15,0.35,0.48)*edge,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let r=length(uv);let a=atan2(uv.y,uv.x);let twist=a+2.8*r+clock.time*0.7;let wave=sin(twist*5.0-r*30.0);let membrane=exp(-abs(wave)*4.0)*(1.0-smoothstep(0.12,0.62,r));let spiral=1.0-smoothstep(0.015,0.04,abs(fract(twist/6.28318)*6.28318-3.14159));return vec4f(vec3f(0.18,0.38,0.75)*membrane+vec3f(0.55,0.24,0.68)*spiral*0.5,1.0);}',
+'@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=(p.xy-clock.dims*0.5)/min(clock.dims.x,clock.dims.y);let a=atan2(uv.y,uv.x);let r=length(uv);let depth=fract(0.22/(r+0.035)+clock.time*0.22);let ring=1.0-smoothstep(0.018,0.045,abs(depth-0.5));let spokes=pow(abs(sin(a*12.0+clock.time*0.2)),22.0);let fade=1.0-smoothstep(0.0,0.72,r);return vec4f((vec3f(0.08,0.5,0.9)*ring+vec3f(0.45,0.2,0.8)*spokes*0.3)*fade,1.0);}',
+'fn hash2(v:vec2f)->vec2f{return fract(sin(vec2f(dot(v,vec2f(127.1,311.7)),dot(v,vec2f(269.5,183.3))))*43758.5453);}@fragment fn fs(@builtin(position) p:vec4f)->@location(0) vec4f{let uv=p.xy/clock.dims*vec2f(8.0,5.0);let cell=floor(uv);let f=fract(uv);var nearest=8.0;var second=8.0;for(var y:i32=-1;y<=1;y=y+1){for(var x:i32=-1;x<=1;x=x+1){let g=vec2f(f32(x),f32(y));let id=cell+g;let point=g+hash2(id)+0.12*sin(vec2f(clock.time*0.5,clock.time*0.7)+id);let d=length(f-point);if(d<nearest){second=nearest;nearest=d;}else if(d<second){second=d;}}}let edge=1.0-smoothstep(0.025,0.055,second-nearest);let tint=0.5+0.5*sin(cell.x*0.7+cell.y*0.9+clock.time*0.35);return vec4f(mix(vec3f(0.035,0.1,0.19),vec3f(0.18,0.62,0.72),tint)*0.8+vec3f(0.35,0.72,0.85)*edge*0.7,1.0);}'
+];
+const layout=device.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:"uniform"}}]});
+const pipelineLayout=device.createPipelineLayout({bindGroupLayouts:[layout]});
+const items=canvases.map((canvas,i)=>{
+const context=canvas.getContext("webgpu"),module=device.createShaderModule({code:common+"\\n"+sources[i]});
+const pipeline=device.createRenderPipeline({layout:pipelineLayout,vertex:{module,entryPoint:"vs"},fragment:{module,entryPoint:"fs",targets:[{format}]},primitive:{topology:"triangle-list"}});
+const buffer=device.createBuffer({size:16,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
+const bindGroup=device.createBindGroup({layout,entries:[{binding:0,resource:{buffer}}]});
+return{canvas,context,pipeline,buffer,bindGroup};
+});
+function frame(now){for(const item of items){const rect=item.canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);const w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(item.canvas.width!==w||item.canvas.height!==h){item.canvas.width=w;item.canvas.height=h;item.context.configure({device,format,alphaMode:"opaque"});}device.queue.writeBuffer(item.buffer,0,new Float32Array([now/1000,w,h,0]));const encoder=device.createCommandEncoder();const pass=encoder.beginRenderPass({colorAttachments:[{view:item.context.getCurrentTexture().createView(),clearValue:{r:0.025,g:0.035,b:0.06,a:1},loadOp:"clear",storeOp:"store"}]});pass.setPipeline(item.pipeline);pass.setBindGroup(0,item.bindGroup);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);}requestAnimationFrame(frame);}
+status.textContent="10 GPU experiments running · WebGPU / WGSL";requestAnimationFrame(frame);
+}}
+</script></body></html>
