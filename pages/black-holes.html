@@ -44,23 +44,39 @@
 
         // 100 thin, closely spaced continuous circular hairlines.
         ctx.lineWidth = 0.02;
-        const ringColors = [
-          'rgba(255, 255, 255, 0.42)',
-          'rgba(220, 220, 220, 0.42)',
-          'rgba(185, 185, 185, 0.42)',
-          'rgba(145, 175, 195, 0.42)',
-          'rgba(105, 155, 190, 0.42)',
-          'rgba(70, 130, 175, 0.42)'
+        const ringPalette = [
+          [255, 255, 255],
+          [220, 220, 220],
+          [185, 185, 185],
+          [145, 175, 195],
+          [105, 155, 190],
+          [70, 130, 175]
         ];
+
         for (let i = 0; i < 100; i++) {
+          const palettePosition = (i / 99) * (ringPalette.length - 1);
+          const colorIndex = Math.floor(palettePosition);
+          const blend = palettePosition - colorIndex;
+          const colorA = ringPalette[colorIndex];
+          const colorB = ringPalette[Math.min(colorIndex + 1, ringPalette.length - 1)];
+          const color = colorA.map((channel, index) =>
+            Math.round(channel + (colorB[index] - channel) * blend)
+          );
+          const baseColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.42)`;
+          const dimColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.08)`;
+
           ctx.beginPath();
-          ctx.arc(centerX, centerY, 183.5 + i * 0.25, 0, Math.PI * 2);
-          const baseColor = ringColors[Math.floor(i / 100 * ringColors.length)];
-          const gradient = ctx.createConicGradient(rotation, centerX, centerY);
-          gradient.addColorStop(0, baseColor);
-          gradient.addColorStop(0.035, 'rgba(255, 255, 255, 0.78)');
-          gradient.addColorStop(0.07, baseColor);
-          gradient.addColorStop(1, baseColor);
+          ctx.arc(centerX, centerY, 183.5 + i * 0.3, 0, Math.PI * 2);
+
+          // Each thread has its own moving conic light gradient.
+          const gradient = ctx.createConicGradient(rotation + i * 0.025, centerX, centerY);
+          gradient.addColorStop(0, dimColor);
+          gradient.addColorStop(0.018, baseColor);
+          gradient.addColorStop(0.035, 'rgba(255, 255, 255, 0.9)');
+          gradient.addColorStop(0.055, baseColor);
+          gradient.addColorStop(0.12, dimColor);
+          gradient.addColorStop(0.2, baseColor);
+          gradient.addColorStop(1, dimColor);
           ctx.strokeStyle = gradient;
           ctx.stroke();
         }
