@@ -7,57 +7,51 @@
   <title>Black Holes</title>
   <style>
     * { box-sizing: border-box; }
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      background: #000;
-    }
-
-    #black-hole {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .circle {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .sphere-outline {
-      width: 349.3px;
-      height: 349.3px;
-      border: 0.45px solid rgba(255, 255, 255, 0.9);
-    }
-
-    .hairline {
-      border: 0.5px solid rgba(205, 205, 205, 0.48);
-    }
-
-    .ring-1 { width: 372px; height: 372px; }
-    .ring-2 { width: 382px; height: 382px; }
-    .ring-3 { width: 392px; height: 392px; }
-    .ring-4 { width: 402px; height: 402px; }
-    .ring-5 { width: 412px; height: 412px; }
-    .ring-6 { width: 422px; height: 422px; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #000000; }
+    canvas { display: block; width: 100%; height: 100%; }
   </style>
 </head>
 <body>
-  <div id="black-hole" role="img" aria-label="Black sphere with six thin circular outlines">
-    <div class="circle sphere-outline"></div>
-    <div class="circle hairline ring-1"></div>
-    <div class="circle hairline ring-2"></div>
-    <div class="circle hairline ring-3"></div>
-    <div class="circle hairline ring-4"></div>
-    <div class="circle hairline ring-5"></div>
-    <div class="circle hairline ring-6"></div>
-  </div>
+  <canvas id="black-hole" aria-label="Black sphere with a thin white outline"></canvas>
+  <script>
+    (() => {
+      const canvas = document.getElementById('black-hole');
+      const ctx = canvas.getContext('2d', { alpha: false });
+      if (!ctx) return;
+
+      function render() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(innerWidth * dpr);
+        canvas.height = Math.round(innerHeight * dpr);
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, innerWidth, innerHeight);
+
+        const centerX = innerWidth / 2;
+        const centerY = innerHeight / 2;
+
+        // Thin white outline around the black sphere.
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 174.65, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.lineWidth = 0.45;
+        ctx.stroke();
+
+        // Six continuous circular hairlines, spaced 5 CSS pixels apart.
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = 'rgba(205, 205, 205, 0.48)';
+        for (let i = 0; i < 6; i++) {
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, 186 + i * 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      window.addEventListener('resize', render, { passive: true });
+      render();
+    })();
+  </script>
 </body>
 </html>
