@@ -70,7 +70,7 @@
           ctx.arc(centerX, centerY, 183.5 + i * 2.5, 0, Math.PI * 2);
 
           // Three soft light waves flow around each thread at slightly different speeds.
-          const speed = 0.0035 + i * 0.000045;
+          const speed = 0.006 + (i % 7) * 0.0007;
           const gradient = ctx.createConicGradient(time * speed + i * 0.13, centerX, centerY);
           gradient.addColorStop(0, dimColor);
           gradient.addColorStop(0.035, baseColor);
