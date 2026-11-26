@@ -20,7 +20,7 @@
       const ctx = canvas.getContext('2d', { alpha: false });
       if (!ctx) return;
 
-      let rotation = 0;
+      let time = 0;
       let animationFrame;
 
       function render() {
@@ -64,18 +64,27 @@
           );
           const baseColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.42)`;
           const dimColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.08)`;
+          const lightColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.72)`;
 
           ctx.beginPath();
           ctx.arc(centerX, centerY, 183.5 + i * 2.5, 0, Math.PI * 2);
 
-          // Each thread has its own moving conic light gradient.
-          const gradient = ctx.createConicGradient(rotation + i * 0.025, centerX, centerY);
+          // Three soft light waves flow around each thread at slightly different speeds.
+          const speed = 0.006 + (i % 7) * 0.0007;
+          const gradient = ctx.createConicGradient(time * speed + i * 0.13, centerX, centerY);
           gradient.addColorStop(0, dimColor);
-          gradient.addColorStop(0.018, baseColor);
-          gradient.addColorStop(0.035, 'rgba(255, 255, 255, 0.9)');
-          gradient.addColorStop(0.055, baseColor);
-          gradient.addColorStop(0.12, dimColor);
-          gradient.addColorStop(0.2, baseColor);
+          gradient.addColorStop(0.035, baseColor);
+          gradient.addColorStop(0.075, lightColor);
+          gradient.addColorStop(0.115, baseColor);
+          gradient.addColorStop(0.16, dimColor);
+          gradient.addColorStop(0.36, baseColor);
+          gradient.addColorStop(0.40, lightColor);
+          gradient.addColorStop(0.44, baseColor);
+          gradient.addColorStop(0.49, dimColor);
+          gradient.addColorStop(0.69, baseColor);
+          gradient.addColorStop(0.73, lightColor);
+          gradient.addColorStop(0.77, baseColor);
+          gradient.addColorStop(0.82, dimColor);
           gradient.addColorStop(1, dimColor);
           ctx.strokeStyle = gradient;
           ctx.stroke();
@@ -83,7 +92,7 @@
       }
 
       function animate() {
-        rotation = (rotation + 0.006) % (Math.PI * 2);
+        time += 1;
         render();
         animationFrame = requestAnimationFrame(animate);
       }
