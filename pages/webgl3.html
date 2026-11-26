@@ -74,10 +74,15 @@ const demos=[
 ['Soap Film Minimal Surface','ฟิล์มสบู่ยืดตัวเป็นพื้นผิวพลังงานต่ำ','Minimal Surface','Surface Tension',136],
 ['Chromatic Aberration','ขอบวัตถุแยกสีจากความคลาดของเลนส์','Lens Aberration','RGB Dispersion',137]
 ];
+const MAX_CARDS_PER_FILE=30;
+const CARDS_PER_PAGE=10;
+if(demos.length>MAX_CARDS_PER_FILE){
+ console.error('WebGL page overflow:',demos.length,'cards. Move cards after index 30 to the next webgl file.');
+}
 const gallery=document.getElementById('gallery');
 const pagination=document.getElementById('pagination');
-const perPage=10;
-const totalPages=Math.ceil(demos.length/perPage);
+const perPage=CARDS_PER_PAGE;
+const totalPages=Math.ceil(Math.min(demos.length,MAX_CARDS_PER_FILE)/perPage);
 let currentPage=1;
 let visibilityObserver=null;
 const activeCanvases=new Map();
@@ -110,7 +115,7 @@ function renderPage(page){
  currentPage=Math.max(1,Math.min(totalPages,page));
  clearPage();
  const start=(currentPage-1)*perPage;
- demos.slice(start,start+perPage).forEach((d,offset)=>{
+ demos.slice(start,Math.min(start+perPage,MAX_CARDS_PER_FILE)).forEach((d,offset)=>{
   const i=start+offset;
   const card=document.createElement('article');card.className='card';
   card.innerHTML='<div class="visual"><canvas aria-label="'+d[0]+' WebGL animation"></canvas><span class="index">WEBGL / '+String(i+1).padStart(2,'0')+'</span></div><div class="content"><h2>'+d[0]+'</h2><p>'+d[1]+'</p><div class="tags"><span>'+d[2]+'</span><span>'+d[3]+'</span></div></div>';
@@ -148,8 +153,8 @@ function renderPagination(){
  for(let page=1;page<=totalPages;page++)makeButton(String(page),page,false,page===currentPage);
  makeButton('›',currentPage+1,currentPage===totalPages);
  const info=document.createElement('div');info.className='page-info';
- const first=(currentPage-1)*perPage+1,last=Math.min(currentPage*perPage,demos.length);
- info.textContent='PAGE '+currentPage+' / '+totalPages+' · SHOWING '+first+'–'+last+' OF '+demos.length+' CARDS';
+ const first=(currentPage-1)*perPage+1,last=Math.min(currentPage*perPage,MAX_CARDS_PER_FILE,demos.length);
+ info.textContent='PAGE '+currentPage+' / '+totalPages+' · SHOWING '+first+'–'+last+' OF '+Math.min(demos.length,MAX_CARDS_PER_FILE)+' CARDS';
  pagination.appendChild(info);
 }
 renderPage(1);
