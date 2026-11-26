@@ -209,10 +209,16 @@
 
       // Launch exactly 20 rockets together as one synchronized salvo.
       function launchBatch() {
-        const targetY = height * (0.24 + Math.random() * 0.16);
         const margin = Math.min(55, width * 0.04);
+        const usedCoordinates = new Set();
         for (let i = 0; i < 20; i++) {
-          const x = margin + Math.random() * Math.max(1, width - margin * 2);
+          let x, targetY, coordinate;
+          do {
+            x = Math.round(margin + Math.random() * Math.max(1, width - margin * 2));
+            targetY = Math.round(height * (0.20 + Math.random() * 0.30));
+            coordinate = `${x},${targetY}`;
+          } while (usedCoordinates.has(coordinate));
+          usedCoordinates.add(coordinate);
           launch(x, targetY);
         }
       }
