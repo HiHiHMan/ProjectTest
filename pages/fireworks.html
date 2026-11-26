@@ -201,10 +201,20 @@
           x, y: height + 8,
           targetY: targetY ?? height * (0.20 + Math.random() * 0.36),
           vx: (Math.random() - 0.5) * 42,
-          vy: -(height * (0.62 + Math.random() * 0.18)),
+          vy: -(height * 0.70),
           color,
           trailTimer: 0
         });
+      }
+
+      // Launch exactly 20 rockets together as one synchronized salvo.
+      function launchBatch() {
+        const targetY = height * (0.24 + Math.random() * 0.16);
+        const margin = Math.min(55, width * 0.04);
+        for (let i = 0; i < 20; i++) {
+          const x = margin + Math.random() * Math.max(1, width - margin * 2);
+          launch(x, targetY);
+        }
       }
 
       function burstFlash(x, y, color) {
@@ -484,11 +494,8 @@
         lastTime = now;
         nextLaunch -= dt;
         if (nextLaunch <= 0) {
-          launch();
-          if (Math.random() < 0.28) {
-            launch(width * (0.18 + Math.random() * 0.64), height * (0.25 + Math.random() * 0.24));
-          }
-          nextLaunch = 0.62 + Math.random() * 0.72;
+          launchBatch();
+          nextLaunch = 5.2;
         }
         update(dt);
         render();
@@ -499,9 +506,8 @@
         launch(event.clientX, Math.max(height * 0.12, event.clientY));
       });
 
-      // A few opening bursts make the scene feel alive immediately.
-      launch(width * 0.32, height * 0.32);
-      setTimeout(() => launch(width * 0.68, height * 0.25), 420);
+      // Start with one full synchronized batch.
+      launchBatch();
       requestAnimationFrame(frame);
     })();
   </script>
