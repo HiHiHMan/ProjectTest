@@ -7,43 +7,57 @@
   <title>Black Holes</title>
   <style>
     * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; }
-    body { overflow: hidden; background: #000000; }
-    canvas { display: block; width: 100%; height: 100%; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #black-hole {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .circle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .sphere-outline {
+      width: 349.3px;
+      height: 349.3px;
+      border: 0.45px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .hairline {
+      border: 0.5px solid rgba(205, 205, 205, 0.48);
+    }
+
+    .ring-1 { width: 372px; height: 372px; }
+    .ring-2 { width: 382px; height: 382px; }
+    .ring-3 { width: 392px; height: 392px; }
+    .ring-4 { width: 402px; height: 402px; }
+    .ring-5 { width: 412px; height: 412px; }
+    .ring-6 { width: 422px; height: 422px; }
   </style>
 </head>
 <body>
-  <svg id="black-hole" aria-label="Black sphere with a thin white outline" role="img">
-    <circle class="sphere-outline" cx="50%" cy="50%" r="174.65" />
-    <g class="hairlines">
-      <circle cx="50%" cy="50%" r="186" />
-      <circle cx="50%" cy="50%" r="191" />
-      <circle cx="50%" cy="50%" r="196" />
-      <circle cx="50%" cy="50%" r="201" />
-      <circle cx="50%" cy="50%" r="206" />
-      <circle cx="50%" cy="50%" r="211" />
-    </g>
-  </svg>
-  <style>
-    #black-hole {
-      display: block;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      background: #000;
-    }
-    .sphere-outline {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.9);
-      stroke-width: 0.45;
-      vector-effect: non-scaling-stroke;
-    }
-    .hairlines circle {
-      fill: none;
-      stroke: rgba(205, 205, 205, 0.48);
-      stroke-width: 0.5;
-      vector-effect: non-scaling-stroke;
-    }
-  </style>
+  <div id="black-hole" role="img" aria-label="Black sphere with six thin circular outlines">
+    <div class="circle sphere-outline"></div>
+    <div class="circle hairline ring-1"></div>
+    <div class="circle hairline ring-2"></div>
+    <div class="circle hairline ring-3"></div>
+    <div class="circle hairline ring-4"></div>
+    <div class="circle hairline ring-5"></div>
+    <div class="circle hairline ring-6"></div>
+  </div>
 </body>
 </html>
