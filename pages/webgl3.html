@@ -25,6 +25,7 @@ h1{font-size:clamp(38px,6vw,68px);letter-spacing:-.055em;margin:10px 0 12px;line
 footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){main{width:calc(100% - 28px);padding-top:36px}.grid{grid-template-columns:1fr;gap:13px}.visual{height:220px}.toolbar{align-items:flex-start;flex-direction:column}}
  .page-switch{display:flex;gap:8px;margin:18px 0 26px}.page-switch a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;color:#c4ccda;text-decoration:none;background:#111722;font:12px ui-monospace,monospace}.page-switch a[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}
+.page-switch{display:flex;gap:8px;margin:18px 0 26px}.page-switch a{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;color:#c4ccda;text-decoration:none;background:#111722;font:12px ui-monospace,monospace}.page-switch a[aria-current=page]{background:#243a5b;border-color:#6e9bd8;color:#fff}
 </style>
 </head>
 <body>
@@ -35,6 +36,7 @@ footer{margin-top:34px;color:#778195;font-size:11px;text-align:center}
 <p class="intro">สำรวจว่า WebGL สร้างภาพเคลื่อนไหวและเอฟเฟกต์ได้หลากหลายแค่ไหน ตั้งแต่ Raymarching, Volumetric Lighting, Particle Physics, Fluid Fields ไปจนถึงวัตถุ 3D ที่สร้างจากสมการทางคณิตศาสตร์</p>
 <div class="meta"><span>18 ADVANCED STUDIES · 10 CARDS / PAGE</span><span>3-COLUMN GRID</span><span>GPU SHADERS</span><span>REAL-TIME</span></div>
 </header>
+<nav class="page-switch" aria-label="WebGL collections"><a href="./webgl.html">1</a><a href="./webgl2.html">2</a><a href="./webgl3.html" aria-current="page">3</a><a href="./webgl4.html">4</a><a href="./webgl5.html">5</a></nav>
 <div class="toolbar"><strong>Explore the possibilities</strong><small>แต่ละ Card คือแนวทางสร้างภาพคนละประเภท</small></div>
 <section class="grid" id="gallery" aria-label="WebGL visual examples"></section>\n<nav class="pagination" id="pagination" aria-label="WebGL pages"></nav>
 <footer>WEBGL PLAYGROUND · FRAGMENT SHADERS · REQUEST ANIMATION FRAME</footer>
