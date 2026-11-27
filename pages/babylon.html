@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090d">
+<title>Babylon.js — 3D Playground</title>
+<style>
+:root{color-scheme:dark;--bg:#070a10;--panel:#101722;--line:#263448;--text:#eef5ff;--muted:#9eacc0;--cyan:#72dfff}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 48% -18%,#18364b 0,transparent 44%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(1440px,calc(100% - 48px));margin:auto;padding:54px 0 68px}
+header{max-width:790px;margin-bottom:28px}.eyebrow{color:#7fdcf7;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+h1{font-size:clamp(38px,6vw,68px);letter-spacing:-.055em;margin:10px 0 12px;line-height:1}
+.intro{color:#b4c2d5;line-height:1.75;font-size:15px;max-width:720px}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.meta span{border:1px solid var(--line);background:#111b28;border-radius:999px;padding:7px 11px;color:#c8d6e8;font-size:11px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:30px 0 15px}.toolbar strong{font-size:12px;letter-spacing:.13em;text-transform:uppercase}.toolbar small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{min-width:0;background:linear-gradient(150deg,#151e2b,#0c121c);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-2px);border-color:#547b9e}
+.visual{height:224px;position:relative;background:#030811;overflow:hidden}.visual canvas{width:100%;height:100%;display:block;outline:none;touch-action:pan-y}
+.index{position:absolute;left:12px;top:11px;color:#b9cce1;background:#07101bc9;border:1px solid #ffffff20;border-radius:5px;padding:5px 7px;font:10px ui-monospace,monospace;pointer-events:none}
+.card-state{position:absolute;right:10px;bottom:9px;color:#8fa9c2;background:#06101bbd;border:1px solid #ffffff14;border-radius:5px;padding:4px 7px;font-size:9px;pointer-events:none}
+.card-error{position:absolute;inset:10px;display:none;place-items:center;text-align:center;padding:12px;color:#ffb6ae;background:#180e15e8;border:1px solid #743c47;border-radius:8px;font-size:11px;line-height:1.5}
+.content{padding:15px 17px 18px}.content h2{font-size:16px;margin:0 0 7px;letter-spacing:-.02em}.content p{margin:0;color:#aebbd0;font-size:12px;line-height:1.65;min-height:40px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.tags span{font-size:9px;color:#9bc9dc;border:1px solid #294456;background:#0d1e2b;padding:4px 7px;border-radius:5px}
+.status{color:#91a8bf;font-size:11px;margin:18px 2px 0;min-height:18px}footer{border-top:1px solid var(--line);margin-top:30px;padding-top:17px;color:#78879a;font:10px ui-monospace,monospace;letter-spacing:.1em}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){main{width:min(100% - 26px,480px);padding:34px 0 48px}.grid{grid-template-columns:1fr;gap:13px}.visual{height:230px}.toolbar{align-items:flex-start;flex-direction:column;gap:5px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="eyebrow">Babylon.js / Real-time 3D Engine</p>
+<h1>Babylon.js Playground</h1>
+<p class="intro">สำรวจการสร้างฉาก 3 มิติด้วย Babylon.js ตั้งแต่ Mesh, Material, Particle System, Animation, Lighting ไปจนถึง Dynamic Geometry ทุกตัวอย่างเป็นฉาก 3D ที่เรนเดอร์ด้วย Babylon.js จริง</p>
+<div class="meta"><span>10 3D SCENES</span><span>3-COLUMN GRID</span><span>BABYLON.JS ENGINE</span><span>30 FPS TARGET</span></div>
+</header>
+<div class="toolbar"><strong>Explore 3D capabilities</strong><small>ลากเมาส์เพื่อหมุนมุมมอง · Scroll เพื่อซูม</small></div>
+<section class="grid" id="gallery" aria-label="Babylon.js 3D examples">
+<article class="card" data-scene="0">
+ <div class="visual"><canvas aria-label="Planetary Orrery Babylon.js 3D scene"></canvas><span class="index">BABYLON / 01</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Planetary Orrery</h2><p>ระบบดาวเคราะห์จำลองพร้อมดวงอาทิตย์ ดาวบริวาร และวงโคจร</p><div class="tags"><span>Orbital Animation</span><span>Parent Transforms</span></div></div>
+</article>
+<article class="card" data-scene="1">
+ <div class="visual"><canvas aria-label="PBR Material Studio Babylon.js 3D scene"></canvas><span class="index">BABYLON / 02</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>PBR Material Studio</h2><p>ทดลองพื้นผิวโลหะ เซรามิก และวัสดุผิวหยาบภายใต้แสง 3D</p><div class="tags"><span>PBR Materials</span><span>Metallic / Roughness</span></div></div>
+</article>
+<article class="card" data-scene="2">
+ <div class="visual"><canvas aria-label="Particle Fountain Babylon.js 3D scene"></canvas><span class="index">BABYLON / 03</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Particle Fountain</h2><p>น้ำพุอนุภาคที่พุ่งขึ้น แตกกระจาย และตกลงด้วยแรงโน้มถ่วง</p><div class="tags"><span>Particle System</span><span>Gravity Simulation</span></div></div>
+</article>
+<article class="card" data-scene="3">
+ <div class="visual"><canvas aria-label="Crystal Cathedral Babylon.js 3D scene"></canvas><span class="index">BABYLON / 04</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Crystal Cathedral</h2><p>กลุ่มผลึกโปร่งแสงหลายรูปทรงที่หักเหแสงและหมุนคนละจังหวะ</p><div class="tags"><span>Transparent Materials</span><span>Polyhedral Meshes</span></div></div>
+</article>
+<article class="card" data-scene="4">
+ <div class="visual"><canvas aria-label="Neon Tunnel Babylon.js 3D scene"></canvas><span class="index">BABYLON / 05</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Neon Tunnel</h2><p>อุโมงค์วงแหวนเรืองแสงที่เคลื่อนผ่านมุมมองแบบ 3 มิติ</p><div class="tags"><span>Mesh Animation</span><span>Emissive Lighting</span></div></div>
+</article>
+<article class="card" data-scene="5">
+ <div class="visual"><canvas aria-label="Kinetic Gearworks Babylon.js 3D scene"></canvas><span class="index">BABYLON / 06</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Kinetic Gearworks</h2><p>ชุดเฟืองหลายขนาดที่ขบกันและหมุนสัมพันธ์กัน</p><div class="tags"><span>Procedural Geometry</span><span>Hierarchical Motion</span></div></div>
+</article>
+<article class="card" data-scene="6">
+ <div class="visual"><canvas aria-label="Ocean Surface Babylon.js 3D scene"></canvas><span class="index">BABYLON / 07</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Ocean Surface</h2><p>พื้นผิวน้ำที่เปลี่ยนรูปด้วยคลื่นและคำนวณ Normal ใหม่แบบเรียลไทม์</p><div class="tags"><span>Dynamic Vertex Data</span><span>Surface Deformation</span></div></div>
+</article>
+<article class="card" data-scene="7">
+ <div class="visual"><canvas aria-label="Asteroid Field Babylon.js 3D scene"></canvas><span class="index">BABYLON / 08</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Asteroid Field</h2><p>สนามดาวเคราะห์น้อยจำนวนมากที่หมุนและลอยอยู่ในอวกาศ</p><div class="tags"><span>Mesh Instances</span><span>3D Transform</span></div></div>
+</article>
+<article class="card" data-scene="8">
+ <div class="visual"><canvas aria-label="Holographic Portal Babylon.js 3D scene"></canvas><span class="index">BABYLON / 09</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Holographic Portal</h2><p>วงแหวนพอร์ทัลหลายชั้นพร้อมจุดพลังงานโคจรรอบแกน</p><div class="tags"><span>Layered Geometry</span><span>Animated Materials</span></div></div>
+</article>
+<article class="card" data-scene="9">
+ <div class="visual"><canvas aria-label="Shadow Theater Babylon.js 3D scene"></canvas><span class="index">BABYLON / 10</span><span class="card-state">Waiting for 3D engine</span><div class="card-error"></div></div>
+ <div class="content"><h2>Shadow Theater</h2><p>ฉากวัตถุ 3 มิติพร้อมแสงทิศทาง เงาตกกระทบ และวัตถุเคลื่อนที่</p><div class="tags"><span>Shadow Generator</span><span>Dynamic Lighting</span></div></div>
+</article>
+</section>
+<p class="status" id="status">Loading Babylon.js engine and preparing 10 scenes…</p>
+<footer>BABYLON.JS PLAYGROUND · REAL 3D MESHES · WEBGL ENGINE · INTERACTIVE SCENES</footer>
+</main>
+<script src="https://cdn.babylonjs.com/v9.38.0/babylon.js"></script>
+<script>
+(()=>{
+"use strict";
+const cards=[...document.querySelectorAll(".card")];
+const status=document.getElementById("status");
+const states=new Map();
+const C=(hex)=>BABYLON.Color3.FromHexString(hex);
+const mat=(scene,name,diffuse,emissive="#000000",specular="#b7d4eb")=>{
+ const m=new BABYLON.StandardMaterial(name,scene);
+ m.diffuseColor=C(diffuse);m.emissiveColor=C(emissive);m.specularColor=C(specular);m.specularPower=96;return m;
+};
+function baseScene(engine,canvas,target=new BABYLON.Vector3(0,0,0),radius=7){
+ const scene=new BABYLON.Scene(engine);
+ scene.clearColor=new BABYLON.Color4(.008,.016,.032,1);
+ const camera=new BABYLON.ArcRotateCamera("camera", -Math.PI/2,1.12,radius,target,scene);
+ camera.lowerRadiusLimit=radius*.55;camera.upperRadiusLimit=radius*1.65;camera.wheelPrecision=75;camera.panningSensibility=0;camera.attachControl(canvas,true);
+ scene.activeCamera=camera;
+ const hemi=new BABYLON.HemisphericLight("ambient",new BABYLON.Vector3(0,1,0),scene);hemi.intensity=.72;hemi.groundColor=new BABYLON.Color3(.035,.055,.09);
+ const key=new BABYLON.DirectionalLight("key",new BABYLON.Vector3(-.45,-.8,.55),scene);key.position=new BABYLON.Vector3(4,7,-5);key.intensity=1.15;
+ return scene;
+}
+function buildOrrery(engine,canvas){
+ const scene=baseScene(engine,canvas,BABYLON.Vector3.Zero(),8.4);
+ const sun=BABYLON.MeshBuilder.CreateSphere("sun",{diameter:1.15,segments:32},scene);sun.material=mat(scene,"sunMat","#ffb34d","#ff8b24","#ffe1a3");
+ const sunLight=new BABYLON.PointLight("sunLight",BABYLON.Vector3.Zero(),scene);sunLight.diffuse=C("#ffad52");sunLight.intensity=2.1;sunLight.range=10;
+ const data=[[1.35,.2,"#9ba6b8"],[2.05,.31,"#42b9e8"],[2.85,.25,"#e17b4f"],[3.72,.43,"#d6b56c"]];
+ const pivots=[];
+ data.forEach((d,i)=>{
+  const track=BABYLON.MeshBuilder.CreateTorus("orbit"+i,{diameter:d[0]*2,thickness:.012,tessellation:100},scene);track.rotation.x=Math.PI/2;track.material=mat(scene,"orbitMat"+i,"#29465c","#10283d","#6bb4dd");
+  const pivot=new BABYLON.TransformNode("orbitPivot"+i,scene);const planet=BABYLON.MeshBuilder.CreateSphere("planet"+i,{diameter:d[1]*2,segments:24},scene);planet.position.x=d[0];planet.parent=pivot;planet.material=mat(scene,"planetMat"+i,d[2],i===1?"#062333":"#000000");
+  if(i===1){const moonPivot=new BABYLON.TransformNode("moonPivot",scene);moonPivot.parent=pivot;const moon=BABYLON.MeshBuilder.CreateSphere("moon",{diameter:.13,segments:16},scene);moon.parent=moonPivot;moon.position.x=.48;moon.material=mat(scene,"moonMat","#b7c9d8");pivots.push({node:moonPivot,speed:1.5});}
+  pivots.push({node:pivot,speed:.28/(i+1)*(i%2?-1:1)});
+ });
+ for(let i=0;i<85;i++){const star=BABYLON.MeshBuilder.CreateSphere("star"+i,{diameter:.018+(i%4)*.006,segments:6},scene);const a=i*2.399,r=4.6+(i%9)*.28;star.position.set(Math.cos(a)*r,(Math.sin(i*1.7))*.9,Math.sin(a)*r);star.material=mat(scene,"starMat"+i,"#a4c9e8",i%5===0?"#9ccfff":"#263b55");}
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;pivots.forEach(p=>p.node.rotation.y=t*p.speed);sun.rotation.y=t*.12;});
+ return scene;
+}
+function buildMaterials(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,.1,0),7.7);
+ const colors=["#a8c4d8","#df9b55","#9b83e6","#64c8bd","#c4d0db"];
+ const rough=[.08,.25,.48,.72,.94],metal=[1,.92,.68,.3,0];
+ const point=new BABYLON.PointLight("warm",new BABYLON.Vector3(-3,4,-2),scene);point.diffuse=C("#b9dcff");point.intensity=1.8;
+ const fill=new BABYLON.PointLight("cool",new BABYLON.Vector3(3,1,3),scene);fill.diffuse=C("#6b8dff");fill.intensity=1.1;
+ colors.forEach((color,i)=>{
+  const sphere=BABYLON.MeshBuilder.CreateSphere("surface"+i,{diameter:1.12,segments:40},scene);sphere.position.x=(i-2)*1.42;sphere.position.y=.18+(i%2)*.06;
+  const pbr=new BABYLON.PBRMaterial("pbr"+i,scene);pbr.albedoColor=C(color);pbr.metallic=metal[i];pbr.roughness=rough[i];sphere.material=pbr;
+  const pedestal=BABYLON.MeshBuilder.CreateCylinder("pedestal"+i,{height:.12,diameter:1.2,tessellation:48},scene);pedestal.position.set(sphere.position.x,-.53,0);pedestal.material=mat(scene,"base"+i,"#172638","#07111f","#64809c");
+ });
+ const floor=BABYLON.MeshBuilder.CreateGround("floor",{width:9,height:4},scene);floor.position.y=-.62;floor.material=mat(scene,"floorMat","#101c2a","#030914","#182d44");
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;scene.meshes.filter(m=>m.name.startsWith("surface")).forEach((m,i)=>{m.rotation.y=t*(.12+i*.035);m.rotation.x=.12*Math.sin(t*.7+i);});});
+ return scene;
+}
+function buildParticles(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,1.1,0),7);
+ const base=BABYLON.MeshBuilder.CreateCylinder("fountainBase",{height:.35,diameter:1.4,tessellation:48},scene);base.position.y=-.12;base.material=mat(scene,"baseMat","#172d48","#102c50","#78b9e8");
+ const nozzle=BABYLON.MeshBuilder.CreateTorus("nozzle",{diameter:.82,thickness:.055},scene);nozzle.position.y=.08;nozzle.material=mat(scene,"nozzleMat","#5e9ac7","#1d73af","#b6eaff");
+ const texture=new BABYLON.DynamicTexture("particleTexture",{width:64,height:64},scene,false);const ctx=texture.getContext();const grad=ctx.createRadialGradient(32,32,1,32,32,31);grad.addColorStop(0,"rgba(255,255,255,1)");grad.addColorStop(.22,"rgba(120,225,255,.95)");grad.addColorStop(.58,"rgba(35,140,255,.45)");grad.addColorStop(1,"rgba(10,65,180,0)");ctx.fillStyle=grad;ctx.fillRect(0,0,64,64);texture.update();
+ const ps=new BABYLON.ParticleSystem("fountainParticles",1400,scene);ps.particleTexture=texture;ps.emitter=new BABYLON.Vector3(0,.08,0);ps.minEmitBox=new BABYLON.Vector3(-.08,0,-.08);ps.maxEmitBox=new BABYLON.Vector3(.08,.12,.08);ps.color1=new BABYLON.Color4(.35,.83,1,1);ps.color2=new BABYLON.Color4(.2,.4,1,1);ps.colorDead=new BABYLON.Color4(.1,.3,.8,0);ps.minSize=.035;ps.maxSize=.15;ps.minLifeTime=.7;ps.maxLifeTime=1.75;ps.emitRate=370;ps.blendMode=BABYLON.ParticleSystem.BLENDMODE_ADD;ps.gravity=new BABYLON.Vector3(0,-3.1,0);ps.direction1=new BABYLON.Vector3(-.65,3.8,-.65);ps.direction2=new BABYLON.Vector3(.65,5.3,.65);ps.minEmitPower=.6;ps.maxEmitPower=1.6;ps.updateSpeed=.012;ps.start();
+ const light=new BABYLON.PointLight("fountainGlow",new BABYLON.Vector3(0,.5,0),scene);light.diffuse=C("#27a9ff");light.intensity=1.4;
+ return scene;
+}
+function buildCrystals(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,0,0),7.4);
+ const specs=[{type:1,x:-1.25,y:.05,s:1.18,c:"#40bce8"},{type:2,x:0,y:.15,s:1.42,c:"#9b78ef"},{type:3,x:1.3,y:-.02,s:1.05,c:"#45dfc5"}];
+ specs.forEach((d,i)=>{
+  const crystal=BABYLON.MeshBuilder.CreatePolyhedron("crystal"+i,{type:d.type,size:d.s},scene);crystal.position.x=d.x;
+  const m=new BABYLON.PBRMaterial("glass"+i,scene);m.albedoColor=C(d.c);m.metallic=.18;m.roughness=.12;m.alpha=.48;m.transparencyMode=BABYLON.PBRMaterial.PBRMATERIAL_ALPHABLEND;m.emissiveColor=C(d.c).scale(.16);crystal.material=m;
+  const core=BABYLON.MeshBuilder.CreatePolyhedron("innerCore"+i,{type:d.type,size:d.s*.37},scene);core.position.copyFrom(crystal.position);core.material=mat(scene,"coreMat"+i,d.c,d.c,"#ffffff");
+ });
+ const floor=BABYLON.MeshBuilder.CreateGround("crystalFloor",{width:7,height:5},scene);floor.position.y=-1.38;floor.material=mat(scene,"crystalFloorMat","#101b31","#080f20");
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;specs.forEach((d,i)=>{const m=scene.getMeshByName("crystal"+i);m.rotation.y=t*(.2+i*.11);m.rotation.x=.15*Math.sin(t*.65+i);});});
+ return scene;
+}
+function buildTunnel(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,0,1.2),8.6);
+ const palette=["#36cfff","#7f78ff","#e46bff","#41f0d0"];
+ for(let i=0;i<15;i++){
+  const ring=BABYLON.MeshBuilder.CreateTorus("tunnelRing"+i,{diameter:3.8,thickness:.035+(i%3)*.012,tessellation:72},scene);ring.position.z=-4.8+i*.72;ring.rotation.z=(i%2?1:-1)*.08;
+  ring.material=mat(scene,"ringMat"+i,palette[i%palette.length],palette[i%palette.length],"#d5f8ff");
+  ring.metadata={phase:i*.32,baseZ:ring.position.z};
+ }
+ for(let i=0;i<10;i++){const orb=BABYLON.MeshBuilder.CreateSphere("tunnelOrb"+i,{diameter:.12,segments:12},scene);orb.position.set(Math.sin(i*2.1)*1.1,Math.cos(i*1.7)*1.1,-4+i*.85);orb.material=mat(scene,"orbMat"+i,"#c8f6ff","#66bfff","#ffffff");}
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;scene.meshes.filter(m=>m.name.startsWith("tunnelRing")).forEach(r=>{r.position.z=r.metadata.baseZ+Math.sin(t*.9+r.metadata.phase)*.13;r.rotation.z=Math.sin(t*.35+r.metadata.phase)*.18;});});
+ return scene;
+}
+function makeGear(scene,name,x,y,radius,teeth,color){
+ const root=new BABYLON.TransformNode(name,scene);root.position.set(x,y,0);
+ const body=BABYLON.MeshBuilder.CreateCylinder(name+"Body",{height:.2,diameter:radius*2,tessellation:48},scene);body.rotation.x=Math.PI/2;body.parent=root;body.material=mat(scene,name+"BodyMat",color,"#101e32","#c7e4ff");
+ const rim=BABYLON.MeshBuilder.CreateTorus(name+"Rim",{diameter:radius*1.72,thickness:.055,tessellation:64},scene);rim.parent=root;rim.material=mat(scene,name+"RimMat","#9dc9e8","#264763","#f2fbff");
+ for(let i=0;i<teeth;i++){const a=i*Math.PI*2/teeth;const tooth=BABYLON.MeshBuilder.CreateBox(name+"Tooth"+i,{width:radius*.3,height:radius*.22,depth:.2},scene);tooth.position.set(Math.cos(a)*radius*.91,Math.sin(a)*radius*.91,0);tooth.rotation.z=a;tooth.parent=root;tooth.material=body.material;}
+ const hub=BABYLON.MeshBuilder.CreateCylinder(name+"Hub",{height:.25,diameter:radius*.48,tessellation:32},scene);hub.rotation.x=Math.PI/2;hub.parent=root;hub.material=mat(scene,name+"HubMat","#c4d5e8","#26384c","#ffffff");
+ const hole=BABYLON.MeshBuilder.CreateCylinder(name+"Hole",{height:.27,diameter:radius*.15,tessellation:24},scene);hole.rotation.x=Math.PI/2;hole.parent=root;hole.material=mat(scene,name+"HoleMat","#03070d");
+ return root;
+}
+function buildGears(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,0,0),7.2);
+ const a=makeGear(scene,"gearA",-1.2,0,1.18,12,"#3d789e"),b=makeGear(scene,"gearB",1.1,.05,.88,10,"#bd8748"),c=makeGear(scene,"gearC",.1,1.45,.48,8,"#629d89");
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;a.rotation.z=t*.32;b.rotation.z=-t*.43;c.rotation.z=t*.78;});
+ return scene;
+}
+function buildOcean(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,0,0),8.6);
+ const ground=BABYLON.MeshBuilder.CreateGround("ocean",{width:8,height:8,subdivisions:62},scene);
+ const base=ground.getVerticesData(BABYLON.VertexBuffer.PositionKind).slice();const indices=ground.getIndices();const normals=new Float32Array(base.length);
+ const water=mat(scene,"waterMat","#07577c","#00314d","#b5efff");water.specularPower=140;ground.material=water;ground.isPickable=false;
+ const wave=new BABYLON.PointLight("waterLight",new BABYLON.Vector3(-2,3,-1),scene);wave.diffuse=C("#31bfff");wave.intensity=1.25;
+ const buoy=BABYLON.MeshBuilder.CreateSphere("buoy",{diameter:.32,segments:20},scene);buoy.position.set(1.2,.35,.5);buoy.material=mat(scene,"buoyMat","#f3e6d0","#fb8d4c","#ffffff");
+ scene.onBeforeRenderObservable.add(()=>{
+  const t=performance.now()*.001;const p=base.slice();
+  for(let i=0;i<p.length;i+=3){const x=base[i],z=base[i+2];p[i+1]=.18*Math.sin(x*1.45+t*1.15)+.11*Math.cos(z*1.8-t*.85)+.055*Math.sin((x+z)*2.1+t*.65);}
+  BABYLON.VertexData.ComputeNormals(p,indices,normals);ground.updateVerticesData(BABYLON.VertexBuffer.PositionKind,p);ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind,normals);
+  buoy.position.y=.38+.18*Math.sin(1.2*1.45+t*1.15)+.11*Math.cos(.5*1.8-t*.85)+.055*Math.sin(1.7*2.1+t*.65);
+ });
+ return scene;
+}
+function buildAsteroids(engine,canvas){
+ const scene=baseScene(engine,canvas,BABYLON.Vector3.Zero(),9.2);
+ const rocks=[];
+ const palette=["#62778d","#7d6e62","#526d79","#91816e"];
+ for(let i=0;i<54;i++){
+  const rock=BABYLON.MeshBuilder.CreateIcoSphere("asteroid"+i,{radius:.28+((i*7)%9)*.035,subdivisions:1+(i%2)},scene);
+  const a=i*2.399,r=2.4+(i%11)*.18,y=Math.sin(i*1.73)*1.8;
+  rock.position.set(Math.cos(a)*r,y,Math.sin(a)*r);rock.scaling.set(1+.6*Math.sin(i*2.1),.65+.5*Math.cos(i*1.3),.75+.4*Math.sin(i*.9));rock.rotation.set(i*.3,i*.71,i*.19);
+  rock.material=mat(scene,"rockMat"+i,palette[i%4],"#05080d","#879caf");rocks.push({mesh:rock,a,r,y,speed:.025+(i%7)*.006});
+ }
+ const central=BABYLON.MeshBuilder.CreateIcoSphere("coreAsteroid",{radius:.7,subdivisions:2},scene);central.material=mat(scene,"coreRock","#9b8063","#1d110b","#e6c89f");
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;rocks.forEach(o=>{o.mesh.position.x=Math.cos(o.a+t*o.speed)*o.r;o.mesh.position.z=Math.sin(o.a+t*o.speed)*o.r;o.mesh.rotation.y+=.0018;});central.rotation.y=t*.08;});
+ return scene;
+}
+function buildPortal(engine,canvas){
+ const scene=baseScene(engine,canvas,BABYLON.Vector3.Zero(),7.7);
+ const colors=["#37d9ff","#8d69ff","#e45fff"];
+ const rings=[];
+ for(let i=0;i<5;i++){const ring=BABYLON.MeshBuilder.CreateTorus("portalRing"+i,{diameter:2.4+i*.34,thickness:.035+(i%2)*.02,tessellation:96},scene);ring.rotation.x=(i-2)*.18;ring.rotation.y=(i-2)*.22;ring.material=mat(scene,"portalMat"+i,colors[i%3],colors[i%3],"#ffffff");rings.push(ring);}
+ const core=BABYLON.MeshBuilder.CreateSphere("portalCore",{diameter:1.7,segments:40},scene);core.scaling.y=.12;core.material=mat(scene,"portalCoreMat","#1d65aa","#163cff","#a9eaff");
+ const nodes=[];
+ for(let i=0;i<24;i++){const node=BABYLON.MeshBuilder.CreateSphere("portalNode"+i,{diameter:.055+(i%3)*.02,segments:10},scene);node.material=mat(scene,"portalNodeMat"+i,colors[i%3],colors[i%3],"#ffffff");nodes.push(node);}
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;rings.forEach((r,i)=>{r.rotation.y=t*(.12+i*.045)*(i%2?-1:1);r.rotation.x=(i-2)*.18+.08*Math.sin(t*.6+i);});core.rotation.z=t*.35;nodes.forEach((n,i)=>{const a=t*(.35+i*.006)+i*Math.PI*2/nodes.length,rad=1.25+(i%4)*.11;n.position.set(Math.cos(a)*rad,Math.sin(a*1.6)*.3,Math.sin(a)*rad);});});
+ return scene;
+}
+function buildShadows(engine,canvas){
+ const scene=baseScene(engine,canvas,new BABYLON.Vector3(0,.5,0),8);
+ const ground=BABYLON.MeshBuilder.CreateGround("shadowGround",{width:9,height:7},scene);ground.material=mat(scene,"groundMat","#17263a","#070e1b","#263d59");ground.receiveShadows=true;
+ const light=new BABYLON.DirectionalLight("shadowLight",new BABYLON.Vector3(-.55,-1,.35),scene);light.position=new BABYLON.Vector3(4,7,-4);light.intensity=2;
+ const shadow=new BABYLON.ShadowGenerator(1024,light);shadow.useBlurExponentialShadowMap=true;shadow.blurKernel=16;
+ const addCaster=(mesh)=>{mesh.material=mat(scene,mesh.name+"Mat","#5c9abb","#102b40","#deefff");shadow.addShadowCaster(mesh);return mesh;};
+ for(let i=0;i<5;i++){const pillar=addCaster(BABYLON.MeshBuilder.CreateCylinder("pillar"+i,{height:1.25+(i%3)*.35,diameter:.48,tessellation:24},scene));pillar.position.set((i-2)*1.3,.75+(i%3)*.17,0);}
+ const orb=addCaster(BABYLON.MeshBuilder.CreateSphere("shadowOrb",{diameter:.8,segments:32},scene));orb.position.y=1.65;orb.position.z=-1;
+ const box=addCaster(BABYLON.MeshBuilder.CreateBox("shadowBox",{size:1.05},scene));box.position.set(1.7,.55,1.1);
+ scene.onBeforeRenderObservable.add(()=>{const t=performance.now()*.001;orb.position.x=Math.sin(t*.75)*2.1;orb.position.z=Math.cos(t*.75)*1.1;orb.rotation.x=t*.4;orb.rotation.z=t*.3;box.rotation.y=t*.32;});
+ return scene;
+}
+const builders=[buildOrrery,buildMaterials,buildParticles,buildCrystals,buildTunnel,buildGears,buildOcean,buildAsteroids,buildPortal,buildShadows];
+function showCardError(card,error){const box=card.querySelector(".card-error");box.textContent=String(error&&error.message||error);box.style.display="grid";card.querySelector(".card-state").textContent="Scene failed";card.querySelector(".card-state").style.color="#ffaaa0";}
+function startCard(card){
+ if(card.dataset.started==="1")return;
+ card.dataset.started="1";
+ if(!window.BABYLON){showCardError(card,"Babylon.js CDN could not be loaded. Check the internet connection.");return;}
+ const canvas=card.querySelector("canvas");
+ try{
+  const engine=new BABYLON.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,powerPreference:"low-power"},true);
+  engine.setHardwareScalingLevel(1.25);
+  const scene=builders[Number(card.dataset.scene)](engine,canvas);
+  const state={engine,scene,last:0,loop:null,running:false};states.set(card,state);
+  state.loop=()=>{const now=performance.now();if(now-state.last<1000/30)return;state.last=now;scene.render();};
+  engine.resize();
+  engine.runRenderLoop(state.loop);state.running=true;
+  card.querySelector(".card-state").textContent="Babylon.js · 30 FPS";
+ }catch(error){showCardError(card,error);}
+}
+const observer=new IntersectionObserver(entries=>{
+ entries.forEach(entry=>{
+  const card=entry.target;
+  if(entry.isIntersecting){startCard(card);const state=states.get(card);if(state&&!state.running){state.engine.runRenderLoop(state.loop);state.running=true;}}
+  else{const state=states.get(card);if(state&&state.running){state.engine.stopRenderLoop(state.loop);state.running=false;}}
+ });
+},{rootMargin:"120px 0px"});
+cards.forEach(card=>observer.observe(card));
+window.addEventListener("resize",()=>states.forEach(state=>state.engine.resize()),{passive:true});
+window.addEventListener("pagehide",()=>{observer.disconnect();states.forEach(state=>{state.engine.stopRenderLoop(state.loop);state.scene.dispose();state.engine.dispose();});states.clear();});
+if(!window.BABYLON){status.textContent="Babylon.js CDN failed to load. The 3D previews need an internet connection.";status.style.color="#ffaaa0";}
+else{status.textContent="Babylon.js is ready · scenes initialize only when they enter view · 30 FPS target";}
+})();
+</script>
+</body>
+</html>
