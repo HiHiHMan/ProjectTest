@@ -32,7 +32,7 @@
       display: block;
       width: 100vw;
       height: 100vh;
-      background: #06232b;
+      background: #020914;
     }
   </style>
 </head>
@@ -48,7 +48,7 @@
       });
 
       if (!gl) {
-        canvas.style.background = 'linear-gradient(160deg, #b9e8e8, #176477 35%, #03131d 85%)';
+        canvas.style.background = 'linear-gradient(160deg, #07172c, #06152a 45%, #01050d 90%)';
         return;
       }
 
@@ -115,9 +115,9 @@
           float hy = waterHeight(p + vec2(0.0, 0.012)) - waterHeight(p - vec2(0.0, 0.012));
           vec3 normal = normalize(vec3(-hx * 2.8, -hy * 2.8, 1.0));
 
-          vec3 deep = vec3(0.006, 0.045, 0.064);
-          vec3 blue = vec3(0.025, 0.22, 0.27);
-          vec3 teal = vec3(0.12, 0.43, 0.46);
+          vec3 deep = vec3(0.002, 0.008, 0.025);
+          vec3 blue = vec3(0.006, 0.035, 0.095);
+          vec3 teal = vec3(0.018, 0.105, 0.19);
           float depth = smoothstep(0.0, 0.9, uv.y);
           vec3 water = mix(deep, blue, 0.25 + depth * 0.5);
           water = mix(water, teal, smoothstep(0.25, 0.95, h) * 0.28);
@@ -134,10 +134,10 @@
           float glint = pow(max(dot(normal, normalize(vec3(-0.5, 0.7, 0.8))), 0.0), 22.0);
           float movingShimmer = 0.5 + 0.5 * sin(p.x * 17.0 + p.y * 8.0 + u_time * 1.2);
 
-          water += vec3(0.045, 0.12, 0.14) * diffuse * 0.55;
-          water += vec3(0.30, 0.66, 0.68) * streak * (0.25 + movingShimmer * 0.5);
-          water += vec3(0.48, 0.78, 0.78) * glint * 0.35;
-          water += vec3(0.10, 0.28, 0.32) * fresnel * 0.55;
+          water += vec3(0.20, 0.13, 0.045) * diffuse * 0.42;
+          water += vec3(0.72, 0.43, 0.12) * streak * (0.20 + movingShimmer * 0.48);
+          water += vec3(1.0, 0.91, 0.70) * glint * 0.62;
+          water += vec3(0.12, 0.085, 0.035) * fresnel * 0.42;
 
           float vignette = smoothstep(0.0, 0.22, uv.x) * (1.0 - smoothstep(0.78, 1.0, uv.x));
           water *= 0.72 + vignette * 0.28;
