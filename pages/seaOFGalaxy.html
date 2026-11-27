@@ -191,8 +191,17 @@
           float reflectionFade = 1.0 - smoothstep(0.0, 0.88, reflectionDepth);
           float reflection = (reflectionShape * 0.68 + reflectionEdge * 0.32)
             * (0.28 + reflectionBreakup * 0.72) * reflectionFade * seaMask;
-          scene += vec3(0.92, 0.54, 0.16) * reflection * 0.34;
-          scene += vec3(1.0, 0.94, 0.78) * reflection * reflectionShape * 0.22;
+          // Let the reflection emerge softly from the white horizon light.
+          float reflectionOriginGlow = exp(-reflectionDepth * 42.0)
+            * exp(-pow((uv.x - 0.5) / 0.105, 2.0)) * seaMask;
+          vec3 reflectionTint = mix(
+            vec3(1.0, 0.96, 0.84),
+            vec3(0.92, 0.54, 0.16),
+            smoothstep(0.035, 0.30, reflectionDepth)
+          );
+          scene += vec3(1.0, 0.97, 0.88) * reflectionOriginGlow * 0.22;
+          scene += reflectionTint * reflection * 0.34;
+          scene += vec3(1.0, 0.96, 0.84) * reflection * reflectionShape * 0.22;
 
           // White-hot horizon edge surrounded by a rich golden aura.
           scene += vec3(0.62, 0.34, 0.075) * horizonGoldAura * 0.20;
