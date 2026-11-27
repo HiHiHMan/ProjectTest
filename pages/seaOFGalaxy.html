@@ -148,7 +148,7 @@
           float horizonDistance = abs(uv.y - horizonY);
           float horizonGoldAura = exp(-horizonDistance * 34.0);
           float horizonInnerAura = exp(-horizonDistance * 105.0);
-          float horizonCore = 1.0 - smoothstep(0.00035, 0.00115, horizonDistance);
+          float horizonCore = 1.0 - smoothstep(0.00075, 0.0028, horizonDistance);
           // Deep-black night sky with sparse, softly twinkling stars.
           vec3 sky = vec3(0.0012, 0.0014, 0.0022);
           float skyFade = smoothstep(horizonY, 1.0, uv.y);
