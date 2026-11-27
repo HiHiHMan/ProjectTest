@@ -176,9 +176,10 @@
           // A broken golden-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
           float reflectionWidth = 0.205 - pow(reflectionDepth, 1.28) * 0.197;
-          float reflectionCenter = 0.5
-            + sin(reflectionDepth * 13.0 + u_time * 0.34) * 0.012 * reflectionDepth
-            + (fbm(vec2(reflectionDepth * 5.0, u_time * 0.08)) - 0.5) * 0.018 * reflectionDepth;
+          float zigzag = sin(reflectionDepth * 34.0 + u_time * 0.22) * 0.62
+            + sin(reflectionDepth * 17.0 - u_time * 0.16) * 0.28
+            + (fbm(vec2(reflectionDepth * 8.0, u_time * 0.06)) - 0.5) * 0.45;
+          float reflectionCenter = 0.5 + zigzag * (0.018 + reflectionDepth * 0.105);
           float reflectionX = abs(uv.x - reflectionCenter);
           float reflectionShape = 1.0 - smoothstep(reflectionWidth * 0.18, reflectionWidth, reflectionX);
           float reflectionEdge = exp(-pow(reflectionX / max(reflectionWidth * 0.72, 0.001), 2.0));
@@ -189,8 +190,8 @@
           float reflectionFade = 1.0 - smoothstep(0.0, 0.88, reflectionDepth);
           float reflection = (reflectionShape * 0.68 + reflectionEdge * 0.32)
             * (0.28 + reflectionBreakup * 0.72) * reflectionFade * seaMask;
-          scene += vec3(0.92, 0.54, 0.16) * reflection * 0.82;
-          scene += vec3(1.0, 0.94, 0.78) * reflection * reflectionShape * 0.72;
+          scene += vec3(0.92, 0.54, 0.16) * reflection * 0.34;
+          scene += vec3(1.0, 0.94, 0.78) * reflection * reflectionShape * 0.22;
 
           // White-hot horizon edge surrounded by a rich golden aura.
           scene += vec3(0.62, 0.34, 0.075) * horizonGoldAura * 0.20;
