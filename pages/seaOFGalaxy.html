@@ -172,6 +172,26 @@
           sky += starColor * stars * 0.72;
 
           vec3 scene = mix(sky, water, seaMask);
+
+          // A broken golden-white reflection spreading from the top-center horizon.
+          float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
+          float reflectionWidth = 0.008 + pow(reflectionDepth, 1.28) * 0.205;
+          float reflectionCenter = 0.5
+            + sin(reflectionDepth * 13.0 + u_time * 0.34) * 0.012 * reflectionDepth
+            + (fbm(vec2(reflectionDepth * 5.0, u_time * 0.08)) - 0.5) * 0.018 * reflectionDepth;
+          float reflectionX = abs(uv.x - reflectionCenter);
+          float reflectionShape = 1.0 - smoothstep(reflectionWidth * 0.18, reflectionWidth, reflectionX);
+          float reflectionEdge = exp(-pow(reflectionX / max(reflectionWidth * 0.72, 0.001), 2.0));
+          float reflectionNoise = fbm(vec2(uv.x * 34.0 + u_time * 0.025, uv.y * 92.0 - u_time * 0.12));
+          float reflectionRipples = 0.5 + 0.5 * sin(uv.y * 245.0 + reflectionNoise * 8.0 + u_time * 0.8);
+          float reflectionBreakup = smoothstep(0.34, 0.78, reflectionRipples * 0.58 + reflectionNoise * 0.62);
+          float reflectionFade = smoothstep(0.0, 0.075, reflectionDepth)
+            * (1.0 - smoothstep(0.82, 1.0, reflectionDepth));
+          float reflection = (reflectionShape * 0.58 + reflectionEdge * 0.42)
+            * reflectionBreakup * reflectionFade * seaMask;
+          scene += vec3(0.72, 0.43, 0.13) * reflection * 0.42;
+          scene += vec3(1.0, 0.91, 0.72) * reflection * reflectionShape * 0.30;
+
           // White-hot horizon edge surrounded by a rich golden aura.
           scene += vec3(0.62, 0.34, 0.075) * horizonGoldAura * 0.20;
           scene += vec3(0.95, 0.66, 0.25) * horizonInnerAura * 0.24;
