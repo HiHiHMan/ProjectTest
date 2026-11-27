@@ -25,18 +25,6 @@
       overflow: visible;
       filter: drop-shadow(-7px 0 10px rgba(255, 255, 255, 0.85)) drop-shadow(-12px 6px 16px rgba(255, 255, 255, 0.48)) drop-shadow(-18px 2px 8px rgba(255, 255, 255, 0.42)) drop-shadow(-25px 0 13px rgba(255, 255, 255, 0.36)) drop-shadow(-33px -2px 18px rgba(255, 255, 255, 0.30)) drop-shadow(-42px 0 25px rgba(255, 255, 255, 0.25)) drop-shadow(-55px 0 42px rgba(255, 255, 255, 0.20)) drop-shadow(-72px 0 58px rgba(255, 255, 255, 0.12)) drop-shadow(-92px 0 76px rgba(255, 255, 255, 0.06));
     }
-    .moon-rings {
-      position: fixed;
-      z-index: 2;
-      top: calc(25% - 58px);
-      left: 50%;
-      width: min(440px, 96vw);
-      height: auto;
-      aspect-ratio: 11 / 7;
-      transform: translate(-50%, 0);
-      overflow: visible;
-      pointer-events: none;
-    }
     .moon-crescent {
       position: fixed;
       z-index: 3;
@@ -62,43 +50,6 @@
 </head>
 <body>
   <canvas id="sea-canvas" aria-label="Sea of Galaxy animated WebGL ocean">Sea of Galaxy</canvas>
-    <svg class="moon-rings" viewBox="0 0 440 280" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="ring-bronze" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#765037" stop-opacity="0.16"/>
-        <stop offset="28%" stop-color="#C49A69" stop-opacity="0.78"/>
-        <stop offset="52%" stop-color="#E3C69B" stop-opacity="0.92"/>
-        <stop offset="76%" stop-color="#8A6040" stop-opacity="0.62"/>
-        <stop offset="100%" stop-color="#493326" stop-opacity="0.12"/>
-      </linearGradient>
-      <filter id="ring-soft-glow" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="2.2" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-      <!-- Keep the orbital system entirely in the sky, above the sea horizon. -->
-      <clipPath id="rings-sky-only">
-        <rect x="0" y="0" width="440" height="218"/>
-      </clipPath>
-      <!-- The sphere occludes the ring paths; only the front/back arcs remain visible. -->
-      <mask id="rings-behind-moon">
-        <rect x="0" y="0" width="440" height="280" fill="white"/>
-        <circle cx="220" cy="140" r="96" fill="black"/>
-      </mask>
-    </defs>
-    <g clip-path="url(#rings-sky-only)" mask="url(#rings-behind-moon)">
-      <g transform="rotate(-45 220 140)" fill="none" stroke="url(#ring-bronze)" stroke-linecap="round" filter="url(#ring-soft-glow)">
-        <ellipse cx="220" cy="140" rx="204" ry="49" stroke-width="1.15" opacity="0.72"/>
-        <ellipse cx="220" cy="140" rx="184" ry="38" stroke-width="2.1" opacity="0.88"/>
-        <ellipse cx="220" cy="140" rx="163" ry="29" stroke-width="0.8" opacity="0.66"/>
-        <ellipse cx="220" cy="140" rx="145" ry="22" stroke-width="1.65" opacity="0.82"/>
-        <ellipse cx="220" cy="140" rx="124" ry="15" stroke-width="0.65" opacity="0.7"/>
-        <ellipse cx="220" cy="140" rx="108" ry="10" stroke-width="1.25" opacity="0.76"/>
-      </g>
-    </g>
-  </svg>
   <svg class="moon-crescent" viewBox="0 0 50 50" width="250" height="250" role="img" aria-label="Upside-down crescent moon" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="moon-edge-aura" x="-180%" y="-180%" width="460%" height="460%" color-interpolation-filters="sRGB">
