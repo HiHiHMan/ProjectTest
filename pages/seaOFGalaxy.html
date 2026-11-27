@@ -25,6 +25,18 @@
       overflow: visible;
       filter: drop-shadow(-7px 0 10px rgba(255, 255, 255, 0.85)) drop-shadow(-12px 6px 16px rgba(255, 255, 255, 0.48)) drop-shadow(-18px 2px 8px rgba(255, 255, 255, 0.42)) drop-shadow(-25px 0 13px rgba(255, 255, 255, 0.36)) drop-shadow(-33px -2px 18px rgba(255, 255, 255, 0.30)) drop-shadow(-42px 0 25px rgba(255, 255, 255, 0.25)) drop-shadow(-55px 0 42px rgba(255, 255, 255, 0.20)) drop-shadow(-72px 0 58px rgba(255, 255, 255, 0.12)) drop-shadow(-92px 0 76px rgba(255, 255, 255, 0.06));
     }
+    .moon-crescent {
+      position: fixed;
+      z-index: 1;
+      top: calc(41.4% - 58px);
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      transform: translateX(-50%);
+      overflow: visible;
+      filter: drop-shadow(0 0 5px rgba(255, 239, 202, 0.28));
+      pointer-events: none;
+    }
     #sea-canvas {
       position: fixed;
       inset: 0;
@@ -38,6 +50,9 @@
 </head>
 <body>
   <canvas id="sea-canvas" aria-label="Sea of Galaxy animated WebGL ocean">Sea of Galaxy</canvas>
+  <svg class="moon-crescent" viewBox="0 0 50 50" width="50" height="50" role="img" aria-label="Upside-down crescent moon" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 7 35 A 18 18 0 1 0 43 35 A 14 14 0 0 1 7 35 Z" fill="#F5EAD2"/>
+  </svg>
   <script>
     (() => {
       const canvas = document.getElementById('sea-canvas');
