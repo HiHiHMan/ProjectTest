@@ -211,12 +211,12 @@
           scene += reflectionTint * reflection * reflectionShape * 0.28;
           scene += vec3(1.0) * reflection * whiteCore * 0.42;
 
-          // Softer, more transparent horizon edge light; retain a clean white core.
-          scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.12;
-          scene += vec3(0.90, 0.54, 0.22) * horizonInnerAura * 0.15;
-          scene += vec3(0.88, 0.90, 0.96) * horizonWhiteAura * 0.25;
-          scene += vec3(1.0, 0.99, 0.97) * horizonWhiteBlur * 0.38;
-          scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.82;
+          // Very subtle, translucent horizon edge light with a restrained white core.
+          scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.06;
+          scene += vec3(0.90, 0.54, 0.22) * horizonInnerAura * 0.08;
+          scene += vec3(0.88, 0.90, 0.96) * horizonWhiteAura * 0.14;
+          scene += vec3(1.0, 0.99, 0.97) * horizonWhiteBlur * 0.22;
+          scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.68;
 
           gl_FragColor = vec4(scene, 1.0);
         }
