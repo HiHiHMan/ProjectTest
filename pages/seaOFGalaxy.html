@@ -206,6 +206,9 @@
           float horizonSkyDistance = max(uv.y - horizonLineY, 0.0);
           float horizonWhiteAura = exp(-horizonSkyDistance * 22.0) * horizonSkySide;
           float horizonWhiteBlur = exp(-horizonSkyDistance * 52.0) * horizonSkySide;
+          // A faint sideways bloom gives the horizon light a little lateral spread.
+          float horizonSideTexture = 0.82 + fbm(vec2(uv.x * 5.0, horizonSkyDistance * 2.8)) * 0.18;
+          float horizonSideSpread = exp(-horizonSkyDistance * 34.0) * horizonSideTexture * horizonSkySide;
           float horizonCore = 1.0 - smoothstep(0.0025, 0.007, horizonDistance);
           // Deep-black night sky with sparse, softly twinkling stars.
           vec3 sky = vec3(0.0012, 0.0014, 0.0022);
@@ -268,6 +271,7 @@
           scene += vec3(0.90, 0.54, 0.22) * horizonInnerAura * 0.08;
           scene += vec3(1.0) * horizonWhiteAura * 0.24;
           scene += vec3(1.0) * horizonWhiteBlur * 0.38;
+          scene += vec3(1.0) * horizonSideSpread * 0.10;
           scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.68;
 
           gl_FragColor = vec4(scene, 1.0);
