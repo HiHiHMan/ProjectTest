@@ -144,8 +144,11 @@
 
           // A clean, distant horizon separating the black sky from the night sea.
           float horizonY = 0.64;
-          float seaMask = 1.0 - smoothstep(horizonY - 0.0015, horizonY + 0.0015, uv.y);
-          float horizonDistance = abs(uv.y - horizonY);
+          // A gentle planetary arc: the horizon rises slightly at the center.
+          float horizonCurve = 0.026 * (1.0 - pow((uv.x - 0.5) * 2.0, 2.0));
+          float horizonLineY = horizonY + horizonCurve;
+          float seaMask = 1.0 - smoothstep(horizonLineY - 0.0015, horizonLineY + 0.0015, uv.y);
+          float horizonDistance = abs(uv.y - horizonLineY);
           float horizonGoldAura = exp(-horizonDistance * 42.0);
           float horizonInnerAura = exp(-horizonDistance * 92.0);
           float horizonWhiteAura = exp(-horizonDistance * 62.0);
@@ -153,7 +156,7 @@
           float horizonCore = 1.0 - smoothstep(0.0045, 0.0125, horizonDistance);
           // Deep-black night sky with sparse, softly twinkling stars.
           vec3 sky = vec3(0.0012, 0.0014, 0.0022);
-          float skyFade = smoothstep(horizonY, 1.0, uv.y);
+          float skyFade = smoothstep(horizonLineY, 1.0, uv.y);
           sky += vec3(0.0035, 0.0032, 0.0048) * skyFade;
 
           vec2 starGrid = uv * vec2(190.0, 112.0);
@@ -163,7 +166,7 @@
           float starShape = 1.0 - smoothstep(0.015, 0.055, length(starLocal));
           float starOn = step(0.991, starSeed);
           float starTwinkle = 0.62 + 0.38 * sin(u_time * (1.1 + starSeed * 2.0) + starSeed * 90.0);
-          float stars = starShape * starOn * starTwinkle * smoothstep(horizonY + 0.025, horizonY + 0.12, uv.y);
+          float stars = starShape * starOn * starTwinkle * smoothstep(horizonLineY + 0.025, horizonLineY + 0.12, uv.y);
           float goldStar = step(0.78, hash(starCell + 17.3));
           vec3 starColor = mix(vec3(0.78, 0.82, 0.88), vec3(1.0, 0.72, 0.38), goldStar);
           sky += starColor * stars * 0.72;
