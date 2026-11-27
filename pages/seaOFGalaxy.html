@@ -229,6 +229,13 @@
 
           vec3 scene = mix(sky, water, seaMask);
 
+          // Soft light from the horizon grazing the water surface, fading downward.
+          float horizonWaterDistance = max(horizonLineY - uv.y, 0.0);
+          float horizonWaterSide = 1.0 - step(horizonLineY, uv.y);
+          float waterHorizonGlow = exp(-horizonWaterDistance * 34.0) * horizonWaterSide * seaMask;
+          float waterHorizonRipple = 0.72 + 0.28 * sin(uv.y * 190.0 + fbm(vec2(uv.x * 18.0, uv.y * 42.0)) * 5.0);
+          scene += vec3(0.72, 0.66, 0.58) * waterHorizonGlow * waterHorizonRipple * 0.075;
+
           // A broken rust-and-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
           float reflectionWidth = 0.19 - pow(reflectionDepth, 1.18) * 0.182;
