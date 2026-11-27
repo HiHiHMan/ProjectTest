@@ -123,24 +123,59 @@ const status=document.querySelector("#status");
 const pageSize=10;let currentPage=1;const totalPages=Math.ceil(canvases.length/pageSize);let device=null;let pipeline=null;let format=null;let observer=null;let frameId=0;const active=new Map();
 const fallbackActive=new Map();
 function drawFallback(canvas,now){
- let ctx=fallbackActive.get(canvas);
- if(!ctx){ctx=canvas.getContext("2d");if(!ctx)return;fallbackActive.set(canvas,ctx);}
- const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.5);
- const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+ let ctx=fallbackActive.get(canvas);if(!ctx){ctx=canvas.getContext("2d");if(!ctx)return;fallbackActive.set(canvas,ctx);}
+ const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.5),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
- ctx.setTransform(dpr,0,0,dpr,0,0);const cw=rect.width,ch=rect.height,cx=cw/2,cy=ch/2,t=now*0.001,m=Number(canvas.dataset.mode)||0;
- ctx.fillStyle="#050914";ctx.fillRect(0,0,cw,ch);
- const hue=(m*37+t*18)%360,radius=Math.min(cw,ch)*0.34;
- const grad=ctx.createRadialGradient(cx,cy,2,cx,cy,radius*1.9);grad.addColorStop(0,"hsla("+(hue+35)+",95%,55%,.28)");grad.addColorStop(.55,"hsla("+hue+",85%,35%,.12)");grad.addColorStop(1,"rgba(2,6,18,0)");ctx.fillStyle=grad;ctx.fillRect(0,0,cw,ch);
- ctx.save();ctx.translate(cx,cy);ctx.rotate(t*(m%2?-.22:.22));
- const count=12+(m%9)*3;
- for(let i=0;i<count;i++){const ang=i*Math.PI*2/count,rr=radius*(.55+.18*Math.sin(t*1.4+i*.73+m));ctx.save();ctx.rotate(ang);ctx.strokeStyle="hsla("+(hue+i*7)+",95%,68%,"+(.24+.45*(.5+.5*Math.sin(t*2+i)))+")";ctx.lineWidth=1+(i%3)*.45;ctx.beginPath();ctx.ellipse(rr*.45,0,rr*.55,Math.max(2,rr*(.08+(m%4)*.025)),0,0,Math.PI*2);ctx.stroke();ctx.restore();}
- ctx.strokeStyle="hsla("+(hue+80)+",95%,72%,.8)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,radius*(.58+.05*Math.sin(t*1.7)),0,Math.PI*2);ctx.stroke();
- for(let i=0;i<7;i++){const ang=t*(.35+i*.025)+i*Math.PI*2/7,rr=radius*(.25+.08*Math.sin(t+i));ctx.fillStyle="hsla("+(hue+i*31)+",100%,75%,.95)";ctx.beginPath();ctx.arc(Math.cos(ang)*rr,Math.sin(ang)*rr,2.2+i%3,0,Math.PI*2);ctx.fill();}
- ctx.restore();
+ ctx.setTransform(dpr,0,0,dpr,0,0);const W=rect.width,H=rect.height,cx=W*.5,cy=H*.5,t=now*.001,m=Number(canvas.dataset.mode);
+ ctx.fillStyle="#030813";ctx.fillRect(0,0,W,H);
+ const bg=ctx.createRadialGradient(cx,cy,1,cx,cy,Math.max(W,H)*.8);bg.addColorStop(0,"#10243d");bg.addColorStop(1,"#02050c");ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ const glow=(color,blur)=>{ctx.shadowColor=color;ctx.shadowBlur=blur;};
+ const clearGlow=()=>{ctx.shadowBlur=0;};
+ const rnd=(n)=>{const v=Math.sin(n*127.1+19.19)*43758.5453;return v-Math.floor(v);};
+ if(m===50){
+  const cols=["#4bd8ff","#ff9a54","#b18aff"],rots=[t*.45,-t*.32+1.05,t*.25-1.05];
+  for(let i=0;i<3;i++){ctx.save();ctx.translate(cx,cy);ctx.rotate(rots[i]);ctx.beginPath();ctx.ellipse(0,0,W*.31,H*.2,0,0,Math.PI*2);ctx.strokeStyle="rgba(25,75,115,.65)";ctx.lineWidth=7;ctx.stroke();ctx.strokeStyle=cols[i];ctx.lineWidth=2.6;glow(cols[i],11);ctx.stroke();clearGlow();
+   for(let k=0;k<2;k++){ctx.beginPath();ctx.moveTo(-W*.23,k?7:-7);ctx.lineTo(W*.23,k?7:-7);ctx.strokeStyle=cols[i];ctx.lineWidth=1.2;ctx.stroke();}ctx.restore();}
+  ctx.beginPath();ctx.arc(cx,cy,Math.min(W,H)*.1,0,Math.PI*2);ctx.fillStyle="#183858";ctx.fill();ctx.strokeStyle="#c7ecff";ctx.lineWidth=2;glow("#75ceff",13);ctx.stroke();clearGlow();
+  ctx.beginPath();ctx.arc(cx,cy,Math.min(W,H)*.035,0,Math.PI*2);ctx.fillStyle="#edfaff";ctx.fill();
+ }else if(m===52){
+  const verts=[];for(let z of [-1,1])for(let y of [-1,1])for(let x of [-1,1]){let a=t*.32,b=t*.21,xx=x*Math.cos(a)-z*Math.sin(a),zz=x*Math.sin(a)+z*Math.cos(a),yy=y*Math.cos(b)-zz*Math.sin(b);zz=y*Math.sin(b)+zz*Math.cos(b);const s=1/(2.7+zz*.55);verts.push([cx+xx*s*W*.8,cy+yy*s*H*.8]);}
+  const edges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+  ctx.strokeStyle="#62caff";ctx.lineWidth=1.8;glow("#168cff",9);for(const e of edges){ctx.beginPath();ctx.moveTo(...verts[e[0]]);ctx.lineTo(...verts[e[1]]);ctx.stroke();}clearGlow();
+  verts.forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],2.6,0,Math.PI*2);ctx.fillStyle="#e4f7ff";ctx.fill();});
+ }else if(m===53){
+  const cell=8;for(let y=0;y<H;y+=cell)for(let x=0;x<W;x+=cell){const v=.5+.25*Math.sin(x*.022+t*.6)+.2*Math.cos(y*.031-t*.4)+.12*Math.sin((x+y)*.018+t);const hue=225-225*Math.max(0,Math.min(1,v));ctx.fillStyle="hsl("+hue+",90%,"+(22+44*v)+"%)";ctx.fillRect(x,y,cell+1,cell+1);}
+  for(let k=0;k<5;k++){ctx.beginPath();for(let x=0;x<W;x+=4){const y=H*(.2+k*.15)+Math.sin(x*.018+t+k)*12;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle="rgba(255,245,190,.55)";ctx.lineWidth=1;ctx.stroke();}
+ }else if(m===54){
+  const sx=W*.25,sy=cy;for(let slit=0;slit<2;slit++){ctx.fillStyle="#efffff";glow("#48dfff",16);ctx.fillRect(sx-2,sy+(slit?15:-15)-16,4,32);clearGlow();}
+  for(let i=0;i<18;i++){const r=15+i*12+(t*7%12);ctx.beginPath();ctx.arc(sx,sy-15,r,Math.PI*-.48,Math.PI*.48);ctx.strokeStyle="rgba(58,175,255,"+(.45-i*.018)+")";ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.arc(sx,sy+15,r,Math.PI*-.48,Math.PI*.48);ctx.stroke();}
+  for(let x=W*.42;x<W;x+=7)for(let y=0;y<H;y+=7){const d1=Math.hypot(x-sx,y-(sy-15)),d2=Math.hypot(x-sx,y-(sy+15)),v=Math.pow(.5+.5*Math.cos((d1+d2)*.12-t*2),7);ctx.fillStyle="rgba(86,220,255,"+(v*.65)+")";ctx.fillRect(x,y,2,2);}
+ }else if(m===55){
+  const golden=Math.PI*(3-Math.sqrt(5));for(let i=0;i<520;i++){const r=Math.sqrt(i/520)*Math.min(W,H)*.43,a=i*golden+t*.15,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;const radius=1.1+(1-r/(Math.min(W,H)*.46))*2.1;ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fillStyle="hsla("+(185+i*.42)+",90%,"+(55+25*(1-i/520))+"%,.9)";if(i%9===0)glow("#6fe4ff",7);ctx.fill();clearGlow();}
+ }else if(m===58){
+  for(let j=0;j<13;j++){ctx.beginPath();for(let i=0;i<=90;i++){const x=W*i/90,y=H*(.12+j*.065)+Math.sin(i*.18+t*1.5+j*.55)*H*.045;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle="rgba(60,210,255,.66)";ctx.lineWidth=1.1;glow("#25a9ff",5);ctx.stroke();clearGlow();}
+  for(let i=0;i<18;i++){const x=W*(.07+i*.05),y=cy+Math.sin(i*.72+t)*H*.15;ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fillStyle="#b8f7ff";ctx.fill();}
+ }else if(m===90){
+  const mx=cx+Math.sin(t*.3)*W*.08,my=cy;for(let i=0;i<18;i++){const r=12+i*9,dist=Math.abs(r-100);ctx.beginPath();ctx.ellipse(mx,my,r*(1+.09*Math.sin(t*1.4+i*.22)),r*.48,Math.sin(t*.3)*.08,0,Math.PI*2);ctx.strokeStyle="rgba(70,160,255,"+(.12+.35*(1-i/22))+")";ctx.lineWidth=1.2;ctx.stroke();}
+  for(let k=0;k<2;k++){const x=mx+(k?1:-1)*W*.105;ctx.beginPath();ctx.arc(x,my,15+k*3,0,Math.PI*2);ctx.fillStyle="#010207";ctx.fill();ctx.strokeStyle=k?"#9e65ff":"#50caff";ctx.lineWidth=2;glow(k?"#965eff":"#28aaff",12);ctx.stroke();clearGlow();}
+ }else if(m===91){
+  for(let i=0;i<190;i++){const x=rnd(i+2)*W,y=rnd(i+9)*H,r=1.5+4*rnd(i+17)+1.5*Math.sin(t*1.4+i);ctx.beginPath();ctx.arc(x,y,Math.max(.8,r),0,Math.PI*2);ctx.strokeStyle="rgba(95,205,255,"+(.18+.48*rnd(i+4))+")";ctx.lineWidth=.7;ctx.stroke();if(i%5===0){ctx.fillStyle="rgba(155,110,255,.32)";ctx.fill();}}
+ }else if(m===92){
+  function crack(x,y,a,len,depth,seed,width){const nx=x+Math.cos(a)*len,ny=y+Math.sin(a)*len;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(nx,ny);ctx.strokeStyle=depth?"rgba(76,177,255,.8)":"rgba(220,250,255,.95)";ctx.lineWidth=width;glow("#56bdff",depth?5:11);ctx.stroke();clearGlow();if(depth>0){const bend=(rnd(seed)-.5)*.65;crack(nx,ny,a-.58+bend,len*.72,depth-1,seed+1,width*.68);crack(nx,ny,a+.62+bend,len*.7,depth-1,seed+3,width*.64);}}
+  for(let i=0;i<7;i++){const a=i*Math.PI*2/7+t*.025;crack(cx,cy,a,Math.min(W,H)*(.15+.04*rnd(i)),3,i+1,2.2);}
+  for(let i=0;i<12;i++){const x=rnd(i+50)*W,y=rnd(i+80)*H;ctx.beginPath();ctx.arc(x,y,10+rnd(i)*18,0,Math.PI*2);ctx.strokeStyle="rgba(100,180,255,.12)";ctx.stroke();}
+ }else if(m===93){
+  const drift=Math.sin(t*.45)*W*.025,bx=cx+drift,top=H*.22,base=H*.49;
+  const g=ctx.createLinearGradient(0,top,0,base);g.addColorStop(0,"rgba(180,245,255,.94)");g.addColorStop(.45,"rgba(35,160,220,.82)");g.addColorStop(1,"rgba(8,55,105,.92)");
+  ctx.beginPath();ctx.moveTo(bx-W*.2,base);ctx.bezierCurveTo(bx-W*.18,top,bx+W*.18,top,bx+W*.2,base);ctx.quadraticCurveTo(bx,base+H*.035,bx-W*.2,base);ctx.closePath();ctx.fillStyle=g;glow("#38cfff",15);ctx.fill();clearGlow();ctx.strokeStyle="#c8f8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bx-W*.2,base);ctx.quadraticCurveTo(bx,base+H*.035,bx+W*.2,base);ctx.stroke();
+  for(let i=0;i<12;i++){const x=bx+(i-5.5)*W*.035;const sway=Math.sin(t*1.1+i*.7)*W*.025;ctx.beginPath();ctx.moveTo(bx+(i-5.5)*W*.025,base);ctx.bezierCurveTo(x+sway,base+H*.18,x-sway,base+H*.38,x+Math.sin(t*.7+i)*W*.05,H*(.84+.08*Math.sin(i*1.7)));ctx.strokeStyle=i%3?"rgba(64,205,255,.72)":"rgba(170,235,255,.92)";ctx.lineWidth=i%4===0?2:1.1;glow("#32bfff",7);ctx.stroke();clearGlow();}
+  for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(bx+(i-3)*W*.05,base+2);ctx.bezierCurveTo(bx+(i-3)*W*.06,base+H*.09,bx+(i-3)*W*.035,base+H*.11,bx+(i-3)*W*.025,base+H*.2);ctx.strokeStyle="rgba(90,210,255,.55)";ctx.lineWidth=1.4;ctx.stroke();}
+ }
 }
-function startFallback(){
- status.textContent="กำลังแสดงภาพตัวอย่างด้วย Canvas 2D — Browser นี้ไม่สามารถเริ่ม WebGPU ได้";
+function startFallback(reason=""){
+ status.textContent=reason
+  ? "WebGPU เริ่มทำงานไม่สำเร็จ ("+reason+") — แสดงภาพสำรอง 2D แยกตาม Card"
+  : "Browser นี้ไม่มี WebGPU — แสดงภาพสำรอง 2D แยกตาม Card";
  status.style.color="#f4c77b";status.style.whiteSpace="normal";
  const draw=(now)=>{canvases.forEach(canvas=>{if(!canvas.closest(".card").hidden&&canvas.getBoundingClientRect().width>0)drawFallback(canvas,now);});frameId=requestAnimationFrame(draw);};
  frameId=requestAnimationFrame(draw);
@@ -150,7 +185,7 @@ function renderPage(page){currentPage=Math.max(1,Math.min(totalPages,page));clea
 function renderPagination(){const root=document.querySelector("#pagination");root.replaceChildren();const add=(label,p,disabled=false,current=false)=>{const b=document.createElement("button");b.textContent=label;b.disabled=disabled;if(current)b.setAttribute("aria-current","page");b.addEventListener("click",()=>{renderPage(p);document.querySelector("header").scrollIntoView({behavior:"smooth"});});root.appendChild(b);};add("‹",currentPage-1,currentPage===1);for(let i=1;i<=totalPages;i++)add(String(i),i,false,i===currentPage);add("›",currentPage+1,currentPage===totalPages);const info=document.createElement("div");info.className="page-info";info.textContent="PAGE "+currentPage+" / "+totalPages+" · SHOWING "+((currentPage-1)*10+1)+"–"+Math.min(currentPage*10,canvases.length)+" OF "+canvases.length+" CARDS";root.appendChild(info);}
 function setupCanvas(canvas){if(active.has(canvas)||!device)return;const context=canvas.getContext("webgpu");if(!context){drawFallback(canvas,performance.now());return;}const buffer=device.createBuffer({size:16,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});const bindGroup=device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer}}]});context.configure({device,format,alphaMode:"opaque"});const resizeCanvas=()=>{const rect=canvas.getBoundingClientRect();const dpr=Math.min(window.devicePixelRatio||1,1.5);const w=Math.max(1,Math.round(rect.width*dpr));const h=Math.max(1,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}};const resize=new ResizeObserver(resizeCanvas);resize.observe(canvas);resizeCanvas();active.set(canvas,{context,buffer,bindGroup,resize,start:performance.now()});}
 function observeVisible(){observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)setupCanvas(entry.target);else if(active.has(entry.target)){const item=active.get(entry.target);item.resize.disconnect();item.buffer.destroy();active.delete(entry.target);}}),{rootMargin:"80px"});canvases.forEach(c=>{if(!c.closest(".card").hidden)observer.observe(c);});}
-async function init(){if(!navigator.gpu){startFallback();return;}try{const adapter=await navigator.gpu.requestAdapter();if(!adapter)throw new Error("No compatible GPU adapter.");device=await adapter.requestDevice();format=navigator.gpu.getPreferredCanvasFormat();const module=device.createShaderModule({code:shaderCode});const compilation=await module.getCompilationInfo();const shaderErrors=compilation.messages.filter(message=>message.type==="error");if(shaderErrors.length){throw new Error("WGSL compile error:\\n"+shaderErrors.map(message=>"Line "+message.lineNum+", column "+message.linePos+": "+message.message).join("\\n"));}await device.pushErrorScope("validation");pipeline=device.createRenderPipeline({layout:"auto",vertex:{module,entryPoint:"vs"},fragment:{module,entryPoint:"fs",targets:[{format}]},primitive:{topology:"triangle-list"}});const pipelineError=await device.popErrorScope();if(pipelineError)throw new Error("GPU pipeline error: "+pipelineError.message);status.textContent="10 GPU experiments ready · WebGPU / WGSL";renderPage(1);function draw(now){for(const [canvas,item] of active){if(!canvas.isConnected)continue;const w=canvas.width,h=canvas.height;if(!w||!h)continue;const mode=Number(canvas.dataset.mode);device.queue.writeBuffer(item.buffer,0,new Float32Array([(now-item.start)*0.001,mode,w,h]));const encoder=device.createCommandEncoder();const pass=encoder.beginRenderPass({colorAttachments:[{view:item.context.getCurrentTexture().createView(),clearValue:{r:0.008,g:0.012,b:0.025,a:1},loadOp:"clear",storeOp:"store"}]});pass.setPipeline(pipeline);pass.setBindGroup(0,item.bindGroup);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);}frameId=requestAnimationFrame(draw);}frameId=requestAnimationFrame(draw);}catch(error){status.textContent="ไม่สามารถแสดงผล WebGPU ได้: "+error.message;status.style.color="#ff9b9b";status.style.whiteSpace="pre-wrap";console.error(error);startFallback();}}
+async function init(){if(!navigator.gpu){startFallback();return;}try{const adapter=await navigator.gpu.requestAdapter();if(!adapter)throw new Error("No compatible GPU adapter.");device=await adapter.requestDevice();format=navigator.gpu.getPreferredCanvasFormat();const module=device.createShaderModule({code:shaderCode});const compilation=await module.getCompilationInfo();const shaderErrors=compilation.messages.filter(message=>message.type==="error");if(shaderErrors.length){throw new Error("WGSL compile error:\\n"+shaderErrors.map(message=>"Line "+message.lineNum+", column "+message.linePos+": "+message.message).join("\\n"));}await device.pushErrorScope("validation");pipeline=device.createRenderPipeline({layout:"auto",vertex:{module,entryPoint:"vs"},fragment:{module,entryPoint:"fs",targets:[{format}]},primitive:{topology:"triangle-list"}});const pipelineError=await device.popErrorScope();if(pipelineError)throw new Error("GPU pipeline error: "+pipelineError.message);status.textContent="10 GPU experiments ready · WebGPU / WGSL";renderPage(1);function draw(now){for(const [canvas,item] of active){if(!canvas.isConnected)continue;const w=canvas.width,h=canvas.height;if(!w||!h)continue;const mode=Number(canvas.dataset.mode);device.queue.writeBuffer(item.buffer,0,new Float32Array([(now-item.start)*0.001,mode,w,h]));const encoder=device.createCommandEncoder();const pass=encoder.beginRenderPass({colorAttachments:[{view:item.context.getCurrentTexture().createView(),clearValue:{r:0.008,g:0.012,b:0.025,a:1},loadOp:"clear",storeOp:"store"}]});pass.setPipeline(pipeline);pass.setBindGroup(0,item.bindGroup);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);}frameId=requestAnimationFrame(draw);}frameId=requestAnimationFrame(draw);}catch(error){status.textContent="ไม่สามารถแสดงผล WebGPU ได้: "+error.message;status.style.color="#ff9b9b";status.style.whiteSpace="pre-wrap";console.error(error);startFallback(error.message);}}
 renderPagination();init();
 window.addEventListener("pagehide",()=>{cancelAnimationFrame(frameId);if(observer)observer.disconnect();clearActive();});
 </script></body></html>
