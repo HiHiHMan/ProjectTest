@@ -25,6 +25,26 @@
       overflow: visible;
       filter: drop-shadow(-7px 0 10px rgba(255, 255, 255, 0.85)) drop-shadow(-12px 6px 16px rgba(255, 255, 255, 0.48)) drop-shadow(-18px 2px 8px rgba(255, 255, 255, 0.42)) drop-shadow(-25px 0 13px rgba(255, 255, 255, 0.36)) drop-shadow(-33px -2px 18px rgba(255, 255, 255, 0.30)) drop-shadow(-42px 0 25px rgba(255, 255, 255, 0.25)) drop-shadow(-55px 0 42px rgba(255, 255, 255, 0.20)) drop-shadow(-72px 0 58px rgba(255, 255, 255, 0.12)) drop-shadow(-92px 0 76px rgba(255, 255, 255, 0.06));
     }
+    .moon-aura {
+      position: fixed;
+      z-index: 2;
+      top: calc(25% - 235px);
+      left: 50%;
+      width: min(900px, 115vw);
+      height: 720px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 43% 65% at 50% 78%,
+          rgba(143, 91, 49, 0.52) 0%,
+          rgba(125, 78, 43, 0.40) 24%,
+          rgba(105, 67, 40, 0.29) 43%,
+          rgba(82, 55, 36, 0.17) 62%,
+          rgba(60, 43, 31, 0.07) 78%,
+          rgba(45, 34, 27, 0) 100%);
+      filter: blur(24px);
+      mix-blend-mode: screen;
+    }
     .moon-crescent {
       position: fixed;
       z-index: 3;
@@ -50,6 +70,7 @@
 </head>
 <body>
   <canvas id="sea-canvas" aria-label="Sea of Galaxy animated WebGL ocean">Sea of Galaxy</canvas>
+  <div class="moon-aura" aria-hidden="true"></div>
   <svg class="moon-crescent" viewBox="0 0 50 50" width="250" height="250" role="img" aria-label="Upside-down crescent moon" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <mask id="inverted-crescent-mask">
