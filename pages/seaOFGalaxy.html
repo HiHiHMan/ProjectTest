@@ -134,9 +134,10 @@
           float glint = pow(max(dot(normal, normalize(vec3(-0.5, 0.7, 0.8))), 0.0), 22.0);
           float movingShimmer = 0.5 + 0.5 * sin(p.x * 17.0 + p.y * 8.0 + u_time * 1.2);
 
+          // Deep burnt-gold / rust reflections across the sea; avoid bright yellow highlights.
           water += vec3(0.16, 0.075, 0.025) * diffuse * 0.30;
-          water += vec3(1.0, 0.72, 0.22) * streak * (0.14 + movingShimmer * 0.34);
-          water += vec3(1.0, 0.84, 0.42) * glint * 0.48;
+          water += vec3(0.58, 0.25, 0.07) * streak * (0.14 + movingShimmer * 0.34);
+          water += vec3(0.72, 0.32, 0.10) * glint * 0.38;
           water += vec3(0.12, 0.052, 0.018) * fresnel * 0.28;
 
           float vignette = smoothstep(0.0, 0.22, uv.x) * (1.0 - smoothstep(0.78, 1.0, uv.x));
