@@ -195,16 +195,14 @@
           float reflectionOriginGlow = exp(-reflectionDepth * 16.0)
             * exp(-pow((uv.x - reflectionCenter) / 0.155, 2.0))
             * (1.0 - smoothstep(0.0, 0.42, reflectionDepth)) * seaMask;
-          // Match the reflection's near-horizon color to the horizon's inner aura.
-          float horizonAuraFalloff = 1.0 - smoothstep(0.015, 0.24, reflectionDepth);
-          vec3 reflectionTint = mix(
-            vec3(0.72, 0.29, 0.15),
-            vec3(0.90, 0.54, 0.22),
-            horizonAuraFalloff
-          );
-          scene += vec3(1.0, 0.91, 0.64) * reflectionOriginGlow * 0.30;
+          // Start the reflection in clean white at the horizon, then fade
+          // smoothly into the exact rust-gold hue of the horizon aura.
+          float whiteToAura = 1.0 - smoothstep(0.0, 0.30, reflectionDepth);
+          vec3 horizonAuraColor = vec3(0.90, 0.54, 0.22);
+          vec3 reflectionTint = mix(horizonAuraColor, vec3(1.0, 0.99, 0.96), whiteToAura);
+          scene += vec3(1.0, 0.99, 0.96) * reflectionOriginGlow * 0.34;
           scene += reflectionTint * reflection * 0.34;
-          scene += vec3(1.0, 0.82, 0.38) * reflection * reflectionShape * 0.25;
+          scene += reflectionTint * reflection * reflectionShape * 0.25;
 
           // White-hot horizon edge surrounded by a rich rust-colored aura.
           scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.20;
