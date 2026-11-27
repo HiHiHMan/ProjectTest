@@ -157,7 +157,16 @@
         }
 
         void main() {
+          // Keep a fixed 16:9 composition scale; reveal less of the scene on
+          // narrower/wider screens instead of shrinking the entire artwork.
           vec2 uv = v_uv;
+          float screenAspect = u_resolution.x / max(u_resolution.y, 1.0);
+          const float designAspect = 16.0 / 9.0;
+          if (screenAspect < designAspect) {
+            uv.x = (uv.x - 0.5) * (screenAspect / designAspect) + 0.5;
+          } else {
+            uv.y = (uv.y - 0.5) * (designAspect / screenAspect) + 0.5;
+          }
           vec2 p = uv * vec2(2.2, 7.0);
           float h = waterHeight(p);
           float hx = waterHeight(p + vec2(0.012, 0.0)) - waterHeight(p - vec2(0.012, 0.0));
