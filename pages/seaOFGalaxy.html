@@ -269,9 +269,9 @@
           // Very subtle, translucent horizon edge light with a restrained white core.
           scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.06;
           scene += vec3(0.90, 0.54, 0.22) * horizonInnerAura * 0.08;
-          scene += vec3(1.0) * horizonWhiteAura * 0.24;
-          scene += vec3(1.0) * horizonWhiteBlur * 0.38;
-          scene += vec3(1.0) * horizonSideSpread * 0.10;
+          scene += vec3(1.0) * horizonWhiteAura * 0.17;
+          scene += vec3(1.0) * horizonWhiteBlur * 0.26;
+          scene += vec3(1.0) * horizonSideSpread * 0.07;
           scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.68;
 
           gl_FragColor = vec4(scene, 1.0);
