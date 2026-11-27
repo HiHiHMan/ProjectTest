@@ -175,15 +175,15 @@
 
           // A broken golden-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
-          float reflectionWidth = 0.205 - pow(reflectionDepth, 1.28) * 0.197;
+          float reflectionWidth = 0.105 - pow(reflectionDepth, 1.18) * 0.099;
           float zigzag = sin(reflectionDepth * 72.0 + u_time * 0.24) * 0.58
             + sin(reflectionDepth * 39.0 - u_time * 0.19) * 0.32
             + sin(reflectionDepth * 118.0 + u_time * 0.13) * 0.16
             + (fbm(vec2(reflectionDepth * 13.0, u_time * 0.07)) - 0.5) * 0.52;
           float reflectionCenter = 0.5 + zigzag * (0.026 + reflectionDepth * 0.145);
           float reflectionX = abs(uv.x - reflectionCenter);
-          float reflectionShape = 1.0 - smoothstep(reflectionWidth * 0.18, reflectionWidth, reflectionX);
-          float reflectionEdge = exp(-pow(reflectionX / max(reflectionWidth * 0.72, 0.001), 2.0));
+          float reflectionShape = 1.0 - smoothstep(reflectionWidth * 0.12, reflectionWidth * 0.72, reflectionX);
+          float reflectionEdge = exp(-pow(reflectionX / max(reflectionWidth * 0.48, 0.001), 2.0));
           float rayNoise = fbm(vec2(uv.x * 34.0 + u_time * 0.025, uv.y * 92.0 - u_time * 0.12));
           float reflectionRipples = 0.5 + 0.5 * sin(uv.y * 245.0 + rayNoise * 8.0 + u_time * 0.8);
           float reflectionBreakup = smoothstep(0.20, 0.72, reflectionRipples * 0.52 + rayNoise * 0.72);
