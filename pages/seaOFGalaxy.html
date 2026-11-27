@@ -135,7 +135,7 @@
           float movingShimmer = 0.5 + 0.5 * sin(p.x * 17.0 + p.y * 8.0 + u_time * 1.2);
 
           water += vec3(0.20, 0.13, 0.045) * diffuse * 0.42;
-          water += vec3(0.72, 0.43, 0.12) * streak * (0.20 + movingShimmer * 0.48);
+          water += vec3(0.84, 0.68, 0.30) * streak * (0.20 + movingShimmer * 0.48);
           water += vec3(1.0, 0.91, 0.70) * glint * 0.62;
           water += vec3(0.12, 0.085, 0.035) * fresnel * 0.42;
 
@@ -197,7 +197,7 @@
             * (1.0 - smoothstep(0.0, 0.42, reflectionDepth)) * seaMask;
           vec3 reflectionTint = mix(
             vec3(1.0, 0.98, 0.91),
-            vec3(0.92, 0.54, 0.16),
+            vec3(0.96, 0.76, 0.38),
             smoothstep(0.10, 0.46, reflectionDepth)
           );
           scene += vec3(1.0, 0.98, 0.92) * reflectionOriginGlow * 0.30;
@@ -205,8 +205,8 @@
           scene += vec3(1.0, 0.97, 0.88) * reflection * reflectionShape * 0.25;
 
           // White-hot horizon edge surrounded by a rich golden aura.
-          scene += vec3(0.62, 0.34, 0.075) * horizonGoldAura * 0.20;
-          scene += vec3(0.95, 0.66, 0.25) * horizonInnerAura * 0.24;
+          scene += vec3(0.68, 0.49, 0.18) * horizonGoldAura * 0.20;
+          scene += vec3(0.98, 0.79, 0.42) * horizonInnerAura * 0.24;
           scene += vec3(0.88, 0.90, 0.96) * horizonWhiteAura * 0.40;
           scene += vec3(1.0, 0.99, 0.97) * horizonWhiteBlur * 0.62;
           scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.92;
