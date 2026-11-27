@@ -203,10 +203,12 @@
           float whiteToAura = max(edgeGold, tipGold);
           vec3 horizonAuraColor = vec3(0.90, 0.54, 0.22);
           vec3 reflectionTint = mix(vec3(1.0), horizonAuraColor, whiteToAura);
-          // Push the reflection center to clean, luminous white instead of gray.
+          // Keep the narrow inner highlight pure #ffffff; let rust-gold dominate the wider edges.
+          float whiteCore = 1.0 - smoothstep(0.015, 0.22, reflectionSide);
           scene += vec3(1.0) * reflectionOriginGlow * 0.14;
-          scene += reflectionTint * reflection * 0.27;
-          scene += reflectionTint * reflection * reflectionShape * 0.18;
+          scene += reflectionTint * reflection * 0.52;
+          scene += reflectionTint * reflection * reflectionShape * 0.28;
+          scene += vec3(1.0) * reflection * whiteCore * 0.42;
 
           // White-hot horizon edge surrounded by a rich rust-colored aura.
           scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.20;
