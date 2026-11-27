@@ -255,3 +255,87 @@
 .sky-preview-cloud::before { left:20px; }.sky-preview-cloud::after { right:18px; width:54px; height:45px; }
 .sky-preview-cloud--one { left:8%; bottom:47px; transform:scale(1.05); }
 .sky-preview-cloud--two { right:5%; bottom:24px; transform:scale(.72); opacity:.8; }
+
+
+/* Sea of Galaxy card preview — crescent, curved horizon and water reflection. */
+.preview-art--sea {
+  display:block;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 50% 68%,rgb(112 71 43 / 12%),transparent 38%),
+    linear-gradient(180deg,#020307 0%,#050609 54%,#020304 55%,#030506 100%);
+}
+.sea-preview-moon {
+  position:absolute;
+  z-index:2;
+  top:24px;
+  left:50%;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  transform:translateX(-50%);
+  background:#f4ead5;
+  box-shadow:0 0 12px rgb(191 137 83 / 32%),0 0 34px rgb(139 88 51 / 24%);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%);
+}
+.sea-preview-moon::after {
+  content:"";
+  position:absolute;
+  top:7px;
+  left:17px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#030407;
+}
+.sea-preview-horizon {
+  position:absolute;
+  z-index:1;
+  top:57%;
+  left:-8%;
+  width:116%;
+  height:8px;
+  border-top:1px solid rgb(255 249 239 / 92%);
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow:0 -5px 12px rgb(255 255 255 / 28%),0 -13px 30px rgb(255 255 255 / 13%);
+}
+.sea-preview-horizon::after {
+  content:"";
+  position:absolute;
+  top:-8px;
+  left:25%;
+  width:50%;
+  height:24px;
+  background:linear-gradient(180deg,rgb(255 255 255 / 17%),rgb(255 255 255 / 0));
+  filter:blur(8px);
+}
+.sea-preview-reflection {
+  position:absolute;
+  z-index:1;
+  top:58%;
+  left:50%;
+  width:30%;
+  height:45%;
+  transform:translateX(-50%);
+  opacity:.9;
+  background:repeating-linear-gradient(180deg,
+    transparent 0 4px,
+    rgb(255 250 240 / 78%) 4px 5px,
+    transparent 5px 9px,
+    rgb(151 93 54 / 55%) 9px 11px,
+    transparent 11px 16px);
+  clip-path:polygon(43% 0,57% 0,100% 100%,0 100%);
+  filter:drop-shadow(0 0 5px rgb(255 242 221 / 38%));
+  mask-image:linear-gradient(180deg,#000 0%,rgb(0 0 0 / 78%) 42%,transparent 100%);
+}
+.sea-preview-stars {
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 18% 18%,#e9e4dc 0 1px,transparent 1.5px),
+    radial-gradient(circle at 30% 31%,#aaa9a7 0 .8px,transparent 1.4px),
+    radial-gradient(circle at 76% 19%,#f4eee3 0 1px,transparent 1.5px),
+    radial-gradient(circle at 86% 38%,#b9b4ac 0 .8px,transparent 1.4px),
+    radial-gradient(circle at 65% 12%,#d9d5cf 0 .7px,transparent 1.4px);
+  opacity:.68;
+}
