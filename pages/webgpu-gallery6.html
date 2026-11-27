@@ -107,7 +107,7 @@ else if(m==56){let p=q-vec2f(-0.22,0.0);let n=q-vec2f(0.22,0.0);let field=p/(dot
 else if(m==57){let twist=a+q.y*10.0+t*0.45;let strip=exp(-abs(r-(0.22+0.055*sin(twist*0.5)))*75.0);let cross=exp(-abs(sin(twist*4.0+q.y*5.0))*30.0);let seam=exp(-abs(sin(twist*2.0))*42.0);c=vec3f(0.004,0.01,0.028)+vec3f(0.08,0.72,0.65)*strip*0.7+palette(twist/6.283+t*0.02)*cross*0.45+vec3f(0.9,0.45,0.2)*seam*0.2;}
 else if(m==58){let wave=sin(q.x*17.0+t*0.7)*sin(q.y*13.0-t*0.55);let nodes=exp(-abs(wave)*34.0);let antinodes=pow(abs(wave),5.0);let pulse=0.5+0.5*sin(t*1.2);c=vec3f(0.003,0.012,0.03)+vec3f(0.08,0.72,0.95)*nodes*(0.55+pulse*0.4)+vec3f(0.72,0.24,0.95)*antinodes*0.25;}
 else if(m==59){let scan=exp(-abs(fract(q.y*38.0+t*0.12)-0.5)*95.0);let carrier=sin(q.x*72.0+sin(q.y*18.0+t)*4.0);let interference=exp(-abs(carrier)*12.0);let code=step(0.62,noise(vec2f(floor(q.x*46.0),floor(q.y*12.0))+vec2f(0.0,t*0.04)));c=vec3f(0.002,0.012,0.025)+vec3f(0.08,0.8,0.78)*scan*0.28+vec3f(0.3,0.62,1.0)*interference*0.48+vec3f(0.75,0.35,1.0)*code*scan*0.35;}
-else {let ring=exp(-abs(r-(0.27+0.025*sin(a*8.0-t*1.2)))*75.0;let spiral=exp(-abs(sin(a*4.0+r*25.0-t*1.8))*10.0);let portal=1.0-smoothstep(0.12,0.17,r);c=vec3f(0.003,0.008,0.025)+palette(a/6.283+t*0.025)*(ring*0.7+spiral*0.3)+vec3f(0.05,0.18,0.4)*portal;}
+else {let ring=exp(-abs(r-(0.27+0.025*sin(a*8.0-t*1.2)))*75.0);let spiral=exp(-abs(sin(a*4.0+r*25.0-t*1.8))*10.0);let portal=1.0-smoothstep(0.12,0.17,r);c=vec3f(0.003,0.008,0.025)+palette(a/6.283+t*0.025)*(ring*0.7+spiral*0.3)+vec3f(0.05,0.18,0.4)*portal;}
  let vignette=1.0-smoothstep(0.42,0.9,r); c*=0.55+0.45*vignette;
  return vec4f(c,1.0);
 }`;
