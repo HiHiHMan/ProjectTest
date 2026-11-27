@@ -234,7 +234,15 @@
           float horizonWaterSide = 1.0 - step(horizonLineY, uv.y);
           float waterHorizonGlow = exp(-horizonWaterDistance * 34.0) * horizonWaterSide * seaMask;
           float waterHorizonRipple = 0.72 + 0.28 * sin(uv.y * 190.0 + fbm(vec2(uv.x * 18.0, uv.y * 42.0)) * 5.0);
-          scene += vec3(0.72, 0.66, 0.58) * waterHorizonGlow * waterHorizonRipple * 0.075;
+          scene += vec3(0.82, 0.76, 0.68) * waterHorizonGlow * waterHorizonRipple * 0.14;
+
+          // A wider, broken sheen lets the horizon light visibly graze nearby wave surfaces.
+          float horizonSheenNoise = fbm(vec2(uv.x * 22.0 + u_time * 0.018, uv.y * 58.0 - u_time * 0.07));
+          float horizonSheenRipples = 0.5 + 0.5 * sin(uv.y * 310.0 + horizonSheenNoise * 7.0 + u_time * 0.55);
+          float horizonSheenFade = exp(-horizonWaterDistance * 11.0) * seaMask;
+          float horizonSheenBreakup = smoothstep(0.28, 0.78, horizonSheenRipples * 0.58 + horizonSheenNoise * 0.62);
+          float horizonSheen = horizonSheenFade * horizonSheenBreakup;
+          scene += vec3(0.72, 0.62, 0.50) * horizonSheen * 0.11;
 
           // A broken rust-and-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
@@ -269,9 +277,9 @@
           // Keep the narrow inner highlight pure #ffffff; let rust-gold dominate the wider edges.
           float whiteCore = 1.0 - smoothstep(0.015, 0.22, reflectionSide);
           scene += vec3(1.0) * reflectionOriginGlow * 0.14;
-          scene += reflectionTint * reflection * 0.52;
+          scene += reflectionTint * reflection * 0.64;
           scene += reflectionTint * reflection * reflectionShape * 0.28;
-          scene += vec3(1.0) * reflection * whiteCore * 0.42;
+          scene += vec3(1.0) * reflection * whiteCore * 0.48;
 
           // Very subtle, translucent horizon edge light with a restrained white core.
           scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.06;
