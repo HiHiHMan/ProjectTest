@@ -175,7 +175,7 @@
 
           // A broken golden-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
-          float reflectionWidth = 0.008 + pow(reflectionDepth, 1.28) * 0.205;
+          float reflectionWidth = 0.205 - pow(reflectionDepth, 1.28) * 0.197;
           float reflectionCenter = 0.5
             + sin(reflectionDepth * 13.0 + u_time * 0.34) * 0.012 * reflectionDepth
             + (fbm(vec2(reflectionDepth * 5.0, u_time * 0.08)) - 0.5) * 0.018 * reflectionDepth;
