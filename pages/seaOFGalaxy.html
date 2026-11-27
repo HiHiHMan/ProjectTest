@@ -196,15 +196,19 @@
           float reflectionOriginGlow = exp(-reflectionDepth * 16.0)
             * exp(-pow((uv.x - reflectionCenter) / 0.155, 2.0))
             * (1.0 - smoothstep(0.0, 0.42, reflectionDepth)) * seaMask;
-          // Keep the reflection white in its center; tint only its outer edges
-          // and narrowing tips with the same rust-gold as the horizon aura.
+          // Layered reflection: pure-white center, deep yellow-gold first edge,
+          // and dark burnt-rust gold on the outer edge and narrowing tips.
           float reflectionSide = reflectionX / max(reflectionWidth * 0.72, 0.001);
           float edgeGold = smoothstep(0.00, 0.30, reflectionSide);
           float tipGold = smoothstep(0.08, 0.38, reflectionDepth);
           float whiteToAura = max(edgeGold, tipGold);
-          vec3 horizonAuraColor = vec3(0.58, 0.25, 0.07);
-          vec3 reflectionTint = mix(vec3(1.0), horizonAuraColor, whiteToAura);
-          // Pure white stays confined to a very thin inner line; the reflection edges use deep rust-gold.
+          vec3 deepYellowGold = vec3(0.68, 0.39, 0.09);
+          vec3 burntRustGold = vec3(0.58, 0.25, 0.07);
+          float firstGoldLayer = smoothstep(0.28, 0.62, whiteToAura);
+          float secondRustLayer = smoothstep(0.64, 0.96, whiteToAura);
+          vec3 reflectionTint = mix(vec3(1.0), deepYellowGold, firstGoldLayer);
+          reflectionTint = mix(reflectionTint, burntRustGold, secondRustLayer);
+          // Keep a crisp pure-white highlight inside the first gold layer.
           float whiteCore = 1.0 - smoothstep(0.0, 0.10, reflectionSide);
           scene += vec3(1.0) * reflectionOriginGlow * 0.14;
           scene += reflectionTint * reflection * 0.52;
