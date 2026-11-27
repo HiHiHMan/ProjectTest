@@ -199,11 +199,11 @@
           float horizonLineY = horizonY + horizonCurve;
           float seaMask = 1.0 - smoothstep(horizonLineY - 0.0015, horizonLineY + 0.0015, uv.y);
           float horizonDistance = abs(uv.y - horizonLineY);
-          float horizonGoldAura = exp(-horizonDistance * 42.0);
-          float horizonInnerAura = exp(-horizonDistance * 92.0);
-          float horizonWhiteAura = exp(-horizonDistance * 62.0);
-          float horizonWhiteBlur = exp(-horizonDistance * 155.0);
-          float horizonCore = 1.0 - smoothstep(0.0045, 0.0125, horizonDistance);
+          float horizonGoldAura = exp(-horizonDistance * 70.0);
+          float horizonInnerAura = exp(-horizonDistance * 150.0);
+          float horizonWhiteAura = exp(-horizonDistance * 105.0);
+          float horizonWhiteBlur = exp(-horizonDistance * 240.0);
+          float horizonCore = 1.0 - smoothstep(0.0025, 0.007, horizonDistance);
           // Deep-black night sky with sparse, softly twinkling stars.
           vec3 sky = vec3(0.0012, 0.0014, 0.0022);
           float skyFade = smoothstep(horizonLineY, 1.0, uv.y);
