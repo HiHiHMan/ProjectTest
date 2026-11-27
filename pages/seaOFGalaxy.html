@@ -199,7 +199,7 @@
           // and narrowing tips with the same rust-gold as the horizon aura.
           float reflectionSide = reflectionX / max(reflectionWidth * 0.72, 0.001);
           float edgeGold = smoothstep(0.12, 0.92, reflectionSide);
-          float tipGold = smoothstep(0.58, 0.96, reflectionDepth);
+          float tipGold = smoothstep(0.12, 0.48, reflectionDepth);
           float whiteToAura = max(edgeGold, tipGold);
           vec3 horizonAuraColor = vec3(0.90, 0.54, 0.22);
           vec3 reflectionTint = mix(vec3(1.0, 0.99, 0.96), horizonAuraColor, whiteToAura);
