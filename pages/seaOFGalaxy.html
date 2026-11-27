@@ -115,9 +115,9 @@
           float hy = waterHeight(p + vec2(0.0, 0.012)) - waterHeight(p - vec2(0.0, 0.012));
           vec3 normal = normalize(vec3(-hx * 2.8, -hy * 2.8, 1.0));
 
-          vec3 deep = vec3(0.001, 0.001, 0.002);
-          vec3 blue = vec3(0.008, 0.009, 0.012);
-          vec3 teal = vec3(0.025, 0.026, 0.028);
+          vec3 deep = vec3(0.0004, 0.0004, 0.0006);
+          vec3 blue = vec3(0.0025, 0.0024, 0.0028);
+          vec3 teal = vec3(0.007, 0.006, 0.005);
           float depth = smoothstep(0.0, 0.9, uv.y);
           vec3 water = mix(deep, blue, 0.25 + depth * 0.5);
           water = mix(water, teal, smoothstep(0.25, 0.95, h) * 0.28);
@@ -134,10 +134,10 @@
           float glint = pow(max(dot(normal, normalize(vec3(-0.5, 0.7, 0.8))), 0.0), 22.0);
           float movingShimmer = 0.5 + 0.5 * sin(p.x * 17.0 + p.y * 8.0 + u_time * 1.2);
 
-          water += vec3(0.22, 0.075, 0.035) * diffuse * 0.42;
-          water += vec3(0.72, 0.29, 0.12) * streak * (0.20 + movingShimmer * 0.48);
-          water += vec3(0.88, 0.52, 0.34) * glint * 0.62;
-          water += vec3(0.16, 0.055, 0.028) * fresnel * 0.42;
+          water += vec3(0.16, 0.075, 0.025) * diffuse * 0.30;
+          water += vec3(0.82, 0.43, 0.14) * streak * (0.14 + movingShimmer * 0.34);
+          water += vec3(1.0, 0.78, 0.43) * glint * 0.48;
+          water += vec3(0.12, 0.052, 0.018) * fresnel * 0.28;
 
           float vignette = smoothstep(0.0, 0.22, uv.x) * (1.0 - smoothstep(0.78, 1.0, uv.x));
           water *= 0.72 + vignette * 0.28;
@@ -168,7 +168,7 @@
           float starTwinkle = 0.62 + 0.38 * sin(u_time * (1.1 + starSeed * 2.0) + starSeed * 90.0);
           float stars = starShape * starOn * starTwinkle * smoothstep(horizonLineY + 0.025, horizonLineY + 0.12, uv.y);
           float goldStar = step(0.78, hash(starCell + 17.3));
-          vec3 starColor = mix(vec3(0.78, 0.82, 0.88), vec3(0.78, 0.32, 0.18), goldStar);
+          vec3 starColor = mix(vec3(0.78, 0.82, 0.88), vec3(0.88, 0.49, 0.20), goldStar);
           sky += starColor * stars * 0.72;
 
           vec3 scene = mix(sky, water, seaMask);
@@ -197,7 +197,7 @@
             * (1.0 - smoothstep(0.0, 0.42, reflectionDepth)) * seaMask;
           vec3 reflectionTint = mix(
             vec3(1.0, 0.98, 0.91),
-            vec3(0.72, 0.29, 0.15),
+            vec3(0.84, 0.43, 0.16),
             smoothstep(0.10, 0.46, reflectionDepth)
           );
           scene += vec3(1.0, 0.98, 0.92) * reflectionOriginGlow * 0.30;
@@ -205,8 +205,8 @@
           scene += vec3(1.0, 0.97, 0.88) * reflection * reflectionShape * 0.25;
 
           // White-hot horizon edge surrounded by a rich rust-colored aura.
-          scene += vec3(0.48, 0.17, 0.08) * horizonGoldAura * 0.20;
-          scene += vec3(0.78, 0.34, 0.18) * horizonInnerAura * 0.24;
+          scene += vec3(0.58, 0.25, 0.07) * horizonGoldAura * 0.20;
+          scene += vec3(0.90, 0.54, 0.22) * horizonInnerAura * 0.24;
           scene += vec3(0.88, 0.90, 0.96) * horizonWhiteAura * 0.40;
           scene += vec3(1.0, 0.99, 0.97) * horizonWhiteBlur * 0.62;
           scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.92;
