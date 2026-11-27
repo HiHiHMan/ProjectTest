@@ -175,7 +175,7 @@
 
           // A broken golden-white reflection spreading from the top-center horizon.
           float reflectionDepth = clamp((horizonLineY - uv.y) / horizonLineY, 0.0, 1.0);
-          float reflectionWidth = 0.105 - pow(reflectionDepth, 1.18) * 0.099;
+          float reflectionWidth = 0.145 - pow(reflectionDepth, 1.18) * 0.139;
           float zigzag = sin(reflectionDepth * 72.0 + u_time * 0.24) * 0.58
             + sin(reflectionDepth * 39.0 - u_time * 0.19) * 0.32
             + sin(reflectionDepth * 118.0 + u_time * 0.13) * 0.16
