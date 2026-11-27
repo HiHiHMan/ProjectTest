@@ -185,8 +185,8 @@
           float rayNoise = fbm(vec2(uv.x * 34.0 + u_time * 0.025, uv.y * 92.0 - u_time * 0.12));
           float reflectionRipples = 0.5 + 0.5 * sin(uv.y * 245.0 + rayNoise * 8.0 + u_time * 0.8);
           float reflectionBreakup = smoothstep(0.20, 0.72, reflectionRipples * 0.52 + rayNoise * 0.72);
-          float reflectionFade = smoothstep(0.0, 0.025, reflectionDepth)
-            * (1.0 - smoothstep(0.88, 1.0, reflectionDepth));
+          // Strongest directly below the horizon, gradually fading toward the viewer.
+          float reflectionFade = 1.0 - smoothstep(0.0, 0.88, reflectionDepth);
           float reflection = (reflectionShape * 0.68 + reflectionEdge * 0.32)
             * (0.28 + reflectionBreakup * 0.72) * reflectionFade * seaMask;
           scene += vec3(0.92, 0.54, 0.16) * reflection * 0.82;
