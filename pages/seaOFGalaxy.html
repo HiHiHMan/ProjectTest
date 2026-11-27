@@ -195,13 +195,12 @@
           float reflectionOriginGlow = exp(-reflectionDepth * 16.0)
             * exp(-pow((uv.x - reflectionCenter) / 0.155, 2.0))
             * (1.0 - smoothstep(0.0, 0.42, reflectionDepth)) * seaMask;
-          // Deep yellow-gold is concentrated near the horizon; farther down,
-          // the reflection returns to a subdued rust tone.
-          float horizonGoldFalloff = 1.0 - smoothstep(0.015, 0.24, reflectionDepth);
+          // Match the reflection's near-horizon color to the horizon's inner aura.
+          float horizonAuraFalloff = 1.0 - smoothstep(0.015, 0.24, reflectionDepth);
           vec3 reflectionTint = mix(
             vec3(0.72, 0.29, 0.15),
-            vec3(0.78, 0.54, 0.12),
-            horizonGoldFalloff
+            vec3(0.90, 0.54, 0.22),
+            horizonAuraFalloff
           );
           scene += vec3(1.0, 0.91, 0.64) * reflectionOriginGlow * 0.30;
           scene += reflectionTint * reflection * 0.34;
