@@ -148,9 +148,9 @@
           float horizonDistance = abs(uv.y - horizonY);
           float horizonGoldAura = exp(-horizonDistance * 42.0);
           float horizonInnerAura = exp(-horizonDistance * 92.0);
-          float horizonWhiteAura = exp(-horizonDistance * 115.0);
-          float horizonWhiteBlur = exp(-horizonDistance * 310.0);
-          float horizonCore = 1.0 - smoothstep(0.0028, 0.0085, horizonDistance);
+          float horizonWhiteAura = exp(-horizonDistance * 62.0);
+          float horizonWhiteBlur = exp(-horizonDistance * 155.0);
+          float horizonCore = 1.0 - smoothstep(0.0045, 0.0125, horizonDistance);
           // Deep-black night sky with sparse, softly twinkling stars.
           vec3 sky = vec3(0.0012, 0.0014, 0.0022);
           float skyFade = smoothstep(horizonY, 1.0, uv.y);
@@ -172,9 +172,9 @@
           // White-hot horizon edge surrounded by a rich golden aura.
           scene += vec3(0.62, 0.34, 0.075) * horizonGoldAura * 0.20;
           scene += vec3(0.95, 0.66, 0.25) * horizonInnerAura * 0.24;
-          scene += vec3(0.82, 0.86, 0.92) * horizonWhiteAura * 0.34;
-          scene += vec3(1.0, 0.98, 0.96) * horizonWhiteBlur * 0.48;
-          scene += vec3(1.0, 0.99, 0.97) * horizonCore * 1.12;
+          scene += vec3(0.88, 0.90, 0.96) * horizonWhiteAura * 0.40;
+          scene += vec3(1.0, 0.99, 0.97) * horizonWhiteBlur * 0.62;
+          scene += vec3(1.0, 0.995, 0.99) * horizonCore * 0.92;
 
           gl_FragColor = vec4(scene, 1.0);
         }
