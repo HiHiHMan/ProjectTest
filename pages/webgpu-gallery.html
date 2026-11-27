@@ -72,7 +72,7 @@ else if(m==47){let nodes=step(0.94,noise(q*vec2f(15.0,10.0)+vec2f(t*0.08,0.0)));
 else if(m==48){let prism=abs(sin(q.x*10.0+q.y*3.0+t*0.2));let ray=exp(-abs(q.y-q.x*0.32)*24.0);let split=palette(q.x*1.8+prism*0.25+t*0.015);c=vec3f(0.003,0.008,0.025)+split*ray*(0.3+0.7*prism);}
 else if(m==49){let bend=atan2(q.y,q.x)+0.18*sin(r*12.0-t);let lens=exp(-abs(r-(0.28+0.035*sin(bend*6.0+t)))*65.0);let warp=exp(-abs(sin(bend*8.0+r*28.0-t))*14.0);let core=1.0-smoothstep(0.08,0.18,r);c=vec3f(0.002,0.006,0.02)+palette(bend/6.283+t*0.02)*(lens*0.65+warp*0.3)+vec3f(0.05,0.22,0.5)*core;}
 else {let ring=exp(-abs(r-(0.27+0.025*sin(a*8.0-t*1.2)))*75.0);let spiral=exp(-abs(sin(a*4.0+r*25.0-t*1.8))*10.0);let portal=1.0-smoothstep(0.12,0.17,r);c=vec3f(0.003,0.008,0.025)+palette(a/6.283+t*0.025)*(ring*0.7+spiral*0.3)+vec3f(0.05,0.18,0.4)*portal;}\n let vignette=1.0-smoothstep(0.42,0.9,r); c*=0.55+0.45*vignette;\n return vec4f(c,1.0);\n}";
-const canvases=[...document.querySelectorAll("canvas")];
+const allCanvases=[...document.querySelectorAll("canvas")];\nallCanvases.slice(30).forEach(canvas=>canvas.closest(".card")?.remove());\nconst canvases=allCanvases.slice(0,30);
 const status=document.querySelector("#status");
 const pageSize=10;let currentPage=1;const totalPages=Math.ceil(canvases.length/pageSize);let device=null;let pipeline=null;let format=null;let observer=null;let frameId=0;const active=new Map();
 function clearActive(){for(const [canvas,item] of active){item.resize.disconnect();item.buffer.destroy();active.delete(canvas);} }
